@@ -10,25 +10,23 @@
   <div id="quizContainer">
     <h1 id="question"></h1>
     <div id="options"></div>
-    <button id="prevBtn" class="nav-btn">Previous</button>
-    <button id="nextBtn" class="nav-btn">Next</button>
-    <div id="timer">45</div>
+    <button id="nextBtn" class="next-btn">Next</button>
   </div>
 
   <div id="endPage" style="display: none;">
     <p>Congratulations, <span id="username"></span>! You have completed the quiz.</p>
     <button id="playAgainBtn">Play Again</button>
-    <button id="shareBtn">Share</button>
-    <button id="joinBtn">Join</button>
   </div>
 
-  <div id="usernameDiv" class="center" style="display: none;">
+  <div id="usernameDiv" class="center">
     <label for="usernameInput">Enter your username:</label>
     <div class="input-wrapper">
       <input type="text" id="usernameInput">
       <button id="submitUsernameBtn">Submit</button>
     </div>
   </div>
+
+  <button id="shareBtn">Share</button> <!-- Added share button -->
 
   <script src="script.js"></script>
 </body>
