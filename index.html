@@ -7,13 +7,23 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Quiz Game</h1>
-    <div id="question"></div>
-    <div id="options"></div>
-    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+  <div id="usernameDiv">
+    <label for="usernameInput">Enter your username:</label>
+    <input type="text" id="usernameInput">
+    <button id="submitUsernameBtn">Submit</button>
   </div>
   
+  <div id="quizContainer">
+    <h1 id="question"></h1>
+    <div id="options"></div>
+    <button id="nextBtn">Next</button>
+  </div>
+
+  <div id="endPage" style="display: none;">
+    <p>Congratulations, <span id="username"></span>! You have completed the quiz.</p>
+    <button id="playAgainBtn">Play Again</button>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
