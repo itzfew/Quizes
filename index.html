@@ -37,15 +37,17 @@
       const playAgainBtn = document.getElementById("playAgainBtn");
 
       submitUsernameBtn.addEventListener("click", function() {
-        const usernameInput = document.getElementById("usernameInput").value.trim();
-        if (usernameInput !== "") {
-          usernameSpan.textContent = usernameInput;
-          endPage.style.display = "block";
-          highScoreLink.style.display = "inline"; // Show high score link
-          // Submit username to highscores.html
-          window.location.href = `highscores.html?username=${usernameInput}`;
-        }
-      });
+    const usernameInput = document.getElementById("usernameInput").value.trim();
+    if (usernameInput !== "") {
+        usernameSpan.textContent = usernameInput;
+        endPage.style.display = "block";
+        highScoreLink.style.display = "inline"; // Show high score link
+        
+        // Submit username and score to highscores.html
+        const score = /* Calculate the score */;
+        window.location.href = `highscores.html?username=${encodeURIComponent(usernameInput)}&score=${score}`;
+    }
+});
 
       playAgainBtn.addEventListener("click", function() {
         endPage.style.display = "none";
