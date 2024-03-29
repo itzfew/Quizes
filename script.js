@@ -19,12 +19,10 @@ document.addEventListener("DOMContentLoaded", function() {
   const nextBtn = document.getElementById("nextBtn");
   const submitUsernameBtn = document.getElementById("submitUsernameBtn");
   const playAgainBtn = document.getElementById("playAgainBtn");
-  const shareBtn = document.getElementById("shareBtn"); // Added share button
 
   nextBtn.addEventListener("click", nextQuestion);
   submitUsernameBtn.addEventListener("click", submitUsername);
   playAgainBtn.addEventListener("click", resetGame);
-  shareBtn.addEventListener("click", shareQuiz); // Added event listener for share button
 
   displayQuestion();
 });
@@ -98,17 +96,5 @@ function resetGame() {
   displayQuestion();
 }
 
-// Function to share the quiz
-function shareQuiz() {
-  if (navigator.share) {
-    navigator.share({
-      title: "Play NEET Quiz",
-      text: "Check out this NEET Quiz and test your knowledge!",
-      url: "https://your-website-url.com" // Replace with your website URL
-    })
-    .then(() => console.log("Shared successfully"))
-    .catch(error => console.error("Error sharing:", error));
-  } else {
-    alert("Web Share API not supported in this browser.");
-  }
-}
+
+
