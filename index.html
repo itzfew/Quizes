@@ -7,16 +7,18 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="usernameDiv">
+  <div id="usernameDiv" class="center">
     <label for="usernameInput">Enter your username:</label>
-    <input type="text" id="usernameInput">
-    <button id="submitUsernameBtn">Submit</button>
+    <div class="input-wrapper">
+      <input type="text" id="usernameInput">
+      <button id="submitUsernameBtn">Submit</button>
+    </div>
   </div>
   
   <div id="quizContainer">
     <h1 id="question"></h1>
     <div id="options"></div>
-    <button id="nextBtn">Next</button>
+    <button id="nextBtn" class="next-btn">Next</button>
   </div>
 
   <div id="endPage" style="display: none;">
