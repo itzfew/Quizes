@@ -13,6 +13,19 @@ const questions = [
 ];
 
 let currentQuestionIndex = 0;
+let username = "";
+
+document.addEventListener("DOMContentLoaded", function() {
+  const nextBtn = document.getElementById("nextBtn");
+  const submitUsernameBtn = document.getElementById("submitUsernameBtn");
+  const playAgainBtn = document.getElementById("playAgainBtn");
+
+  nextBtn.addEventListener("click", nextQuestion);
+  submitUsernameBtn.addEventListener("click", submitUsername);
+  playAgainBtn.addEventListener("click", resetGame);
+
+  displayQuestion();
+});
 
 function displayQuestion() {
   const questionElement = document.getElementById("question");
@@ -25,7 +38,7 @@ function displayQuestion() {
   currentQuestion.options.forEach(option => {
     const button = document.createElement("button");
     button.innerText = option;
-    button.onclick = () => checkAnswer(option);
+    button.addEventListener("click", () => checkAnswer(option));
     optionsElement.appendChild(button);
   });
 }
@@ -42,6 +55,10 @@ function checkAnswer(selectedOption) {
       option.classList.add("wrong");
     }
   });
+
+  if (currentQuestionIndex === questions.length - 1) {
+    showEndPage();
+  }
 }
 
 function nextQuestion() {
@@ -54,11 +71,27 @@ function nextQuestion() {
   currentQuestionIndex++;
   if (currentQuestionIndex < questions.length) {
     displayQuestion();
-  } else {
-    alert("Quiz finished!");
-    currentQuestionIndex = 0; // Restart the quiz
-    displayQuestion();
   }
 }
 
-displayQuestion();
+function submitUsername() {
+  const usernameInput = document.getElementById("usernameInput");
+  username = usernameInput.value.trim();
+  if (username !== "") {
+    document.getElementById("usernameDiv").style.display = "none";
+    document.getElementById("endPage").style.display = "block";
+  }
+}
+
+function showEndPage() {
+  document.getElementById("nextBtn").style.display = "none";
+  document.getElementById("usernameDiv").style.display = "block";
+}
+
+function resetGame() {
+  currentQuestionIndex = 0;
+  document.getElementById("nextBtn").style.display = "block";
+  document.getElementById("usernameDiv").style.display = "none";
+  document.getElementById("endPage").style.display = "none";
+  displayQuestion();
+}
