@@ -3,8 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz Game</title>
+  <title>Quizes</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .center {
+      text-align: center;
+    }
+    
+    .input-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 8px 16px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <div id="quizContainer">
@@ -18,15 +45,13 @@
     <button id="playAgainBtn">Play Again</button>
   </div>
 
-  <div id="usernameDiv" class="center">
+  <div id="usernameDiv" class="center" style="display: none;">
     <label for="usernameInput">Enter your username:</label>
     <div class="input-wrapper">
       <input type="text" id="usernameInput">
       <button id="submitUsernameBtn">Submit</button>
     </div>
   </div>
-
-  <button id="shareBtn">Share</button> <!-- Added share button -->
 
   <script src="script.js"></script>
 </body>
