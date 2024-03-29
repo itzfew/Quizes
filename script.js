@@ -14,6 +14,9 @@ const questions = [
 
 let currentQuestionIndex = 0;
 let username = "";
+let correctAnswers = 0;
+let incorrectAnswers = 0;
+let missedAnswers = 0;
 
 document.addEventListener("DOMContentLoaded", function() {
   const nextBtn = document.getElementById("nextBtn");
@@ -45,8 +48,16 @@ function displayQuestion() {
 
 function checkAnswer(selectedOption) {
   const currentQuestion = questions[currentQuestionIndex];
-  const options = document.querySelectorAll("#options button");
 
+  if (selectedOption === currentQuestion.correctAnswer) {
+    correctAnswers += 4;
+  } else if (selectedOption === "") {
+    missedAnswers++;
+  } else {
+    incorrectAnswers--;
+  }
+
+  const options = document.querySelectorAll("#options button");
   options.forEach(option => {
     option.disabled = true;
     if (option.innerText === currentQuestion.correctAnswer) {
@@ -80,6 +91,7 @@ function submitUsername() {
   if (username !== "") {
     document.getElementById("usernameDiv").style.display = "none";
     document.getElementById("endPage").style.display = "block";
+    displayResults();
   }
 }
 
@@ -88,13 +100,19 @@ function showEndPage() {
   document.getElementById("usernameDiv").style.display = "block";
 }
 
+function displayResults() {
+  const totalScore = correctAnswers + incorrectAnswers;
+  document.getElementById("totalScore").textContent = totalScore;
+  document.getElementById("username").textContent = username;
+}
+
 function resetGame() {
   currentQuestionIndex = 0;
+  correctAnswers = 0;
+  incorrectAnswers = 0;
+  missedAnswers = 0;
   document.getElementById("nextBtn").style.display = "block";
   document.getElementById("usernameDiv").style.display = "none";
   document.getElementById("endPage").style.display = "none";
   displayQuestion();
 }
-
-
-
