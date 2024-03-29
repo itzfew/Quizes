@@ -41,19 +41,19 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-    const scoresContainer = document.getElementById('scoresContainer');
-    const urlParams = new URLSearchParams(window.location.search);
+      const scoresContainer = document.getElementById('scoresContainer');
+      const urlParams = new URLSearchParams(window.location.search);
 
-    // Retrieve and display username and score
-    const username = urlParams.get('username');
-    const score = urlParams.get('score');
-    if (username && score) {
-        const scoreEntry = document.createElement('div');
-        scoreEntry.classList.add('scoreEntry');
-        scoreEntry.textContent = `Username: ${username}, Score: ${score}`;
-        scoresContainer.appendChild(scoreEntry);
-    }
-});
+      // Loop through all query parameters and create score entries
+      urlParams.forEach((value, key) => {
+        if (key !== "username") { // Skip the username parameter
+          const scoreEntry = document.createElement('div');
+          scoreEntry.classList.add('scoreEntry');
+          scoreEntry.textContent = `Username: ${key}, Score: ${value}`;
+          scoresContainer.appendChild(scoreEntry);
+        }
+      });
+    });
   </script>
 </body>
 </html>
