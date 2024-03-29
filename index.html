@@ -30,41 +30,37 @@
 
 <script>
   // Define variables to track scores and username
-  let correctAnswers = 0;
-  let incorrectAnswers = 0;
-  let missedAnswers = 0;
-  let username = "";
+let correctAnswers = 0;
+let incorrectAnswers = 0;
+let username = "";
 
-  // Function to calculate total score
-  function calculateTotalScore() {
-    const totalScore = (correctAnswers * 4) - (incorrectAnswers);
-    return totalScore >= 0 ? totalScore : 0;
-  }
+// Function to calculate total score
+function calculateTotalScore() {
+  return (correctAnswers * 4) - incorrectAnswers;
+}
 
-  // Function to display the results
-  function displayResults() {
-    const totalScore = calculateTotalScore();
-    document.getElementById("totalScore").textContent = totalScore;
-    document.getElementById("username").textContent = username;
-    document.getElementById("endPage").style.display = "block";
-  }
+// Function to display the results
+function displayResults() {
+  const totalScore = calculateTotalScore();
+  document.getElementById("totalScore").textContent = totalScore;
+  document.getElementById("username").textContent = username;
+  document.getElementById("endPage").style.display = "block";
+}
 
-  // Event listener for submit username button
-  document.getElementById("submitUsernameBtn").addEventListener("click", function() {
-    username = document.getElementById("usernameInput").value;
-    document.getElementById("usernameDiv").style.display = "none";
-    displayResults();
-  });
+// Event listener for submit username button
+document.getElementById("submitUsernameBtn").addEventListener("click", function() {
+  username = document.getElementById("usernameInput").value;
+  document.getElementById("usernameDiv").style.display = "none";
+  displayResults();
+});
 
-  // Event listener for play again button
-  document.getElementById("playAgainBtn").addEventListener("click", function() {
-    // Reset variables and hide end page
-    correctAnswers = 0;
-    incorrectAnswers = 0;
-    missedAnswers = 0;
-    document.getElementById("endPage").style.display = "none";
-    // You can add code here to reset the quiz and start over
-  });
+// Event listener for play again button
+document.getElementById("playAgainBtn").addEventListener("click", function() {
+  // Reset variables and hide end page
+  correctAnswers = 0;
+  incorrectAnswers = 0;
+  document.getElementById("endPage").style.display = "none";
+});
 </script>
 </body>
 </html>
