@@ -16,17 +16,43 @@
   <div id="endPage" style="display: none;">
     <p>Congratulations, <span id="username"></span>! You have completed the quiz.</p>
     <button id="playAgainBtn">Play Again</button>
+    <a id="highScoreLink" href="highscores.html" style="display: none;">View High Scores</a>
   </div>
 
-  <div id="usernameDiv" class="center" style="display: none;">
+  <div id="usernameDiv" class="center">
     <label for="usernameInput">Enter your username:</label>
     <div class="input-wrapper">
       <input type="text" id="usernameInput">
       <button id="submitUsernameBtn">Submit</button>
-<a id="highScoreLink" href="highscores.html">View High Scores</a>
     </div>
   </div>
 
   <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const submitUsernameBtn = document.getElementById("submitUsernameBtn");
+      const highScoreLink = document.getElementById("highScoreLink");
+      const endPage = document.getElementById("endPage");
+      const usernameSpan = document.getElementById("username");
+      const playAgainBtn = document.getElementById("playAgainBtn");
+
+      submitUsernameBtn.addEventListener("click", function() {
+        const usernameInput = document.getElementById("usernameInput").value.trim();
+        if (usernameInput !== "") {
+          usernameSpan.textContent = usernameInput;
+          endPage.style.display = "block";
+          highScoreLink.style.display = "inline"; // Show high score link
+          // Submit username to highscores.html
+          window.location.href = `highscores.html?username=${usernameInput}`;
+        }
+      });
+
+      playAgainBtn.addEventListener("click", function() {
+        endPage.style.display = "none";
+        document.getElementById("quizContainer").style.display = "block";
+        // Reset quiz here if needed
+      });
+    });
+  </script>
 </body>
 </html>
