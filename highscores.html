@@ -1,23 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>High Scores</title>
-    <link rel="stylesheet" href="./app.css" />
-    <link rel="stylesheet" href="./highscores.css" />
-    <link rel="icon" href="icon_path" type="image/x-icon">
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High Scores</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    #scoresContainer {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      margin: 0;
+      padding: 5px 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    p:last-child {
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>High Scores</h1>
   
-  <body>
-    <div class="container">
-      <div id="highScores" class="flex-center flex-column">
-        <h1 id="finalScore">High Scores</h1>
-        <ul id="highScoresList"></ul>
-        <a class="btn" href="/">Go Home</a>
-      </div>
-    </div>
-    <script src="./highscores.js"></script>
-  </body>
+  <div id="scoresContainer">
+    <!-- Scores will be dynamically added here -->
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const username = urlParams.get('username');
+      const score = urlParams.get('score');
+
+      const scoresContainer = document.getElementById('scoresContainer');
+      const scoreElement = document.createElement('p');
+      scoreElement.textContent = `Username: ${username}, Score: ${score}`;
+      scoresContainer.appendChild(scoreElement);
+    });
+  </script>
+</body>
 </html>
