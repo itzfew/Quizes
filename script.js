@@ -4,7 +4,7 @@ const questions = [
     options: ["3", "4", "5", "6"],
     correctAnswer: "4"
   },
-  { 
+  {
     question: "What is the capital of France?",
     options: ["London", "Paris", "Berlin", "Rome"],
     correctAnswer: "Paris"
@@ -26,8 +26,8 @@ document.addEventListener("DOMContentLoaded", function() {
   playAgainBtn.addEventListener("click", resetGame);
   shareBtn.addEventListener("click", shareQuiz); // Added event listener for share button
 
+  startTimer(); // Start the timer before displaying the first question
   displayQuestion();
-  startTimer(); // Moved startTimer() here to start the timer before displaying the first question
 });
 
 function displayQuestion() {
@@ -100,19 +100,19 @@ function resetGame() {
 }
 
 let timerElement = document.getElementById('timer');
-let timerInterval;
 let timeLeft = 45;
 
 // Function to start the timer
 function startTimer() {
-  timerInterval = setInterval(updateTimer, 1000);
+  updateTimer(); // Initial call to update timer immediately
+  setInterval(updateTimer, 1000); // Update timer every second
 }
 
 // Function to update the timer
 function updateTimer() {
   timeLeft--;
   timerElement.textContent = timeLeft;
-  if (timeLeft<= 10) {
+  if (timeLeft <= 10) {
     timerElement.style.backgroundColor = 'red'; // Change background color to red
   }
   if (timeLeft === 0) {
@@ -120,14 +120,6 @@ function updateTimer() {
     // Call function to handle time up (e.g., move to next question)
     nextQuestion();
   }
-}
-
-// Function to reset the timer
-function resetTimer() {
-  clearInterval(timerInterval);
-  timeLeft = 45;
-  timerElement.textContent = timeLeft;
-  timerElement.style.backgroundColor = 'white'; // Reset background color
 }
 
 // Function to share the quiz
