@@ -44,15 +44,27 @@
       const scoresContainer = document.getElementById('scoresContainer');
       const urlParams = new URLSearchParams(window.location.search);
 
-      // Loop through all query parameters and create score entries
+      // Retrieve and display username and score
+      const username = urlParams.get('username');
+      let score = 0;
+
+      // Loop through all query parameters to calculate the score
       urlParams.forEach((value, key) => {
         if (key !== "username") { // Skip the username parameter
-          const scoreEntry = document.createElement('div');
-          scoreEntry.classList.add('scoreEntry');
-          scoreEntry.textContent = `Username: ${key}, Score: ${value}`;
-          scoresContainer.appendChild(scoreEntry);
+          if (value === "correct") {
+            score += 4; // Add 4 marks for each correct answer
+          } else if (value === "incorrect") {
+            score -= 1; // Deduct 1 mark for each incorrect answer
+          }
+          // For missed questions, no score is added or deducted
         }
       });
+
+      // Create score entry
+      const scoreEntry = document.createElement('div');
+      scoreEntry.classList.add('scoreEntry');
+      scoreEntry.textContent = `Username: ${username}, Score: ${score}`;
+      scoresContainer.appendChild(scoreEntry);
     });
   </script>
 </body>
