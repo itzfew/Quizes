@@ -101,11 +101,12 @@ function resetGame() {
 
 let timerElement = document.getElementById('timer');
 let timeLeft = 45;
+let timerInterval; // Define timerInterval globally
 
 // Function to start the timer
 function startTimer() {
   updateTimer(); // Initial call to update timer immediately
-  setInterval(updateTimer, 1000); // Update timer every second
+  timerInterval = setInterval(updateTimer, 1000); // Update timer every second
 }
 
 // Function to update the timer
