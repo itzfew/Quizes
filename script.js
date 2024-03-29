@@ -19,12 +19,15 @@ document.addEventListener("DOMContentLoaded", function() {
   const nextBtn = document.getElementById("nextBtn");
   const submitUsernameBtn = document.getElementById("submitUsernameBtn");
   const playAgainBtn = document.getElementById("playAgainBtn");
+  const shareBtn = document.getElementById("shareBtn"); // Added share button
 
   nextBtn.addEventListener("click", nextQuestion);
   submitUsernameBtn.addEventListener("click", submitUsername);
   playAgainBtn.addEventListener("click", resetGame);
+  shareBtn.addEventListener("click", shareQuiz); // Added event listener for share button
 
   displayQuestion();
+  startTimer(); // Moved startTimer() here to start the timer before displaying the first question
 });
 
 function displayQuestion() {
@@ -41,8 +44,6 @@ function displayQuestion() {
     button.addEventListener("click", () => checkAnswer(option));
     optionsElement.appendChild(button);
   });
-
-  startTimer(); // Start the timer when displaying a new question
 }
 
 function checkAnswer(selectedOption) {
@@ -111,7 +112,7 @@ function startTimer() {
 function updateTimer() {
   timeLeft--;
   timerElement.textContent = timeLeft;
-  if (timeLeft <= 10) {
+  if (timeLeft<= 10) {
     timerElement.style.backgroundColor = 'red'; // Change background color to red
   }
   if (timeLeft === 0) {
@@ -129,24 +130,17 @@ function resetTimer() {
   timerElement.style.backgroundColor = 'white'; // Reset background color
 }
 
-
-
-
-  const shareBtn = document.getElementById("shareBtn");
-  shareBtn.addEventListener("click", shareQuiz);
-
-  // Function to share the quiz
-  function shareQuiz() {
-    if (navigator.share) {
-      navigator.share({
-        title: "Play NEET Quiz",
-        text: "Check out this NEET Quiz and test your knowledge!",
-        url: "https://your-website-url.com" // Replace with your website URL
-      })
-      .then(() => console.log("Shared successfully"))
-      .catch(error => console.error("Error sharing:", error));
-    } else {
-      alert("Web Share API not supported in this browser.");
-    }
+// Function to share the quiz
+function shareQuiz() {
+  if (navigator.share) {
+    navigator.share({
+      title: "Play NEET Quiz",
+      text: "Check out this NEET Quiz and test your knowledge!",
+      url: "https://your-website-url.com" // Replace with your website URL
+    })
+    .then(() => console.log("Shared successfully"))
+    .catch(error => console.error("Error sharing:", error));
+  } else {
+    alert("Web Share API not supported in this browser.");
   }
-});
+}
