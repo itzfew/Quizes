@@ -25,14 +25,10 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    p {
-      margin: 0;
-      padding: 5px 0;
+    .scoreEntry {
+      margin-bottom: 10px;
+      padding: 10px;
       border-bottom: 1px solid #ccc;
-    }
-
-    p:last-child {
-      border: none;
     }
   </style>
 </head>
@@ -45,14 +41,18 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const username = urlParams.get('username');
-      const score = urlParams.get('score');
-
       const scoresContainer = document.getElementById('scoresContainer');
-      const scoreElement = document.createElement('p');
-      scoreElement.textContent = `Username: ${username}, Score: ${score}`;
-      scoresContainer.appendChild(scoreElement);
+      const urlParams = new URLSearchParams(window.location.search);
+
+      // Loop through all query parameters and create score entries
+      urlParams.forEach((value, key) => {
+        if (key !== "username") { // Skip the username parameter
+          const scoreEntry = document.createElement('div');
+          scoreEntry.classList.add('scoreEntry');
+          scoreEntry.textContent = `Username: ${key}, Score: ${value}`;
+          scoresContainer.appendChild(scoreEntry);
+        }
+      });
     });
   </script>
 </body>
