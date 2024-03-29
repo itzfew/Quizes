@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function() {
   playAgainBtn.addEventListener("click", resetGame);
   shareBtn.addEventListener("click", shareQuiz); // Added event listener for share button
 
-  startTimer(); // Start the timer before displaying the first question
   displayQuestion();
 });
 
@@ -97,30 +96,6 @@ function resetGame() {
   document.getElementById("usernameDiv").style.display = "none";
   document.getElementById("endPage").style.display = "none";
   displayQuestion();
-}
-
-let timerElement = document.getElementById('timer');
-let timeLeft = 45;
-let timerInterval; // Define timerInterval globally
-
-// Function to start the timer
-function startTimer() {
-  updateTimer(); // Initial call to update timer immediately
-  timerInterval = setInterval(updateTimer, 1000); // Update timer every second
-}
-
-// Function to update the timer
-function updateTimer() {
-  timeLeft--;
-  timerElement.textContent = timeLeft;
-  if (timeLeft <= 10) {
-    timerElement.style.backgroundColor = 'red'; // Change background color to red
-  }
-  if (timeLeft === 0) {
-    clearInterval(timerInterval);
-    // Call function to handle time up (e.g., move to next question)
-    nextQuestion();
-  }
 }
 
 // Function to share the quiz
