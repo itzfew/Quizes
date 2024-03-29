@@ -19,3 +19,41 @@ h1 {
 .wrong {
   background-color: red;
 }
+.center {
+  text-align: center;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+input[type="text"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.next-btn {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  transition: all 0.3s ease;
+}
+
+button.next-btn:hover {
+  background-color: #45a049;
+}
+
+/* Add more styling as needed */
