@@ -128,3 +128,25 @@ function resetTimer() {
   timerElement.textContent = timeLeft;
   timerElement.style.backgroundColor = 'white'; // Reset background color
 }
+
+
+
+
+  const shareBtn = document.getElementById("shareBtn");
+  shareBtn.addEventListener("click", shareQuiz);
+
+  // Function to share the quiz
+  function shareQuiz() {
+    if (navigator.share) {
+      navigator.share({
+        title: "Play NEET Quiz",
+        text: "Check out this NEET Quiz and test your knowledge!",
+        url: "https://your-website-url.com" // Replace with your website URL
+      })
+      .then(() => console.log("Shared successfully"))
+      .catch(error => console.error("Error sharing:", error));
+    } else {
+      alert("Web Share API not supported in this browser.");
+    }
+  }
+});
