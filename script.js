@@ -1,4 +1,6 @@
-const questions = [
+document.addEventListener("DOMContentLoaded", function() {
+  
+  const questions = [
   {
     question: "What is 2 + 2?",
     options: ["3", "4", "5", "6"],
@@ -95,3 +97,54 @@ function resetGame() {
   document.getElementById("endPage").style.display = "none";
   displayQuestion();
 }
+
+
+  // Your existing code
+  
+  let timerElement = document.getElementById('timer');
+  let timerInterval;
+  let timeLeft = 45;
+
+  // Function to start the timer
+  function startTimer() {
+    timerInterval = setInterval(updateTimer, 1000);
+  }
+
+  // Function to update the timer
+  function updateTimer() {
+    timeLeft--;
+    timerElement.textContent = timeLeft;
+    if (timeLeft <= 10) {
+      timerElement.style.backgroundColor = 'red'; // Change background color to red
+    }
+    if (timeLeft === 0) {
+      clearInterval(timerInterval);
+      // Call function to handle time up (e.g., move to next question)
+      nextQuestion();
+    }
+  }
+
+  // Function to reset the timer
+  function resetTimer() {
+    clearInterval(timerInterval);
+    timeLeft = 45;
+    timerElement.textContent = timeLeft;
+    timerElement.style.backgroundColor = 'white'; // Reset background color
+  }
+
+  // Call startTimer function when displaying a new question
+  displayQuestion();
+
+  // Event listeners for next and previous buttons
+  document.getElementById('nextBtn').addEventListener('click', function() {
+    clearInterval(timerInterval); // Clear previous timer
+    resetTimer(); // Reset timer
+    nextQuestion(); // Move to next question
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', function() {
+    clearInterval(timerInterval); // Clear previous timer
+    resetTimer(); // Reset timer
+    previousQuestion(); // Move to previous question
+  });
+});
