@@ -7,14 +7,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="usernameDiv" class="center">
-    <label for="usernameInput">Enter your username:</label>
-    <div class="input-wrapper">
-      <input type="text" id="usernameInput">
-      <button id="submitUsernameBtn">Submit</button>
-    </div>
-  </div>
-  
   <div id="quizContainer">
     <h1 id="question"></h1>
     <div id="options"></div>
@@ -24,6 +16,14 @@
   <div id="endPage" style="display: none;">
     <p>Congratulations, <span id="username"></span>! You have completed the quiz.</p>
     <button id="playAgainBtn">Play Again</button>
+  </div>
+
+  <div id="usernameDiv" class="center" style="display: none;">
+    <label for="usernameInput">Enter your username:</label>
+    <div class="input-wrapper">
+      <input type="text" id="usernameInput">
+      <button id="submitUsernameBtn">Submit</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
