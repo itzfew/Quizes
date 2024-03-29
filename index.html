@@ -5,24 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quiz Game</title>
   <link rel="stylesheet" href="styles.css">
-</head> 
+</head>
 <body>
   <div class="container">
     <h1>Quiz Game</h1>
     <div id="question"></div>
     <div id="options"></div>
-    <button id="nextBtn">Next</button>
-    <div id="usernameDiv" style="display: none;">
-      <input type="text" id="usernameInput" placeholder="Enter your username">
-      <button id="submitUsernameBtn">Submit</button>
-    </div>
-    <div id="endPage" style="display: none;">
-      <button id="playAgainBtn">Play Again</button>
-      <button id="highScoresBtn">High Scores</button>
-      <button id="shareBtn">Share</button>
-    </div>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
   </div>
- 
   
   <script src="script.js"></script>
 </body>
