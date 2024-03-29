@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eid Mubarak Wishes</title>
+  <style>
+    .container {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    button {
+      margin-top: 10px;
+    }
+
+    #nameInput {
+      margin-top: 10px;
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Eid Mubarak!</h1>
+    <div id="wisherName">Enter your name:</div>
+    <input type="text" id="nameInput">
+    <button onclick="submitWish()">Share Wish</button>
+    <div id="wishOutput"></div>
+  </div>
+
+  <script>
+    function submitWish() {
+      var wisherName = document.getElementById("nameInput").value;
+      var wishText = "Eid Mubarak!";
+      var websiteLink = "https://example.com?name=" + encodeURIComponent(wisherName);
+      var wishOutput = wisherName + " wishes: " + wishText + "<br>Share your wish: <a href='" + websiteLink + "'>" + websiteLink + "</a>";
+      document.getElementById("wishOutput").innerHTML = wishOutput;
+    }
+  </script>
+</body>
+</html>
