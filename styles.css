@@ -19,7 +19,6 @@ h1 {
 .wrong {
   background-color: red;
 }
-
 .center {
   text-align: center;
 }
@@ -57,9 +56,6 @@ button.next-btn:hover {
   background-color: #45a049;
 }
 
-/* Add more styling as needed */
-
-/* Add styling for navigation buttons */
 .nav-btn {
   margin: 10px;
 }
