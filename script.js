@@ -57,7 +57,7 @@ function checkAnswer(answer, button) {
     button.style.backgroundColor = "#ff0000"; // Red color
     
     // Highlight the correct option
-    const correctButton = optionsElement.querySelector(`button:nth-child(${current.options.indexOf(current.correctAnswer) + 1})`);
+    const correctButton = document.querySelector(`#options button:nth-child(${current.options.indexOf(current.correctAnswer) + 1})`);
     correctButton.style.backgroundColor = "#00ff00"; // Green color
     
     score -= 1; // Deduct 1 mark for incorrect answer
