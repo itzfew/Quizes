@@ -1,120 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Font Changer</title>
-<style>
-  body {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game</title>
+    <link rel="stylesheet" href="styles.css">
+  <style>body {
     font-family: Arial, sans-serif;
-  }
-  #textArea {
-    width: 80%;
-    height: 100px;
-    margin: 20px auto;
-    padding: 10px;
-    font-size: 16px;
-  }
-  .font-option {
-    margin-bottom: 10px;
-  }
-  .font-option button {
-    margin-left: 10px;
-  }
-</style>
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 400px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-grid {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 10px;
+}
+
+.start-btn, .next-btn {
+    padding: 10px 20px;
+    border: none;
+    background-color: #4caf50;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.start-btn:hover, .next-btn:hover {
+    background-color: #45a049;
+}</style>
 </head>
 <body>
-<textarea id="textArea" placeholder="Type your text here..."></textarea>
-<div id="fonts"></div>
+    <div class="container">
+        <div id="question-container">
+            <h2 id="question"></h2>
+            <ul id="answer-buttons" class="btn-grid">
+                <!-- Answer buttons generated dynamically -->
+            </ul>
+        </div>
+        <div id="controls">
+            <button id="start-btn" class="start-btn">Start</button>
+            <button id="next-btn" class="next-btn">Next</button>
+        </div>
+        <div id="result"></div>
+    </div>
+    <script src="quiz.js"></script>
+  <script>const startButton = document.getElementById('start-btn');
+const nextButton = document.getElementById('next-btn');
+const questionContainer = document.getElementById('question-container');
+const questionElement = document.getElementById('question');
+const answerButtonsElement = document.getElementById('answer-buttons');
+const resultElement = document.getElementById('result');
 
-<script>
-  const textArea = document.getElementById('textArea');
-  const fontsDiv = document.getElementById('fonts');
+let shuffledQuestions, currentQuestionIndex;
 
-  const style = {
-    "name": "Style 1",
-    "styles": {
-      "fontFamily": "SFProDisplay-Semibold",
-      "fontSize": "28px",
-      "lineHeight": "34px",
-      "fontWeight": 8,
-      "paragraphSpacing": 25,
-      "letterSpacing": "0.02em",
-      "textTransform": "none"
-    },
-    "alignments": [
-      "left",
-      "right",
-      "center"
-    ],
-    "adjustments": [
-      {
-        "name": "BP3",
-        "styles": {
-          "fontSize": "42px",
-          "lineHeight": "48px",
-          "paragraphSpacing": 100,
-          "letterSpacing": "0.03em"
+startButton.addEventListener('click', startGame);
+nextButton.addEventListener('click', () => {
+    currentQuestionIndex++;
+    setNextQuestion();
+});
+
+function startGame() {
+    startButton.classList.add('hide');
+    shuffledQuestions = questions.sort(() => Math.random() - 0.5);
+    currentQuestionIndex = 0;
+    questionContainer.classList.remove('hide');
+    setNextQuestion();
+}
+
+function setNextQuestion() {
+    resetState();
+    showQuestion(shuffledQuestions[currentQuestionIndex]);
+}
+
+function showQuestion(question) {
+    questionElement.innerText = question.question;
+    question.answers.forEach(answer => {
+        const button = document.createElement('button');
+        button.innerText = answer.text;
+        button.classList.add('btn');
+        if (answer.correct) {
+            button.dataset.correct = answer.correct;
         }
-      }
-    ]
-  };
-
-  const fonts = [
-    'Arial', 
-    'Times New Roman', 
-    'Courier New', 
-    'Verdana', 
-    'Georgia', 
-    'Tahoma',
-    style.styles.fontFamily
-  ];
-
-  function copyText(text, styling) {
-    const span = document.createElement('span');
-    span.textContent = text;
-    span.style.cssText = styling;
-    document.body.appendChild(span);
-    if (document.selection) {
-      const range = document.body.createTextRange();
-      range.moveToElementText(span);
-      range.select().createTextRange();
-      document.execCommand("copy");
-    } else if (window.getSelection) {
-      const range = document.createRange();
-      range.selectNode(span);
-      window.getSelection().removeAllRanges();
-      window.getSelection().addRange(range);
-      document.execCommand("copy");
-    }
-    document.body.removeChild(span);
-  }
-
-  function updateFonts() {
-    const text = textArea.value;
-    fontsDiv.innerHTML = '';
-    fonts.forEach(font => {
-      const span = document.createElement('span');
-      span.textContent = text;
-      span.style.fontFamily = font;
-      span.className = 'font-option';
-
-      const copyButton = document.createElement('button');
-      copyButton.textContent = 'Copy Text';
-      copyButton.addEventListener('click', () => copyText(text, `font-family: ${font};`));
-
-      const fontDiv = document.createElement('div');
-      fontDiv.appendChild(span);
-      fontDiv.appendChild(copyButton);
-
-      fontsDiv.appendChild(fontDiv);
+        button.addEventListener('click', selectAnswer);
+        answerButtonsElement.appendChild(button);
     });
-  }
+}
 
-  textArea.addEventListener('input', updateFonts);
+function resetState() {
+    nextButton.classList.add('hide');
+    while (answerButtonsElement.firstChild) {
+        answerButtonsElement.removeChild(answerButtonsElement.firstChild);
+    }
+    resultElement.innerText = '';
+}
 
-  // Initial update
-  updateFonts();
-</script>
+function selectAnswer(e) {
+    const selectedButton = e.target;
+    const correct = selectedButton.dataset.correct;
+    setResultText(correct);
+    Array.from(answerButtonsElement.children).forEach(button => {
+        setStatusClass(button, button.dataset.correct);
+    });
+    if (shuffledQuestions.length > currentQuestionIndex + 1) {
+        nextButton.classList.remove('hide');
+    } else {
+        startButton.innerText = 'Restart';
+        startButton.classList.remove('hide');
+    }
+}
+
+function setResultText(correct) {
+    if (correct) {
+        resultElement.innerText = 'Correct!';
+    } else {
+        resultElement.innerText = 'Wrong!';
+    }
+}
+
+function setStatusClass(element, correct) {
+    clearStatusClass(element);
+    if (correct) {
+        element.classList.add('correct');
+    } else {
+        element.classList.add('wrong');
+    }
+}
+
+function clearStatusClass(element) {
+    element.classList.remove('correct');
+    element.classList.remove('wrong');
+}
+
+const questions = [
+    {
+        question: 'What is 2 + 2?',
+        answers: [
+            { text: '4', correct: true },
+            { text: '22', correct: false }
+        ]
+    },
+    {
+        question: 'Which is the largest planet in the solar system?',
+        answers: [
+            { text: 'Earth', correct: false },
+            { text: 'Jupiter', correct: true }
+        ]
+    },
+    {
+        question: 'Who wrote "To Kill a Mockingbird"?',
+        answers: [
+            { text: 'Harper Lee', correct: true },
+            { text: 'Stephen King', correct: false }
+        ]
+    }
+];</script>
 </body>
 </html>
