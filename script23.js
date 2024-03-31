@@ -114,7 +114,7 @@ function prevQuestion() {
 
 function showResult() {
   const resultElement = document.getElementById("result");
-  resultElement.innerHTML = `Congratulations! Your score is ${score}/${questions.length * 4}
+  resultElement.innerHTML = `Congratulations! Your score is ${score}/${questions.length * 4}`;
 }
 
 displayQuestion();
