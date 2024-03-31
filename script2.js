@@ -25,6 +25,7 @@ function displayQuestion() {
   optionsElements.forEach((optionElement, index) => {
     optionElement.textContent = currentQuestion.options[index];
     optionElement.classList.remove("correct", "incorrect");
+    optionElement.setAttribute("onclick", `checkAnswer(${index})`);
   });
 }
 
@@ -43,13 +44,13 @@ function checkAnswer(selectedIndex) {
 
 function disableOptions() {
   optionsElements.forEach(optionElement => {
-    optionElement.style.pointerEvents = "none";
+    optionElement.removeAttribute("onclick");
   });
 }
 
 function enableOptions() {
   optionsElements.forEach(optionElement => {
-    optionElement.style.pointerEvents = "auto";
+    optionElement.setAttribute("onclick", "checkAnswer()");
   });
 }
 
@@ -95,4 +96,5 @@ function resetQuiz() {
   document.getElementById("buttons-container").style.display = "block";
   displayQuestion();
 }
+
 displayQuestion();
