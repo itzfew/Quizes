@@ -17,11 +17,6 @@
   }
   .font-option {
     margin-bottom: 10px;
-    font-family: Arial, Times New Roman, Courier New, Verdana, Georgia, Tahoma, 
-                 𝗪, 𝗐, 𝖶, ԝ, 𝘄, ᴡ, Ꮃ, Ⱳ, ᵂ, 𝙒, 𝘸, 𝘞, ꟽ, 𝚆, 𝙬, Ꮤ, 
-                 𝐖, ⱳ, 𝑾, 𝑊, 𝐰, 𝕨, 𝕎, Ш, Ẁ, Ẃ, 𝑤, Ẅ, 🝃, ᗯ, ш, ω, 
-                 Ẇ, ᙎ, Ɯ, ⍵, 𝓦, Щ, Ŵ, ᙡ, ₩, ѡ, ⨈, 𝞈, 𝛚, ພ, 𝜔, Ⲱ, ധ, 
-                 𝝎, ⲱ, Ẉ, ᥕ, ⟒, 🆆, 🇼, ሠ, ሡ, ய, ｗ, พ, ຟ, ώ, ฟ, ⒲, ഡ, ຜ;
   }
   .font-option button {
     margin-left: 10px;
@@ -36,6 +31,35 @@
   const textArea = document.getElementById('textArea');
   const fontsDiv = document.getElementById('fonts');
 
+  const style = {
+    "name": "Style 1",
+    "styles": {
+      "fontFamily": "SFProDisplay-Semibold",
+      "fontSize": "28px",
+      "lineHeight": "34px",
+      "fontWeight": 8,
+      "paragraphSpacing": 25,
+      "letterSpacing": "0.02em",
+      "textTransform": "none"
+    },
+    "alignments": [
+      "left",
+      "right",
+      "center"
+    ],
+    "adjustments": [
+      {
+        "name": "BP3",
+        "styles": {
+          "fontSize": "42px",
+          "lineHeight": "48px",
+          "paragraphSpacing": 100,
+          "letterSpacing": "0.03em"
+        }
+      }
+    ]
+  };
+
   const fonts = [
     'Arial', 
     'Times New Roman', 
@@ -43,73 +67,7 @@
     'Verdana', 
     'Georgia', 
     'Tahoma',
-    '𝗪',
-    '𝗐',
-    '𝖶',
-    'ԝ',
-    '𝘄',
-    'ᴡ',
-    'Ꮃ',
-    'Ⱳ',
-    'ᵂ',
-    '𝙒',
-    '𝘸',
-    '𝘞',
-    'ꟽ',
-    '𝚆',
-    '𝙬',
-    'Ꮤ',
-    '𝐖',
-    'ⱳ',
-    '𝑾',
-    '𝑊',
-    '𝐰',
-    '𝕨',
-    '𝕎',
-    'Ш',
-    'Ẁ',
-    'Ẃ',
-    '𝑤',
-    'Ẅ',
-    '🝃',
-    'ᗯ',
-    'ш',
-    'ω',
-    'Ẇ',
-    'ᙎ',
-    'Ɯ',
-    '⍵',
-    '𝓦',
-    'Щ',
-    'Ŵ',
-    'ᙡ',
-    '₩',
-    'ѡ',
-    '⨈',
-    '𝞈',
-    '𝛚',
-    'ພ',
-    '𝜔',
-    'Ⲱ',
-    'ധ',
-    '𝝎',
-    'ⲱ',
-    'Ẉ',
-    'ᥕ',
-    '⟒',
-    '🆆',
-    '🇼',
-    'ሠ',
-    'ሡ',
-    'ய',
-    'ｗ',
-    'พ',
-    'ຟ',
-    'ώ',
-    'ฟ',
-    '⒲',
-    'ഡ',
-    'ຜ'
+    style.styles.fontFamily
   ];
 
   function copyText(text, styling) {
