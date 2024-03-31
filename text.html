@@ -15,9 +15,6 @@
     padding: 10px;
     font-size: 16px;
   }
-  #fonts {
-    margin-top: 20px;
-  }
   .font-option {
     margin-bottom: 10px;
   }
@@ -36,12 +33,24 @@
 
   const fonts = ['Arial', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Tahoma'];
 
-  function copyText(text) {
-    navigator.clipboard.writeText(text).then(function() {
-      console.log('Text copied to clipboard');
-    }, function(err) {
-      console.error('Error copying text: ', err);
-    });
+  function copyText(text, styling) {
+    const span = document.createElement('span');
+    span.textContent = text;
+    span.style.cssText = styling;
+    document.body.appendChild(span);
+    if (document.selection) {
+      const range = document.body.createTextRange();
+      range.moveToElementText(span);
+      range.select().createTextRange();
+      document.execCommand("copy");
+    } else if (window.getSelection) {
+      const range = document.createRange();
+      range.selectNode(span);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand("copy");
+    }
+    document.body.removeChild(span);
   }
 
   function updateFonts() {
@@ -52,14 +61,16 @@
       span.textContent = text;
       span.style.fontFamily = font;
       span.className = 'font-option';
-      
+
       const copyButton = document.createElement('button');
       copyButton.textContent = 'Copy Text';
-      copyButton.addEventListener('click', () => copyText(text));
-      
-      span.appendChild(copyButton);
-      
-      fontsDiv.appendChild(span);
+      copyButton.addEventListener('click', () => copyText(text, `font-family: ${font};`));
+
+      const fontDiv = document.createElement('div');
+      fontDiv.appendChild(span);
+      fontDiv.appendChild(copyButton);
+
+      fontsDiv.appendChild(fontDiv);
     });
   }
 
