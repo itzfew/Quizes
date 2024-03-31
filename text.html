@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Font Changer</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  #textArea {
+    width: 80%;
+    height: 100px;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 16px;
+  }
+  #fonts {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .font-option {
+    margin: 5px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<textarea id="textArea" placeholder="Type your text here..."></textarea>
+<div id="fonts"></div>
+
+<script>
+  const textArea = document.getElementById('textArea');
+  const fontsDiv = document.getElementById('fonts');
+
+  const fonts = ['Arial', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Tahoma'];
+
+  function updateFonts() {
+    const text = textArea.value;
+    fontsDiv.innerHTML = '';
+    fonts.forEach(font => {
+      const span = document.createElement('span');
+      span.textContent = text;
+      span.style.fontFamily = font;
+      span.className = 'font-option';
+      fontsDiv.appendChild(span);
+    });
+  }
+
+  textArea.addEventListener('input', updateFonts);
+
+  // Initial update
+  updateFonts();
+</script>
+</body>
+</html>
