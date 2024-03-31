@@ -1,4 +1,4 @@
- body {
+body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
@@ -9,6 +9,7 @@
 
 .quiz-container {
     text-align: center;
+    margin-bottom: 50px; /* Add some margin to separate from buttons */
 }
 
 .question, .option {
@@ -17,6 +18,7 @@
     padding: 10px;
     margin-bottom: 10px;
     display: inline-block;
+    cursor: pointer; /* Add cursor pointer to options */
 }
 
 .option:hover {
@@ -40,7 +42,7 @@
     border-radius: 8px;
     background-color: #fff;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease; /* Only transition background color */
 }
 
 .button:hover {
