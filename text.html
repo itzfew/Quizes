@@ -113,15 +113,28 @@
             <!-- Add more sections as needed -->
         </div>
     </div>
-    <script>function toggleMenu() {
+    <script>let menuVisible = false;
+
+function toggleMenu() {
     var menuItems = document.querySelector('.menu-items');
-    menuItems.style.display = menuItems.style.display === 'block' ? 'none' : 'block';
+    menuVisible = !menuVisible;
+    if (menuVisible) {
+        menuItems.style.display = 'block';
+    } else {
+        menuItems.style.display = 'none';
+    }
 }
 
 function toggleSubMenu(event) {
     event.preventDefault();
     var submenuItems = event.target.nextElementSibling;
     submenuItems.style.display = submenuItems.style.display === 'block' ? 'none' : 'block';
-}</script>
+}
+
+// Hide all submenu items initially
+document.querySelectorAll('.submenu-items').forEach(function(item) {
+    item.style.display = 'none';
+});
+        /script>
 </body>
 </html>
