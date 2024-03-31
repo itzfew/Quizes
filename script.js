@@ -9,7 +9,7 @@ const questions = [
     options: ["3", "4", "5", "6"],
     correctAnswerIndex: 1
   }
-];
+]; 
 
 let currentQuestionIndex = 0;
 let score = 0;
