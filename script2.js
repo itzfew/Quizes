@@ -50,7 +50,7 @@ function checkAnswer(answer, button) {
     feedbackElement.innerHTML = "Correct!";
     feedbackElement.style.color = "#00ff00"; // Green color
     button.style.backgroundColor = "#00ff00"; // Green color
-    score++; // Increment score for correct answer
+    score += 4; // Add 4 marks for correct answer
   } else {
     feedbackElement.innerHTML = "Incorrect!";
     feedbackElement.style.color = "#ff0000"; // Red color
@@ -59,6 +59,8 @@ function checkAnswer(answer, button) {
     // Highlight the correct option
     const correctButton = optionsElement.querySelector(`button:nth-child(${current.options.indexOf(current.correctAnswer) + 1})`);
     correctButton.style.backgroundColor = "#00ff00"; // Green color
+    
+    score -= 1; // Deduct 1 mark for incorrect answer
   }
 
   // Move to the next question or show the result
@@ -74,7 +76,7 @@ function checkAnswer(answer, button) {
 
 function showResult() {
   const resultElement = document.getElementById("result");
-  resultElement.innerHTML = `Congratulations! Your score is ${score}/${questions.length}.`;
+  resultElement.innerHTML = `Congratulations! Your score is ${score}/${questions.length * 4}.`;
 }
 
 displayQuestion();
