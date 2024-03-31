@@ -42,6 +42,15 @@
         .menu-items a {
             text-decoration: none;
             color: #fff;
+            display: block;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-items a:hover {
+            background-color: #555;
+            transform: translateY(-3px);
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
         }
 
         .submenu-items {
@@ -57,6 +66,15 @@
         .submenu-items a {
             text-decoration: none;
             color: #fff;
+            display: block;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .submenu-items a:hover {
+            background-color: #555;
+            transform: translateY(-3px);
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
         }
 
         .main-content {
@@ -68,6 +86,12 @@
             border: 1px solid #000;
             margin-bottom: 20px;
             padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
         }
 
         .logo {
@@ -83,11 +107,15 @@
             <div class="menu-btn" onclick="toggleMenu()">&#9776;</div>
             <ul class="menu-items">
                 <li><a href="#">Home</a></li>
-                <li><a href="#" onclick="toggleSubMenu(event)">Documents</a>
+                <li>
+                    <h2 onclick="toggleSubMenu(event)">
+                        <img src="file_manager_logo.png" alt="File Manager Logo" class="logo">
+                        Documents
+                    </h2>
                     <ul class="submenu-items">
-                        <li><a href="#">Example 1</a></li>
-                        <li><a href="#">Example 2</a></li>
-                        <li><a href="#">Example 3</a></li>
+                        <li><a href="#"><img src="file_manager_logo_small.png" alt="File Manager Logo" class="logo"> Example 1</a></li>
+                        <li><a href="#"><img src="file_manager_logo_small.png" alt="File Manager Logo" class="logo"> Example 2</a></li>
+                        <li><a href="#"><img src="file_manager_logo_small.png" alt="File Manager Logo" class="logo"> Example 3</a></li>
                         <!-- Add more submenu items as needed -->
                     </ul>
                 </li>
@@ -102,14 +130,8 @@
                 <!-- Content for Home section -->
             </section>
             <section class="section">
-                <h2 onclick="toggleSubMenu(event)"><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Documents</h2>
+                <h2><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Documents</h2>
                 <!-- Content for Documents section -->
-                <ul class="submenu-items">
-                    <li><a href="#">Example 1</a></li>
-                    <li><a href="#">Example 2</a></li>
-                    <li><a href="#">Example 3</a></li>
-                    <!-- Add more submenu items as needed -->
-                </ul>
             </section>
             <section class="section">
                 <h2><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Downloads</h2>
@@ -127,10 +149,16 @@
 
         function toggleMenu() {
             var menuItems = document.querySelector('.menu-items');
-            menuItems.style.display = menuItems.style.display === 'block' ? 'none' : 'block';
+            menuVisible = !menuVisible;
+            if (menuVisible) {
+                menuItems.style.display = 'block';
+            } else {
+                menuItems.style.display = 'none';
+            }
         }
 
         function toggleSubMenu(event) {
+            event.preventDefault();
             var submenuItems = event.target.nextElementSibling;
             submenuItems.style.display = submenuItems.style.display === 'block' ? 'none' : 'block';
         }
