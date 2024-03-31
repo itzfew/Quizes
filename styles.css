@@ -20,13 +20,14 @@ h1 {
 }
 
 #options button {
-  margin: 10px;
-  padding: 10px 20px;
+  margin: 10px; /* Add margin around the buttons */
+  padding: 15px 30px; /* Increase padding for larger button size */
   background-color: #333;
   border: none;
   color: white;
   cursor: pointer;
   border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add box shadow for 3D effect */
 }
 
 #options button:hover {
@@ -50,11 +51,3 @@ h1 {
 .selected {
   background-color: #777 !important; /* Example styling for selected option */
 }
-#moreButtons button {
-  margin-right: 10px; /* Add margin to the right of each button */
-}
-
-#moreButtons button:last-child {
-  margin-right: 0; /* Remove margin from the last button */
-}
-
