@@ -25,14 +25,16 @@ function displayQuestion() {
   const feedbackElement = document.getElementById("feedback");
   const current = questions[currentQuestion];
 
-  questionElement.innerHTML = current.question;
+  questionElement.textContent = current.question;
   optionsElement.innerHTML = "";
-  feedbackElement.innerHTML = "";
+  feedbackElement.textContent = "";
 
   current.options.forEach(option => {
     const button = document.createElement("button");
-    button.innerHTML = option;
-    button.onclick = () => checkAnswer(option, button);
+    button.textContent = option;
+    button.addEventListener("click", function() {
+      checkAnswer(option, button);
+    });
     optionsElement.appendChild(button);
   });
 }
@@ -47,20 +49,18 @@ function checkAnswer(answer, button) {
 
   // Highlight correct and incorrect options
   if (answer === current.correctAnswer) {
-    feedbackElement.innerHTML = "Correct!";
+    feedbackElement.textContent = "Correct!";
     feedbackElement.style.color = "#00ff00"; // Green color
     button.style.backgroundColor = "#00ff00"; // Green color
     score += 4; // Add 4 marks for correct answer
   } else {
-    feedbackElement.innerHTML = "Incorrect!";
+    feedbackElement.textContent = "Incorrect!";
     feedbackElement.style.color = "#ff0000"; // Red color
     button.style.backgroundColor = "#ff0000"; // Red color
     
     // Highlight the correct option
     const correctButton = document.querySelector(`#options button:nth-child(${current.options.indexOf(current.correctAnswer) + 1})`);
     correctButton.style.backgroundColor = "#00ff00"; // Green color
-    
-    score -= 1; // Deduct 1 mark for incorrect answer
   }
 
   // Move to the next question or show the result
@@ -73,10 +73,26 @@ function checkAnswer(answer, button) {
     }
   }, 1000);
 }
+function nextQuestion() {
+  if (currentQuestion < questions.length - 1) {
+    currentQuestion++;
+    displayQuestion();
+  } else {
+    // Show a message or handle what to do when there are no more questions
+  }
+}
 
+function prevQuestion() {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    displayQuestion();
+  } else {
+    // Show a message or handle what to do when at the first question
+  }
+}
 function showResult() {
   const resultElement = document.getElementById("result");
-  resultElement.innerHTML = `Congratulations! Your score is ${score}/${questions.length * 4}.`;
+  resultElement.textContent = `Congratulations! Your score is ${score}/${questions.length * 4}.`;
 }
 
 displayQuestion();
