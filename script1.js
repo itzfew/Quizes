@@ -108,15 +108,5 @@ function showResult() {
   resultElement.innerHTML = `Congratulations! Your score is ${score}/${questions.length * 4}.<br><button onclick="playAgain()">Play Again</button><button onclick="seeMore()">See More</button>`;
 }
 
-function playAgain() {
-  // Reset the quiz and start over
-  currentQuestion = 0;
-  score = 0;
-  displayQuestion();
-}
 
-function seeMore() {
-  // Redirect to another page for more content or questions
-  window.location.href = "list.html";
-}
 displayQuestion();
