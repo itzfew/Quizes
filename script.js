@@ -54,7 +54,7 @@ function checkAnswer(answer, button) {
     button.style.backgroundColor = "#00ff00"; // Green color
     score += 4; // Add 4 marks for correct answer
   } else {
-    feedbackElement.textContent = "Incorrect!";
+    feedbackElement.textContent = `This option is wrong. The correct answer is ${current.correctAnswer}.`;
     feedbackElement.style.color = "#ff0000"; // Red color
     button.style.backgroundColor = "#ff0000"; // Red color
     
