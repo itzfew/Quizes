@@ -50,3 +50,14 @@ h1 {
 .selected {
   background-color: #777 !important; /* Example styling for selected option */
 }
+#buttons {
+  margin-bottom: 10px; /* Add margin below buttons */
+}
+
+#moreButtons {
+  margin-top: 20px; /* Add margin above buttons */
+}
+
+#gap {
+  margin-bottom: 20px; /* Add space between the two button groups */
+}
