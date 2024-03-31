@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MCQ Quiz Game</title>
-<link rel="stylesheet" href="styles2.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div id="quiz-container">
   <h1 id="question"></h1>
   <div id="options-container">
-    <div class="option" onclick="checkAnswer(0)"></div>
-    <div class="option" onclick="checkAnswer(1)"></div>
-    <div class="option" onclick="checkAnswer(2)"></div>
-    <div class="option" onclick="checkAnswer(3)"></div>
+    <div class="option" id="option0"></div>
+    <div class="option" id="option1"></div>
+    <div class="option" id="option2"></div>
+    <div class="option" id="option3"></div>
   </div>
   <div id="buttons-container">
     <button onclick="prevQuestion()">Previous Question</button>
@@ -23,6 +23,6 @@
 <div id="end-page" style="display: none;">
   <h2 id="result"></h2>
 </div>
-<script src="script2.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
