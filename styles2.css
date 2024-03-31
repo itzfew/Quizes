@@ -1,4 +1,4 @@
- body {
+body {
   background-color: #222;
   color: white;
   font-family: Arial, sans-serif;
@@ -23,7 +23,6 @@ h1 {
   color: white;
   cursor: pointer;
   border-radius: 10px;
-  transition: background-color 0.3s ease;
 }
 
 #options button:hover {
