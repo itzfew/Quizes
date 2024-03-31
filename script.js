@@ -70,6 +70,8 @@ function checkAnswer(answer, button) {
     // Highlight the correct option
     const correctButton = document.querySelector(`#options button:nth-child(${current.options.indexOf(current.correctAnswer) + 1})`);
     correctButton.style.backgroundColor = "#00ff00"; // Green color
+
+    score -= 1; // Deduct 1 point for incorrect answer
   }
 
   // Move to the next question or show the result
@@ -82,7 +84,6 @@ function checkAnswer(answer, button) {
     }
   }, 1000);
 }
-
 function nextQuestion() {
   if (currentQuestion < questions.length - 1) {
     currentQuestion++;
