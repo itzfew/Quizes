@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Manager</title>
-    <style>body {
+<style>body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -32,7 +32,6 @@
 .menu-items {
     list-style-type: none;
     padding: 0;
-    display: none;
 }
 
 .menu-items li {
@@ -40,6 +39,21 @@
 }
 
 .menu-items a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.submenu-items {
+    display: none;
+    padding-left: 20px;
+    margin-top: 5px;
+}
+
+.submenu-items li {
+    margin-bottom: 5px;
+}
+
+.submenu-items a {
     text-decoration: none;
     color: #fff;
 }
@@ -53,6 +67,11 @@
     border: 1px solid #000;
     margin-bottom: 20px;
     padding: 10px;
+}
+
+.logo {
+    height: 1em; /* Adjust the height as needed */
+    vertical-align: middle;
 }</style>
 </head>
 <body>
@@ -61,7 +80,14 @@
             <div class="menu-btn" onclick="toggleMenu()">&#9776;</div>
             <ul class="menu-items">
                 <li><a href="#">Home</a></li>
-                <li><a href="#">Documents</a></li>
+                <li><a href="#" onclick="toggleSubMenu(event)">Documents</a>
+                    <ul class="submenu-items">
+                        <li><a href="#">Example 1</a></li>
+                        <li><a href="#">Example 2</a></li>
+                        <li><a href="#">Example 3</a></li>
+                        <!-- Add more submenu items as needed -->
+                    </ul>
+                </li>
                 <li><a href="#">Downloads</a></li>
                 <li><a href="#">Images</a></li>
                 <!-- Add more menu items as needed -->
@@ -69,19 +95,19 @@
         </div>
         <div class="main-content">
             <section class="section">
-                <h2><img src="file_manager_logo.png" alt="File Manager Logo"> Home</h2>
+                <h2><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Home</h2>
                 <!-- Content for Home section -->
             </section>
             <section class="section">
-                <h2><img src="file_manager_logo.png" alt="File Manager Logo"> Documents</h2>
+                <h2><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Documents</h2>
                 <!-- Content for Documents section -->
             </section>
             <section class="section">
-                <h2><img src="file_manager_logo.png" alt="File Manager Logo"> Downloads</h2>
+                <h2><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Downloads</h2>
                 <!-- Content for Downloads section -->
             </section>
             <section class="section">
-                <h2><img src="file_manager_logo.png" alt="File Manager Logo"> Images</h2>
+                <h2><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Images</h2>
                 <!-- Content for Images section -->
             </section>
             <!-- Add more sections as needed -->
@@ -90,6 +116,12 @@
     <script>function toggleMenu() {
     var menuItems = document.querySelector('.menu-items');
     menuItems.style.display = menuItems.style.display === 'block' ? 'none' : 'block';
+}
+
+function toggleSubMenu(event) {
+    event.preventDefault();
+    var submenuItems = event.target.nextElementSibling;
+    submenuItems.style.display = submenuItems.style.display === 'block' ? 'none' : 'block';
 }</script>
 </body>
 </html>
