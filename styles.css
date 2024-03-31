@@ -1,50 +1,53 @@
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+  font-family: Arial, sans-serif;
 }
 
-.quiz-container {
-    text-align: center;
-    margin-bottom: 50px; /* Add some margin to separate from buttons */
+#quiz-container {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
 }
 
-.question, .option {
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 10px;
-    display: inline-block;
-    cursor: pointer; /* Add cursor pointer to options */
+#question {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 3D effect */
+}
+
+.option {
+  display: inline-block;
+  width: 100px;
+  height: 50px;
+  line-height: 50px;
+  background-color: #f0f0f0;
+  margin: 5px;
+  cursor: pointer;
+  border: 1px solid transparent; /* Border for 3D effect */
+  border-radius: 5px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 3D effect */
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; /* Transition effects */
 }
 
 .option:hover {
-    background-color: #f0f0f0;
+  background-color: #e0e0e0;
+  transform: translateY(-2px); /* 3D hover effect */
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.5); /* 3D hover effect */
 }
 
-.result-container {
-    text-align: center;
+#buttons-container {
+  margin-top: 20px;
 }
 
-.buttons {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+#end-page {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
 }
 
-.button {
-    padding: 10px 20px;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Only transition background color */
+.correct {
+  background-color: #7FFF00; /* Green */
 }
 
-.button:hover {
-    background-color: #f0f0f0;
+.incorrect {
+  background-color: #FF0000; /* Red */
 }
