@@ -1,4 +1,4 @@
-let totalMarks = 0;
+ let totalMarks = 0;
 
 function checkAnswer(option) {
     let correctAnswer = "Paris";
