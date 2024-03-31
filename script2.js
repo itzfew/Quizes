@@ -62,7 +62,7 @@ function checkAnswer(answer, button) {
     button.style.backgroundColor = "#00ff00"; // Green color
     score += 1; // Increment score for correct answer
   } else {
-    feedbackElement.innerHTML = "Incorrect!";
+    feedbackElement.innerHTML = `Incorrect! The selected option (${answer}) is incorrect. The correct option is ${current.correctAnswer}.`;
     feedbackElement.style.color = "#ff0000"; // Red color
     button.style.backgroundColor = "#ff0000"; // Red color
     // Highlight the correct answer
@@ -72,11 +72,6 @@ function checkAnswer(answer, button) {
   }
 
   current.selectedOption = answer;
-
-  // Show the correct answer
-  const correctAnswerElement = document.createElement("p");
-  correctAnswerElement.innerHTML = `Correct answer is ${current.correctAnswer}`;
-  feedbackElement.appendChild(correctAnswerElement);
 
   // Update score
   showResult();
