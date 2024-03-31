@@ -45,6 +45,10 @@
             display: inline-block;
         }
 
+        .subfiles {
+            display: none;
+        }
+
         .subfile {
             cursor: pointer;
             display: flex;
@@ -63,11 +67,11 @@
 </head>
 <body>
     <div class="main-content">
-        <section class="section">
-            <h2 class="toggle-button" onclick="toggleSubfiles(event)">
+        <section class="section" onclick="toggleSubfiles(event)">
+            <h2 class="toggle-button">
                 <img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Home
             </h2>
-            <div class="subfiles" style="display: none;">
+            <div class="subfiles">
                 <div class="subfile">
                     <img src="subfile_logo.png" alt="Subfile Logo" class="logo">
                     <a href="#" class="text">Subfile 1</a>
@@ -79,11 +83,11 @@
                 <!-- Add more subfiles as needed -->
             </div>
         </section>
-        <section class="section">
-            <h2 class="toggle-button" onclick="toggleSubfiles(event)">
+        <section class="section" onclick="toggleSubfiles(event)">
+            <h2 class="toggle-button">
                 <img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Documents
             </h2>
-            <div class="subfiles" style="display: none;">
+            <div class="subfiles">
                 <div class="subfile">
                     <img src="subfile_logo.png" alt="Subfile Logo" class="logo">
                     <a href="#" class="text">Subfile 1</a>
@@ -100,7 +104,7 @@
 
     <script>
         function toggleSubfiles(event) {
-            var subfiles = event.target.parentElement.nextElementSibling;
+            var subfiles = event.currentTarget.querySelector('.subfiles');
             if (subfiles.style.display === 'block') {
                 subfiles.style.display = 'none';
             } else {
