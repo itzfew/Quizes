@@ -1,18 +1,18 @@
 const questions = [
   { 
-    question: "What is the capital of France?",
-    options: ["Paris", "Berlin", "London", "Rome"],
-    correctAnswer: "Paris"
+    question: "Which hormone promotes internode/petiole elongation in deep water rice?",
+    options: ["Kinetin", "Ethylene", "2, 4-D", "GA3"],
+    correctAnswer: "Ethylene"
   },
   { 
-    question: "Which planet is known as the Red Planet?",
-    options: ["Mars", "Venus", "Mercury", "Earth"],
-    correctAnswer: "Mars"
+    question: "Which of the following plants is monoecious?",
+    options: ["Carica papaya", "Chara", "Marchantia polymorpha", "Cycas circinalis"],
+    correctAnswer: "Chara"
   },
   { 
-    question: "What is 2 + 2?",
-    options: ["3", "4", "5", "6"],
-    correctAnswer: "4"
+    question: "Which of the following stages of meiosis involves division of centromere?",
+    options: ["Anaphase II", "Telophase", "Metaphase I", "Metaphase II"],
+    correctAnswer: "Anaphase II"
   }
 ];
 
