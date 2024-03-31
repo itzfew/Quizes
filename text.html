@@ -4,75 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Manager</title>
-<style>body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-.container {
-    display: flex;
-    flex-direction: row;
-    height: 100vh;
-}
+        .container {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+        }
 
-.navigation-menu {
-    background-color: #333;
-    padding: 10px;
-    border-right: 1px solid #000;
-}
+        .navigation-menu {
+            background-color: #333;
+            padding: 10px;
+            border-right: 1px solid #000;
+        }
 
-.menu-btn {
-    cursor: pointer;
-    color: #fff;
-    font-size: 24px;
-    margin-bottom: 10px;
-}
+        .menu-btn {
+            cursor: pointer;
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
 
-.menu-items {
-    list-style-type: none;
-    padding: 0;
-}
+        .menu-items {
+            list-style-type: none;
+            padding: 0;
+        }
 
-.menu-items li {
-    margin-bottom: 5px;
-}
+        .menu-items li {
+            margin-bottom: 5px;
+        }
 
-.menu-items a {
-    text-decoration: none;
-    color: #fff;
-}
+        .menu-items a {
+            text-decoration: none;
+            color: #fff;
+        }
 
-.submenu-items {
-    display: none;
-    padding-left: 20px;
-    margin-top: 5px;
-}
+        .submenu-items {
+            display: none;
+            padding-left: 20px;
+            margin-top: 5px;
+        }
 
-.submenu-items li {
-    margin-bottom: 5px;
-}
+        .submenu-items li {
+            margin-bottom: 5px;
+        }
 
-.submenu-items a {
-    text-decoration: none;
-    color: #fff;
-}
+        .submenu-items a {
+            text-decoration: none;
+            color: #fff;
+        }
 
-.main-content {
-    flex: 1;
-    padding: 20px;
-}
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
 
-.section {
-    border: 1px solid #000;
-    margin-bottom: 20px;
-    padding: 10px;
-}
+        .section {
+            border: 1px solid #000;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
 
-.logo {
-    height: 1em; /* Adjust the height as needed */
-    vertical-align: middle;
-}</style>
+        .logo {
+            height: 1em; /* Adjust the height as needed */
+            vertical-align: middle;
+            margin-right: 10px; /* Add margin between image and text */
+        }
+    </style>
 </head>
 <body>
     <div class="container" style="background-color: #dd981e;">
@@ -99,15 +102,14 @@
                 <!-- Content for Home section -->
             </section>
             <section class="section">
-                <h2><img src="file_manager_logo.png" alt="File Manager Logo" class="logo" onclick="toggleSubMenu(event)"> Documents</h2>
+                <h2 onclick="toggleSubMenu(event)"><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Documents</h2>
                 <!-- Content for Documents section -->
-                     <ul class="submenu-items">
-                        <li><a href="#">Example 1</a></li>
-                        <li><a href="#">Example 2</a></li>
-                        <li><a href="#">Example 3</a></li>
-                        <!-- Add more submenu items as needed -->
-                    </ul>
-            </li>
+                <ul class="submenu-items">
+                    <li><a href="#">Example 1</a></li>
+                    <li><a href="#">Example 2</a></li>
+                    <li><a href="#">Example 3</a></li>
+                    <!-- Add more submenu items as needed -->
+                </ul>
             </section>
             <section class="section">
                 <h2><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Downloads</h2>
@@ -120,22 +122,23 @@
             <!-- Add more sections as needed -->
         </div>
     </div>
-    <script>let menuVisible = false;
+    <script>
+        let menuVisible = false;
 
-function toggleMenu() {
-    var menuItems = document.querySelector('.menu-items');
-    menuItems.style.display = menuItems.style.display === 'block' ? 'none' : 'block';
+        function toggleMenu() {
+            var menuItems = document.querySelector('.menu-items');
+            menuItems.style.display = menuItems.style.display === 'block' ? 'none' : 'block';
         }
-function toggleSubMenu(event) {
-    event.preventDefault();
-    var submenuItems = event.target.nextElementSibling;
-    submenuItems.style.display = submenuItems.style.display === 'block' ? 'none' : 'block';
-}
 
-// Hide all submenu items initially
-document.querySelectorAll('.submenu-items').forEach(function(item) {
-    item.style.display = 'none';
-});
-        /script>
+        function toggleSubMenu(event) {
+            var submenuItems = event.target.nextElementSibling;
+            submenuItems.style.display = submenuItems.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Hide all submenu items initially
+        document.querySelectorAll('.submenu-items').forEach(function(item) {
+            item.style.display = 'none';
+        });
+    </script>
 </body>
 </html>
