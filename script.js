@@ -1,86 +1,82 @@
 const questions = [
-  {
+  { 
     question: "What is the capital of France?",
-    options: ["Paris", "London", "Berlin", "Rome"],
-    correctAnswerIndex: 0
+    options: ["Paris", "Berlin", "London", "Rome"],
+    correctAnswer: "Paris"
   },
-  {
+  { 
+    question: "Which planet is known as the Red Planet?",
+    options: ["Mars", "Venus", "Mercury", "Earth"],
+    correctAnswer: "Mars"
+  },
+  { 
     question: "What is 2 + 2?",
     options: ["3", "4", "5", "6"],
-    correctAnswerIndex: 1
+    correctAnswer: "4"
   }
-]; 
+];
 
-let currentQuestionIndex = 0;
+let currentQuestion = 0;
 let score = 0;
 
-const questionElement = document.getElementById("question");
-const optionsElements = document.querySelectorAll(".option");
-const endPage = document.getElementById("end-page");
-const resultElement = document.getElementById("result");
-
 function displayQuestion() {
-  const currentQuestion = questions[currentQuestionIndex];
-  questionElement.textContent = currentQuestion.question;
-  optionsElements.forEach((optionElement, index) => {
-    optionElement.textContent = currentQuestion.options[index];
-    optionElement.classList.remove("correct", "incorrect");
+  const questionElement = document.getElementById("question");
+  const optionsElement = document.getElementById("options");
+  const feedbackElement = document.getElementById("feedback");
+  const current = questions[currentQuestion];
+
+  questionElement.innerHTML = current.question;
+  optionsElement.innerHTML = "";
+  feedbackElement.innerHTML = "";
+
+  current.options.forEach(option => {
+    const button = document.createElement("button");
+    button.innerHTML = option;
+    button.onclick = () => checkAnswer(option, button);
+    optionsElement.appendChild(button);
   });
 }
 
-function checkAnswer(selectedIndex) {
-  const currentQuestion = questions[currentQuestionIndex];
-  if (selectedIndex === currentQuestion.correctAnswerIndex) {
-    optionsElements[selectedIndex].classList.add("correct");
-    score += 4;
+function checkAnswer(answer, button) {
+  const current = questions[currentQuestion];
+  const feedbackElement = document.getElementById("feedback");
+  
+  // Disable all buttons after selecting an answer
+  const buttons = document.querySelectorAll("#options button");
+  buttons.forEach(btn => btn.disabled = true);
+
+  // Highlight correct and incorrect options
+  if (answer === current.correctAnswer) {
+    feedbackElement.innerHTML = "Correct!";
+    feedbackElement.style.color = "#00ff00"; // Green color
+    button.style.backgroundColor = "#00ff00"; // Green color
+    score += 4; // Add 4 marks for correct answer
   } else {
-    optionsElements[selectedIndex].classList.add("incorrect");
-    optionsElements[currentQuestion.correctAnswerIndex].classList.add("correct");
-    score -= 1;
+    feedbackElement.innerHTML = "Incorrect!";
+    feedbackElement.style.color = "#ff0000"; // Red color
+    button.style.backgroundColor = "#ff0000"; // Red color
+    
+    // Highlight the correct option
+    const correctButton = optionsElement.querySelector(`button:nth-child(${current.options.indexOf(current.correctAnswer) + 1})`);
+    correctButton.style.backgroundColor = "#00ff00"; // Green color
+    
+    score -= 1; // Deduct 1 mark for incorrect answer
   }
-  disableOptions();
-}
 
-function disableOptions() {
-  optionsElements.forEach(optionElement => {
-    optionElement.style.pointerEvents = "none";
-  });
-}
-
-function enableOptions() {
-  optionsElements.forEach(optionElement => {
-    optionElement.style.pointerEvents = "auto";
-  });
-}
-
-function prevQuestion() {
-  if (currentQuestionIndex > 0) {
-    currentQuestionIndex--;
-    displayQuestion();
-    enableOptions();
-  }
-}
-
-function nextQuestion() {
-  if (currentQuestionIndex < questions.length - 1) {
-    currentQuestionIndex++;
-    displayQuestion();
-    enableOptions();
-  } else {
-    showResult();
-  }
+  // Move to the next question or show the result
+  setTimeout(() => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      displayQuestion();
+    } else {
+      showResult();
+    }
+  }, 1000);
 }
 
 function showResult() {
-  endPage.style.display = "block";
-  questionElement.style.display = "none";
-  document.getElementById("buttons-container").style.display = "none";
-  resultElement.textContent = `Your score is ${score}/ ${questions.length * 4}`;
-  if (score > (questions.length * 4) / 2) {
-    resultElement.innerHTML += "<br>Congratulations!";
-  } else {
-    resultElement.innerHTML += "<br>Best of luck next time!";
-  }
+  const resultElement = document.getElementById("result");
+  resultElement.innerHTML = `Congratulations! Your score is ${score}/${questions.length * 4}.`;
 }
 
 displayQuestion();
