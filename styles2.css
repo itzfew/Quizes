@@ -34,6 +34,14 @@ body {
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.5); /* 3D hover effect */
 }
 
+.correct {
+  background-color: #7FFF00; /* Green */
+}
+
+.incorrect {
+  background-color: #FF0000; /* Red */
+}
+
 #buttons-container {
   margin-top: 20px;
 }
@@ -42,12 +50,4 @@ body {
   max-width: 600px;
   margin: 0 auto;
   text-align: center;
-}
-
-.correct {
-  background-color: #7FFF00; /* Green */
-}
-
-.incorrect {
-  background-color: #FF0000; /* Red */
 }
