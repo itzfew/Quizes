@@ -18,19 +18,28 @@
 
 .navigation-menu {
     background-color: #333;
-    padding: 20px;
+    padding: 10px;
+    border-right: 1px solid #000;
 }
 
-.navigation-menu ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.navigation-menu li {
+.menu-btn {
+    cursor: pointer;
+    color: #fff;
+    font-size: 24px;
     margin-bottom: 10px;
 }
 
-.navigation-menu a {
+.menu-items {
+    list-style-type: none;
+    padding: 0;
+    display: none;
+}
+
+.menu-items li {
+    margin-bottom: 5px;
+}
+
+.menu-items a {
     text-decoration: none;
     color: #fff;
 }
@@ -41,25 +50,23 @@
 }
 
 .section {
-    margin-bottom: 30px;
-}
-
-.section h2 img {
-    vertical-align: middle;
-    margin-right: 10px;
+    border: 1px solid #000;
+    margin-bottom: 20px;
+    padding: 10px;
 }</style>
 </head>
 <body>
     <div class="container" style="background-color: #dd981e;">
-        <nav class="navigation-menu">
-            <ul>
+        <div class="navigation-menu">
+            <div class="menu-btn" onclick="toggleMenu()">&#9776;</div>
+            <ul class="menu-items">
                 <li><a href="#">Home</a></li>
                 <li><a href="#">Documents</a></li>
                 <li><a href="#">Downloads</a></li>
                 <li><a href="#">Images</a></li>
                 <!-- Add more menu items as needed -->
             </ul>
-        </nav>
+        </div>
         <div class="main-content">
             <section class="section">
                 <h2><img src="file_manager_logo.png" alt="File Manager Logo"> Home</h2>
@@ -80,6 +87,9 @@
             <!-- Add more sections as needed -->
         </div>
     </div>
-    
+    <script>function toggleMenu() {
+    var menuItems = document.querySelector('.menu-items');
+    menuItems.style.display = menuItems.style.display === 'block' ? 'none' : 'block';
+}</script>
 </body>
 </html>
