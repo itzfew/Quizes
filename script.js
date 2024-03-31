@@ -107,6 +107,19 @@ function showResult() {
   const resultElement = document.getElementById("result");
   resultElement.innerHTML = `Congratulations! Your score is ${score}/${questions.length * 4}.<br><button onclick="playAgain()">Play Again</button><button onclick="seeMore()">See More</button>`;
 }
-
+function playAgain() {
+  // Reset current question index and score
+  currentQuestion = 0;
+  score = 0;
+  
+  // Clear selected options stored in localStorage
+  localStorage.removeItem("selectedOption");
+  
+  // Display the first question
+  displayQuestion();
+        }
+function seeMore() {
+  window.location.href = "list.html"; // Navigate to list.html
+}
 
 displayQuestion();
