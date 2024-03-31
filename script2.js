@@ -1,4 +1,4 @@
-  const questions = [
+const questions = [
   {
     question: "What is the capital of France?",
     options: ["Paris", "London", "Berlin", "Rome"],
