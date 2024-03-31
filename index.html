@@ -7,19 +7,22 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<div class="quiz-container">
-    <!-- Questions and options will be dynamically loaded here -->
+<div id="quiz-container">
+  <h1 id="question"></h1>
+  <div id="options-container">
+    <div class="option" onclick="checkAnswer(0)"></div>
+    <div class="option" onclick="checkAnswer(1)"></div>
+    <div class="option" onclick="checkAnswer(2)"></div>
+    <div class="option" onclick="checkAnswer(3)"></div>
+  </div>
+  <div id="buttons-container">
+    <button onclick="prevQuestion()">Previous Question</button>
+    <button onclick="nextQuestion()">Next Question</button>
+  </div>
 </div>
-
-<div class="result-container" style="display: none;">
-    <div class="result"></div>
-    <div class="buttons">
-        <button class="button play-again" onclick="playAgain()">Play Again</button>
-    </div>
+<div id="end-page" style="display: none;">
+  <h2 id="result"></h2>
 </div>
-
 <script src="script.js"></script>
-
 </body>
 </html>
