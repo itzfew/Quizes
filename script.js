@@ -16,9 +16,8 @@ const questions = [
   }
 ];
 
-
-
-let selectedOptions = []; // Array to store selected options
+let currentQuestion = 0;
+let score = 0;
 
 function displayQuestion() {
   const questionElement = document.getElementById("question");
@@ -37,30 +36,22 @@ function displayQuestion() {
       checkAnswer(option, button);
     });
 
-    // Add a class to indicate the selected option
-    if (selectedOptions[currentQuestion] === option) {
+    // Add a class to indicate the previously selected option
+    if (localStorage.getItem("selectedOption") === option) {
       button.classList.add("selected");
     }
 
     optionsElement.appendChild(button);
   });
-
-  // Show submit button on last question
-  if (currentQuestion === questions.length - 1) {
-    const submitButton = document.createElement("button");
-    submitButton.textContent = "Submit";
-    submitButton.addEventListener("click", calculateMarks);
-    optionsElement.appendChild(submitButton);
-  }
 }
 
 function checkAnswer(answer, button) {
   const current = questions[currentQuestion];
   const feedbackElement = document.getElementById("feedback");
 
-  // Store the selected option
-  selectedOptions[currentQuestion] = answer;
-
+  // Store the selected option in local storage
+  localStorage.setItem("selectedOption", answer);
+  
   // Disable all buttons after selecting an answer
   const buttons = document.querySelectorAll("#options button");
   buttons.forEach(btn => btn.disabled = true);
@@ -83,30 +74,37 @@ function checkAnswer(answer, button) {
     score -= 1; // Deduct 1 point for incorrect answer
   }
 
-  // Move to the next question
+  // Move to the next question or show the result
   setTimeout(() => {
     currentQuestion++;
     if (currentQuestion < questions.length) {
       displayQuestion();
+    } else {
+      showResult();
     }
   }, 1000);
 }
-
-function calculateMarks() {
-  const resultElement = document.getElementById("result");
-  const totalMarks = questions.length * 4;
-  let obtainedMarks = 0;
-
-  // Calculate obtained marks
-  for (let i = 0; i < questions.length; i++) {
-    if (questions[i].correctAnswer === selectedOptions[i]) {
-      obtainedMarks += 4;
-    }
+function nextQuestion() {
+  if (currentQuestion < questions.length - 1) {
+    currentQuestion++;
+    displayQuestion();
+  } else {
+    // Show a message or handle what to do when there are no more questions
   }
+}
 
-  // Display the result
-  const percentage = (obtainedMarks / totalMarks) * 100;
-  resultElement.textContent = `Congratulations! Your score is ${obtainedMarks}/${totalMarks}. Percentage: ${percentage.toFixed(2)}%`;
+function prevQuestion() {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    displayQuestion();
+  } else {
+    // Show a message or handle what to do when at the first question
+  }
+}
+
+function showResult() {
+  const resultElement = document.getElementById("result");
+  resultElement.textContent = `Congratulations! Your score is ${score}/${questions.length * 4}.`;
 }
 
 displayQuestion();
