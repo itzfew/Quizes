@@ -5,6 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Manager</title>
     <style>
+       
+
+.menu-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.menu-icon {
+  width: 100%;
+  height: 2px;
+  background-color: #000;
+  position: relative;
+  transition: transform 0.5s;
+}
+
+.menu-icon::before,
+.menu-icon::after {
+  content: '';
+  width: 100%;
+  height: 2px;
+  background-color: #000;
+  position: absolute;
+  transition: transform 0.5s;
+}
+
+.menu-icon::before {
+  top: -8px;
+}
+
+.menu-icon::after {
+  top: 8px;
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  left: -200px;
+  width: 200px;
+  height: 100%;
+  background-color: #f0f0f0;
+  transition: left 0.5s;
+}
+
+.menu.open {
+  left: 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  padding: 10px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #ddd;
+}
+
+        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -66,6 +139,21 @@
     </style>
 </head>
 <body>
+    <div class="menu-btn">
+  <div class="menu-icon"></div>
+</div>
+
+<nav class="menu">
+  <ul>
+    <li><button>Button 1</button></li>
+    <li><button>Button 2</button></li>
+    <li><button>Button 3</button></li>
+    <li><button>Button 4</button></li>
+  </ul>
+</nav>
+
+
+    
     <div class="main-content">
         <section class="section" onclick="toggleSubfiles(event)">
             <h2 class="toggle-button">
@@ -111,6 +199,10 @@
                 subfiles.style.display = 'block';
             }
         }
+        
+        document.querySelector('.menu-btn').addEventListener('click', function() {
+  document.querySelector('.menu').classList.toggle('open');
+});
     </script>
 </body>
 </html>
