@@ -41,14 +41,11 @@ function displayQuestion() {
     if (current.selectedOption === option) {
       button.style.backgroundColor = "#555"; // Dark gray
     }
+    // Highlight the correct option after user selects an option
+    if (option === current.correctAnswer) {
+      button.dataset.correct = true;
+    }
   });
-
-  // Display correct answer if previously selected
-  if (current.selectedOption && current.selectedOption !== current.correctAnswer) {
-    const correctAnswerElement = document.createElement("p");
-    correctAnswerElement.innerHTML = `Correct answer is ${current.correctAnswer}`;
-    feedbackElement.appendChild(correctAnswerElement);
-  }
 }
 
 function checkAnswer(answer, button) {
@@ -63,15 +60,26 @@ function checkAnswer(answer, button) {
     feedbackElement.innerHTML = "Correct!";
     feedbackElement.style.color = "#00ff00"; // Green color
     button.style.backgroundColor = "#00ff00"; // Green color
-    score += 4;
+    score += 1; // Increment score for correct answer
   } else {
     feedbackElement.innerHTML = "Incorrect!";
     feedbackElement.style.color = "#ff0000"; // Red color
     button.style.backgroundColor = "#ff0000"; // Red color
-    score -= 1;
+    // Highlight the correct answer
+    const correctButton = document.querySelector(`#options button[data-correct="true"]`);
+    correctButton.style.backgroundColor = "#00ff00"; // Green color
+    score -= 1; // Decrement score for incorrect answer
   }
 
   current.selectedOption = answer;
+
+  // Show the correct answer
+  const correctAnswerElement = document.createElement("p");
+  correctAnswerElement.innerHTML = `Correct answer is ${current.correctAnswer}`;
+  feedbackElement.appendChild(correctAnswerElement);
+
+  // Update score
+  showResult();
 }
 
 function nextQuestion() {
@@ -94,4 +102,5 @@ function showResult() {
   const resultElement = document.getElementById("result");
   resultElement.innerHTML = `Congratulations! Your score is ${score}.`;
 }
+
 displayQuestion();
