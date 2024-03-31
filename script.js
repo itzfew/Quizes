@@ -1,18 +1,18 @@
 const questions = [
   { 
-    question: "Which hormone promotes internode/petiole elongation in deep water rice?",
-    options: ["Kinetin", "Ethylene", "2, 4-D", "GA3"],
-    correctAnswer: "Ethylene"
+    question: "What is the capital of India?",
+    options: ["Mumbai", "Delhi", "Kolkata", "Chennai"],
+    correctAnswer: "Delhi"
   },
   { 
-    question: "Which of the following plants is monoecious?",
-    options: ["Carica papaya", "Chara", "Marchantia polymorpha", "Cycas circinalis"],
-    correctAnswer: "Chara"
+    question: "Who was the first Prime Minister of India?",
+    options: ["Jawaharlal Nehru", "Mahatma Gandhi", "Indira Gandhi", "Sardar Vallabhbhai Patel"],
+    correctAnswer: "Jawaharlal Nehru"
   },
   { 
-    question: "Which of the following stages of meiosis involves division of centromere?",
-    options: ["Anaphase II", "Telophase", "Metaphase I", "Metaphase II"],
-    correctAnswer: "Anaphase II"
+    question: "Which river is known as the 'Ganga of the South'?",
+    options: ["Yamuna", "Godavari", "Krishna", "Kaveri"],
+    correctAnswer: "Kaveri"
   }
 ];
 
@@ -58,9 +58,6 @@ function checkAnswer(answer, button) {
   // Save the updated selected options back to localStorage
   localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
   
-  // Rest of the function code...
-}
-  
   // Disable all buttons after selecting an answer
   const buttons = document.querySelectorAll("#options button");
   buttons.forEach(btn => btn.disabled = true);
@@ -92,8 +89,8 @@ function checkAnswer(answer, button) {
       showResult();
     }
   }, 10000); // 10 seconds timeout
-
 }
+
 function nextQuestion() {
   if (currentQuestion < questions.length - 1) {
     currentQuestion++;
