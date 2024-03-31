@@ -9,76 +9,10 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: row;
-            height: 100vh;
-        }
-
-        .navigation-menu {
-            background-color: #333;
-            padding: 10px;
-            border-right: 1px solid #000;
-        }
-
-        .menu-btn {
-            cursor: pointer;
-            color: #fff;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .menu-items {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .menu-items li {
-            margin-bottom: 5px;
-        }
-
-        .menu-items a {
-            text-decoration: none;
-            color: #fff;
-            display: block;
-            padding: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .menu-items a:hover {
-            background-color: #555;
-            transform: translateY(-3px);
-            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
-        }
-
-        .submenu-items {
-            display: none;
-            padding-left: 20px;
-            margin-top: 5px;
-        }
-
-        .submenu-items li {
-            margin-bottom: 5px;
-        }
-
-        .submenu-items a {
-            text-decoration: none;
-            color: #fff;
-            display: block;
-            padding: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .submenu-items a:hover {
-            background-color: #555;
-            transform: translateY(-3px);
-            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+            background-color: #dd981e;
         }
 
         .main-content {
-            flex: 1;
             padding: 20px;
         }
 
@@ -99,74 +33,80 @@
             vertical-align: middle;
             margin-right: 10px; /* Add margin between image and text */
         }
+
+        .toggle-button {
+            cursor: pointer;
+            color: #333;
+            background-color: #fff;
+            border: 1px solid #333;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .subfile {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .subfile:hover {
+            color: blue;
+        }
+
+        .subfile .text {
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
-    <div class="container" style="background-color: #dd981e;">
-        <div class="navigation-menu">
-            <div class="menu-btn" onclick="toggleMenu()">&#9776;</div>
-            <ul class="menu-items">
-                <li><a href="#">Home</a></li>
-                <li>
-                    <h2 onclick="toggleSubMenu(event)">
-                        <img src="file_manager_logo.png" alt="File Manager Logo" class="logo">
-                        Documents
-                    </h2>
-                    <ul class="submenu-items">
-                        <li><a href="#"><img src="file_manager_logo_small.png" alt="File Manager Logo" class="logo"> Example 1</a></li>
-                        <li><a href="#"><img src="file_manager_logo_small.png" alt="File Manager Logo" class="logo"> Example 2</a></li>
-                        <li><a href="#"><img src="file_manager_logo_small.png" alt="File Manager Logo" class="logo"> Example 3</a></li>
-                        <!-- Add more submenu items as needed -->
-                    </ul>
-                </li>
-                <li><a href="#">Downloads</a></li>
-                <li><a href="#">Images</a></li>
-                <!-- Add more menu items as needed -->
-            </ul>
-        </div>
-        <div class="main-content">
-            <section class="section">
-                <h2><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Home</h2>
-                <!-- Content for Home section -->
-            </section>
-            <section class="section">
-                <h2><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Documents</h2>
-                <!-- Content for Documents section -->
-            </section>
-            <section class="section">
-                <h2><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Downloads</h2>
-                <!-- Content for Downloads section -->
-            </section>
-            <section class="section">
-                <h2><img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Images</h2>
-                <!-- Content for Images section -->
-            </section>
-            <!-- Add more sections as needed -->
-        </div>
+    <div class="main-content">
+        <section class="section">
+            <h2 class="toggle-button" onclick="toggleSubfiles(event)">
+                <img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Home
+            </h2>
+            <div class="subfiles" style="display: none;">
+                <div class="subfile">
+                    <img src="subfile_logo.png" alt="Subfile Logo" class="logo">
+                    <a href="#" class="text">Subfile 1</a>
+                </div>
+                <div class="subfile">
+                    <img src="subfile_logo.png" alt="Subfile Logo" class="logo">
+                    <a href="#" class="text">Subfile 2</a>
+                </div>
+                <!-- Add more subfiles as needed -->
+            </div>
+        </section>
+        <section class="section">
+            <h2 class="toggle-button" onclick="toggleSubfiles(event)">
+                <img src="file_manager_logo.png" alt="File Manager Logo" class="logo"> Documents
+            </h2>
+            <div class="subfiles" style="display: none;">
+                <div class="subfile">
+                    <img src="subfile_logo.png" alt="Subfile Logo" class="logo">
+                    <a href="#" class="text">Subfile 1</a>
+                </div>
+                <div class="subfile">
+                    <img src="subfile_logo.png" alt="Subfile Logo" class="logo">
+                    <a href="#" class="text">Subfile 2</a>
+                </div>
+                <!-- Add more subfiles as needed -->
+            </div>
+        </section>
+        <!-- Add more sections as needed -->
     </div>
-    <script>
-        let menuVisible = false;
 
-        function toggleMenu() {
-            var menuItems = document.querySelector('.menu-items');
-            menuVisible = !menuVisible;
-            if (menuVisible) {
-                menuItems.style.display = 'block';
+    <script>
+        function toggleSubfiles(event) {
+            var subfiles = event.target.parentElement.nextElementSibling;
+            if (subfiles.style.display === 'block') {
+                subfiles.style.display = 'none';
             } else {
-                menuItems.style.display = 'none';
+                subfiles.style.display = 'block';
             }
         }
-
-        function toggleSubMenu(event) {
-            event.preventDefault();
-            var submenuItems = event.target.nextElementSibling;
-            submenuItems.style.display = submenuItems.style.display === 'block' ? 'none' : 'block';
-        }
-
-        // Hide all submenu items initially
-        document.querySelectorAll('.submenu-items').forEach(function(item) {
-            item.style.display = 'none';
-        });
     </script>
 </body>
 </html>
