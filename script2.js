@@ -37,18 +37,21 @@ function displayQuestion() {
 
 function checkAnswer(answer, button) {
   const feedbackElement = document.getElementById("feedback");
-  if (answer === questions[currentQuestion].correctAnswer) {
-    feedbackElement.innerHTML = "Correct!";
+  const correctAnswer = questions[currentQuestion].correctAnswer;
+  if (answer === correctAnswer) {
+    feedbackElement.innerHTML = `Correct! The answer is ${correctAnswer}.`;
     feedbackElement.style.color = "#00ff00"; // Green color
     button.style.backgroundColor = "#00ff00"; // Green color
     score += 4;
   } else {
-    feedbackElement.innerHTML = "Incorrect!";
+    feedbackElement.innerHTML = `Incorrect! The correct answer is ${correctAnswer}.`;
     feedbackElement.style.color = "#ff0000"; // Red color
     button.style.backgroundColor = "#ff0000"; // Red color
     score -= 1;
   }
-  button.disabled = true; // Disable button after selecting an answer
+  // Disable all buttons after selecting an answer
+  const buttons = document.querySelectorAll("#options button");
+  buttons.forEach(btn => btn.disabled = true);
 }
 
 function nextQuestion() {
