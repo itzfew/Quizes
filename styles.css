@@ -1,5 +1,10 @@
  body {
     font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 .question {
     margin-bottom: 20px;
@@ -13,4 +18,17 @@
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.quiz-container {
+    text-align: center;
+}
+.result-container {
+    text-align: center;
+}
+.buttons {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
 }
