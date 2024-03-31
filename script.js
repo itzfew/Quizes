@@ -35,6 +35,12 @@ function displayQuestion() {
     button.addEventListener("click", function() {
       checkAnswer(option, button);
     });
+
+    // Add a class to indicate the previously selected option
+    if (localStorage.getItem("selectedOption") === option) {
+      button.classList.add("selected");
+    }
+
     optionsElement.appendChild(button);
   });
 }
@@ -42,6 +48,9 @@ function displayQuestion() {
 function checkAnswer(answer, button) {
   const current = questions[currentQuestion];
   const feedbackElement = document.getElementById("feedback");
+
+  // Store the selected option in local storage
+  localStorage.setItem("selectedOption", answer);
   
   // Disable all buttons after selecting an answer
   const buttons = document.querySelectorAll("#options button");
@@ -73,6 +82,7 @@ function checkAnswer(answer, button) {
     }
   }, 1000);
 }
+
 function nextQuestion() {
   if (currentQuestion < questions.length - 1) {
     currentQuestion++;
@@ -90,6 +100,7 @@ function prevQuestion() {
     // Show a message or handle what to do when at the first question
   }
 }
+
 function showResult() {
   const resultElement = document.getElementById("result");
   resultElement.textContent = `Congratulations! Your score is ${score}/${questions.length * 4}.`;
