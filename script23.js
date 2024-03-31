@@ -49,8 +49,17 @@ function checkAnswer(answer, button) {
   const current = questions[currentQuestion];
   const feedbackElement = document.getElementById("feedback");
 
-  // Store the selected option in local storage
-  localStorage.setItem("selectedOption", answer);
+  // Get previously selected options from localStorage or initialize an empty array
+  let selectedOptions = JSON.parse(localStorage.getItem("selectedOptions")) || [];
+
+  // Store the selected option for the current question
+  selectedOptions[currentQuestion] = { question: current.question, selectedOption: answer };
+
+  // Save the updated selected options back to localStorage
+  localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
+  
+  // Rest of the function code...
+}
   
   // Disable all buttons after selecting an answer
   const buttons = document.querySelectorAll("#options button");
