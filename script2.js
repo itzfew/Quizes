@@ -81,6 +81,18 @@ function showResult() {
   } else {
     resultElement.innerHTML += "<br>Best of luck next time!";
   }
+  const playAgainButton = document.createElement("button");
+  playAgainButton.textContent = "Play Again";
+  playAgainButton.onclick = resetQuiz;
+  endPage.appendChild(playAgainButton);
 }
 
+function resetQuiz() {
+  currentQuestionIndex = 0;
+  score = 0;
+  endPage.style.display = "none";
+  questionElement.style.display = "block";
+  document.getElementById("buttons-container").style.display = "block";
+  displayQuestion();
+}
 displayQuestion();
