@@ -74,7 +74,7 @@ function checkAnswer(answer, button) {
     score -= 1; // Deduct 1 point for incorrect answer
   }
 
-  // Move to the next question or show the result
+  // Move to the next question or show the result after 10 seconds
   setTimeout(() => {
     currentQuestion++;
     if (currentQuestion < questions.length) {
@@ -82,7 +82,8 @@ function checkAnswer(answer, button) {
     } else {
       showResult();
     }
-  }, 1000);
+  }, 10000); // 10 seconds timeout
+
 }
 function nextQuestion() {
   if (currentQuestion < questions.length - 1) {
