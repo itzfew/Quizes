@@ -16,14 +16,13 @@
     font-size: 16px;
   }
   #fonts {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
     margin-top: 20px;
   }
   .font-option {
-    margin: 5px;
-    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  .font-option button {
+    margin-left: 10px;
   }
 </style>
 </head>
@@ -37,6 +36,14 @@
 
   const fonts = ['Arial', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Tahoma'];
 
+  function copyText(text) {
+    navigator.clipboard.writeText(text).then(function() {
+      console.log('Text copied to clipboard');
+    }, function(err) {
+      console.error('Error copying text: ', err);
+    });
+  }
+
   function updateFonts() {
     const text = textArea.value;
     fontsDiv.innerHTML = '';
@@ -45,6 +52,13 @@
       span.textContent = text;
       span.style.fontFamily = font;
       span.className = 'font-option';
+      
+      const copyButton = document.createElement('button');
+      copyButton.textContent = 'Copy Text';
+      copyButton.addEventListener('click', () => copyText(text));
+      
+      span.appendChild(copyButton);
+      
       fontsDiv.appendChild(span);
     });
   }
