@@ -39,15 +39,19 @@ function checkAnswer(answer, button) {
   const feedbackElement = document.getElementById("feedback");
   const correctAnswer = questions[currentQuestion].correctAnswer;
   if (answer === correctAnswer) {
-    feedbackElement.innerHTML = `Correct! The answer is ${correctAnswer}.`;
+    feedbackElement.innerHTML = `Correct!`;
     feedbackElement.style.color = "#00ff00"; // Green color
     button.style.backgroundColor = "#00ff00"; // Green color
     score += 4;
   } else {
-    feedbackElement.innerHTML = `Incorrect! The correct answer is ${correctAnswer}.`;
+    feedbackElement.innerHTML = `Incorrect!`;
     feedbackElement.style.color = "#ff0000"; // Red color
     button.style.backgroundColor = "#ff0000"; // Red color
     score -= 1;
+    // Show correct answer below options
+    const correctAnswerElement = document.createElement("p");
+    correctAnswerElement.innerHTML = `Correct answer is ${correctAnswer}`;
+    optionsElement.appendChild(correctAnswerElement);
   }
   // Disable all buttons after selecting an answer
   const buttons = document.querySelectorAll("#options button");
