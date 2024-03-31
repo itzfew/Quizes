@@ -109,13 +109,14 @@ function showResult() {
 }
 
 function playAgain() {
-  currentQuestion = 0; // Reset to the first question
-  score = 0; // Reset score
-  displayQuestion(); // Display the first question again
+  // Reset the quiz and start over
+  currentQuestion = 0;
+  score = 0;
+  displayQuestion();
 }
 
 function seeMore() {
-  window.location.href = "list.html"; // Navigate to list.html
+  // Redirect to another page for more content or questions
+  window.location.href = "list.html";
 }
-
 displayQuestion();
