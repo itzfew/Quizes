@@ -42,3 +42,18 @@ h1 {
   margin-top: 20px;
   font-size: 24px;
 }
+
+/* Style for next and previous buttons */
+button {
+  padding: 15px 30px; /* Increase padding to make buttons bigger */
+  background-color: blue; /* Set button background color to blue */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 20px; /* Add margin to separate buttons from options */
+}
+
+button:hover {
+  background-color: #0066cc; /* Darken the blue color on hover */
+}
