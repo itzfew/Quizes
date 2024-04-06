@@ -16,10 +16,9 @@
 <script>
 // Retrieve selected options from session storage
 var selectedOptions = JSON.parse(sessionStorage.getItem('selectedOptions'));
+var correctOptions = ['A', 'B']; // Correct options from page 1 and page 2
+
 if (selectedOptions) {
-    // Retrieve correct options
-    var correctOptions = ['A', 'B']; // Example correct options
-    
     // Generate content for each question dynamically
     var resultsDiv = document.getElementById('results');
     for (var i = 0; i < selectedOptions.length; i++) {
