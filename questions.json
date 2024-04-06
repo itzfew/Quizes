@@ -1,17 +1,35 @@
-[
-  {
-    "question": "What is the capital of India?",
-    "options": ["Mumbai", "Delhi", "Kolkata", "Chennai"],
-    "correctAnswer": "Delhi"
-  },
-  {
-    "question": "Who was the first Prime Minister of India?",
-    "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Indira Gandhi", "Sardar Vallabhbhai Patel"],
-    "correctAnswer": "Jawaharlal Nehru"
-  },
-  {
-    "question": "Which river is known as the 'Ganga of the South'?",
-    "options": ["Yamuna", "Godavari", "Krishna", "Kaveri"],
-    "correctAnswer": "Kaveri"
-  }
-]
+{
+  "questions": [
+    {
+      "prompt": "Inside which HTML element do we put the JavaScript?",
+      "options": [
+        "<javascript>",
+        "<js>",
+        "<script>",
+        "<scripting>"
+      ],
+      "answer": "<script>"
+    },
+    {
+      "prompt": "1112side which HTML element do we put the JavaScript?",
+      "options": [
+        "<java+₹script>",
+        "<jsjssh>",
+        "<scudhdript>",
+        "<scriptidjjdng>"
+      ],
+      "answer": "<jsjssh>"
+    },
+    {
+      "prompt": "Inside which HTMLjsuzdtus element do we put the JavaScript?",
+      "options": [
+        "<javascroskjdipt>",
+        "<jsjdkosgs>",
+        "<scriosoezbypt>",
+        "<scriptjsjsjsing>"
+      ],
+      "answer": "<scriptjsjsjsing>"
+    },
+    // Add more questions in the same format
+  ]
+}
