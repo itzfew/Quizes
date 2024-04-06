@@ -4,22 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OMR Sheet</title>
-<style>body {
-  font-family: Arial, sans-serif;
-}
-
-h1 {
-  text-align: center;
-}
-
-form {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-p {
-  font-weight: bold;
-}</style>
 </head>
 <body>
 <h1>OMR Sheet</h1>
@@ -51,23 +35,7 @@ function submitOMR() {
     sessionStorage.setItem('selectedOptions', JSON.stringify(selectedOptions));
     window.location.href = 'second-page.html';
 }
-
-function checkAnswers() {
-    var selectedOptions = JSON.parse(sessionStorage.getItem('selectedOptions'));
-    var correctOptions = ['A', 'B', 'C', 'D']; // Example correct options
-    var correctCount = 0;
-    var incorrectQuestions = [];
-    for (var i = 0; i < correctOptions.length; i++) {
-        if (selectedOptions[i] === correctOptions[i]) {
-            correctCount++;
-        } else {
-            incorrectQuestions.push(i + 1);
-        }
-    }
-    sessionStorage.setItem('incorrectQuestions', JSON.stringify(incorrectQuestions));
-    window.location.href = 'third-page.html';
-}
-  
 </script>
+
 </body>
 </html>
