@@ -1,9 +1,35 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Select Correct Options</title>
+<script>
+function checkAnswers() {
+    var selectedOptions = [];
+    var inputs = document.querySelectorAll('input[type="radio"]:checked');
+    inputs.forEach(input => {
+        selectedOptions.push(input.value);
+    });
+    var correctOptions = ['A', 'B', 'C', 'D']; // Example correct options
+    var correctCount = 0;
+    var incorrectQuestions = [];
+    for (var i = 0; i < correctOptions.length; i++) {
+        if (selectedOptions[i] === correctOptions[i]) {
+            correctCount++;
+            document.getElementById('q' + (i + 1)).innerHTML = 'Correct'; // Mark correct questions
+        } else {
+            incorrectQuestions.push(i + 1);
+            document.getElementById('q' + (i + 1)).innerHTML = 'Incorrect'; // Mark incorrect questions
+        }
+    }
+    if (correctCount === correctOptions.length) {
+        document.getElementById('results').innerHTML = '<p>Congratulations! All questions are correct.</p>';
+    } else {
+        document.getElementById('results').innerHTML = '<p>The following questions are incorrect: ' + incorrectQuestions.join(', ') + '</p>';
+    }
+}
+</script>
 </head>
 <body>
 <h1>Select Correct Options</h1>
@@ -24,5 +50,6 @@
   <br>
   <button type="button" onclick="checkAnswers()">Check Answers</button>
 </form>
+<div id="results"></div>
 </body>
 </html>
