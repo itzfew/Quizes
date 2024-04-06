@@ -1,50 +1,37 @@
- // highScore.js
+// highScore.js
 
-let scoresBtn = document.querySelector(
-	"#view-high-scores"
-);
-
-// Rank previous scores in order by
-// Retrieving scores from localStorage
-
+// Function to retrieve and print high scores
 function printHighscores() {
-	let highscores =
-		JSON.parse(
-			window.localStorage.getItem(
-				"highscores"
-			)
-		) || [];
-	highscores.sort(function (a, b) {
-		return b.score - a.score;
-	});
-	highscores.forEach(function (
-		score
-	) {
-		let liTag =
-			document.createElement(
-				"li"
-			);
-		liTag.textContent =
-			score.name +
-			" - " +
-			score.score;
-		let olEl =
-			document.getElementById(
-				"highscores"
-			);
-		olEl.appendChild(liTag);
-	});
+    // Retrieve scores from localStorage or initialize as an empty array
+    let highscores = JSON.parse(window.localStorage.getItem("highscores")) || [];
+    
+    // Sort the scores in descending order
+    highscores.sort(function (a, b) {
+        return b.score - a.score;
+    });
+    
+    // Clear previous scores displayed
+    let olEl = document.getElementById("highscores");
+    olEl.innerHTML = "";
+    
+    // Print the sorted scores
+    highscores.forEach(function (score) {
+        let liTag = document.createElement("li");
+        liTag.textContent = score.name + " - " + score.score;
+        olEl.appendChild(liTag);
+    });
 }
 
-// Clear previous scores when users click clear
+// Function to clear high scores
 function clearHighscores() {
-	window.localStorage.removeItem(
-		"highscores"
-	);
-	window.location.reload();
+    // Remove scores from localStorage
+    window.localStorage.removeItem("highscores");
+    // Reload the page to reflect the changes
+    window.location.reload();
 }
-document.getElementById(
-	"clear"
-).onclick = clearHighscores;
 
+// Event listener for the clear button
+document.getElementById("clear").onclick = clearHighscores;
+
+// Call the function to print high scores when the page loads
 printHighscores();
