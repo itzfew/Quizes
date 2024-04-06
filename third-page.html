@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,11 +9,12 @@
 <h1>Results</h1>
 <div id="results"></div>
 <script>
-var incorrectQuestions = JSON.parse(sessionStorage.getItem('incorrectQuestions'));
-if (incorrectQuestions && incorrectQuestions.length > 0) {
-    document.getElementById('results').innerHTML = '<p>The following questions are incorrect: ' + incorrectQuestions.join(', ') + '</p>';
-} else {
+var isCorrect = sessionStorage.getItem('correct');
+if (isCorrect === 'true') {
     document.getElementById('results').innerHTML = '<p>Congratulations! All questions are correct.</p>';
+} else {
+    var incorrectQuestions = JSON.parse(sessionStorage.getItem('incorrectQuestions'));
+    document.getElementById('results').innerHTML = '<p>The following questions are incorrect: ' + incorrectQuestions.join(', ') + '</p>';
 }
 </script>
 </body>
