@@ -27,17 +27,11 @@
 
 <script>
 function checkAnswers() {
-    var selectedOptions = [];
-    var q1Inputs = document.getElementsByName('q1');
-    var q2Inputs = document.getElementsByName('q2');
+    var q1Selected = getSelectedValue('q1');
+    var q2Selected = getSelectedValue('q2');
     
-    if (isSelected(q1Inputs) && isSelected(q2Inputs)) {
-        var q1Selected = getSelectedValue(q1Inputs);
-        var q2Selected = getSelectedValue(q2Inputs);
-
-        selectedOptions.push(q1Selected);
-        selectedOptions.push(q2Selected);
-
+    if (q1Selected && q2Selected) {
+        var selectedOptions = [q1Selected, q2Selected];
         var correctOptions = ['A', 'B']; // Example correct options
         var correctCount = 0;
         var incorrectQuestions = [];
@@ -62,21 +56,14 @@ function checkAnswers() {
     }
 }
 
-function isSelected(inputs) {
-    for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].checked) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function getSelectedValue(inputs) {
+function getSelectedValue(questionName) {
+    var inputs = document.getElementsByName(questionName);
     for (var i = 0; i < inputs.length; i++) {
         if (inputs[i].checked) {
             return inputs[i].value;
         }
     }
+    return null;
 }
 </script>
 
