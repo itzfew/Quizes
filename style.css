@@ -1,52 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Select Correct Options</title>
-</head>
-<body>
-<h1>Select Correct Options</h1>
-<form id="questionsForm">
-  <p>Question 1:</p>
-  <input type="radio" name="q1" value="A"> A
-  <input type="radio" name="q1" value="B"> B
-  <input type="radio" name="q1" value="C"> C
-  <input type="radio" name="q1" value="D"> D
-  <br>
-  <p>Question 2:</p>
-  <input type="radio" name="q2" value="A"> A
-  <input type="radio" name="q2" value="B"> B
-  <input type="radio" name="q2" value="C"> C
-  <input type="radio" name="q2" value="D"> D
-  <br>
-  <!-- Add more questions as needed -->
-  <br>
-  <button type="button" onclick="checkAnswers()">Check Answers</button>
-</form>
+/* Style.css */
 
-<script>
-function checkAnswers() {
-    var q1Selected = getSelectedValue('q1');
-    var q2Selected = getSelectedValue('q2');
-    
-    if (q1Selected && q2Selected) {
-        var selectedOptions = [q1Selected, q2Selected];
-        sessionStorage.setItem('selectedOptions', JSON.stringify(selectedOptions));
-        window.location.href = 'third-page.html';
-    }
+* {
+	font-family: Georgia, Times, "Times New Roman", serif;
 }
 
-function getSelectedValue(questionName) {
-    var inputs = document.getElementsByName(questionName);
-    for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].checked) {
-            return inputs[i].value;
-        }
-    }
-    return null;
+.quiz,
+.scores {
+	margin: 50px auto 0 auto;
+	max-width: 400px;
 }
-</script>
 
-</body>
-</html>
+#top {
+	color: green;
+}
+
+.containerNew {
+	border: 5px solid;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	height: 580px;
+	width: 50%;
+	transform: translate(-50%, -50%);
+	padding: 10px;
+}
+
+p {
+	margin: 15px 15px;
+}
+
+.landing {
+	text-align: center;
+}
+
+.scoresHeader {
+	position: absolute;
+	top: 15px;
+	left: 15px;
+}
+
+.timer {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+}
+
+button {
+	display: inline-block;
+	margin: 10px;
+	cursor: pointer;
+	color: #fff;
+	background-color: #52865a;
+	border-radius: 5px;
+	border: 0;
+	padding: 20px;
+}
+
+button:hover {
+	background-color: #2a8d12;
+}
+
+.options button {
+	display: block;
+}
+
+input[type="text"] {
+	font-size: 100%;
+}
+
+.hide {
+	display: none;
+}
+
+.feedback {
+	font-style: bold;
+	font-size: 120%;
+	margin-top: 20px;
+	padding-top: 15px;
+	color: #fff;
+	border-top: 2px solid #4B0082;
+}
+
+ol {
+	padding-left: 15px;
+	max-height: 600px;
+	overflow: auto;
+}
+
+li {
+	padding: 5px;
+	list-style: decimal inside none;
+}
+
+li:nth-child(odd) {
+	background-color: #dfdae7;
+}
+
+@media screen and (max-width: 768px) {
+	.containerNew {
+		width: 80%;
+	}
+}
+
+@media screen and (max-width: 575px) {
+	.containerNew {
+		width: 90%;
+	}
+
+	.quiz,
+	.scores {
+		max-width: 90%;
+	}
+}
