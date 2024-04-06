@@ -26,6 +26,23 @@
 </form>
 
 <script>
+// Function to pre-select previously chosen options
+function preSelectOptions() {
+    var selectedOptions = JSON.parse(sessionStorage.getItem('selectedOptions'));
+    if (selectedOptions) {
+        var form = document.getElementById('questionsForm');
+        selectedOptions.forEach(option => {
+            var input = form.querySelector('input[value="' + option + '"]');
+            if (input) {
+                input.checked = true;
+            }
+        });
+    }
+}
+
+// Call the function when the page loads
+window.onload = preSelectOptions;
+
 function checkAnswers() {
     var q1Selected = getSelectedValue('q1');
     var q2Selected = getSelectedValue('q2');
