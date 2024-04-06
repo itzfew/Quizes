@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMR Sheet</title>
+<style>body {
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+}
+
+form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+p {
+  font-weight: bold;
+}</style>
+</head>
+<body>
+<h1>OMR Sheet</h1>
+<form id="omrForm">
+  <p>Question 1:</p>
+  <input type="radio" name="q1" value="A"> A
+  <input type="radio" name="q1" value="B"> B
+  <input type="radio" name="q1" value="C"> C
+  <input type="radio" name="q1" value="D"> D
+  <br>
+  <p>Question 2:</p>
+  <input type="radio" name="q2" value="A"> A
+  <input type="radio" name="q2" value="B"> B
+  <input type="radio" name="q2" value="C"> C
+  <input type="radio" name="q2" value="D"> D
+  <br>
+  <!-- Add more questions as needed -->
+  <br>
+  <button type="button" onclick="submitOMR()">Submit OMR</button>
+</form>
+
+<script src="script.js"></script>
+</body>
+</html>
