@@ -1,27 +1,93 @@
- <!DOCTYPE html>
+<!--index.html-->
+
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>General Knowledge Quiz</title>
-  <link rel="stylesheet" href="styles.css">
+	<meta charset="UTF-8" />
+	<meta name="viewport"
+		content="width=device-width,
+				initial-scale=1.0" />
+	<link rel="stylesheet"
+		href="./style.css" />
+	<title>Code Quiz</title>
 </head>
+
 <body>
-  <div class="container">
-    <h1>General Knowledge</h1>
-    <div id="question"></div>
-    <div id="options"></div>
-    <div id="feedback"></div>
-    <button onclick="prevQuestion()">Previous</button>
-     <button id="nextButton" onclick="nextOrSubmit()">Next</button>
-    <div id="result"></div>
-  </div>
-    
-  </div>
-  <script src="script.js"></script>
-<footer style="background-color: white; color: black; text-align: center; position: fixed; bottom: 0; width: 100%;">
-  <p style="display: none;">------ Credit of this -----please don't remove this-</p>
-  <p>Website created by <a href="https://github.com/Itzfew" style="color: black;">Itzfew</a></p>
-</footer>
+	<div class="containerNew">
+		<header>
+			<div>
+				<a href="./highscore.html">
+					<button class="scores-header"
+							id="view-high-scores">
+						View High Scores
+					</button>
+				</a>
+			</div>
+
+			<div class="timer">
+				<p>
+					Time:
+					<span id="timer">
+						0
+					</span>
+				</p>
+			</div>
+		</header>
+
+		<main class="quiz">
+			<div id="quiz-start">
+				<div class="landing"
+					id="start-screen">
+					<h1 id="top">
+						GeeksforGeeks
+					</h1>
+					<h1>
+						Coding Quiz Challenge
+					</h1>
+					<p>
+						Try to answer the following
+						code-related questions with
+						in the time limit. Keep in
+						mind that incorrect answers
+						will penalize your score/time
+						by ten seconds!
+					</p>
+					<button id="start">
+						Start Quiz
+					</button>
+				</div>
+			</div>
+
+			<div class="hide" id="questions">
+				<h2 id="question-words"></h2>
+				<div class="options" id="options">
+				</div>
+			</div>
+
+			<div class="hide" id="quiz-end">
+				<h2>All Done!</h2>
+				<p>Your final score is:
+					<span id="score-final">
+					</span>
+				</p>
+				<p>
+					Please enter your name:
+					<input type="text"
+						id="name"
+						max="3" />
+					<button id="submit-score">
+						Submit
+					</button>
+				</p>
+			</div>
+
+			<div id="feedback"
+				class="feedback hide">
+			</div>
+		</main>
+	</div>
+	<script src="./script.js"></script>
 </body>
+
 </html>
