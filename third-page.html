@@ -8,6 +8,7 @@
 <body>
 <h1>Results</h1>
 <div id="results"></div>
+
 <script>
 var isCorrect = sessionStorage.getItem('correct');
 if (isCorrect === 'true') {
@@ -17,5 +18,6 @@ if (isCorrect === 'true') {
     document.getElementById('results').innerHTML = '<p>The following questions are incorrect: ' + incorrectQuestions.join(', ') + '</p>';
 }
 </script>
+
 </body>
 </html>
