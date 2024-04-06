@@ -1,50 +1,93 @@
+<!--index.html-->
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Results</title>
-<style>
-.correct { color: green; }
-.incorrect { color: red; }
-</style>
+	<meta charset="UTF-8" />
+	<meta name="viewport"
+		content="width=device-width,
+				initial-scale=1.0" />
+	<link rel="stylesheet"
+		href="./style.css" />
+	<title>Code Quiz</title>
 </head>
+
 <body>
-<h1>Results</h1>
-<div id="results"></div>
+	<div class="containerNew">
+		<header>
+			<div>
+				<a href="./highscore.html">
+					<button class="scores-header"
+							id="view-high-scores">
+						View High Scores
+					</button>
+				</a>
+			</div>
 
-<script>
-// Retrieve selected options from session storage
-var selectedOptions1 = JSON.parse(sessionStorage.getItem('selectedOptions1'));
-var selectedOptions2 = JSON.parse(sessionStorage.getItem('selectedOptions2'));
+			<div class="timer">
+				<p>
+					Time:
+					<span id="timer">
+						0
+					</span>
+				</p>
+			</div>
+		</header>
 
-// Check if selected options are available
-if (selectedOptions1 && selectedOptions2) {
-    var resultsDiv = document.getElementById('results');
-    // Iterate over the questions
-    for (var i = 0; i < selectedOptions1.length; i++) {
-        var questionNum = i + 1;
-        var questionDiv = document.createElement('div');
-        var questionText = document.createTextNode('Question ' + questionNum + ': ');
-        questionDiv.appendChild(questionText);
-        
-        // Compare selected options for each question
-        if (selectedOptions1[i] === selectedOptions2[i]) {
-            questionDiv.classList.add('correct');
-            var optionText = document.createTextNode('Selected option: ' + selectedOptions1[i]);
-        } else {
-            questionDiv.classList.add('incorrect');
-            var optionText = document.createTextNode('Selected options are different');
-        }
-        
-        questionDiv.appendChild(optionText);
-        resultsDiv.appendChild(questionDiv);
-    }
-} else {
-    // Handle case when selected options are not available
-    document.getElementById('results').innerHTML = '<p>No selected options found. Please go back and select options.</p>';
-}
-</script>
+		<main class="quiz">
+			<div id="quiz-start">
+				<div class="landing"
+					id="start-screen">
+					<h1 id="top">
+						GeeksforGeeks
+					</h1>
+					<h1>
+						Coding Quiz Challenge
+					</h1>
+					<p>
+						Try to answer the following
+						code-related questions with
+						in the time limit. Keep in
+						mind that incorrect answers
+						will penalize your score/time
+						by ten seconds!
+					</p>
+					<button id="start">
+						Start Quiz
+					</button>
+				</div>
+			</div>
 
+			<div class="hide" id="questions">
+				<h2 id="question-words"></h2>
+				<div class="options" id="options">
+				</div>
+			</div>
+
+			<div class="hide" id="quiz-end">
+				<h2>All Done!</h2>
+				<p>Your final score is:
+					<span id="score-final">
+					</span>
+				</p>
+				<p>
+					Please enter your name:
+					<input type="text"
+						id="name"
+						max="3" />
+					<button id="submit-score">
+						Submit
+					</button>
+				</p>
+			</div>
+
+			<div id="feedback"
+				class="feedback hide">
+			</div>
+		</main>
+	</div>
+	<script src="./script.js"></script>
 </body>
+
 </html>
