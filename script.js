@@ -1,23 +1,16 @@
-const questions = [
-  { 
-    question: "What is the capital of India?",
-    options: ["Mumbai", "Delhi", "Kolkata", "Chennai"],
-    correctAnswer: "Delhi"
-  },
-  { 
-    question: "Who was the first Prime Minister of India?",
-    options: ["Jawaharlal Nehru", "Mahatma Gandhi", "Indira Gandhi", "Sardar Vallabhbhai Patel"],
-    correctAnswer: "Jawaharlal Nehru"
-  },
-  { 
-    question: "Which river is known as the 'Ganga of the South'?",
-    options: ["Yamuna", "Godavari", "Krishna", "Kaveri"],
-    correctAnswer: "Kaveri"
-  }
-];
-
 let currentQuestion = 0;
 let score = 0;
+let questions = [];
+
+async function fetchQuestions() {
+  try {
+    const response = await fetch('questions.json');
+    questions = await response.json();
+    displayQuestion();
+  } catch (error) {
+    console.error('Error fetching questions:', error);
+  }
+}
 
 function displayQuestion() {
   const questionElement = document.getElementById("question");
@@ -36,11 +29,6 @@ function displayQuestion() {
       checkAnswer(option, button);
     });
 
-    // Add a class to indicate the previously selected option
-    if (localStorage.getItem("selectedOption") === option) {
-      button.classList.add("selected");
-    }
-
     optionsElement.appendChild(button);
   });
 }
@@ -49,20 +37,6 @@ function checkAnswer(answer, button) {
   const current = questions[currentQuestion];
   const feedbackElement = document.getElementById("feedback");
 
-  // Get previously selected options from localStorage or initialize an empty array
-  let selectedOptions = JSON.parse(localStorage.getItem("selectedOptions")) || [];
-
-  // Store the selected option for the current question
-  selectedOptions[currentQuestion] = { question: current.question, selectedOption: answer };
-
-  // Save the updated selected options back to localStorage
-  localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
-  
-  // Disable all buttons after selecting an answer
-  const buttons = document.querySelectorAll("#options button");
-  buttons.forEach(btn => btn.disabled = true);
-
-  // Highlight correct and incorrect options
   if (answer === current.correctAnswer) {
     feedbackElement.textContent = "Correct!";
     feedbackElement.style.color = "#00ff00"; // Green color
@@ -73,14 +47,12 @@ function checkAnswer(answer, button) {
     feedbackElement.style.color = "#ff0000"; // Red color
     button.style.backgroundColor = "#ff0000"; // Red color
     
-    // Highlight the correct option
     const correctButton = document.querySelector(`#options button:nth-child(${current.options.indexOf(current.correctAnswer) + 1})`);
     correctButton.style.backgroundColor = "#00ff00"; // Green color
 
     score -= 1; // Deduct 1 point for incorrect answer
   }
 
-  // Move to the next question or show the result after 10 seconds
   setTimeout(() => {
     currentQuestion++;
     if (currentQuestion < questions.length) {
@@ -89,6 +61,11 @@ function checkAnswer(answer, button) {
       showResult();
     }
   }, 10000); // 10 seconds timeout
+}
+
+function showResult() {
+  const resultElement = document.getElementById("result");
+  resultElement.innerHTML = `Congratulations! Your score is ${score}/${questions.length * 4}`;
 }
 
 function nextQuestion() {
@@ -109,9 +86,4 @@ function prevQuestion() {
   }
 }
 
-function showResult() {
-  const resultElement = document.getElementById("result");
-  resultElement.innerHTML = `Congratulations! Your score is ${score}/${questions.length * 4}`;
-}
-
-displayQuestion();
+fetchQuestions();
