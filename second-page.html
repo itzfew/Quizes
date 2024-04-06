@@ -17,16 +17,16 @@ function checkAnswers() {
     for (var i = 0; i < correctOptions.length; i++) {
         if (selectedOptions[i] === correctOptions[i]) {
             correctCount++;
-            document.getElementById('q' + (i + 1)).innerHTML = 'Correct'; // Mark correct questions
         } else {
             incorrectQuestions.push(i + 1);
-            document.getElementById('q' + (i + 1)).innerHTML = 'Incorrect'; // Mark incorrect questions
         }
     }
     if (correctCount === correctOptions.length) {
-        document.getElementById('results').innerHTML = '<p>Congratulations! All questions are correct.</p>';
+        sessionStorage.setItem('correct', 'true');
+        window.location.href = 'third-page.html';
     } else {
-        document.getElementById('results').innerHTML = '<p>The following questions are incorrect: ' + incorrectQuestions.join(', ') + '</p>';
+        sessionStorage.setItem('incorrectQuestions', JSON.stringify(incorrectQuestions));
+        alert('Please answer all questions before checking.');
     }
 }
 </script>
@@ -50,6 +50,5 @@ function checkAnswers() {
   <br>
   <button type="button" onclick="checkAnswers()">Check Answers</button>
 </form>
-<div id="results"></div>
 </body>
 </html>
