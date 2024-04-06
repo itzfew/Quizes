@@ -28,27 +28,54 @@
 <script>
 function checkAnswers() {
     var selectedOptions = [];
-    var form = document.getElementById('questionsForm');
-    var inputs = form.querySelectorAll('input[type="radio"]:checked');
-    inputs.forEach(input => {
-        selectedOptions.push(input.value);
-    });
-    var correctOptions = ['A', 'B', 'C', 'D']; // Example correct options
-    var correctCount = 0;
-    var incorrectQuestions = [];
-    for (var i = 0; i < correctOptions.length; i++) {
-        if (selectedOptions[i] === correctOptions[i]) {
-            correctCount++;
+    var q1Inputs = document.getElementsByName('q1');
+    var q2Inputs = document.getElementsByName('q2');
+    
+    if (isSelected(q1Inputs) && isSelected(q2Inputs)) {
+        var q1Selected = getSelectedValue(q1Inputs);
+        var q2Selected = getSelectedValue(q2Inputs);
+
+        selectedOptions.push(q1Selected);
+        selectedOptions.push(q2Selected);
+
+        var correctOptions = ['A', 'B']; // Example correct options
+        var correctCount = 0;
+        var incorrectQuestions = [];
+
+        for (var i = 0; i < correctOptions.length; i++) {
+            if (selectedOptions[i] === correctOptions[i]) {
+                correctCount++;
+            } else {
+                incorrectQuestions.push(i + 1);
+            }
+        }
+
+        if (correctCount === correctOptions.length) {
+            sessionStorage.setItem('correct', 'true');
+            window.location.href = 'third-page.html';
         } else {
-            incorrectQuestions.push(i + 1);
+            sessionStorage.setItem('incorrectQuestions', JSON.stringify(incorrectQuestions));
+            alert('Some questions are incorrect. Please review your answers.');
+        }
+    } else {
+        alert('Please answer all questions before checking.');
+    }
+}
+
+function isSelected(inputs) {
+    for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].checked) {
+            return true;
         }
     }
-    if (correctCount === correctOptions.length) {
-        sessionStorage.setItem('correct', 'true');
-        window.location.href = 'third-page.html';
-    } else {
-        sessionStorage.setItem('incorrectQuestions', JSON.stringify(incorrectQuestions));
-        alert('Please answer all questions before checking.');
+    return false;
+}
+
+function getSelectedValue(inputs) {
+    for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].checked) {
+            return inputs[i].value;
+        }
     }
 }
 </script>
