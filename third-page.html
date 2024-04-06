@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Results</title>
+</head>
+<body>
+<h1>Results</h1>
+<div id="results"></div>
+<script>
+var incorrectQuestions = JSON.parse(sessionStorage.getItem('incorrectQuestions'));
+if (incorrectQuestions && incorrectQuestions.length > 0) {
+    document.getElementById('results').innerHTML = '<p>The following questions are incorrect: ' + incorrectQuestions.join(', ') + '</p>';
+} else {
+    document.getElementById('results').innerHTML = '<p>Congratulations! All questions are correct.</p>';
+}
+</script>
+</body>
+</html>
