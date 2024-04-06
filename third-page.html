@@ -4,18 +4,42 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Results</title>
+<style>
+.correct { color: green; }
+.incorrect { color: red; }
+</style>
 </head>
 <body>
 <h1>Results</h1>
 <div id="results"></div>
 
 <script>
-var isCorrect = sessionStorage.getItem('correct');
-if (isCorrect === 'true') {
-    document.getElementById('results').innerHTML = '<p>Congratulations! All questions are correct.</p>';
+// Retrieve selected options from session storage
+var selectedOptions = JSON.parse(sessionStorage.getItem('selectedOptions'));
+if (selectedOptions) {
+    // Retrieve correct options
+    var correctOptions = ['A', 'B']; // Example correct options
+    
+    // Generate content for each question dynamically
+    var resultsDiv = document.getElementById('results');
+    for (var i = 0; i < selectedOptions.length; i++) {
+        var questionNum = i + 1;
+        var questionDiv = document.createElement('div');
+        var questionText = document.createTextNode('Question ' + questionNum + ': ');
+        questionDiv.appendChild(questionText);
+        var optionText = document.createTextNode('Selected option: ' + selectedOptions[i]);
+        questionDiv.appendChild(optionText);
+        // Check if the selected option is correct
+        if (selectedOptions[i] === correctOptions[i]) {
+            questionDiv.classList.add('correct');
+        } else {
+            questionDiv.classList.add('incorrect');
+        }
+        resultsDiv.appendChild(questionDiv);
+    }
 } else {
-    var incorrectQuestions = JSON.parse(sessionStorage.getItem('incorrectQuestions'));
-    document.getElementById('results').innerHTML = '<p>The following questions are incorrect: ' + incorrectQuestions.join(', ') + '</p>';
+    // Handle case when no selected options are found
+    resultsDiv.innerHTML = '<p>No selected options found. Please go back and select options.</p>';
 }
 </script>
 
