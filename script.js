@@ -57,8 +57,14 @@ function checkAnswer(answer, button) {
     currentQuestion++;
     if (currentQuestion < questions.length) {
       displayQuestion();
+      // Change button text to "Submit" when reaching the last question
+      if (currentQuestion === questions.length - 1) {
+        document.getElementById("nextButton").textContent = "Submit";
+      }
     } else {
       showResult();
+      // Hide the next button
+      document.getElementById("nextButton").style.display = "none";
     }
   }, 10000); // 10 seconds timeout
 }
@@ -72,8 +78,10 @@ function nextQuestion() {
   if (currentQuestion < questions.length - 1) {
     currentQuestion++;
     displayQuestion();
-  } else {
-    // Show a message or handle what to do when there are no more questions
+    // Change button text to "Submit" when reaching the last question
+    if (currentQuestion === questions.length - 1) {
+      document.getElementById("nextButton").textContent = "Submit";
+    }
   }
 }
 
@@ -81,9 +89,14 @@ function prevQuestion() {
   if (currentQuestion > 0) {
     currentQuestion--;
     displayQuestion();
-  } else {
-    // Show a message or handle what to do when at the first question
   }
+}
+
+function submitQuiz() {
+  // Calculate and display the result
+  showResult();
+  // Hide the next button
+  document.getElementById("nextButton").style.display = "none";
 }
 
 fetchQuestions();
