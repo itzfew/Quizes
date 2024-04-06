@@ -41,6 +41,33 @@ p {
   <button type="button" onclick="submitOMR()">Submit OMR</button>
 </form>
 
-<script src="script.js"></script>
+<script>
+function submitOMR() {
+    var selectedOptions = [];
+    var inputs = document.querySelectorAll('input[type="radio"]:checked');
+    inputs.forEach(input => {
+        selectedOptions.push(input.value);
+    });
+    sessionStorage.setItem('selectedOptions', JSON.stringify(selectedOptions));
+    window.location.href = 'second-page.html';
+}
+
+function checkAnswers() {
+    var selectedOptions = JSON.parse(sessionStorage.getItem('selectedOptions'));
+    var correctOptions = ['A', 'B', 'C', 'D']; // Example correct options
+    var correctCount = 0;
+    var incorrectQuestions = [];
+    for (var i = 0; i < correctOptions.length; i++) {
+        if (selectedOptions[i] === correctOptions[i]) {
+            correctCount++;
+        } else {
+            incorrectQuestions.push(i + 1);
+        }
+    }
+    sessionStorage.setItem('incorrectQuestions', JSON.stringify(incorrectQuestions));
+    window.location.href = 'third-page.html';
+}
+  
+</script>
 </body>
 </html>
