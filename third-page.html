@@ -17,12 +17,6 @@
 // Retrieve selected options from session storage
 var selectedOptions = JSON.parse(sessionStorage.getItem('selectedOptions'));
 
-// Set correct options for each question
-var correctOptions = [
-    ['A', 'B', 'C', 'D'], // Correct options for question 1
-    ['A', 'B', 'C', 'D']  // Correct options for question 2
-];
-
 if (selectedOptions) {
     // Generate content for each question dynamically
     var resultsDiv = document.getElementById('results');
@@ -34,7 +28,7 @@ if (selectedOptions) {
         var optionText = document.createTextNode('Selected option: ' + selectedOptions[i]);
         questionDiv.appendChild(optionText);
         // Check if the selected option is correct
-        if (selectedOptions[i] === correctOptions[i][selectedOptions[i]]) {
+        if (selectedOptions[i] === getCorrectOption(questionNum)) {
             questionDiv.classList.add('correct');
         } else {
             questionDiv.classList.add('incorrect');
@@ -46,8 +40,15 @@ if (selectedOptions) {
     resultsDiv.innerHTML = '<p>No selected options found. Please go back and select options.</p>';
 }
 
-console.log('Selected Options:', selectedOptions);
-console.log('Correct Options:', correctOptions);
+function getCorrectOption(questionNum) {
+    // Define correct options for each question
+    if (questionNum === 1) {
+        return 'A'; // Correct option for question 1
+    } else if (questionNum === 2) {
+        return 'B'; // Correct option for question 2
+    }
+    // Add more questions as needed
+}
 </script>
 
 </body>
