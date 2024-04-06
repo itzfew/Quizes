@@ -15,39 +15,34 @@
 
 <script>
 // Retrieve selected options from session storage
-var selectedOptions = JSON.parse(sessionStorage.getItem('selectedOptions'));
+var selectedOptions1 = JSON.parse(sessionStorage.getItem('selectedOptions1'));
+var selectedOptions2 = JSON.parse(sessionStorage.getItem('selectedOptions2'));
 
-if (selectedOptions) {
-    // Generate content for each question dynamically
+// Check if selected options are available
+if (selectedOptions1 && selectedOptions2) {
     var resultsDiv = document.getElementById('results');
-    for (var i = 0; i < selectedOptions.length; i++) {
+    // Iterate over the questions
+    for (var i = 0; i < selectedOptions1.length; i++) {
         var questionNum = i + 1;
         var questionDiv = document.createElement('div');
         var questionText = document.createTextNode('Question ' + questionNum + ': ');
         questionDiv.appendChild(questionText);
-        var optionText = document.createTextNode('Selected option: ' + selectedOptions[i]);
-        questionDiv.appendChild(optionText);
-        // Check if the selected option is correct
-        if (selectedOptions[i] === getCorrectOption(questionNum)) {
+        
+        // Compare selected options for each question
+        if (selectedOptions1[i] === selectedOptions2[i]) {
             questionDiv.classList.add('correct');
+            var optionText = document.createTextNode('Selected option: ' + selectedOptions1[i]);
         } else {
             questionDiv.classList.add('incorrect');
+            var optionText = document.createTextNode('Selected options are different');
         }
+        
+        questionDiv.appendChild(optionText);
         resultsDiv.appendChild(questionDiv);
     }
 } else {
-    // Handle case when no selected options are found
-    resultsDiv.innerHTML = '<p>No selected options found. Please go back and select options.</p>';
-}
-
-function getCorrectOption(questionNum) {
-    // Define correct options for each question
-    if (questionNum === 1) {
-        return 'A'; // Correct option for question 1
-    } else if (questionNum === 2) {
-        return 'B'; // Correct option for question 2
-    }
-    // Add more questions as needed
+    // Handle case when selected options are not available
+    document.getElementById('results').innerHTML = '<p>No selected options found. Please go back and select options.</p>';
 }
 </script>
 
