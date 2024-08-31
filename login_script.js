@@ -1,13 +1,13 @@
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBiKMAtstlv7R9DD5bDJ_ju2KXy0Oz91uY",
-  authDomain: "quiz-34ac3.firebaseapp.com",
-  databaseURL: "https://quiz-34ac3-default-rtdb.firebaseio.com",
-  projectId: "quiz-34ac3",
-  storageBucket: "quiz-34ac3.appspot.com",
-  messagingSenderId: "33579432678",
-  appId: "1:33579432678:web:585465a1afc56d5bb35927",
+  apiKey: "AIzaSyAolcB_o6f1CQPbLSYrMKTYaz_xYs54khY",
+  authDomain: "quizapp-1ae20.firebaseapp.com",
+  projectId: "quizapp-1ae20",
+  storageBucket: "quizapp-1ae20.appspot.com",
+  messagingSenderId: "626886802317",
+  appId: "1:626886802317:web:df08c307697ca235c45bc4",
+  measurementId: "G-NKJTC5C1XW"
 };
-
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const databse = firebase.database();
