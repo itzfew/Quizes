@@ -263,7 +263,7 @@
         <h1><i class="fas fa-question-circle"></i> Quiz Game</h1>
         <div id="setup">
             <label for="numQuestions"><i class="fas fa-list-alt"></i> Number of Questions: </label>
-            <input type="number" id="numQuestions" min="1" max="25" placeholder="5">
+            <input type="number" id="numQuestions" min="1" max="15" placeholder="5">
             <label for="subject"><i class="fas fa-book"></i> Select Subject:</label>
             <select id="subject">
                 <option value="biology">Biology</option>
@@ -299,6 +299,7 @@
                 options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
                 correct: 1
             },
+            // Additional questions...
         ];
 
         const chemistryQuestions = [
@@ -312,6 +313,7 @@
                 options: ["Hydrogen", "Oxygen", "Carbon", "Water"],
                 correct: 1
             },
+            // Additional questions...
         ];
 
         const physicsQuestions = [
@@ -325,6 +327,7 @@
                 options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Nikola Tesla"],
                 correct: 0
             },
+            // Additional questions...
         ];
 
         const mathQuestions = [
@@ -338,6 +341,7 @@
                 options: ["6", "7", "8", "9"],
                 correct: 2
             },
+            // Additional questions...
         ];
 
         const subjects = {
@@ -360,8 +364,8 @@
 
         function startQuiz() {
             numQuestions = parseInt(document.getElementById('numQuestions').value);
-            if (isNaN(numQuestions) || numQuestions < 1 || numQuestions > 25) {
-                alert("Please enter a valid number of questions (1-25).");
+            if (isNaN(numQuestions) || numQuestions < 1 || numQuestions > 15) {
+                alert("Please enter a valid number of questions (1-15).");
                 return;
             }
             const subject = document.getElementById('subject').value;
