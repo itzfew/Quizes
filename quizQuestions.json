@@ -1,0 +1,50 @@
+{
+  "biology": [
+    {
+      "question": "What is the powerhouse of the cell?",
+      "options": ["Nucleus", "Mitochondrion", "Ribosome", "Endoplasmic reticulum"],
+      "correct": 1
+    },
+    {
+      "question": "Which gas do plants absorb during photosynthesis?",
+      "options": ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+      "correct": 1
+    }
+  ],
+  "chemistry": [
+    {
+      "question": "What is the chemical formula of water?",
+      "options": ["H2O", "CO2", "NaCl", "CH4"],
+      "correct": 0
+    },
+    {
+      "question": "Which element is known as the 'universal solvent'?",
+      "options": ["Hydrogen", "Oxygen", "Carbon", "Water"],
+      "correct": 1
+    }
+  ],
+  "physics": [
+    {
+      "question": "What is the SI unit of force?",
+      "options": ["Watt", "Newton", "Joule", "Pascal"],
+      "correct": 1
+    },
+    {
+      "question": "Which scientist formulated the laws of motion?",
+      "options": ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Nikola Tesla"],
+      "correct": 0
+    }
+  ],
+  "math": [
+    {
+      "question": "What is the value of π (pi)?",
+      "options": ["3.14", "2.71", "1.62", "4.67"],
+      "correct": 0
+    },
+    {
+      "question": "What is the square root of 64?",
+      "options": ["6", "7", "8", "9"],
+      "correct": 2
+    }
+  ]
+}
