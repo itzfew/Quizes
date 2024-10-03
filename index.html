@@ -288,67 +288,112 @@
     </div>
 
     <script>
-        const biologyQuestions = [
-            {
-                question: "What is the powerhouse of the cell?",
-                options: ["Nucleus", "Mitochondrion", "Ribosome", "Endoplasmic reticulum"],
-                correct: 1
-            },
-            {
-                question: "Which gas do plants absorb during photosynthesis?",
-                options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
-                correct: 1
-            },
-            // Additional questions...
-        ];
+const biologyQuestions = [
+    {
+        question: "The oversized amoeba cells that are part of our innate immune system found in areolar tissue are called:",
+        options: ["Macrophages", "Mast cells", "Fibroblasts", "Adipocytes"],
+        correct: 0
+    },
+    {
+        question: "Cells that release heparin and histamine into the blood are:",
+        options: ["Basophils", "Mast cells", "Eosinophils", "Neutrophils"],
+        correct: 0
+    },
+    {
+        question: "This feature is not found in Periplaneta Americana:",
+        options: [
+            "During embryonic development, indeterminate and radial cleavage occur",
+            "Schizocoelom as the body cavity",
+            "Metamerically segmented body",
+            "Exoskeleton composed of N-acetyl glucose-amine"
+        ],
+        correct: 0
+    },
+    {
+        question: "The function of the gap junction is to:",
+        options: [
+            "Facilitates communication between neighboring cells by quickly connecting the cytoplasm. Movement of ions, small molecules, and some large molecules",
+            "Prevent substances from leaking through tissues",
+            "Separate two cells from each other",
+            "Perform cementation to join adjacent cells."
+        ],
+        correct: 0
+    },
+    {
+        question: "This accurately describes an animal:",
+        options: [
+            "Earthworm – the alimentary canal consists of a sequence of the pharynx, esophagus, stomach, gizzard, and intestine",
+            "Rat – left kidney is slightly higher in position than the correct one",
+            "Cockroach – 10 pairs of spiracles (8 pairs on the abdomen and 2 pairs on the thorax)",
+            "Frog — body divisible into three regions — head, neck, and trunk"
+        ],
+        correct: 0
+    },
+    {
+        question: "In which of the following preparations are you likely to come across cell junctions most frequently?",
+        options: ["Hyaline cartilage", "Thrombocytes", "Ciliated epithelium", "Tendon"],
+        correct: 2
+    },
+    {
+        question: "The non-excitable, variously shaped, and found between neurons are:",
+        options: ["Dendrites", "Nissibodies", "Glial cells", "Schwann cell"],
+        correct: 2
+    },
+    {
+        question: "How are skeletal muscles similar to visceral muscles?",
+        options: [
+            "Shape of muscle fibers.",
+            "Muscle fibers have a certain number of nuclei.",
+            "Presence of actin and myosin filaments.",
+            "Presence of light and dark bands."
+        ],
+        correct: 2
+    },
+    {
+        question: "Which ion is necessary for the contraction of a muscle and nerve impulse transmission?",
+        options: ["N+", "K+", "Ca++", "None of the above"],
+        correct: 2
+    },
+    {
+        question: "Bipolar neurons are found in human ______:",
+        options: ["Brain", "Spinal cord", "Embryonic stages", "Olfactory epithelium"],
+        correct: 3
+    },
+    {
+        question: "The epiglottis, pinna, and tip of the nose contain the following types of cartilage:",
+        options: ["Elastic", "Hyaline", "Fibrous", "Calcified"],
+        correct: 0
+    },
+    {
+        question: "What type of animal tissue changes a blood vessel’s diameter?",
+        options: ["Epithelium", "Connective", "Muscle", "Neural"],
+        correct: 2
+    },
+    {
+        question: "The body cells in cockroaches discharge their nitrogenous waste in the hemolymph mainly as:",
+        options: ["Ammonia", "Potassium urate", "Urea", "Calcium carbonate"],
+        correct: 1
+    },
+    {
+        question: "The kind of epithelium which forms the inner walls of blood vessels is:",
+        options: ["Cuboidal epithelium", "Columnar epithelium", "Ciliated columnar epithelium", "Squamous epithelium"],
+        correct: 3
+    },
+    {
+        question: "The epithelial tissue on the inner surface of bronchioles and fallopian tubes is:",
+        options: ["Cuboidal", "Glandular", "Ciliated", "Squamous"],
+        correct: 2
+    },
+    {
+        question: "In which part of the reproductive system is male cockroach sperm stored?",
+        options: ["Vas Deferens", "Testes", "Mushroom glands", "Seminal vesicles"],
+        correct: 3
+    }
+];
 
-        const chemistryQuestions = [
-            {
-                question: "What is the chemical formula of water?",
-                options: ["H2O", "CO2", "NaCl", "CH4"],
-                correct: 0
-            },
-            {
-                question: "Which element is known as the 'universal solvent'?",
-                options: ["Hydrogen", "Oxygen", "Carbon", "Water"],
-                correct: 1
-            },
-            // Additional questions...
-        ];
-
-        const physicsQuestions = [
-            {
-                question: "What is the SI unit of force?",
-                options: ["Watt", "Newton", "Joule", "Pascal"],
-                correct: 1
-            },
-            {
-                question: "Which scientist formulated the laws of motion?",
-                options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Nikola Tesla"],
-                correct: 0
-            },
-            // Additional questions...
-        ];
-
-        const mathQuestions = [
-            {
-                question: "What is the value of π (pi)?",
-                options: ["3.14", "2.71", "1.62", "4.67"],
-                correct: 0
-            },
-            {
-                question: "What is the square root of 64?",
-                options: ["6", "7", "8", "9"],
-                correct: 2
-            },
-            // Additional questions...
-        ];
 
         const subjects = {
             biology: biologyQuestions,
-            chemistry: chemistryQuestions,
-            physics: physicsQuestions,
-            math: mathQuestions
         };
 
         let selectedQuestions = [];
