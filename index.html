@@ -1,143 +1,428 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel = "stylesheet" href = "login_style.css">
-  <title>Home Page</title>
-	<!-- add icon link -->
-	<link rel = "icon" href = "Quizzo_logo.png" type = "image/x-icon"> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #4CAF50;
+            --warning-color: #f0ad4e;
+            --danger-color: #dc3545;
+            --background-color: #f0f0f0;
+            --container-color: #fff;
+            --text-color: #333;
+            --hover-color: #0056b3;
+            --border-radius: 15px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+        }
+
+        #container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: var(--container-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: transform 0.2s;
+        }
+
+        #container:hover {
+            transform: scale(1.02);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        #setup {
+            margin-bottom: 20px;
+            border: 2px solid var(--primary-color);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            background-color: #f7f9fc;
+        }
+
+        #setup label {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #setup input[type="number"], #setup select {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+            width: 80px;
+            transition: border 0.3s;
+        }
+
+        #setup input[type="number"]:focus, #setup select:focus {
+            border-color: var(--primary-color);
+        }
+
+        #startButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--secondary-color);
+            color: white;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: bold;
+        }
+
+        #startButton:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        #quiz {
+            display: none;
+        }
+
+        .question {
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .options {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .options li {
+            margin: 10px 0;
+            background-color: #e7f3fe;
+            border: 1px solid #b3d7ff;
+            border-radius: 5px;
+            padding: 10px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .options li:hover {
+            background-color: #d0e7ff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        #questionNumbers {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        #questionNumbers button {
+            flex: 1;
+            margin: 2px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: bold;
+            color: white;
+        }
+
+        #questionNumbers .selected {
+            background-color: var(--secondary-color);
+        }
+
+        #questionNumbers .solving {
+            background-color: var(--primary-color);
+        }
+
+        #questionNumbers .upcoming {
+            background-color: #ddd;
+            color: black;
+        }
+
+        #prevButton, #nextButton, #submitButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: bold;
+        }
+
+        #prevButton {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        #prevButton:hover {
+            background-color: #ec971f;
+            transform: scale(1.05);
+        }
+
+        #nextButton {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        #nextButton:hover {
+            background-color: #ec971f;
+            transform: scale(1.05);
+        }
+
+        #submitButton {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        #submitButton:hover {
+            background-color: var(--hover-color);
+            transform: scale(1.05);
+        }
+
+        #result {
+            display: none;
+            text-align: left;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: var(--box-shadow);
+        }
+
+        .result-item {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+
+        .wrong {
+            color: red;
+            font-weight: bold;
+        }
+
+        #history {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #history h2 {
+            color: var(--text-color);
+        }
+
+        #history .button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+            color: white;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        #history .button:hover {
+            background-color: var(--hover-color);
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
-	<div id ="myDiv">
-		<div id="logo">
-			<img src="Quizzo_main_logo.png" width="180px"/>
-		</div>
-		<div class="copyright">
-			Copyright &copy; Quizzo By <a class="portfolio-link" href="https://itz-kaushal.netlify.app/"> Kaushal </a>
-		</div>
-    <div class="dots-3"></div>
-	</div>
-  <div id="container" class="container">
-		<!-- FORM SECTION -->
-		<div class="row">
-			<!-- SIGN UP -->
-			<div class="col align-items-center flex-col sign-up">
-				<div class="form-wrapper align-items-center">
-					<div class="form sign-up">
-						<div class="input-group">
-							<i class='bx bxs-user'></i>
-							<input id = "email-signup" type = "email" placeholder = "Email *">
-						</div>
-						<div class="input-group">
-							<i class='bx bx-mail-send'></i>
-							<input id = "username-signup" type = "name" placeholder = "Username *"></input>
-						</div>
-						<div class="input-group">
-							<i class='bx bxs-lock-alt'></i>
-							<input id = "password-signup" type = "password" placeholder = "Password *"></input>
-						</div>
-						<div class="input-group">
-							<i class='bx bxs-lock-alt'></i>
-							<input id = "confirm-password-signup" type = "password" placeholder = "Confirm Password *"></input>
-						</div>
-						<button id = "create-acct-btn">Create Account</button>
-						<p>
-							<span>
-								Already have an account?
-							</span>
-							<b onclick="toggle()" class="pointer">
-								Sign in here
-							</b>
-						</p>
-					</div>
-				</div>
-			</div>
-			<!-- END SIGN UP -->
-			<!-- SIGN IN -->
-			<div class="col align-items-center flex-col sign-in">
-				<div class="form-wrapper align-items-center">
-					<div class="form sign-in">
-						<div class="input-group">
-							<i class='bx bxs-user'></i>
-							<input id = "email" type = "text" placeholder = "Email &#42;"></input>
-						</div>
-						<div class="input-group">
-							<i class='bx bxs-lock-alt'></i>
-							<input id = "password" type = "password" placeholder = "Password &#42;"></input>
-						</div>
-						<button id = "submit">Submit</button>
-						<p>
-							<b class="forget-btn pointer">
-								Forgot password?
-							</b>
-						</p>
-						<p>
-							<span>
-								Don't have an account?
-							</span>
-							<b onclick="toggle()" class="pointer">
-								Sign up here
-							</b>
-						</p>
-					</div>
-				</div>
-				<div class="form-wrapper">
-				</div>
-			</div>
-			<!-- END SIGN IN -->
-		</div>
-		<!-- END FORM SECTION -->
-		<!-- CONTENT SECTION -->
-		<div class="row content-row">
-			<!-- SIGN IN CONTENT -->
-			<div class="col align-items-center flex-col">
-				<div class="text sign-in">
-					<h2>
-						Happy to see you 
-					</h2>
-				</div>
-				<div class="img sign-in">
-				</div>
-			</div>
-			<!-- END SIGN IN CONTENT -->
-			<!-- SIGN UP CONTENT -->
-			<div class="col align-items-center flex-col">
-				<div class="img sign-up">
-				</div>
-				<div class="text sign-up">
-					<h2>
-						Team Quizzo Welcomes you 
-					</h2>
-				</div>
-			</div>
-			<!-- END SIGN UP CONTENT -->
-		</div>
-		<!-- END CONTENT SECTION -->
-	</div>
+    <div id="container">
+        <h1><i class="fas fa-question-circle"></i> Quiz Game</h1>
+        <div id="setup">
+            <label for="numQuestions"><i class="fas fa-list-alt"></i> Number of Questions: </label>
+            <input type="number" id="numQuestions" min="1" max="25" placeholder="5">
+            <label for="subject"><i class="fas fa-book"></i> Select Subject:</label>
+            <select id="subject">
+                <option value="biology">Biology</option>
+                <option value="chemistry">Chemistry</option>
+                <option value="physics">Physics</option>
+                <option value="math">Mathematics</option>
+            </select>
+            <button id="startButton" aria-label="Start the quiz"><i class="fas fa-play"></i> Start</button>
+        </div>
+        <div id="quiz">
+            <div id="questionNumbers"></div>
+            <div id="questionContainer">
+                <div id="question" class="question"></div>
+                <ul id="options" class="options"></ul>
+            </div>
+            <button id="prevButton" aria-label="Go to previous question"><i class="fas fa-arrow-left"></i> Previous</button>
+            <button id="nextButton" aria-label="Go to next question"><i class="fas fa-arrow-right"></i> Next</button>
+            <button id="submitButton" aria-label="Submit answers"><i class="fas fa-check"></i> Submit</button>
+        </div>
+        <div id="result"></div>
+        <div id="history"></div>
+    </div>
 
-	<script>
+    <script>
+        let subjects = {};
+        let quizHistory = JSON.parse(localStorage.getItem('quizHistory')) || [];
+        let selectedQuestions = [];
+        let userAnswers = [];
+        let currentQuestion = 0;
+        let numQuestions = 0;
 
-		document.querySelector(".container").classList.add("hidden");
-		setTimeout(function(){
-			document.getElementById("myDiv").style.display = "none";
-			document.querySelector(".container").classList.remove("hidden");
-		},5000);
-    
-		let container = document.getElementById('container')
-		toggle = () => {
-			container.classList.toggle('sign-in')
-			container.classList.toggle('sign-up')
-		}
-		setTimeout(() => {
-			container.classList.add('sign-in')
-		}, 5200)
-	</script>
-	
+        document.getElementById("startButton").addEventListener("click", startQuiz);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch('quizQuestions.json')
+                .then(response => response.json())
+                .then(data => {
+                    subjects = data;
+                })
+                .catch(error => console.error('Error loading quiz questions:', error));
+        });
+
+        function startQuiz() {
+            const subject = document.getElementById("subject").value;
+            numQuestions = parseInt(document.getElementById("numQuestions").value);
+
+            if (!numQuestions || numQuestions < 1 || numQuestions > 25) {
+                alert("Please enter a valid number of questions (1-25).");
+                return;
+            }
+
+            selectedQuestions = subjects[subject].sort(() => 0.5 - Math.random()).slice(0, numQuestions);
+            userAnswers = Array(numQuestions).fill(null);
+            currentQuestion = 0;
+
+            document.getElementById("setup").style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+            displayQuestion();
+            displayHistory();
+        }
+
+        function displayQuestion() {
+            const questionData = selectedQuestions[currentQuestion];
+            document.getElementById("question").innerText = questionData.question;
+
+            const optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+
+            questionData.options.forEach((option, index) => {
+                const li = document.createElement("li");
+                li.innerHTML = `<input type="radio" name="option" value="${index}" id="option${index}"> ${option}`;
+                optionsContainer.appendChild(li);
+            });
+
+            updateQuestionNumbers();
+        }
+
+        function updateQuestionNumbers() {
+            const questionNumbersContainer = document.getElementById("questionNumbers");
+            questionNumbersContainer.innerHTML = "";
+            selectedQuestions.forEach((_, index) => {
+                const button = document.createElement("button");
+                button.innerText = index + 1;
+                button.classList.add(currentQuestion === index ? 'selected' : 'upcoming');
+                button.addEventListener("click", () => {
+                    currentQuestion = index;
+                    displayQuestion();
+                });
+                questionNumbersContainer.appendChild(button);
+            });
+            questionNumbersContainer.children[currentQuestion].classList.add('solving');
+        }
+
+        document.getElementById("prevButton").addEventListener("click", () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+            }
+        });
+
+        document.getElementById("nextButton").addEventListener("click", () => {
+            if (currentQuestion < numQuestions - 1) {
+                currentQuestion++;
+                displayQuestion();
+            }
+        });
+
+        document.getElementById("submitButton").addEventListener("click", submitQuiz);
+
+        function submitQuiz() {
+            const selectedOption = document.querySelector('input[name="option"]:checked');
+            if (selectedOption) {
+                userAnswers[currentQuestion] = parseInt(selectedOption.value);
+            }
+
+            const resultContainer = document.getElementById("result");
+            resultContainer.innerHTML = "<h2>Quiz Results</h2>";
+
+            selectedQuestions.forEach((question, index) => {
+                const isCorrect = userAnswers[index] === question.correct;
+                const resultItem = document.createElement("div");
+                resultItem.className = "result-item";
+                resultItem.innerHTML = `
+                    <p>${question.question}</p>
+                    <p class="${isCorrect ? 'correct' : 'wrong'}">
+                        Your answer: ${question.options[userAnswers[index]]} (${isCorrect ? 'Correct' : 'Wrong'})
+                    </p>
+                `;
+                resultContainer.appendChild(resultItem);
+            });
+
+            resultContainer.style.display = "block";
+            document.getElementById("quiz").style.display = "none";
+            saveHistory();
+        }
+
+        function saveHistory() {
+            const date = new Date();
+            const score = userAnswers.reduce((acc, answer, index) => acc + (answer === selectedQuestions[index].correct ? 1 : 0), 0);
+            quizHistory.push({
+                date: date.toLocaleString(),
+                score: score,
+                total: selectedQuestions.length
+            });
+            localStorage.setItem('quizHistory', JSON.stringify(quizHistory));
+            displayHistory();
+        }
+
+        function displayHistory() {
+            const historyContainer = document.getElementById("history");
+            historyContainer.innerHTML = "<h2>Quiz History</h2>";
+
+            quizHistory.forEach(entry => {
+                const historyItem = document.createElement("div");
+                historyItem.innerHTML = `${entry.date} - Score: ${entry.score}/${entry.total}`;
+                historyItem.className = "history-item";
+                historyContainer.appendChild(historyItem);
+            });
+        }
+    </script>
 </body>
-  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
-	<script src="login_script.js"> </script>
 </html>
