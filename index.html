@@ -6,6 +6,216 @@
     <title>Quiz Game</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+    --primary-color: #007bff;
+    --secondary-color: #4CAF50;
+    --warning-color: #f0ad4e;
+    --danger-color: #dc3545;
+    --background-color: #f0f0f0;
+    --container-color: #fff;
+    --text-color: #333;
+    --border-radius: 15px;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+}
+
+#container {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: var(--container-color);
+    padding: 20px;
+    border-radius: var(--border-radius);
+}
+
+h1 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 2.5em;
+}
+
+#setup {
+    margin-bottom: 20px;
+    border: 2px solid var(--primary-color);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    background-color: #f7f9fc;
+}
+
+#setup label {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#setup input[type="number"], #setup select {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    width: 80px;
+}
+
+#setup input[type="number"]:focus, #setup select:focus {
+    border-color: var(--primary-color);
+}
+
+#startButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--secondary-color);
+    color: white;
+    font-weight: bold;
+}
+
+#quiz {
+    display: none;
+}
+
+.question {
+    margin: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+}
+
+.options {
+    list-style-type: none;
+    padding: 0;
+    text-align: left;
+}
+
+.options li {
+    margin: 10px 0;
+    background-color: #e7f3fe;
+    border: 1px solid #b3d7ff;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.options li:hover {
+    background-color: #d0e7ff;
+}
+
+.options input[type="radio"] {
+    margin-right: 10px;
+}
+
+#questionNumbers {
+    display: flex;
+    overflow-x: auto;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+#questionNumbers button {
+    flex: 1;
+    margin: 2px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+}
+
+#questionNumbers .selected {
+    background-color: var(--secondary-color);
+}
+
+#questionNumbers .solving {
+    background-color: var(--primary-color);
+}
+
+#questionNumbers .upcoming {
+    background-color: #ddd;
+    color: black;
+}
+
+#prevButton, #nextButton, #submitButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+#prevButton {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+#nextButton {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+#submitButton {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#result {
+    display: none;
+    text-align: left;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: #fff;
+}
+
+.result-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.correct {
+    color: green;
+    font-weight: bold;
+}
+
+.wrong {
+    color: red;
+    font-weight: bold;
+}
+
+#history {
+    margin-top: 20px;
+    text-align: left;
+}
+
+#history h2 {
+    color: var(--text-color);
+}
+
+#history .button {
+    margin-left: 10px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: white;
+}
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -102,7 +312,14 @@
             <input type="number" id="numQuestions" min="1" max="15" placeholder="5">
             <label for="subject"><i class="fas fa-book"></i> Select Subject:</label>
             <select id="subject">
-                <option value="biology">Biology</option>
+                <option value="Chap1">Living World </option>
+                <option value="Chap2">Biological Classification</option>
+                <option value="Chap3">Plant Kindom</option>
+                <option value="Chap4">Animal Kindom</option>
+                <option value="Chap5">Morphology In Flowering Plants</option>
+                <option value="Chap6">Anatomy In Flowering Plants</option>
+
+                
             </select>
             <button id="startButton" class="button"><i class="fas fa-play"></i> Start</button>
         </div>
@@ -125,27 +342,224 @@
     </div>
 
     <script>
-        const biologyQuestions = [
-            { question: "The oversized amoeba cells that are part of our innate immune system found in areolar tissue are called:", options: ["Macrophages", "Mast cells", "Fibroblasts", "Adipocytes"], correct: 0 },
-            { question: "Cells that release heparin and histamine into the blood are:", options: ["Basophils", "Mast cells", "Eosinophils", "Neutrophils"], correct: 0 },
-            { question: "This feature is not found in Periplaneta Americana:", options: ["During embryonic development, indeterminate and radial cleavage occur", "Schizocoelom as the body cavity", "Metamerically segmented body", "Exoskeleton composed of N-acetyl glucose-amine"], correct: 0 },
-            { question: "The function of the gap junction is to:", options: ["Facilitates communication between neighboring cells by quickly connecting the cytoplasm. Movement of ions, small molecules, and some large molecules", "Prevent substances from leaking through tissues", "Separate two cells from each other", "Perform cementation to join adjacent cells."], correct: 0 },
-            { question: "This accurately describes an animal:", options: ["Earthworm – the alimentary canal consists of a sequence of the pharynx, esophagus, stomach, gizzard, and intestine", "Rat – left kidney is slightly higher in position than the correct one", "Cockroach – 10 pairs of spiracles (8 pairs on the abdomen and 2 pairs on the thorax)", "Frog — body divisible into three regions — head, neck, and trunk"], correct: 0 },
-            { question: "In which of the following preparations are you likely to come across cell junctions most frequently?", options: ["Hyaline cartilage", "Thrombocytes", "Ciliated epithelium", "Tendon"], correct: 2 },
-            { question: "The non-excitable, variously shaped, and found between neurons are:", options: ["Dendrites", "Nissibodies", "Glial cells", "Schwann cell"], correct: 2 },
-            { question: "How are skeletal muscles similar to visceral muscles?", options: ["Shape of muscle fibers.", "Muscle fibers have a certain number of nuclei.", "Presence of actin and myosin filaments.", "Presence of light and dark bands."], correct: 2 },
-            { question: "Which ion is necessary for the contraction of a muscle and nerve impulse transmission?", options: ["N+", "K+", "Ca++", "None of the above"], correct: 2 },
-            { question: "Bipolar neurons are found in human ______:", options: ["Brain", "Spinal cord", "Embryonic stages", "Olfactory epithelium"], correct: 3 },
-            { question: "The epiglottis, pinna, and tip of the nose contain the following types of cartilage:", options: ["Elastic", "Hyaline", "Fibrous", "Calcified"], correct: 0 },
-            { question: "What type of animal tissue changes a blood vessel’s diameter?", options: ["Epithelium", "Connective", "Muscle", "Neural"], correct: 2 },
-            { question: "The body cells in cockroaches discharge their nitrogenous waste in the hemolymph mainly as:", options: ["Ammonia", "Potassium urate", "Urea", "Calcium carbonate"], correct: 1 },
-            { question: "The kind of epithelium which forms the inner walls of blood vessels is:", options: ["Cuboidal epithelium", "Columnar epithelium", "Ciliated columnar epithelium", "Squamous epithelium"], correct: 3 },
-            { question: "The epithelial tissue on the inner surface of bronchioles and fallopian tubes is:", options: ["Cuboidal", "Glandular", "Ciliated", "Squamous"], correct: 2 },
-            { question: "In which part of the reproductive system is male cockroach sperm stored?", options: ["Vas Deferens", "Testes", "Mushroom glands", "Seminal vesicles"], correct: 3 }
-        ];
+        const Chap1Questions = [
+    { question: "Which one of the following aspects is an exclusive characteristic of living things?", options: ["Isolated metabolic reactions occur in vitro", "Increase in mass from inside only", "Perception of events happening in the environment and their memory", "Increase in mass by accumulation of material both on surface as well as internally"], correct: 3 },
+    { question: "The living organisms can be unexceptionally distinguished from the non-living things on the basis of their ability for:", options: ["interaction with the environment and progressive evolution", "reproduction", "growth and movement", "responsiveness to touch"], correct: 1 },
+    { question: "Biological organisation starts with:", options: ["cellular level", "organismic level", "atomic level", "submicroscopic molecular level"], correct: 3 },
+    { question: "Select the correctly written scientific name of Mango which was first described by Carolus Linnaeus.", options: ["Mangifera Indica", "Mangifera indica Car. Linn.", "Mangifera indica Linn.", "Mangifera indica"], correct: 2 },
+    { question: "Which of the following is against the rules of ICBN?", options: ["Hand written scientific names should be underlined", "Every species should have a generic name and a specific epithet", "Scientific names are in Latin and should be italicized", "Generic and specific names should be written starting with small letters"], correct: 3 },
+    { question: "Nomenclature is governed by certain universal rules. Which one of the following is contrary to the rules of nomenclature?", options: ["The names are written in Latin and are italicised", "When written by hand the names are to be underlined", "Biological names can be written in any language", "The first word in a biological name represents the genus name and the second is a specific epithet"], correct: 2 },
+    { question: "ICBN stands for:", options: ["International Code of Botanical Nomenclature", "International Congress of Biological Names", "Indian Code of Botanical Nomenclature", "Indian Congress of Biological Names"], correct: 0 },
+    { question: "Biosystematics aims at:", options: ["the classification of organisms based on broad morphological characters", "delimiting various taxa of organisms and establishing their relationships", "the classification of organisms based on their evolutionary history and establishing their phylogeny on the totality of various parameters from all fields of studies", "identification and arrangement of organisms on the basis of their cytological characteristics"], correct: 2 },
+    { question: "The book ‘Genera Plantarum’ was written by:", options: ["Engler and Prantl", "Bentham and Hooker", "Bessey", "Hutchinson"], correct: 1 },
+    { question: "Linnaeus is credited with:", options: ["binomial nomenclature", "theory of biogenesis", "discovery of microscope", "discovery of blood circulation"], correct: 0 },
+    { question: "Linnaeus evolved a system of nomenclature called:", options: ["mononomial", "vernacular", "binomial", "polynomial"], correct: 2 },
+    { question: "The term 'New Systematics' was introduced by:", options: ["Bentham and Hooker", "Linnaeus", "Julian Huxley", "A.P. de Candolle"], correct: 2 },
+    { question: "Match column I with column II for housefly classification and select the correct option using the codes given below.", options: ["A-(iii), B-(i), C-(iv), D-(ii)", "A-(iii), B-(ii), C-(iv), D-(i)", "A-(iv), B-(iii), C-(ii), D-(i)", "A-(iv), B-(ii), C-(i), D-(iii)"], correct: 0 },
+    { question: "The common characteristics between tomato and potato will be maximum at the level of their:", options: ["family", "order", "division", "genus"], correct: 3 },
+    { question: "Which one of the following organisms is scientifically correctly named, correctly printed according to the International Rules of Nomenclature and correctly described?", options: ["Musca domestica - the common house lizard, a reptile", "Plasmodium falciparum - a protozoan pathogen causing the most serious type of malaria", "Felis tigris - the Indian tiger, well protected in Gir forests", "E.coli - full name Entamoeba coli, a commonly occurring bacterium in human intestine"], correct: 1 },
+    { question: "Which one of the following animals is correctly matched with its particular taxonomic category?", options: ["Tiger - tigris, species", "Cuttlefish - mollusca, class", "Humans - primata, family", "Housefly - Musca, order"], correct: 0 },
+    { question: "Species are considered as:", options: ["real basic units of classification", "the lowest units of classification", "artificial concept of human mind which cannot be defined in absolute terms", "real units of classification devised by taxonomists"], correct: 0 },
+    { question: "Which of the following is less general in characters as compared to genus?", options: ["Species", "Division", "Class", "Family"], correct: 0 },
+    { question: "'Taxon' is the unit of a group of:", options: ["order", "taxonomy", "species", "genes"], correct: 1 },
+    { question: "Sequence of taxonomic categories is:", options: ["class–phylum–tribe–order–family–genus–species", "division–class–family–tribe–order–genus–species", "division–class–order–family–tribe–genus–species", "phylum–order–class–tribe–family–genus–species"], correct: 2 },
+    { question: "The term phylum was given by:", options: ["Cuvier", "Haeckel", "Theophrastus", "Linnaeus"], correct: 1 },
+    { question: "A group of plants or animals with similar traits of any rank is:", options: ["species", "genus", "order", "taxon"], correct: 3 },
+    { question: "A taxon is:", options: ["a group of related families", "a group of related species", "a type of living organisms", "a taxonomic group of any ranking"], correct: 3 },
+    { question: "Basic unit or smallest taxon of taxonomy/classification is:", options: ["species", "kingdom", "family", "variety"], correct: 0 },
+    { question: "Static concept of species was put forward by:", options: ["de Candolle", "Linnaeus", "Theophrastus", "Darwin"], correct: 1 }
+
+];
+
+const Chap2Questions = [
+    { question: "Five kingdom system of classification suggested by R.H. Whittaker is not based on:", options: ["presence or absence of a well defined nucleus", "mode of reproduction", "mode of nutrition", "complexity of body organisation"], correct: 1 },
+    { question: "Maximum nutritional diversity is found in the group:", options: ["fungi", "animalia", "monera", "plantae"], correct: 2 },
+    { question: "In the five kingdom classification, Chlamydomonas and Chlorella have been included in:", options: ["protista", "algae", "plantae", "monera"], correct: 0 },
+    { question: "In which kingdom would you classify the archaea and nitrogen-fixing organisms, if the five kingdom system of classification is used?", options: ["Plantae", "Fungi", "Protista", "Monera"], correct: 3 },
+    { question: "In five kingdom system, the main basis of classification is:", options: ["structure of nucleus", "mode of nutrition", "structure of cell wall", "asexual reproduction"], correct: 1 },
+    { question: "In the five kingdom system of classification, which single kingdom out of the following can include blue-green algae, nitrogen fixing bacteria and methanogenic archaebacteria?", options: ["Plantae", "Protista", "Monera", "Fungi"], correct: 2 },
+    { question: "BGA (blue green algae) are included in which of the following groups?", options: ["Bryophytes", "Prokaryotes", "Protista", "Fungi"], correct: 1 },
+    { question: "An important criterion for modern day classification is:", options: ["resemblances in morphology", "anatomical and physiological traits", "breeding habits", "presence or absence of notochord"], correct: 1 },
+    { question: "Match the organisms in column-I with habitats in column-II.", options: ["A-(iv), B-(i), C-(iii), D-(ii)", "A-(i), B-(ii), C-(iii), D-(iv)", "A-(iii), B-(iv), C-(ii), D-(i)", "A-(ii), B-(iv), C-(iii), D-(i)"], correct: 0 },
+    { question: "Which of the following are found in extreme saline conditions?", options: ["Eubacteria", "Cyanobacteria", "Mycobacteria", "Archaebacteria"], correct: 3 },
+    { question: "Which among the following are the smallest living cells, known without a definite cell wall, pathogenic to plants as well as animals and can survive without oxygen?", options: ["Pseudomonas", "Mycoplasma", "Nostoc", "Bacillus"], correct: 1 },
+    { question: "Which of the following components provides sticky character to the bacterial cell?", options: ["Nuclear membrane", "Plasma membrane", "Glycocalyx", "Cell wall"], correct: 2 },
+    { question: "DNA replication in bacteria occurs:", options: ["within nucleolus", "prior to fission", "just before transcription", "during S phase"], correct: 1 },
+    { question: "Methanogens belong to:", options: ["eubacteria", "archaea", "dinoflagellates", "slime moulds"], correct: 1 },
+    { question: "The primitive prokaryotes responsible for the production of biogas from the dung of ruminant animals, include the:", options: ["methanogens", "eubacteria", "halophiles", "thermoacidophiles"], correct: 0 },
+    { question: "Archaebacteria differ from eubacteria in:", options: ["cell membrane structure", "mode of nutrition", "cell shape", "mode of reproduction"], correct: 0 },
+    { question: "Which of the following are likely to be present in deep sea water?", options: ["Blue-green algae", "Saprophytic fungi", "Archaebacteria", "Eubacteria"], correct: 2 },
+    { question: "Pigment containing membranous extensions in some cyanobacteria are:", options: ["pneumatophores", "chromatophores", "heterocysts", "basal bodies"], correct: 1 },
+    { question: "The cyanobacteria are also referred to as:", options: ["protists", "golden algae", "slime moulds", "blue green algae"], correct: 3 },
+    { question: "The most abundant prokaryotes helpful to humans in making curd from milk and in production of antibiotics are the ones categorized as:", options: ["cyanobacteria", "archaea", "chemosynthetic autotrophs", "heterotrophic bacteria"], correct: 3 }
+];
+
+const Chap3Questions = [
+    { question: "Phylogenetic system of classification is based on:", options: ["morphological features", "chemical constituents", "floral characters", "evolutionary relationships"], correct: 3 },
+    { question: "Phenetic classification of organisms is based on:", options: ["observable characteristics of existing organisms", "the ancestral lineage of existing organisms", "dendrogram based on DNA characteristics", "sexual characteristics"], correct: 0 },
+    { question: "A system of classification, in which a large number of traits are considered, is:", options: ["natural system", "phylogenetic system", "artificial system", "synthetic system"], correct: 0 },
+    { question: "Phylogenetic classification is one which is based on:", options: ["overall similarities", "utilitarian system", "habits of plants", "common evolutionary descent"], correct: 3 },
+    { question: "System of classification used by Linnaeus was:", options: ["natural system", "artificial system", "phylogenetic system", "asexual system"], correct: 1 },
+    { question: "Artificial system of classification was first used by:", options: ["Linnaeus", "De Candolle", "Pliny the Elder", "Bentham and Hooker"], correct: 0 },
+    { question: "Classification given by Bentham and Hooker is:", options: ["artificial", "natural", "phylogenetic", "numerical"], correct: 1 },
+    { question: "Floridean starch has structure similar to:", options: ["starch and cellulose", "amylopectin and glycogen", "mannitol and algin", "laminarin and cellulose"], correct: 1 },
+    { question: "Which of the following pairs is of unicellular algae?", options: ["Laminaria and Sargassum", "Gelidium and Gracilaria", "Anabaena and Volvox", "Chlorella and Spirulina"], correct: 3 },
+    { question: "An example of colonial alga is:", options: ["Volvox", "Ulothrix", "Spirogyra", "Chlorella"], correct: 0 },
+    { question: "Which one of the following statements is wrong?", options: ["Algae increase the level of dissolved oxygen in the immediate environment.", "Algin is obtained from red algae, and carrageenan from brown algae.", "Agar-agar is obtained from Gelidium and Gracilaria.", "Laminaria and Sargassum are used as food."], correct: 1 },
+    { question: "Which one of the following statements is wrong?", options: ["Chlorella and Spirulina are used as space food.", "Mannitol is stored food in Rhodophyceae.", "Algin and carrageenan are products of algae.", "Agar-agar is obtained from Gelidium and Gracilaria."], correct: 1 },
+    { question: "Male gametes are flagellated in:", options: ["Ectocarpus", "Spirogyra", "Polysiphonia", "Anabaena"], correct: 0 },
+    { question: "Which one of the following is wrong about Chara?", options: ["Upper oogonium and lower round antheridium", "Globule and nucule present on the same plant", "Upper antheridium and lower oogonium", "Globule is male reproductive structure"], correct: 2 },
+    { question: "Which one of the following shows isogamy with non-flagellated gametes?", options: ["Sargassum", "Ectocarpus", "Ulothrix", "Spirogyra"], correct: 2 },
+    { question: "Sexual reproduction involving fusion of two cells in Chlamydomonas is:", options: ["isogamy", "homogamy", "somatogamy", "hologamy"], correct: 0 },
+    { question: "Which one is wrongly matched?", options: ["Uniflagellate gametes – Polysiphonia", "Biflagellate zoospores – Brown algae", "Gemma cups – Marchantia", "Unicellular organism – Chlorella"], correct: 0 },
+    { question: "Which of the following is responsible for peat formation?", options: ["Marchantia", "Riccia", "Funaria", "Sphagnum"], correct: 3 },
+    { question: "Which one of the following is common to multicellular fungi, filamentous algae and protonema of mosses?", options: ["Diplontic life cycle", "Members of Kingdom Plantae", "Mode of nutrition", "Multiplication by fragmentation"], correct: 3 },
+    { question: "Examine the given figure and select the correct option giving all the four parts (A, B, C and D) rightly identified.", options: ["Archegoniophore - Female - Gemma - Rhizoids", "Archegoniophore - Female - Bud - Foot", "Seta - Sporophyte - Protonema", "Antheridiophore - Male - Globule - Roots"], correct: 0 },
+    { question: "Spore dissemination in some liverworts is aided by:", options: ["indusium", "calyptra", "peristome teeth", "elaters"], correct: 3 },
+    { question: "Peat moss is used as a packing material for sending flowers and live plants to distant places because:", options: ["it serves as a disinfectant", "it is easily available", "it is hygroscopic", "it reduces transpiration"], correct: 2 },
+    { question: "In a moss, the sporophyte:", options: ["manufactures food for itself, as well as for the gametophyte", "is partially parasitic on the gametophyte", "produces gametes that give rise to the gametophyte", "arises from a spore produced from the gametophyte"], correct: 1 },
+    { question: "The antherozoids of Funaria are:", options: ["multiciliated", "monociliated", "aciliated", "biciliated"], correct: 3 },
+    { question: "Bryophytes comprise:", options: ["dominant phase of gametophyte which produces spores", "small sporophyte phase and generally parasitic on gametophyte", "sporophyte is of longer duration", "dominant phase of sporophyte which is parasitic"], correct: 1 },
+    { question: "Which of the following is true about bryophytes?", options: ["They are thalloid.", "They possess archegonia.", "They contain chloroplast.", "All of these"], correct: 3 },
+    { question: "Bryophytes are dependent on water, because:", options: ["water is essential for their vegetative propagation", "the sperms can easily reach up to egg in the archegonium", "archegonium has to remain filled with water for fertilization", "water is essential for fertilization for their homosporous nature"], correct: 1 },
+    { question: "Bryophytes can be separated from algae, because they:", options: ["possess archegonia", "contain chloroplast", "are thalloid forms", "have no conducting tissue"], correct: 0 },
+    { question: "Elater mechanism for spore dispersal is exhibited by:", options: ["liverworts", "Marchantia", "Riccia", "Funaria"], correct: 0 },
+    { question: "The plant body of moss (Funaria) is:", options: ["completely sporophyte", "predominantly gametophyte with sporophyte", "completely gametophyte", "predominantly sporophyte with gametophyte"], correct: 1 },
+    { question: "In bryophytes:", options: ["both generations are independent", "gametophytes are dependent upon sporophytes", "sporophytes complete their life cycle", "sporophytes are dependent upon gametophytes"], correct: 3 },
+    { question: "Protonema occurs in the life cycle of:", options: ["Riccia", "Funaria", "Anthoceros", "Spirogya"], correct: 1 }
+];
+const Chap4Questions = [
+    { question: "Consider following features: (A) Organ system level of organisation (B) Bilateral symmetry (C) True coelomates with segmentation of body. Select the correct option of animal groups which possess all the above characteristics.", options: ["Annelida, Mollusca and Chordata", "Annelida, Arthropoda and Chordata", "Annelida, Arthropoda and Mollusca", "Arthropoda, Mollusca and Chordata"], correct: 1 },
+    { question: "Which of the following animals are true coelomates with bilateral symmetry?", options: ["Adult Echinoderms", "Aschelminthes", "Platyhelminthes", "Annelids"], correct: 3 },
+    { question: "Which one of the following kinds of animals are triploblastic?", options: ["Flatworms", "Sponges", "Ctenophores", "Corals"], correct: 0 },
+    { question: "Which one of the following statements about certain given animals is correct?", options: ["Roundworms (Aschelminthes) are pseudo-coelomates.", "Molluscs are acoelomates.", "Insects are pseudocoelomates.", "Flatworms (Platyhelminthes) are coelomates."], correct: 0 },
+    { question: "Which one of the following groups of animals is bilaterally symmetrical and triploblastic?", options: ["Aschelminthes (roundworms)", "Ctenophores", "Sponges", "Coelenterates (cnidarians)"], correct: 0 },
+    { question: "Metameric segmentation is the characteristic of:", options: ["mollusca and chordata", "platyhelminthes and arthropoda", "echinodermata and annelida", "annelida and arthropoda"], correct: 3 },
+    { question: "The animals with bilateral symmetry in young stage and radial pentamerous symmetry in the adult stage, belong to the Phylum:", options: ["Annelida", "Mollusca", "Cnidaria", "Echinodermata"], correct: 3 },
+    { question: "Which of the following animals have scattered cells with cell-tissue grade organisation?", options: ["Sponge", "Hydra", "Liver fluke", "Ascaris"], correct: 0 },
+    { question: "Coelom is found between:", options: ["body wall and ectoderm", "ectoderm and endoderm", "mesoderm and body wall (endoderm)", "mesoderm and ectoderm"], correct: 2 },
+    { question: "Besides annelida and arthropoda, the metamerism is exhibited by:", options: ["mollusca", "acanthocephala", "cestoda", "chordata"], correct: 3 },
+    { question: "Bilaterally symmetrical and acoelomate animals are exemplified by:", options: ["ctenophora", "platyhelminthes", "aschelminthes", "annelida"], correct: 1 },
+    { question: "In arthropoda, head and thorax are often used to form cephalothorax, but in which one of the following classes, is the body divided into head thorax and abdomen?", options: ["Insecta", "Myriapoda", "Crustacea", "Arachnida and crustacea"], correct: 0 },
+    { question: "Presence of gills in the tadpole of frog indicates that:", options: ["fish were amphibious in the past", "fish evolved from frog-like ancestors", "frogs will have gills in future", "frogs evolved from gilled ancestors"], correct: 3 },
+    { question: "One of the following is a very unique feature of the mammalian body:", options: ["homeothermy", "presence of diaphragm", "four chambered heart", "rib cage"], correct: 1 },
+    { question: "Sycon belongs to a group of animals, which are best described as:", options: ["unicellular or acellular", "multicellular without any tissue organization", "multicellular with a gastrovascular system", "multicellular having tissue organization, but no body cavity"], correct: 1 },
+    { question: "During the life-cycle, Fasciola hepatica (liver fluke) infects its intermediate host and primary host at the following larval stages respectively:", options: ["redia and miracidium", "cercaria and redia", "metacercaria and cercaria", "miracidium and metacercaria"], correct: 3 },
+    { question: "Ommatidia serve the purpose of photoreception in:", options: ["cockroach", "frog", "humans", "sunflower"], correct: 0 },
+    { question: "The canal system is a characteristic feature of:", options: ["echinoderms", "sponges", "helminthes", "coelenterates"], correct: 1 },
+    { question: "Which of the following is not found in birds?", options: ["Pelvic girdle", "Pectoral girdle", "Hindlimb", "Forelimb"], correct: 3 },
+    { question: "The long bones are hollow and connected by air passages. They are the characteristics of:", options: ["reptilia", "land vertebrates", "aves", "mammals"], correct: 2 },
+    { question: "Solenocytes are the main excretory structures in:", options: ["echinodermates", "platyhelminthes", "annelids", "molluscs"], correct: 2 },
+    { question: "Most appropriate term to describe the life cycle of Obelia is:", options: ["metamorphosis", "neoteny", "metagenesis", "all of these"], correct: 2 },
+    { question: "The lower jaw in mammals is made up of:", options: ["dentary", "maxilla", "angulars", "mandible"], correct: 0 },
+    { question: "Which one of the following cells, found in testes of rabbit, secretes male hormone?", options: ["Epithelial cells", "Spermatocytes", "Leydig’s cell", "Sertoli cells"], correct: 2 },
+    { question: "What is common among silverfish, scorpion, crab and honey bee?", options: ["Jointed legs", "Metamorphosis", "Compound eyes", "Poison glands"], correct: 0 },
+    { question: "The embryonated egg of Ascaris represents:", options: ["an egg with blastula", "an egg with a juvenile", "an egg with an egg", "an egg with gastrula"], correct: 1 },
+    { question: "Which of the following statements is without exception for sponges?", options: ["They all have calcareous spicules.", "They have high regenerative power.", "They are found only in marine water.", "They are all radially symmetrical."], correct: 1 },
+    { question: "Pneumatic bone is found in:", options: ["shark", "Rana", "pigeon", "whale"], correct: 2 },
+    { question: "The nephridia in earthworm are analogous to:", options: ["nematoblasts of Hydra", "flame cells of Planaria", "gills of prawn", "trachea of insects"], correct: 1 },
+    { question: "Which of the following is common among mammals?", options: ["They undergo no moulting.", "They have seven cervical vertebrae.", "They are carnivores.", "They have ventral nerve cord."], correct: 0 },
+    { question: "The formation of canal system in sponges is due to:", options: ["folding of inner walls", "gastro-vascular system", "reproduction", "porous walls"], correct: 0 },
+    { question: "The organisms attached to the substratum, generally, possess:", options: ["one single opening of the digestive canal", "cilia on the surface to create water current", "radial symmetry", "asymmetrical body"], correct: 1 },
+    { question: "A common characteristic of all vertebrates without exception is:", options: ["the division of body into head, neck, trunk and tail", "their body covered with an exoskeleton", "the possession of two pairs of functional appendages", "the presence of well-developed skull."], correct: 3 },
+    { question: "One of the special characters of coelenterata only is the occurrence of:", options: ["polymorphism", "flame cells", "hermaphroditism", "nematocysts"], correct: 3 },
+    { question: "Radial symmetry is, usually, exhibited in animals which:", options: ["are attached to the substratum", "have one opening of alimentary canal", "live in water", "have ciliary mode of feeding"], correct: 0 },
+    { question: "Which of the following is an example of platyhelminthes?", options: ["Plasmodium", "Schistosoma", "Trypanosoma", "Wuchereria"], correct: 1 },
+    { question: "Among the following organisms point out a completely non-parasitic form:", options: ["Tapeworm", "Mosquito", "Sea anemone", "Leech"], correct: 2 },
+    { question: "Tube feet are the characteristic structures of:", options: ["starfish", "jellyfish", "crayfish", "cuttlefish"], correct: 0 },
+    { question: "Which of the following does not have an open circulatory system?", options: ["Frog’s tadpole", "Prawn", "Chelifer", "Cockroach"], correct: 0 },
+    { question: "Which is common between ostrich, penguin and kiwi?", options: ["Running birds", "Migratory birds", "Flightless birds", "Four toed birds"], correct: 2 }
+];
+const Chap5Questions = [
+    { question: "The roots that originate from the base of the stem are", options: ["(a) fibrous roots", "(b) primary roots", "(c) prop roots", "(d) lateral roots"], correct: 2 },
+    { question: "Sweet potato is a modified", options: ["(a) stem", "(b) adventitious root", "(c) tap root", "(d) rhizome"], correct: 1 },
+    { question: "Roots play insignificant role in absorption of water in", options: ["(a) pea", "(b) wheat", "(c) sunflower", "(d) Pistia"], correct: 3 },
+    { question: "Pneumatophores are found in", options: ["(a) the vegetation which is found in marshy and saline lake", "(b) the vegetation which found in acidic soil", "(c) xerophytes", "(d) epiphytes"], correct: 0 },
+    { question: "The plant, which bears clinging roots, is", options: ["(a) screw pine", "(b) Podostemon", "(c) Trapa", "(d) orchid"], correct: 3 },
+    { question: "Velamen is found in", options: ["(a) roots of screwpine", "(b) aerial and terrestrial roots of orchids", "(c) leaves of Ficus elastica", "(d) aerial roots of orchids"], correct: 1 },
+    { question: "In Bougainvillea, thorns are the modifications of", options: ["(a) adventitious root", "(b) stem", "(c) leaf", "(d) stipules"], correct: 1 },
+    { question: "Which of the following is not a stem modification?", options: ["(a) Tendrils of cucumber", "(b) Flattened structures of Opuntia", "(c) Pitcher of Nepenthes", "(d) Thorns of citrus"], correct: 2 },
+    { question: "Stems modified into flat green organs performing the functions of leaves are known as", options: ["(a) phylloclades", "(b) scales", "(c) cladodes", "(d) phyllodes"], correct: 0 },
+    { question: "An example of edible underground stem is", options: ["(a) carrot", "(b) groundnut", "(c) sweet potato", "(d) potato"], correct: 3 },
+    { question: "Sweet potato is homologous to", options: ["(a) potato", "(b) Colocasia", "(c) ginger", "(d) turnip"], correct: 3 },
+    { question: "Which one of the following is a xerophytic plant in which the stem is modified into the flat green and succulent structure?", options: ["(a) Opuntia", "(b) Casuarina", "(c) Hydrilla", "(d) Acacia"], correct: 0 },
+    { question: "What is the eye of potato?", options: ["(a) Axillary bud", "(b) Accessory bud", "(c) Adventitious bud", "(d) Apical bud"], correct: 0 },
+    { question: "New banana plants develop from", options: ["(a) rhizome", "(b) sucker", "(c) stolon", "(d) seed"], correct: 1 },
+    { question: "Leaves become modified into spines in", options: ["(a) onion", "(b) silk cotton", "(c) Opuntia", "(d) pea"], correct: 2 },
+    { question: "How many plants among China rose, Ocimum, sunflower, mustard, Alstonia, guava, Calotropis and Nerium (oleander) have opposite phyllotaxy?", options: ["(a) Three", "(b) Four", "(c) Five", "(d) Two"], correct: 1 },
+    { question: "Phyllode is present in", options: ["(a) Asparagus", "(b) Euphorbia", "(c) Australian Acacia", "(d) Opuntia"], correct: 2 },
+    { question: "The coconut water and the edible part of coconut are equivalent to", options: ["(a) endosperm", "(b) endocarp", "(c) mesocarp", "(d) embryo"], correct: 0 },
+    { question: "A drupe develops in", options: ["(a) mango", "(b) wheat", "(c) pea", "(d) tomato"], correct: 1 },
+    { question: "A fruit developed from hypanthodium inflorescence is called", options: ["(a) sorosis", "(b) syconus", "(c) caryopsis", "(d) hesperidium"], correct: 1 },
+    { question: "Cotyledons and testa respectively are edible parts in", options: ["(a) walnut and tamarind", "(b) french bean and coconut", "(c) cashew nut and litchi", "(d) groundnut and pomegranate"], correct: 3 },
+    { question: "The fleshy receptacle of syconus of fig encloses a number of", options: ["(a) berries", "(b) mericarps", "(c) achenes", "(d) samaras"], correct: 2 },
+    { question: "Dry indehiscent single-seeded fruit formed from bicarpellary syncarpous inferior ovary is", options: ["(a) berry", "(b) cremocarp", "(c) caryopsis", "(d) cypsela"], correct: 3 },
+    { question: "The fruit is chambered, developed from inferior ovary and has seeds with succulent testa in", options: ["(a) guava", "(b) cucumber", "(c) pomegranate", "(d) orange"], correct: 2 },
+    { question: "Pineapple (Ananas) fruit develops from", options: ["(a) a multilocular monocarpellary flower", "(b) a unilocular polycarpellary flower", "(c) a multipistillate syncarpous flower", "(d) a cluster of compactly borne flowers on a common axis"], correct: 3 },
+    { question: "In which of the following fruits, the edible part is the aril?", options: ["(a) Litchi", "(b) Custard apple", "(c) Pomegranate", "(d) Orange"], correct: 0 },
+    { question: "Which of the following represents the edible part of the fruit of litchi?", options: ["(a) Mesocarp", "(b) Endocarp", "(c) Pericarp", "(d) Juicy aril"], correct: 3 },
+    { question: "Edible part of mango is", options: ["(a) endocarp", "(b) receptacle", "(c) epicarp", "(d) mesocarp"], correct: 3 },
+    { question: "Juicy hair-like structures observed in the lemon fruit develop from", options: ["(a) exocarp", "(b) mesocarp", "(c) endocarp", "(d) mesocarp and endocarp"], correct: 2 },
+    { question: "Geocarpic fruit is", options: ["(a) potato", "(b) peanut", "(c) onion", "(d) garlic"], correct: 1 },
+    { question: "Edible part in mango is", options: ["(a) mesocarp", "(b) epicarp", "(c) endocarp", "(d) epidermis"], correct: 0 },
+    { question: "Edible part of banana is", options: ["(a) epicarp", "(b) mesocarp and less developed endocarp", "(c) endocarp and less developed mesocarp", "(d) epicarp and mesocarp"], correct: 1 },
+    { question: "Geocarpic fruit is", options: ["(a) carrot", "(b) radish", "(c) groundnut", "(d) turnip"], correct: 2 },
+    { question: "Which plant will lose its economic value, if its fruits are produced by induced parthenocarpy?", options: ["(a) Orange", "(b) Banana", "(c) Grape", "(d) Pomegranate"], correct: 3 },
+    { question: "Which of the following is a ‘true fruit’?", options: ["(a) Banana", "(b) Fig", "(c) Apple", "(d) Pear"], correct: 0 },
+    { question: "Fruit of Mangifera indica is", options: ["(a) berry", "(b) drupe", "(c) capsule", "(d) siliqua"], correct: 1 },
+    { question: "Mango juice is obtained from", options: ["(a) epicarp", "(b) mesocarp", "(c) endocarp", "(d) pericarp and thalamus"], correct: 1 },
+    { question: "Fruit of groundnut is", options: ["(a) legume", "(b) caryopsis", "(c) berry", "(d) nut"], correct: 0 },
+    { question: "The body of the ovule is fused within the funicle at", options: ["(a) hilum", "(b) micropyle", "(c) nucellus", "(d) chalaza"], correct: 0 },
+    { question: "Cotyledon of maize grain is called", options: ["(a) coleoptile", "(b) scutellum", "(c) plumule", "(d) coleorhiza"], correct: 1 },
+    { question: "The wheat grain has an embryo with one large, shield shaped cotyledon known as", options: ["(a) scutellum", "(b) coleoptile", "(c) epiblast", "(d) coleorhiza"], correct: 0 },
+    { question: "Which one of the following statements is correct?", options: ["(a) The seed in grasses is not endospermic.", "(b) Mango is a parthenocarpic fruit.", "(c) A proteinaceous aleurone layer is present in maize grain.", "(d) A sterile pistil is called a staminode."], correct: 2 }
+];
+const Chap6Questions = [
+    { question: "Phloem in gymnosperms lacks", options: ["(a) both sieve tubes and companion cells", "(b) albuminous cells and sieve cells", "(c) sieve tubes only", "(d) companion cells only"], correct: 0 },
+    { question: "Regeneration of damaged growing grass following grazing is largely due to", options: ["(a) lateral meristem", "(b) apical meristem", "(c) intercalary meristem", "(d) secondary meristem"], correct: 2 },
+    { question: "Tracheids differ from other tracheary elements in", options: ["(a) having Casparian strips", "(b) being imperforate", "(c) lacking nucleus", "(d) being lignified"], correct: 1 },
+    { question: "Meristematic tissue responsible for increase in girth of tree trunk is", options: ["(a) intercalary meristem", "(b) lateral meristem", "(c) phellogen", "(d) apical meristem"], correct: 1 },
+    { question: "Gymnosperms are also called soft wood spermatophytes because they lack", options: ["(a) cambium", "(b) phloem fibres", "(c) thick-walled tracheids", "(d) xylem fibres"], correct: 3 },
+    { question: "Companion cells are closely associated with", options: ["(a) sieve elements", "(b) vessel elements", "(c) trichomes", "(d) guard cells"], correct: 0 },
+    { question: "Function of companion cells is", options: ["(a) providing energy to sieve elements for active transport", "(b) providing water to phloem", "(c) loading of sucrose into sieve elements by passive transport", "(d) loading of sucrose into sieve elements"], correct: 3 },
+    { question: "Which one of the following is not a lateral meristem?", options: ["(a) Intrafascicular cambium", "(b) Interfascicular cambium", "(c) Phellogen", "(d) Intercalary meristem"], correct: 3 },
+    { question: "The chief water conducting elements of xylem in gymnosperms are", options: ["(a) vessels", "(b) fibres", "(c) transfusion tissue", "(d) tracheids"], correct: 3 },
+    { question: "Transport of food material in higher plants takes place through", options: ["(a) companion cells", "(b) transfusion tissue", "(c) tracheids", "(d) sieve elements"], correct: 3 },
+    { question: "The length of different internodes in a culm of sugarcane is variable because of", options: ["(a) size of leaf lamina at the node below each internode", "(b) intercalary meristem", "(c) shoot apical meristem", "(d) position of axillary buds"], correct: 1 },
+    { question: "A common structural feature of vessel elements and sieve tube elements is", options: ["(a) enucleate condition", "(b) thick secondary walls", "(c) pores on lateral walls", "(d) presence of P-protein"], correct: 0 },
+    { question: "The apical meristem of the root is present", options: ["(a) only in radicals", "(b) only in tap roots", "(c) only in adventitious roots", "(d) in all the roots"], correct: 3 },
+    { question: "Chlorenchyma is known to develop in the", options: ["(a) cytoplasm of Chlorella", "(b) mycelium of a green mould such as Aspergillus", "(c) spore capsule of a moss", "(d) pollen tube of Pinus"], correct: 2 },
+    { question: "The cells of the quiescent centre are characterised by", options: ["(a) having dense cytoplasm and prominent nuclei", "(b) having light cytoplasm and small nuclei", "(c) dividing regularly to add to the corpus", "(d) dividing regularly to add to tunica"], correct: 1 },
+    { question: "Which of the following statements is true?", options: ["(a) Vessels are multicellular with wide lumen.", "(b) Tracheids are multicellular with narrow lumen.", "(c) Vessels are unicellular with narrow lumen.", "(d) Tracheids are unicellular with wide lumen."], correct: 0 },
+    { question: "Passage cells are thin walled cells found in", options: ["(a) phloem elements that serve as entry points for substance for transport to other plant parts", "(b) testa of seeds to enable emergence of growing embryonic axis during seed germination", "(c) central region of style through which the pollen tube grows towards the ovary", "(d) endodermis of roots facilitating rapid transport of water from cortex to pericycle"], correct: 3 },
+    { question: "In a woody dicotyledonous tree, which of the following parts will mainly consist of primary tissues?", options: ["(a) All parts", "(b) Stem and root", "(c) Flowers, fruits and leaves", "(d) Shoot tips and root tips"], correct: 3 },
+    { question: "Four radial vascular bundle are found in", options: ["(a) dicot root", "(b) monocot root", "(c) dicot stem", "(d) monocot stem"], correct: 0 },
+    { question: "What happens in plants during vascularisation?", options: ["(a) Differentiation of procambium, formation of primary phloem followed by formation of primary xylem", "(b) Differentiation of procambium followed by the formation of primary phloem and xylem simultaneously", "(c) Formation of procambium, primary phloem and xylem simultaneously", "(d) Differentiation of procambium followed by the formation of secondary xylem"], correct: 1 },
+    { question: "Casparian strips are found in", options: ["(a) epidermis", "(b) hypodermis", "(c) periderm", "(d) endodermis"], correct: 3 },
+    { question: "Casparian strip occurs in a", options: ["(a) endodermis", "(b) exodermis", "(c) pericycle", "(d) epidermis"], correct: 0 },
+    { question: "A plant bears fruit, has a column of vascular tissue and a tap root system. This plant is a", options: ["(a) angiosperm and dicot", "(b) gymnosperm and dicot", "(c) angiosperm and monocot", "(d) gymnosperm and monocot"], correct: 0 },
+    { question: "Where do the Casparian bands occur?", options: ["(a) Epidermis", "(b) Endodermis", "(c) Pericycle", "(d) Phloem"], correct: 1 },
+    { question: "A narrow layer of thin walled cells found between phloem/bark and wood of a dicot is", options: ["(a) cork cambium", "(b) vascular cambium", "(c) endodermis", "(d) pericycle"], correct: 1 },
+    { question: "What is true about a monocot leaf?", options: ["(a) Reticulate venation", "(b) Absence of bulliform cells from epidermis", "(c) Mesophyll not differentiated into palisade and spongy tissues", "(d) Well differentiated mesophyll"], correct: 2 },
+    { question: "Pericycle of roots produces", options: ["(a) mechanical support", "(b) lateral roots", "(c) vascular bundles", "(d) adventitious buds"], correct: 1 },
+    { question: "Monocot leaves possess", options: ["(a) intercalary meristem", "(b) lateral meristem", "(c) apical meristem", "(d) mass meristem"], correct: 0 },
+    { question: "Pith and cortex do not differentiate in", options: ["(a) monocot stem", "(b) dicot stem", "(c) monocot root", "(d) dicot root"], correct: 0 },
+    { question: "Identify the incorrect statement.", options: ["(a) Heartwood does not conduct water but gives mechanical support.", "(b) Sapwood is involved in conduction of water and minerals from root to leaf.", "(c) Sapwood is the innermost secondary xylem and is lighter in colour.", "(d) Due to deposition of tannins, resins, oils, etc., heartwood is dark in colour."], correct: 2 },
+    { question: "Which of the statements given below is not true about formation of annual rings in trees?", options: ["(a) Annual rings are not prominent in trees of temperate region.", "(b) Annual ring is a combination of spring wood and autumn wood produced in a year.", "(c) Differential activity of cambium causes light and dark bands of tissue-early and late wood respectively.", "(d) Activity of cambium depends upon variation in climate."], correct: 0 },
+    { question: "Secondary xylem and phloem in dicot stem are produced by", options: ["(a) apical meristems", "(b) vascular cambium", "(c) phellogen", "(d) axillary meristems"], correct: 1 },
+    { question: "Plants having little or no secondary growth are", options: ["(a) grasses", "(b) deciduous angiosperms", "(c) conifers", "(d) cycads"], correct: 0 },
+    { question: "The vascular cambium normally gives rise to", options: ["(a) primary phloem", "(b) secondary xylem", "(c) periderm", "(d) phelloderm"], correct: 1 },
+    { question: "Which of the following is made up of dead cells?", options: ["(a) Collenchyma", "(b) Phellem", "(c) Phloem", "(d) Xylem parenchyma"], correct: 1 }
+];
+
 
         const subjects = {
-            biology: biologyQuestions,
+            Chap1: Chap1Questions,
+            Chap2: Chap2Questions,
+            Chap3: Chap3Questions,
+            Chap4: Chap4Questions,
+            Chap5: Chap5Questions,
+            Chap6: Chap6Questions,
         };
 
         let selectedQuestions = [];
