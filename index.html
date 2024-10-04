@@ -312,12 +312,13 @@ h1 {
             <input type="number" id="numQuestions" min="1" max="15" placeholder="5">
             <label for="subject"><i class="fas fa-book"></i> Select Subject:</label>
             <select id="subject">
-                <option value="Chap1">Living World </option>
+              <option value="biology">Full Biology</option>              <option value="Chap1">Living World </option>
                 <option value="Chap2">Biological Classification</option>
                 <option value="Chap3">Plant Kindom</option>
                 <option value="Chap4">Animal Kindom</option>
                 <option value="Chap5">Morphology In Flowering Plants</option>
                 <option value="Chap6">Anatomy In Flowering Plants</option>
+            
 
                 
             </select>
@@ -551,7 +552,986 @@ const Chap6Questions = [
     { question: "The vascular cambium normally gives rise to", options: ["(a) primary phloem", "(b) secondary xylem", "(c) periderm", "(d) phelloderm"], correct: 1 },
     { question: "Which of the following is made up of dead cells?", options: ["(a) Collenchyma", "(b) Phellem", "(c) Phloem", "(d) Xylem parenchyma"], correct: 1 }
 ];
+         const biologyQuestions = [
+            {
+                question: "What is the powerhouse of the cell?",
+                options: ["Nucleus", "Mitochondrion", "Ribosome", "Endoplasmic reticulum"],
+                correct: 1
+            },
+            {
+                question: "Which gas do plants absorb during photosynthesis?",
+                options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+                correct: 1
+            },
+          {
+        question: "In majority of higher animals and plants, _____ and _____ are mutually exclusive events.",
+        options: [
+            "growth; nutrition",
+            "nutrition; consciousness",
+            "growth; reproduction",
+            "reproduction; consciousness"
+        ],
+        correct: 2
+    },
+    {
+        question: "In multicellular organisms _____ refers to the production of progeny possessing features more or less similar to those of parents.",
+        options: [
+            "growth",
+            "reproduction",
+            "metabolism",
+            "consciousness"
+        ],
+        correct: 1
+    },
+    {
+        question: "Families are characterized on which of the following features of plant species?",
+        options: [
+            "External morphology",
+            "Anatomy of parts",
+            "Vegetative and reproductive parts",
+            "Seasonal similarities and variations"
+        ],
+        correct: 2
+    },
+    {
+        question: "The sum total of all the chemical reactions occurring in our body is known as",
+        options: [
+            "metabolism",
+            "growth",
+            "regeneration",
+            "reproduction"
+        ],
+        correct: 0
+    },
+    {
+        question: "Cell division occurs _______ in plants and _______ in animals.",
+        options: [
+            "continuously, only up to a certain age",
+            "only up to a certain age, continuously",
+            "continuously, never",
+            "once, twice"
+        ],
+        correct: 0
+    },
+    {
+        question: "The fungi, the filamentous algae, the protonema of mosses, all easily multiply by _____.",
+        options: [
+            "budding",
+            "fission",
+            "regeneration",
+            "fragmentation"
+        ],
+        correct: 3
+    },
+    {
+        question: "Which of the following factors exclusively affects reproduction in seasonal breeders, both plants and animals?",
+        options: [
+            "Water",
+            "Temperature",
+            "Photoperiod",
+            "All of these"
+        ],
+        correct: 2
+    },
+    {
+        question: "The keys are based on contrasting characters generally in a pair called _______.",
+        options: [
+            "flora",
+            "couplet",
+            "both (a) and (b)",
+            "manuals"
+        ],
+        correct: 1
+    },
+    {
+        question: "The order generally ends with",
+        options: [
+            "ales",
+            "aceae",
+            "eae",
+            "none of these"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following are unique features of living organisms?",
+        options: [
+            "Growth and reproduction",
+            "Reproduction and ability to sense environment",
+            "Metabolism and interaction",
+            "All of the above"
+        ],
+        correct: 3
+    },
+    {
+        question: "Which of the following aspects is an exclusive characteristic of living things?",
+        options: [
+            "Isolated metabolic reactions occur in vitro.",
+            "Increase in mass from inside only.",
+            "Perception of events happening in the environment and their memory.",
+            "Increase in mass by accumulation of material both on surface as well as internally."
+        ],
+        correct: 2
+    },
+    {
+        question: "Which of the following term is used to refer the number of varieties of plants and animals on earth?",
+        options: [
+            "Taxonomy",
+            "Identification",
+            "Biodiversity",
+            "Classification"
+        ],
+        correct: 2
+    },
 
+    {
+        question: "ICBN stands for",
+        options: [
+            "International Code of Botanical Nomenclature",
+            "International Congress of Biological Names",
+            "Indian Code of Botanical Nomenclature",
+            "Indian Congress of Biological Names"
+        ],
+        correct: 0
+    },
+    {
+        question: "Binomial nomenclature means",
+        options: [
+            "one name given by two scientists.",
+            "one scientific name consisting of a generic and specific epithet.",
+            "two names, one latinized, other of a person.",
+            "two names of same plant."
+        ],
+        correct: 1
+    },
+    {
+        question: "Herbarium is a",
+        options: [
+            "garden where medicinal plants are grown.",
+            "garden where herbaceous plants are grown.",
+            "dry garden.",
+            "chemical to kill plants."
+        ],
+        correct: 2
+    },
+    {
+        question: "The famous botanical garden ‘Kew’ is located in",
+        options: [
+            "England",
+            "Lucknow",
+            "Berlin",
+            "Australia"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following taxonomic aid provides information for the identification of names of species found in an area?",
+        options: [
+            "Monograph",
+            "Manual",
+            "Flora",
+            "Periodical"
+        ],
+        correct: 1
+    },
+    {
+        question: "Which one of the taxonomic aids can give comprehensive account of complete compiled information of any one genus or family at a particular time?",
+        options: [
+            "Taxonomic key",
+            "Flora",
+            "Herbarium",
+            "Monograph"
+        ],
+        correct: 3
+    },
+    {
+        question: "Which one of the following taxonomical aid is used for identification of plants and animals based on similarities and dissimilarities?",
+        options: [
+            "Flora",
+            "Keys",
+            "Monographs",
+            "Catalogues"
+        ],
+        correct: 1
+    },
+    {
+        question: "The practical purpose of classification of living organisms is to",
+        options: [
+            "explain the origin of living organsims.",
+            "trace the evolution of living organsims.",
+            "name the living organisms.",
+            "facilitate identification of unknown organisms."
+        ],
+        correct: 3
+    },
+    {
+        question: "Taxon is a",
+        options: [
+            "unit of classification.",
+            "species.",
+            "highest rank of classification.",
+            "group of closely related organisms."
+        ],
+        correct: 3
+    },
+    {
+        question: "Systematics refers to the",
+        options: [
+            "identification and classification of plants and animals.",
+            "nomenclature and identification of plants and animals.",
+            "diversity of kinds of organisms and their relationship.",
+            "different kinds of organisms and their classification."
+        ],
+        correct: 2
+    },
+    {
+        question: "Keys are generally _______in nature.",
+        options: [
+            "physical",
+            "chemical",
+            "analytical",
+            "qualitative"
+        ],
+        correct: 2
+    },
+    {
+        question: "Each statement in the key is called _______.",
+        options: [
+            "lead",
+            "catalogues",
+            "manuals",
+            "monographs"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following is not a characteristic of life?",
+        options: [
+            "Reproduction",
+            "Complex chemical organization",
+            "Adaptation to environmental changes",
+            "Differentiation from cells to tissues"
+        ],
+        correct: 3
+    },
+
+    {
+        question: "In printed scientific names, only the ______is capitalized.",
+        options: [
+            "class",
+            "species",
+            "genus",
+            "family"
+        ],
+        correct: 2
+    },
+    {
+        question: "Each category of taxonomic hierarchy refers to as a unit of______.",
+        options: [
+            "systematic",
+            "identification",
+            "nomenclature",
+            "classification"
+        ],
+        correct: 3
+    },
+    {
+        question: "Which of the following statement(s) is/are correct?",
+        options: [
+            "Only living organisms grow.",
+            "Plants grow only up to a certain age.",
+            "The growth in living organisms is from inside.",
+            "All of the above"
+        ],
+        correct: 2
+    },
+    {
+        question: "Which one of the following is not a correct statement?",
+        options: [
+            "Botanical gardens have collection of living plants for reference.",
+            "A museum has collection of photographs of plants and animals.",
+            "Key is a taxonomic aid for identification of specimens.",
+            "Herbarium is a store house that contains dried, pressed and preserved plant specimens."
+        ],
+        correct: 1
+    },
+    {
+        question: "Which two points are known as the twin characteristics of growth?",
+        options: [
+            "(i) Increase in mass",
+            "(ii) Differentiation",
+            "(iii) Increase in number of individuals",
+            "(iv) Response to stimuli"
+        ],
+        correct: 3
+    },
+    {
+        question: "Statement 1 : Taxon and category are different things.\nStatement 2 : Category shows hierarchical classification.",
+        options: [
+            "Statement-1 and statement-2 are true and statement-2 is a correct explanation for statement -1",
+            "Statement -1 and Statement -2 are true;statement-2 is not a correct explanation for statement – 1",
+            "Statement – 1 is true and statement- 2 is false",
+            "Both the statements are false."
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following statements regarding nomenclature is correct?",
+        options: [
+            "Generic name always begins with capital letter whereas specific name with small letter.",
+            "Scientific name should be printed in italics.",
+            "Scientific name when typed or handwritten should be underlined.",
+            "All of the above"
+        ],
+        correct: 3
+    },
+    {
+        question: "Which of the following statements are correct about herbarium?",
+        options: [
+            "It is a store house of collected plant specimens that are dried and preserved on sheets.",
+            "Herbarium sheets contain information about date and place of collection, names, family, collector’s name, etc.",
+            "It serves as quick referral systems in taxonomical studies.",
+            "All of the above"
+        ],
+        correct: 3
+    },
+    {
+        question: "Which of the following statements regarding growth is correct?",
+        options: [
+            "In plants, growth by cell division is seen only up to a certain stage.",
+            "Growth exhibited by non-living objects is by accumulation of material on the surface.",
+            "A multicellular organism grows by cell division.",
+            "Growth in in vitro culture of unicellular organisms can be observed by counting the number of cells."
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following statement(s) is/are correct for Metabolism ?",
+        options: [
+            "It is the sum total of all physical reactions taking place inside a living system.",
+            "All plants, animals, fungi and microbes exhibit metabolism.",
+            "Isolated metabolic reactions in-vitro are not living but are living reactions.",
+            "All of the above"
+        ],
+        correct: 1
+    },
+    {
+        question: "Which one of the following statements is correct about biodiversity ?",
+        options: [
+            "It is the occurrence of varied type of organisms on earth.",
+            "Each different kind of plant, animal or organism represents a species.",
+            "The number of species that are known and described range between 1.7–1.8million.",
+            "All of the above"
+        ],
+        correct: 3
+    },
+    {
+        question: "Which of the following statements(i – vi) are correct ?\n(i) Growth cannot be taken as a defining property of living organism.\n(ii) Dead organism does not grow.\n(iii) Reproduction cannot be an all inclusive defining characteristic of living organisms.\n(iv) No non-living object is capable of replicating itself.\n(v) Metabolism in a test tube is non-living.\n(vi) Metabolism is a defining feature of all living organisms.",
+        options: [
+            "(i) and (iii)",
+            "All except (v)",
+            "All except (iii)",
+            "All of these"
+        ],
+        correct: 1
+    },
+    {
+        question: "Which of the following statements are not correct ?\n(i) Lower the taxon, more are the characteristics that the members within the taxon share.\n(ii) Order is the assemblage of genera which exhibit a few similar characters.\n(iii) Cat and dog are included in the same family Felidae.\n(iv) Binomial nomenclature was introduced by Carolus Linnaeus.",
+        options: [
+            "(i), (ii) and (iii)",
+            "(ii), (iii) and (iv)",
+            "(i) and (iv)",
+            "(ii) and (iii)"
+        ],
+        correct: 3
+    },
+
+
+    {
+        question: "Which of the following statements are correct?\n(i) Genus comprises a group of related species.\n(ii) Taxon represents a taxonomic group of individual organisms.\n(iii) Family comprises a group of related genera.\n(iv) Taxonomic category class includes related orders.",
+        options: [
+            "(i), (ii), and (iv)",
+            "(ii) and (iv)",
+            "(i), (iii) and (iv)",
+            "(ii), (iii) and (iv)"
+        ],
+        correct: 2
+    },
+    {
+        question: "Which of the following statement(s) is/are not correct ?\n(i) Reproduction is the production of progeny possessing features dissimilar to their parents.\n(ii) The fungi, the filamentous algae, the protonema  of mosses, all multiply by budding.\n(iii) Many organisms like mules, sterile worker bees do not reproduce.\n(iv) Reproduction is not an all-inclusive defining characteristic of living organisms.",
+        options: [
+            "Only (i)",
+            "Both (i) and (ii)",
+            "Both (ii) and (iv)",
+            "All of these"
+        ],
+        correct: 1
+    },
+    {
+        question: "Which of the following statement(s) is/are correct ?\n(i) All living organisms have ability to respond the environment stimuli which could be physical, chemical or biological.\n(ii) Plants respond to external factors like light, water, temperature, other organisms, pollutants, etc.\n(iii) Photoperiod affects the process of reproduction.\n(iv) Human being is the only organism who has self-consciousness.",
+        options: [
+            "Only (i)",
+            "Both (ii) and (iii)",
+            "Both (i) and (iv)",
+            "All of these"
+        ],
+        correct: 3
+    },
+    {
+        question: "Which of the following statement(s) is/are correct ?\n(i) Classification is the providing of standardize names to the organisms such that a particular organism known by the same all over the world.\n(ii) Taxonomy is the correct description of an organism and to recognition in its scientific name.\n(iii) The system of naming with two components(binomial nomenclature) is proposed by Carolus Linneaus.\n(iv) Zoological names are based on International Code for Zoological Nomenclature (ICZN).",
+        options: [
+            "Only (i)",
+            "Both (iii) and (iv)",
+            "Only (iv)",
+            "All of these"
+        ],
+        correct: 1
+    },
+    {
+        question: "Which of the following taxonomic categories is being described by the given statements(i-iii) ?\n(i) It is the basic unit of classification.\n(ii) It is defined as the group of individuals which resemble in their morphological and reproductive characters and interbreed among themselves and produce fertile off springs.\n(iii) Human beings belong to the species sapiens which is grouped in the genus Homo.",
+        options: [
+            "Species",
+            "Genus",
+            "Order",
+            "Family"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following statement(s) is/are not correct ?\n(i) Genus comprises a group of related species which has more characters in common in comparison to species of other genera.\n(ii) Three different genera such as Solanum, Datura and Petunia are placed in the family malvaceae.\n(iii) In case of plants, classes with a few similar characters are assigned to a higher category called phylum.",
+        options: [
+            "Both (i) and (ii)",
+            "Only (iii)",
+            "Both (ii) and (iii)",
+            "All of these"
+        ],
+        correct: 2
+    },
+    {
+        question: "Which of the following taxonomical aids is being described by the given statements(i-iv) ?\n(i) They generally established in educational institutes.\n(ii) They have collections of preserved plant and animals specimens for study and reference.\n(iii) Insects are preserved in boxes after collecting, killing and pinning.\n(iv) They often have collections of skeletons of animals too.",
+        options: [
+            "Herbarium",
+            "Museum",
+            "Zoological parks",
+            "Botanical gardens"
+        ],
+        correct: 1
+    },
+    {
+        question: "Statement 1 : The species is reproductively isolated natural population.\nStatement 2 : Prokaryotes cannot be kept under differents species on the basis of reproductive isolation.",
+        options: [
+            "Statement-1 and Statement-2 are True and statement-2 is a correct explanation forstatement-1",
+            "Statement -1 and statement -2 are True and statement-2 is not a correct explanation forstatement-1",
+            "Statement-1 is true and statement-2 is false",
+            "Both the statements are false."
+        ],
+        correct: 1
+    },
+    {
+        question: "Which of the following statements regarding growth is incorrect?",
+        options: [
+            "In animals growth is seen up to a certain age.",
+            "Increase in body mass is considered as growth.",
+            "Growth by cell division occurs continuously throughout their life span in animals.",
+            "Increase in mass and number of individuals is the characteristic feature of animal growth."
+        ],
+        correct: 2
+    },
+    {
+        question: "Select the correct statements(i-v) regarding taxonomic categories.\n(i) Each step or rank in hierarchy is called taxonomic category.\n(ii) Species is a group of individual organisms with fundamental similarities capable of breeding among themselves.\n(iii) Taxonomic studies of all unknown organisms have led to the development of common categories like kingdom, phylum or division, class, order, family, genus and species.\n(iv) Lower the category, greater is the difficulty of determining the relationship to other taxa at the same level.",
+        options: [
+            "(i) & (ii) only",
+            "(ii) & (iv) only",
+            "(i), (ii) & (iii) only",
+            "All of the above"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following statements is incorrect?",
+        options: [
+            "The scientific name for humans is Homo sapiens.",
+            "Organisms placed in the same genus are least closely related.",
+            "Moving from species to kingdom, more  different species are included in each higher category.",
+            "Species that are in the same genus share very specific characteristics."
+        ],
+        correct: 1
+    },
+    {
+        question: "Study the following statements and select the correct description of botanical garden.\n(i) Plant species are grown for identification purposes.\n(ii) Labeling of each plant consists of its botanical name/scientific name and its family.\n(iii) Specimens are preserved in the jars and containers.\n(iv) It is a type of store house which contains dried, pressed and preserved plants specimens on sheet.\n(v) Plant specimen contains a labeling of information about date and place of collection.",
+        options: [
+            "(i) and (ii) only",
+            "(i), (ii) and (iii) only",
+            "(ii) and (iv) only",
+            "All the five statements."
+        ],
+        correct: 0
+    },
+     
+    {
+        question: "Identify the pair of heterosporous pteridophytes among the following:",
+        options: [
+            "Psilotum and Salvinia",
+            "Equisetum and Salvinia",
+            "Lycopodium and Selaginella",
+            "Selaginella and Salvinia"
+        ],
+        correct: 3,
+        explanation: "Selaginella and Salvinia are heterosporous pteridophytes. They produce two different kinds of spores. Psilotum, Lycopodium, and Equisetum are homosporous pteridophytes."
+    },
+    {
+        question: "The reaction centre in PS II has an absorption maxima at",
+        options: [
+            "660 nm",
+            "780 nm",
+            "680 nm",
+            "700 nm"
+        ],
+        correct: 2,
+        explanation: "In PS-I, the reaction centre chlorophyll a has an absorption peak at 700 nm, while in PS-II, the reaction centre has an absorption maxima at 680 nm."
+    },
+    {
+        question: "Identify the correct statements:\nA. Detrivores perform fragmentation.\nB. The humus is further degraded by some microbes during mineralization.\nC. Water soluble inorganic nutrients go down into the soil and get precipitated by a process called leaching.\nD. The detritus food chain begins with living organisms.\nE. Earthworms break down detritus into smaller particles by a process called catabolism.\nChoose the correct answer from the options given below:",
+        options: [
+            "C, D, E only",
+            "D, E, A only",
+            "A, B, C only",
+            "B, C, D only"
+        ],
+        correct: 2,
+        explanation: "The detritus food chain begins with detritus that is dead organic matter. The saprotrophic bacteria and fungi break down detritus into simpler inorganic substances by a process called catabolism."
+    },
+    {
+        question: "Family Fabaceae differs from Solanaceae and Liliaceae. With respect to the stamens, pick out the characteristics specific to family Fabaceae but not found in Solanaceae or Liliaceae.",
+        options: [
+            "Monoadelphous and Monothecous anthers",
+            "Epiphyllous and Dithecous anthers",
+            "Diadelphous and Dithecous anthers",
+            "Polyadelphous and epipetalous stamens"
+        ],
+        correct: 2,
+        explanation: "Family Fabaceae is characterized by diadelphous and dithecous anthers, which are specific features not found in Solanaceae or Liliaceae."
+    },
+
+    {
+        question: "Given below are two statements:\nStatement I: The forces generated transpiration can lift a xylem-sized column of water over 130 meters height.\nStatement II: Transpiration cools leaf surfaces sometimes 10 to 15 degrees, by evaporative cooling.\nIn the light of the above statements, choose the most appropriate answer from the options given below:",
+        options: [
+            "Statement I is correct but Statement II is incorrect",
+            "Statement I is incorrect but Statement II is correct",
+            "Both Statement I and Statement II are correct",
+            "Both Statement I and Statement II are incorrect"
+        ],
+        correct: 2,
+        explanation: "Statement I is correct as measurements reveal that the forces generated by transpiration can create pressures sufficient to lift a xylem-sized column of water up to 130 meters high. Statement II is also correct as transpiration cools leaf surfaces, sometimes 10 to 15 degrees, by evaporative cooling."
+    },
+    {
+        question: "Given below are two statements: One is labelled as Assertion A and the other is labelled as Reason R:\nAssertion A: Late wood has fewer xylary elements with narrow vessels.\nReason R: Cambium is less active in winters.\nIn the light of the above statements, choose the correct answer from the options given below:",
+        options: [
+            "A is true but R is false",
+            "A is false but R is true",
+            "Both A and R are true and R is the correct explanation of A",
+            "Both A and R are true but R is NOT the correct explanation of A"
+        ],
+        correct: 2,
+        explanation: "In winter, the cambium is less active and forms fewer xylary elements that have narrow vessels, and this wood is called autumn wood or late wood."
+    },
+    {
+        question: "In the equation \nGPP - R = NPP\nGPP is Gross Primary Productivity\nNPP is Net Primary Productivity\nR here is ________.",
+        options: [
+            "Respiratory loss",
+            "Reproductive allocation",
+            "Photosynthetically active radiation",
+            "Respiratory quotient"
+        ],
+        correct: 0,
+        explanation: "A considerable amount of GPP is utilised by plants in respiration. Gross primary productivity minus respiration losses (R), is the net primary productivity. So R = Respiratory loss."
+    },
+          
+    {
+        question: "Given below are two statements:\n\nStatement I: A protein is imagined as a line, the left end represented by first amino acid (C-terminal) and the right end represented by last amino acid (N-terminal).\nStatement II: Adult human haemoglobin, consists of 4 subunits (two subunits of α type and two subunits of β type.)\n\nIn the light of the above statements, choose the correct answer from the options given below:",
+        options: [
+            "Statement I is true but Statement II is false.",
+            "Statement I is false but Statement II is true.",
+            "Both Statement I and Statement II are true.",
+            "Both Statement I and Statement II are false."
+        ],
+        correct: 1,
+        explanation: "The correct answer is option (2) as a protein is imagined as a line, the left end represented by the first amino acid and the right end is represented by the last amino acid. The first amino acid is also called N-terminal amino acid. The last amino acid is called the C-terminal amino acid."
+    },
+    {
+        question: "Given below are two statements:\n\nStatement I: RNA mutates at a faster rate.\nStatement II: Viruses having RNA genome and shorter life span mutate and evolve faster.\n\nIn the light of the above statements, choose the correct answer from the options given below:",
+        options: [
+            "Statement I is true but Statement II is false.",
+            "Statement I is false but Statement II is true.",
+            "Both Statement I and Statement II are true.",
+            "Both Statement I and Statement II are false."
+        ],
+        correct: 2,
+        explanation: "RNA being unstable, mutates at a faster rate. Consequently, viruses having RNA genome and having shorter life span mutate and evolve faster."
+    },
+    {
+        question: "Radial symmetry is NOT found in adults of phylum ______.",
+        options: [
+            "Coelenterata",
+            "Echinodermata",
+            "Ctenophora",
+            "Hemichordata"
+        ],
+        correct: 3,
+        explanation: "Option (4) is the correct answer because hemichordates are bilaterally symmetrical animals. Option (1) is not the answer because coelenterates are radially symmetrical organisms. Option (2) is not the answer because adult echinoderms are radially symmetrical in adult stage. Option (3) is not the answer because ctenophores are radially symmetrical organisms."
+    },
+    {
+        question: "Given below are two statements: One is labelled as Assertion A and the other is labelled as Reason R:\n\nAssertion A: The first stage of gametophyte in the life cycle of moss is protonema stage.\nReason R: Protonema develops directly from spores produced in capsule.\n\nIn the light of the above statements, choose the most appropriate answer from the options given below:",
+        options: [
+            "A is correct but R is not correct",
+            "A is not correct but R is correct",
+            "Both A and R are correct and R is the correct explanation of A",
+            "Both A and R are correct but R is NOT the correct explanation of A"
+        ],
+        correct: 2,
+        explanation: "The predominant stage of the life cycle of a moss is the gametophyte which consists of two stages. The first stage is the protonema stage, which develops directly from a spore. Capsule of the sporophyte contains spores which give rise to protonema. Thus, the reason correctly explains the assertion."
+    },
+    {
+        question: "Cellulose does not form blue colour with Iodine because:",
+        options: [
+            "It does not contain complex helices and hence cannot hold iodine molecules",
+            "It breaks down when iodine reacts with it",
+            "It is a disaccharide",
+            "It is a helical molecule"
+        ],
+        correct: 0,
+        explanation: "Option (1) is the correct answer because cellulose does not contain complex helices and hence cannot hold iodine molecules. Option (2), (3), and (4) are not correct as cellulose is a polysaccharide."
+    },
+    {
+        question: "Given below are two statements: One is labelled as Assertion A and the other is labelled as Reason R:\n\nAssertion A: ATP is used at two steps in glycolysis.\nReason R: First ATP is used in converting glucose into glucose-6-phosphate and second ATP is used in conversion of fructose-6-phosphate into fructose-1, 6-diphosphate.\n\nIn the light of the above statements, choose the correct answer from the options given below:",
+        options: [
+            "A is true but R is false.",
+            "A is false but R is true.",
+            "Both A and R are true and R is the correct explanation of A.",
+            "Both A and R are true but R is NOT the correct explanation of A."
+        ],
+        correct: 2,
+        explanation: "ATP in glycolysis is used at two steps of conversion that are: Glucose → Glucose-6-phosphate, Fructose-6-phosphate → Fructose-1, 6-bisphosphate. The reason for the utilization of ATP is for phosphorylation of the substrates."
+    },
+    {
+        question: "The historic Convention on Biological Diversity, 'The Earth Summit' was held in Rio de Janeiro in the year:",
+        options: [
+            "1986",
+            "2002",
+            "1985",
+            "1992"
+        ],
+        correct: 3,
+        explanation: "The historic Convention on Biological Diversity, 'The Earth Summit' was held in Rio de Janeiro in the year 1992."
+    },
+    {
+        question: "Unequivocal proof that DNA is the genetic material was first proposed by:",
+        options: [
+            "Avery, Macleoid and McCarthy",
+            "Wilkins and Franklin",
+            "Frederick Griffith",
+            "Alfred Hershey and Martha Chase"
+        ],
+        correct: 3,
+        explanation: "The unequivocal proof that DNA is the genetic material came from the experiment of Alfred Hershey and Martha Chase. Avery, Macleoid and McCarty gave the biochemical characterization of Transforming Principle. The transformation experiments by using Pneumococcus was conducted by Frederick Griffith. Wilkins and Franklin produced X-ray diffraction data of DNA."
+    },
+    {
+        question: "Among 'The Evil Quartet', which one is considered the most important cause driving extinction of species?",
+        options: [
+            "Alien species invasions",
+            "Co-extinctions",
+            "Habitat loss and fragmentation",
+            "Over exploitation for economic gain"
+        ],
+        correct: 2,
+        explanation: "Habitat loss and fragmentation is the most important cause driving animals and plants to extinction."
+    },
+    {
+        question: "The thickness of ozone in a column of air in the atmosphere is measured in terms of:",
+        options: [
+            "Decameter",
+            "Kilobase",
+            "Dobson units",
+            "Decibels"
+        ],
+        correct: 2,
+        explanation: "The thickness of the ozone in a column of air from the ground to the top of the atmosphere is measured in terms of Dobson units (DU). Noise is measured in decibels."
+    },
+    {
+        question: "Which of the following stages of meiosis involves division of centromere?",
+        options: [
+            "Anaphase II",
+            "Telophase",
+            "Metaphase I",
+            "Metaphase II"
+        ],
+        correct: 0,
+        explanation: "Splitting of centromere occurs during anaphase of mitosis or anaphase II of meiosis. During Metaphase I and II, chromosomes align at the equator. During telophase, chromosomes reach the respective poles."
+    },
+    {
+        question: "Spraying of which of the following phytohormones on juvenile conifers helps in hastening the maturity period, that leads to early seed production?",
+        options: [
+            "Zeatin",
+            "Abscisic Acid",
+            "Indole-3-butyric Acid",
+            "Gibberellic Acid"
+        ],
+        correct: 3,
+        explanation: "Spraying juvenile conifers with gibberellins (GAs) hastens the maturity period, thus leading to early seed production."
+    },
+    {
+        question: "What is the function of tassels in the corn cob?",
+        options: [
+            "To disperse pollen grains",
+            "To protect seeds",
+            "To attract insects",
+            "To trap pollen grains"
+        ],
+        correct: 3,
+        explanation: "Tassels in the corn cob represent stigma and style which wave in the wind to trap pollen grains."
+    },
+    {
+        question: "Which hormone promotes internode/petiole elongation in deep water rice?",
+        options: [
+            "Ethylene",
+            "2, 4-D",
+            "GA3",
+            "Kinetin"
+        ],
+        correct: 0,
+        explanation: "Ethylene promotes rapid internode/petiole elongation in deep water rice plants."
+    },
+    {
+        question: "The phenomenon of pleiotropism refers to:",
+        options: [
+            "A single gene affecting multiple phenotypic expression",
+            "More than two genes affecting a single character",
+            "Presence of several alleles of a single gene controlling a single crossover",
+            "Presence of two alleles, each of the two genes controlling a single trait"
+        ],
+        correct: 0,
+        explanation: "When a single gene affects multiple phenotypic expressions, the gene is called pleiotropic gene and the phenomenon is called pleiotropism."
+    },
+    {
+        question: "What is the role of RNA polymerase III in the process of transcription in Eukaryotes?",
+        options: [
+            "Transcription of precursor of mRNA",
+            "Transcription of only snRNAs",
+            "Transcription of rRNAs (28S, 18S and 5.8S)",
+            "Transcription of tRNA, 5S rRNA and snRNA"
+        ],
+        correct: 3,
+        explanation: "In eukaryotes, there are three major types of RNA polymerases. RNA polymerase I transcribes 5.8S, 18S, 28S rRNAs. RNA polymerase II transcribes hnRNAs (precursor of mRNA). RNA polymerase III transcribes tRNAs, 5S rRNA, and snRNA."
+    },
+    {
+        question: "Expressed Sequence Tags (ESTs) refers to:",
+        options: [
+            "All genes whether expressed or unexpressed.",
+            "Certain important expressed genes.",
+            "All genes that are expressed as RNA.",
+            "All genes that are expressed as proteins."
+        ],
+        correct: 2,
+        explanation: "All the genes that are expressed as RNA are referred to as Expressed Sequence Tags (ESTs)."
+    },
+          
+    {
+        question: "Which of the following is characteristic feature of cockroach regarding sexual dimorphism?",
+        options: [
+            "Presence of sclerites",
+            "Presence of anal cerci",
+            "Dark brown body colour and anal cerci",
+            "Presence of anal styles"
+        ],
+        correct: 3,
+        explanation: "Option (4) is the correct answer because anal styles are present in male cockroaches and absent in female cockroaches. Option (1), (2), and (3) are not the correct answers because sclerites, anal cerci, and dark brown body colour are common features of both male and female cockroaches."
+    },
+    {
+        question: "Which one of the following is the sequence on corresponding coding strand, if the sequence on mRNA formed is as follows 5’AUCGAUCGAUCGAUCGAUCGAUCGAUCG 3’?",
+        options: [
+            "5’ ATCGATCGATCGATCGATCGATCGATCG 3’",
+            "3’ ATCGATCGATCGATCGATCGATCGATCG 5’",
+            "5’ UAGCUAGCUAGCUAGCUAGCUAGCUAGC 3’",
+            "3’ UAGCUAGCUAGCUAGCUAGCUAGCUAGC 5’"
+        ],
+        correct: 1,
+        explanation: "The sequence of coding strand is the same as RNA except thymine at the place of uracil. Template strand: 3’-TAGCTAGCTAGCTAGCTAGCTAGCTAGC-5’. Coding strand: 5’-ATCGATCGATCGATCGATCGATCGATCG-3’. Transcription to mRNA: 5’ AUCGAUCGAUCGAUCGAUCGAUCG 3’."
+    },
+    {
+        question: "Which one of the following products diffuses out of the chloroplast during photosynthesis?",
+        options: [
+            "ADP",
+            "NADPH",
+            "O2",
+            "ATP"
+        ],
+        correct: 2
+    },
+    {
+        question: "Recombinant DNA molecule can be created normally by cutting the vector DNA and source DNA respectively with:",
+        options: [
+            "Hind II, Hind II",
+            "Hind II, Alu I",
+            "Hind II, EcoR I",
+            "Hind II, BamHI"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which one of the following is not a limitation of ecological pyramids?",
+        options: [
+            "Saprophytes are not given any place of ecological pyramids",
+            "It assumes a simple food chain, that almost never exists in nature",
+            "It accommodates a food web",
+            "It does not take into account the same species belonging to two or more trophic levels"
+        ],
+        correct: 2
+    },
+    {
+        question: "The Bt toxin in genetically engineered Bt cotton kills the pest by:",
+        options: [
+            "Creating pores in the midgut",
+            "Damaging the respiratory system",
+            "Degenerating the nervous system",
+            "Altering the pH of body fluids"
+        ],
+        correct: 0
+    },
+
+
+    {
+        question: "Ligases is a class of enzymes responsible for catalysing the linking together of two compounds. Which of the following bonds is not catalysed by it?",
+        options: [
+            "C – C",
+            "P – O",
+            "C – O",
+            "C – N"
+        ],
+        correct: 0
+    },
+    {
+        question: "F. Skoog observed that callus proliferated from the internodal segments of tobacco stem when auxins was supplied with one of the following except:",
+        options: [
+            "Extract of Vascular tissues",
+            "Coconut milk",
+            "Abscisic acid",
+            "Yeast Extract"
+        ],
+        correct: 2
+    },
+    {
+        question: "Given below are some statements about plant growth regulators. Choose the correct set of statements from the options given below:",
+        options: [
+            "A. All GAs are acidic in nature.",
+            "B. Auxins are antagonists to GAs.",
+            "C. Zeatin was isolated from coconut milk.",
+            "D. Ethylene induces flowering in Mango.",
+            "E. Abscisic acid induces parthenocarpy."
+        ],
+        correct: 0
+    },
+    {
+        question: "Identify the incorrect statement related to gel electrophoresis.",
+        options: [
+            "Separated DNA fragments can be directly seen under UV radiation",
+            "Separated DNA can be extracted from gel piece",
+            "Fragment of DNA moves toward anode",
+            "Sieving effect of agarose gel helps in separation of DNA fragments"
+        ],
+        correct: 0
+    },
+
+
+    {
+        question: "Aneuploidy is a chromosomal disorder where chromosome number is not the exact copy of its haploid set of chromosomes, due to:",
+        options: [
+            "Substitution",
+            "Addition",
+            "Deletion",
+            "Translocation",
+            "Inversion"
+        ],
+        correct: 3
+    },
+    {
+        question: "Given below are two statements:\nStatement I: RNA interference takes place in all Eukaryotic organisms as method of cellular defense.\nStatement II: RNAi involves the silencing of a specific mRNA due to a complementary single-stranded RNA molecule that binds and prevents translation of mRNA\nIn the light of the above statements, choose the correct answer from the options given below.",
+        options: [
+            "Statement I is true but Statement II is false.",
+            "Statement I is false but Statement II is true.",
+            "Both Statement I and Statement II are true.",
+            "Both Statement I and Statement II are false."
+        ],
+        correct: 0
+    },
+    {
+        question: "Identify the wrong statements:",
+        options: [
+            "Erythropoietin is produced by juxtaglomerular cells of the kidney",
+            "Leydig cells produce Androgens",
+            "Atrial Natriuretic factor, a peptide hormone is secreted by the seminiferous tubules of the testes",
+            "Cholecystokinin is produced by gastrointestinal tract",
+            "Gastrin acts on intestinal wall and helps in the production of pepsinogen"
+        ],
+        correct: 2
+    },
+
+
+    {
+        question: "Following are the steps involved in the process of PCR. Choose the correct sequence of steps of PCR from the options given below:",
+        options: [
+            "c → a → d → e → b",
+            "a → b → e → d → c",
+            "a → c → e → d → b",
+            "d → b → e → c → a"
+        ],
+        correct: 0
+    },
+    {
+        question: "Given below are two statements:\nStatement I: Concentrated urine is formed due to counter current mechanism in nephron.\nStatement II: Counter current mechanism helps to maintain osmotic gradient in the medullary interstitium.\nIn the light of the above statements, choose the most appropriate answer from the options given below.",
+        options: [
+            "Statement I is correct but Statement II is incorrect.",
+            "Statement I is incorrect but Statement II is correct.",
+            "Both Statement I and Statement II are correct.",
+            "Both Statement I and Statement II are incorrect."
+        ],
+        correct: 2
+    },
+    {
+        question: "Given below are two statements:\nStatement I: Concentrically arranged cisternae of Golgi complex are arranged near the nucleus with distinct convex cis or maturing and concave trans or forming face.\nStatement II: A number of proteins are modified in the cisternae of Golgi complex before they are released from cis face.\nIn the light of the above statements, choose the correct answer from the option given below.",
+        options: [
+            "Statement I is true but Statement II is false.",
+            "Statement I is false but Statement II is true.",
+            "Both Statement I and Statement II are true.",
+            "Both Statement I and Statement II are false."
+        ],
+        correct: 3
+    },
+    {
+        question: "Which of the following are NOT under the control of thyroid hormone?\nA. Maintenance of water and electrolyte balance\nB. Regulation of basal metabolic rate\nC. Normal rhythm of sleep-wake cycle\nD. Development of immune system\nE. Support the process of RBCs formation\nChoose the correct answer from the options given below:",
+        options: [
+            "C and D only",
+            "D and E only",
+            "A and D only",
+            "B and C only"
+        ],
+        correct: 0,
+        explanation: "Option (1) is the correct answer because thyroid hormones play an important role in the regulation of basal metabolic rate, maintenance of water and electrolyte balance, and support the process of RBCs formation, whereas this hormone is not involved in regulating normal rhythm of sleep-wake cycle and development of the immune system."
+    },
+    {
+        question: "Which of the following statements are correct regarding skeletal muscle?\nA. Muscle bundles are held together by collagenous connective tissue layer called fascicle.\nB. Sarcoplasmic reticulum of muscle fibre is a storehouse of calcium ions.\nC. Striated appearance of skeletal muscle fibre is due to distribution pattern of actin and myosin proteins.\nD. M line is considered as functional unit of contraction called sarcomere.\nChoose the most appropriate answer from the options given below:",
+        options: [
+            "A, C and D only",
+            "C and D only",
+            "A, B and C only",
+            "B and C only"
+        ],
+        correct: 3,
+        explanation: "Option (4) is the correct answer because statements B and C are only correct statements while A and D are incorrect statements. Muscle bundles are held together by collagenous connective tissue layer called fascia. Muscle bundles are called fascicles. The portion of the myofibril between two successive ‘Z’ lines is considered as functional unit of contraction called sarcomere."
+    }, 
+          
+          
+            // Add more biology questions as needed
+        ];
 
         const subjects = {
             Chap1: Chap1Questions,
@@ -560,6 +1540,7 @@ const Chap6Questions = [
             Chap4: Chap4Questions,
             Chap5: Chap5Questions,
             Chap6: Chap6Questions,
+          biology: biologyQuestions,
         };
 
         let selectedQuestions = [];
