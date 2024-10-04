@@ -6,225 +6,92 @@
     <title>Quiz Game</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-      :root {
-    --primary-color: #007bff;
-    --secondary-color: #4CAF50;
-    --warning-color: #f0ad4e;
-    --danger-color: #dc3545;
-    --background-color: #f0f0f0;
-    --container-color: #fff;
-    --text-color: #333;
-    --border-radius: 15px;
-}
-
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: var(--background-color);
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    color: var(--text-color);
-}
-
-#container {
-    width: 90%;
-    max-width: 800px;
-    margin: 20px auto;
-    background-color: var(--container-color);
-    padding: 20px;
-    border-radius: var(--border-radius);
-}
-
-h1 {
-    color: var(--primary-color);
-    margin-bottom: 20px;
-    font-size: 2.5em;
-}
-
-#setup {
-    margin-bottom: 20px;
-    border: 2px solid var(--primary-color);
-    padding: 15px;
-    border-radius: var(--border-radius);
-    background-color: #f7f9fc;
-}
-
-#setup label {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-#setup input[type="number"], #setup select {
-    padding: 10px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
-    width: 80px;
-}
-
-#setup input[type="number"]:focus, #setup select:focus {
-    border-color: var(--primary-color);
-}
-
-#startButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: var(--secondary-color);
-    color: white;
-    font-weight: bold;
-}
-
-#quiz {
-    display: none;
-}
-
-.question {
-    margin: 20px 0;
-    font-size: 24px;
-    font-weight: bold;
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 10px;
-}
-
-.options {
-    list-style-type: none;
-    padding: 0;
-    text-align: left;
-}
-
-.options li {
-    margin: 10px 0;
-    background-color: #e7f3fe;
-    border: 1px solid #b3d7ff;
-    border-radius: 5px;
-    padding: 10px;
-}
-
-.options li:hover {
-    background-color: #d0e7ff;
-}
-
-.options input[type="radio"] {
-    margin-right: 10px;
-}
-
-#questionNumbers {
-    display: flex;
-    overflow-x: auto;
-    margin-bottom: 20px;
-    justify-content: center;
-}
-
-#questionNumbers button {
-    flex: 1;
-    margin: 2px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    color: white;
-}
-
-#questionNumbers .selected {
-    background-color: var(--secondary-color);
-}
-
-#questionNumbers .solving {
-    background-color: var(--primary-color);
-}
-
-#questionNumbers .upcoming {
-    background-color: #ddd;
-    color: black;
-}
-
-#prevButton, #nextButton, #submitButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    margin: 10px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-#prevButton {
-    background-color: var(--warning-color);
-    color: white;
-}
-
-#nextButton {
-    background-color: var(--warning-color);
-    color: white;
-}
-
-#submitButton {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-#result {
-    display: none;
-    text-align: left;
-    margin-top: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 15px;
-    background-color: #fff;
-}
-
-.result-item {
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.correct {
-    color: green;
-    font-weight: bold;
-}
-
-.wrong {
-    color: red;
-    font-weight: bold;
-}
-
-#history {
-    margin-top: 20px;
-    text-align: left;
-}
-
-#history h2 {
-    color: var(--text-color);
-}
-
-#history .button {
-    margin-left: 10px;
-    padding: 8px 12px;
-    font-size: 14px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: var(--primary-color);
-    color: white;
-}
-
-      
-        body { font-family: Arial, sans-serif; }
-        #container { width: 80%; margin: auto; }
-        #quiz { display: none; }
-        .progress-bar { width: 100%; background: #f3f3f3; border-radius: 5px; margin: 20px 0; }
-        .progress { height: 20px; background: #4caf50; width: 0; border-radius: 5px; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        #container {
+            width: 80%;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        #setup, #quiz, #result, #history {
+            display: none;
+        }
+        #setup {
+            display: block;
+            margin-bottom: 20px;
+        }
+        .button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .progress-bar {
+            width: 100%;
+            background: #f3f3f3;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress {
+            height: 20px;
+            background: #4caf50;
+            width: 0;
+            border-radius: 5px;
+        }
         .correct { color: green; }
         .wrong { color: red; }
-        #timer { font-size: 20px; }
+        #timer { font-size: 20px; text-align: right; }
+        .result-item {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        #history button {
+            margin: 5px;
+        }
+        #questionNumbers {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        #questionNumbers button {
+            margin: 0 5px;
+            padding: 5px;
+            border: 1px solid #007bff;
+            background: white;
+            color: #007bff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #questionNumbers button.selected {
+            background: #007bff;
+            color: white;
+        }
+        #questionNumbers button.solving {
+            background: #ffc107;
+            color: white;
+        }
+        #questionNumbers button.upcoming:hover {
+            background: #e7f3ff;
+        }
     </style>
 </head>
 <body>
@@ -236,11 +103,8 @@ h1 {
             <label for="subject"><i class="fas fa-book"></i> Select Subject:</label>
             <select id="subject">
                 <option value="biology">Biology</option>
-                <option value="chemistry">Chemistry</option>
-                <option value="physics">Physics</option>
-                <option value="math">Mathematics</option>
             </select>
-            <button id="startButton" aria-label="Start the quiz"><i class="fas fa-play"></i> Start</button>
+            <button id="startButton" class="button"><i class="fas fa-play"></i> Start</button>
         </div>
         <div id="quiz">
             <div id="timer"></div>
@@ -252,9 +116,9 @@ h1 {
                 <div id="question" class="question"></div>
                 <ul id="options" class="options"></ul>
             </div>
-            <button id="prevButton" aria-label="Go to previous question"><i class="fas fa-arrow-left"></i> Previous</button>
-            <button id="nextButton" aria-label="Go to next question"><i class="fas fa-arrow-right"></i> Next</button>
-            <button id="submitButton" aria-label="Submit answers"><i class="fas fa-check"></i> Submit</button>
+            <button id="prevButton" class="button"><i class="fas fa-arrow-left"></i> Previous</button>
+            <button id="nextButton" class="button"><i class="fas fa-arrow-right"></i> Next</button>
+            <button id="submitButton" class="button"><i class="fas fa-check"></i> Submit</button>
         </div>
         <div id="result"></div>
         <div id="history"></div>
@@ -298,40 +162,34 @@ h1 {
         document.getElementById('submitButton').addEventListener('click', submitQuiz);
 
         function startQuiz() {
-            numQuestions = parseInt(document.getElementById('numQuestions').value);
-            if (isNaN(numQuestions) || numQuestions < 1 || numQuestions > 15) {
-                alert("Please enter a valid number of questions (1-15).");
-                return;
-            }
             const subject = document.getElementById('subject').value;
+            numQuestions = parseInt(document.getElementById('numQuestions').value) || 5;
             selectedQuestions = getRandomQuestions(numQuestions, subject);
-            userAnswers = Array(numQuestions).fill(null);
+            userAnswers = new Array(numQuestions).fill(null);
             currentQuestion = 0;
-            timeLeft = numQuestions * 60; // Set total time based on number of questions
+            timeLeft = numQuestions * 60; // Total time in seconds
             document.getElementById('setup').style.display = 'none';
             document.getElementById('quiz').style.display = 'block';
             displayQuestion();
-            updateQuestionNumbers();
             startTimer();
+            updateProgressBar();
         }
 
         function startTimer() {
-            updateTimerDisplay();
             timerInterval = setInterval(() => {
                 timeLeft--;
-                updateTimerDisplay();
+                document.getElementById('timer').innerText = `Time Left: ${Math.floor(timeLeft / 60)}:${(timeLeft % 60 < 10 ? '0' : '')}${timeLeft % 60}`;
+                updateProgressBar();
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
+                    alert("Time's up! Submitting your quiz.");
                     submitQuiz();
                 }
             }, 1000);
         }
 
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            document.getElementById('timer').innerText = `Time Left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            const progress = (1 - timeLeft / (numQuestions * 60)) * 100;
+        function updateProgressBar() {
+            const progress = ((currentQuestion + 1) / numQuestions) * 100;
             document.getElementById('progress').style.width = `${progress}%`;
         }
 
@@ -364,6 +222,7 @@ h1 {
                 li.appendChild(document.createTextNode(option));
                 options.appendChild(li);
             });
+            updateQuestionNumbers();
         }
 
         function changeQuestion(direction) {
@@ -375,7 +234,6 @@ h1 {
                 currentQuestion = 0;
             }
             displayQuestion();
-            updateQuestionNumbers();
         }
 
         function updateQuestionNumbers() {
@@ -394,7 +252,6 @@ h1 {
                 button.addEventListener('click', () => {
                     currentQuestion = i;
                     displayQuestion();
-                    updateQuestionNumbers();
                 });
                 questionNumbers.appendChild(button);
             }
@@ -403,29 +260,51 @@ h1 {
         function submitQuiz() {
             clearInterval(timerInterval); // Stop the timer
             let score = 0;
-            const resultContainer = document.getElementById('result');
-            resultContainer.innerHTML = '<h2>Results</h2>';
-            for (let i = 0; i < numQuestions; i++) {
-                const question = selectedQuestions[i];
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let missedCount = 0;
+
+            selectedQuestions.forEach((question, i) => {
                 const userAnswer = userAnswers[i];
                 const isCorrect = userAnswer === question.correct;
                 if (isCorrect) {
                     score += 4;
+                    correctCount++;
                 } else if (userAnswer !== null) {
                     score -= 1;
+                    incorrectCount++;
+                } else {
+                    missedCount++;
                 }
-                const result = document.createElement('div');
-                result.className = 'result-item';
-                result.innerHTML = `
-                    <p><strong>Question ${i + 1}:</strong> ${question.question}</p>
-                    <p class="${isCorrect ? 'correct' : 'wrong'}">
-                        Your answer: ${userAnswer !== null ? question.options[userAnswer] : 'No answer'}
-                        ${!isCorrect ? `<br>Correct answer: ${question.options[question.correct]}` : ''}
-                    </p>
-                `;
-                resultContainer.appendChild(result);
-            }
-            resultContainer.innerHTML += `<p><strong>Total Score: ${score}</strong></p>`;
+            });
+
+            const totalMarks = numQuestions * 4; // Maximum marks
+            const percentage = (score / totalMarks) * 100;
+            const averageTime = ((numQuestions * 60) / numQuestions); // Average time per question in seconds
+            const averageTimeDisplay = `${Math.floor(averageTime / 60)}:${(averageTime % 60 < 10 ? '0' : '')}${averageTime % 60} mins`;
+
+            const resultContainer = document.getElementById('result');
+            resultContainer.innerHTML = `
+                <h2>Results</h2>
+                <p><strong>Total Questions:</strong> ${numQuestions}</p>
+                <p><strong>Correct:</strong> ${correctCount}</p>
+                <p><strong>Incorrect:</strong> ${incorrectCount}</p>
+                <p><strong>Missed:</strong> ${missedCount}</p>
+                <p><strong>Total Marks Obtained:</strong> ${score} / ${totalMarks}</p>
+                <p><strong>Percentage:</strong> ${percentage.toFixed(2)}%</p>
+                <p><strong>Average Time Taken per Question:</strong> ${averageTimeDisplay}</p>
+                <h3>Detailed Results:</h3>
+                ${selectedQuestions.map((question, i) => `
+                    <div class="result-item">
+                        <p><strong>Question ${i + 1}:</strong> ${question.question}</p>
+                        <p class="${userAnswers[i] === question.correct ? 'correct' : 'wrong'}">
+                            Your answer: ${userAnswers[i] !== null ? question.options[userAnswers[i]] : 'No answer'}
+                            ${userAnswers[i] !== null && userAnswers[i] !== question.correct ? `<br>Correct answer: ${question.options[question.correct]}` : ''}
+                        </p>
+                    </div>
+                `).join('')}
+            `;
+
             document.getElementById('quiz').style.display = 'none';
             resultContainer.style.display = 'block';
 
@@ -452,6 +331,7 @@ h1 {
                 `;
                 historyContainer.appendChild(historyItem);
             });
+            historyContainer.style.display = 'block';
         }
 
         function viewHistory(index) {
@@ -472,7 +352,6 @@ h1 {
                 `;
                 resultContainer.appendChild(result);
             });
-            resultContainer.innerHTML += `<p><strong>Total Score: ${quiz.score}</strong></p>`;
             document.getElementById('quiz').style.display = 'none';
             resultContainer.style.display = 'block';
         }
@@ -481,4 +360,4 @@ h1 {
         displayHistory();
     </script>
 </body>
-</html> 
+</html>
