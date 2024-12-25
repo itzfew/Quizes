@@ -6,135 +6,200 @@
     <title>Interactive Quiz Game</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
 
-        .quiz-title {
-            font-size: 2.5em;
-            margin: 20px 0;
-            color: #333;
-            text-align: center;
-        }
+.quiz-title {
+    font-size: 2.5em;
+    margin: 20px 0;
+    color: #333;
+    text-align: center;
+}
 
-        .subject-title {
-            font-size: 2em;
-            margin: 20px 0;
-            color: #333;
-            text-align: center;
-        }
+.subject-title {
+    font-size: 2em;
+    margin: 20px 0;
+    color: #333;
+    text-align: center;
+}
 
-        .question {
-            margin-bottom: 30px;
-            padding: 20px;
-            border-bottom: 1px solid #ccc;
-        }
+.question {
+    margin-bottom: 30px;
+    padding: 20px;
+    border-bottom: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 10px;
+}
 
-        .question-id {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #555;
-        }
+.question-id {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #555;
+}
 
-        .question-content {
-            margin-bottom: 15px;
-        }
+.question-content {
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
 
-        .question-subject, .question-explanation {
-            margin-top: 10px;
-            font-style: italic;
-            color: #777;
-        }
+/* New styles for handling column-based question layouts */
+.question-columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Makes columns flexible */
+    gap: 10px;
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+}
 
-        .options {
-            list-style: none;
-            padding: 0;
-        }
+.question-column {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    overflow: hidden; /* Prevents content from spilling over */
+    word-wrap: break-word; /* Prevents words from spilling out */
+    white-space: normal; /* Makes content fit in the box */
+}
 
-        .options li {
-            margin-bottom: 10px;
-            border: 1px solid #ccc; /* Added solid border to each option */
-            padding: 10px;
-            border-radius: 5px;
-        }
+.question-subject, .question-explanation {
+    margin-top: 10px;
+    font-style: italic;
+    color: #777;
+}
 
-        .options label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
+.options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
-        .options input[type="radio"] {
-            margin-right: 10px;
-        }
+.options li {
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
 
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
-            color: green;
-        }
+.options li:hover {
+    background-color: #e0e0e0;
+}
 
-        .next-button {
-            background-color: #000; /* Changed button color to black */
-            color: white; /* Changed text color to white */
-            padding: 10px 20px;
-            border: 1px solid white; /* Added solid white border */
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            display: block;
-            width: 100%;
-            text-align: center;
-        }
+.options label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
 
-        .next-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
+.options input[type="radio"] {
+    margin-right: 10px;
+}
 
-        #subject-dropdown {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 1em;
-        }
+.correct-answer {
+    margin-top: 10px;
+    font-weight: bold;
+    color: green;
+}
 
-        img {
-            max-width: 100px; /* Set a maximum width for images */
-            height: auto; /* Maintain aspect ratio */
-        }
+.next-button {
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    border: 1px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%; /* Make button take full width */
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
 
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
+.next-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
 
-            #quiz-container {
-                padding: 15px;
-            }
+.progress-bar {
+    height: 10px;
+    background-color: #ccc;
+    margin-top: 20px;
+    width: 100%; /* Make progress bar take full width */
+    border-radius: 5px;
+    overflow: hidden;
+}
 
-            .next-button {
-                padding: 10px;
-            }
+.progress-bar-inner {
+    height: 100%;
+    background-color: #4caf50;
+    width: 0%;
+}
 
-            .options li {
-                padding: 5px; /* Adjust padding for smaller screens */
-            }
+.timer {
+    font-size: 1.5em;
+    color: #d32f2f;
+    font-weight: bold;
+    text-align: center;
+}
 
-            .subject-title {
-                font-size: 1.5em; /* Adjust title size for smaller screens */
-            }
+#subject-dropdown {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 1em;
+    width: 100%; /* Make dropdown take full width */
+}
 
-            #subject-dropdown {
-                width: 100%;
-            }
+/* Media query for small screens */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
 
-            img {
-                max-width: 80px; /* Adjust image size for smaller screens */
-            }
-        }
+    #quiz-container {
+        padding: 15px;
+    }
+
+    .next-button {
+        padding: 10px;
+    }
+
+    .options li {
+        padding: 5px;
+    }
+
+    .subject-title {
+        font-size: 1.5em;
+    }
+
+    #subject-dropdown {
+        width: 100%; /* Ensure dropdown takes full width */
+    }
+
+    /* Adjust the size of text for better readability on small screens */
+    .quiz-title {
+        font-size: 2em;
+    }
+
+    .question-content {
+        font-size: 1em; /* Slightly smaller text for questions */
+    }
+
+    .question-id, .question-subject {
+        font-size: 1em; /* Adjust text size */
+    }
+
+    .progress-bar {
+        margin-top: 15px; /* Add some space for progress bar on small screens */
+    }
+
+    .timer {
+        font-size: 1.2em;
+    }
+}
+
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
