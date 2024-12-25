@@ -100,6 +100,7 @@
         img {
             max-width: 100px; /* Set a maximum width for images */
             height: auto; /* Maintain aspect ratio */
+            cursor: pointer;
         }
 
         .timer {
@@ -107,6 +108,37 @@
             text-align: center;
             color: #d9534f;
             font-weight: bold;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         @media (max-width: 600px) {
@@ -136,6 +168,13 @@
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
+
+    <!-- Modal for Full-Size Image -->
+    <div id="imageModal" class="modal">
+        <span class="close" id="closeModal">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
@@ -209,6 +248,15 @@
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
             questionContent.innerHTML = question.content;
+
+            // If there is an image in the question, add a click event to open it in full view
+            const images = questionContent.getElementsByTagName('img');
+            for (let img of images) {
+                img.onclick = function() {
+                    openModal(img.src);
+                };
+            }
+
             questionElement.appendChild(questionContent);
 
             // Display options
@@ -260,6 +308,20 @@
             // Re-render MathJax content
             MathJax.typesetPromise();
         }
+
+        // Open modal for full-size image
+        function openModal(imgSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modal.style.display = "block";
+            modalImage.src = imgSrc;
+        }
+
+        // Close modal
+        document.getElementById('closeModal').onclick = function() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = "none";
+        };
 
         function startTimer() {
             timer = setInterval(() => {
