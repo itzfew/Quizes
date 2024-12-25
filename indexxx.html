@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .subject-title {
+            font-size: 2em;
+            margin: 20px 0;
+            color: #333;
+            text-align: center;
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .question-id {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .question-content {
+            margin-bottom: 15px;
+        }
+
+        .question-subject, .question-explanation {
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options li {
+            margin-bottom: 10px;
+            border: 1px solid #ccc; /* Added solid border to each option */
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .options label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
+            color: green;
+        }
+
+        .next-button {
+            background-color: #000; /* Changed button color to black */
+            color: white; /* Changed text color to white */
+            padding: 10px 20px;
+            border: 1px solid white; /* Added solid white border */
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .next-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #subject-dropdown {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 1em;
+        }
+
+        img {
+            max-width: 100px; /* Set a maximum width for images */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            #quiz-container {
+                padding: 15px;
+            }
+
+            .next-button {
+                padding: 10px;
+            }
+
+            .options li {
+                padding: 5px; /* Adjust padding for smaller screens */
+            }
+
+            .subject-title {
+                font-size: 1.5em; /* Adjust title size for smaller screens */
+            }
+
+            #subject-dropdown {
+                width: 100%;
+            }
+
+            img {
+                max-width: 80px; /* Adjust image size for smaller screens */
+            }
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <select id="subject-dropdown"></select>
+    <div id="quiz-container"></div>
+    <script>
+        let currentQuestionIndex = 0;
+        let quizData = [];
+        let userSelections = {};
+
+        function getMetaIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('metaId');
+        }
+
+        // Fetch the JSON data dynamically based on metaId
+        function fetchQuizData() {
+            const metaId = getMetaIdFromUrl();
+            if (!metaId) {
+                console.error('metaId is missing in the URL.');
+                return;
+            }
+
+            fetch(`https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`)
+                .then(response => response.json())
+                .then(data => {
+                    quizData = data;
+                    populateSubjectDropdown();
+                    displayQuestion();
+                })
+                .catch(error => console.error('Error fetching the JSON data:', error));
+        }
+
+        function populateSubjectDropdown() {
+            const subjectDropdown = document.getElementById('subject-dropdown');
+            quizData.forEach((subject, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = subject.title;
+                subjectDropdown.appendChild(option);
+            });
+
+            subjectDropdown.onchange = () => {
+                currentQuestionIndex = 0;
+                displayQuestion();
+            };
+        }
+
+        function displayQuestion() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+            const question = subject.questions[currentQuestionIndex];
+
+            // Display subject title
+            const subjectTitle = document.createElement('div');
+            subjectTitle.className = 'subject-title';
+            subjectTitle.textContent = `Subject: ${subject.title}`;
+            quizContainer.appendChild(subjectTitle);
+
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question';
+
+            // Display question_id
+            const questionId = document.createElement('div');
+            questionId.className = 'question-id';
+            questionId.textContent = `Question ID: ${question.question_id}`;
+            questionElement.appendChild(questionId);
+
+            // Display question content
+            const questionContent = document.createElement('div');
+            questionContent.className = 'question-content';
+            questionContent.innerHTML = question.content;
+            questionElement.appendChild(questionContent);
+
+            // Display options
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options';
+
+            question.options.forEach((option, index) => {
+                const optionItem = document.createElement('li');
+                const optionLabel = document.createElement('label');
+                const optionInput = document.createElement('input');
+
+                optionInput.type = 'radio';
+                optionInput.name = `question${question.question_id}`;
+                optionInput.value = option.identifier;
+                optionInput.checked = userSelections[question.question_id] === option.identifier;
+
+                optionLabel.appendChild(optionInput);
+                optionLabel.innerHTML += `${String.fromCharCode(65 + index)}. ${option.content}`;
+                if (option.image) {
+                    const optionImage = document.createElement('img');
+                    optionImage.src = option.image;
+                    optionLabel.appendChild(optionImage);
+                }
+                optionItem.appendChild(optionLabel);
+                optionsList.appendChild(optionItem);
+            });
+
+            questionElement.appendChild(optionsList);
+            quizContainer.appendChild(questionElement);
+
+            // Add Button container
+            const buttonContainer = document.createElement('div');
+            buttonContainer.className = 'button-container';
+
+            // Add Previous button
+            const prevButton = document.createElement('button');
+            prevButton.className = 'button';
+            prevButton.textContent = 'Previous';
+            prevButton.disabled = currentQuestionIndex === 0;
+            prevButton.onclick = () => {
+                saveUserSelection();
+                currentQuestionIndex--;
+                displayQuestion();
+            };
+            buttonContainer.appendChild(prevButton);
+
+            // Add Next/Submit button
+            const nextButton = document.createElement('button');
+            nextButton.className = 'button';
+            nextButton.textContent = currentQuestionIndex === subject.questions.length - 1 ? 'Submit' : 'Next';
+            nextButton.onclick = () => {
+                saveUserSelection();
+                if (currentQuestionIndex < subject.questions.length - 1) {
+                    currentQuestionIndex++;
+                    displayQuestion();
+                } else {
+                    showQuizEnd();
+                }
+            };
+            buttonContainer.appendChild(nextButton);
+
+            quizContainer.appendChild(buttonContainer);
+
+            // Re-render MathJax content
+            MathJax.typesetPromise();
+        }
+
+        function saveUserSelection() {
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const question = quizData[subjectIndex].questions[currentQuestionIndex];
+            const selectedOption = document.querySelector('input[name="question' + question.question_id + '"]:checked');
+            if (selectedOption) {
+                userSelections[question.question_id] = selectedOption.value;
+            }
+        }
+
+        function showQuizEnd() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = `<div class="subject-title">You have completed the quiz!</div>`;
+        }
+
+        // Initialize the quiz
+        fetchQuizData();
+    </script>
+</body>
+</html>
