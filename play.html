@@ -35,9 +35,42 @@
 
 .question-content {
     margin-bottom: 15px;
-    white-space: nowrap; /* Prevent content from wrapping, allowing horizontal scrolling */
+    white-space: nowrap; /* Prevent content from wrapping */
     max-width: 100%; /* Ensure content can overflow horizontally */
+    overflow-x: auto; /* Enable horizontal scroll within the question content */
 }
+
+.next-button {
+    background-color: #000; /* Button color */
+    color: white; /* Text color */
+    padding: 10px 20px;
+    border: 1px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    display: block;
+    width: 100%; /* Ensure the button fills its container */
+    text-align: center;
+}
+
+.options li {
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
+}
+
+.options label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.options input[type="radio"] {
+    margin-right: 10px;
+}
+
 
 
         .question-id {
@@ -54,50 +87,10 @@
             color: #777;
         }
 
-        .options {
-            list-style: none;
-            padding: 0;
-        }
-
-        .options li {
-            margin-bottom: 10px;
-            border: 1px solid #ccc; /* Added solid border to each option */
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .options label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .options input[type="radio"] {
-            margin-right: 10px;
-        }
-
         .correct-answer {
             margin-top: 10px;
             font-weight: bold;
             color: green;
-        }
-
-        .next-button {
-            background-color: #000; /* Changed button color to black */
-            color: white; /* Changed text color to white */
-            padding: 10px 20px;
-            border: 1px solid white; /* Added solid white border */
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            display: block;
-            width: 100%;
-            text-align: center;
-        }
-
-        .next-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
         }
 
         #subject-dropdown {
