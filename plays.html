@@ -1,12 +1,24 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
-    <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    <!-- Updated MathJax 3.x -->
+    <script type="module">
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                packages: {'[+]': ['ams', 'physics', 'chemistry', 'biology']} // Added packages for various subjects
+            },
+            loader: {load: ['[tex]/ams', '[tex]/physics', '[tex]/chemistry', '[tex]/biology']}, // Ensure these subject-related packages are loaded
+            svg: {
+                fontCache: 'global'
+            }
+        };
     </script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -261,7 +273,7 @@
             startTimer();
 
             // Re-render MathJax content
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            MathJax.typeset();
 
         }
 
@@ -277,85 +289,53 @@
                 }
             }, 1000);
         }
- function showExplanation() {
-    clearInterval(timer); // Stop the timer when explanation is shown
 
-    const subjectIndex = document.getElementById('subject-dropdown').value;
-    const question = quizData[subjectIndex].questions[currentQuestionIndex];
+        function showExplanation() {
+            clearInterval(timer); // Stop the timer when explanation is shown
 
-    const selectedOption = document.querySelector('input[name="question' + question.question_id + '"]:checked');
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
+            if (selectedOption) {
+                const question = quizData[subjectIndex].questions[currentQuestionIndex];
+                const selectedOptionValue = selectedOption.value;
 
-    let feedback = document.createElement('div');
-    feedback.className = 'correct-answer';
+                // Find the selected option content
+                const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
+                const correctOptionValue = question.correct_options[0];
+                const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
-    if (selectedOption) {
-        const selectedOptionValue = selectedOption.value;
-        const correctOptionValue = question.correct_options[0];
-        const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
-        const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
+                // Show feedback based on correctness
+                const feedback = document.createElement('div');
+                feedback.className = 'correct-answer';
 
-        // Show feedback based on correctness
-        if (selectedOptionValue === correctOptionValue) {
-            feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-            feedback.style.color = 'green'; // Correct answer in green
-        } else {
-            feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-            feedback.style.color = 'red'; // Incorrect answer in red
-        }
+                if (selectedOptionValue === correctOptionValue) {
+                    feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
+                    feedback.style.color = 'green'; // Correct answer in green
+                } else {
+                    feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+                    feedback.style.color = 'red'; // Incorrect answer in red
+                }
 
-        document.querySelector('.question').appendChild(feedback);
+                document.querySelector('.question').appendChild(feedback);
 
-        // Color the options based on correctness
-        const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
-        options.forEach(option => {
-            const optionItem = option.closest('li');
-            if (option.value === correctOptionValue) {
-                optionItem.style.backgroundColor = 'green'; // Correct option turns green
-                optionItem.style.color = 'white'; // Text color for green
-            } else if (option.value === selectedOptionValue) {
-                optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
-                optionItem.style.color = 'white'; // Text color for red
-            }
-        });
-    } else {
-        // If no option was selected before time ran out, mark it as missed
-        feedback.innerHTML = `You didn't select an option in time. The correct answer is Option ${question.correct_options[0]}: ${question.options.find(option => option.identifier === question.correct_options[0]).content}.`;
-        feedback.style.color = 'gray'; // Mark missed question in gray
-        document.querySelector('.question').appendChild(feedback);
-    }
+                // Show explanation
+                if (question.explanation) {
+                    const explanation = document.createElement('div');
+                    explanation.className = 'question-explanation';
+                    explanation.innerHTML = `Explanation: ${question.explanation}`;
+                    document.querySelector('.question').appendChild(explanation);
+                }
 
-    // Show explanation if available
-    if (question.explanation) {
-        const explanation = document.createElement('div');
-        explanation.className = 'question-explanation';
-        explanation.innerHTML = `Explanation: ${question.explanation}`;
-        document.querySelector('.question').appendChild(explanation);
-    }
-
-    // Disable further selection
-    const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
-    options.forEach(option => option.disabled = true);
-
-    // Update button text to 'Next Question'
-    const nextButton = document.querySelector('.next-button');
-    nextButton.textContent = 'Next Question';
-
-    // Save the current question index
-    saveLastQuestion();
-
-    // Show next question on button click
-    nextButton.onclick = () => {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
-            timeLeft = 30; // Reset the timer for the next question
-            displayQuestion();
-        } else {
-            showQuizEnd();
-        }
-    };
-
-     // Re-render MathJax content
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                // Color the options based on correctness
+                const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
+                options.forEach(option => {
+                    const optionItem = option.closest('li');
+                    if (option.value === correctOptionValue) {
+                        optionItem.style.backgroundColor = 'green'; // Correct option turns green
+                        optionItem.style.color = 'white'; // Text color for green
+                    } else if (option.value === selectedOptionValue) {
+                        optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
+                        optionItem.style.color = 'white'; // Text color for red
                     }
                 });
 
