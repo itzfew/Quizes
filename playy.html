@@ -278,53 +278,95 @@
             }, 1000);
         }
 
-        function showExplanation() {
-            clearInterval(timer); // Stop the timer when explanation is shown
+        function startTimer() {
+    timer = setInterval(() => {
+        timeLeft--;
+        const timerElement = document.getElementById('timer');
+        timerElement.textContent = `Time Left: ${timeLeft}s`;
 
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
-            if (selectedOption) {
-                const question = quizData[subjectIndex].questions[currentQuestionIndex];
-                const selectedOptionValue = selectedOption.value;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            autoSubmit(); // Automatically submit if time is up
+        }
+    }, 1000);
+}
 
-                // Find the selected option content
-                const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
-                const correctOptionValue = question.correct_options[0];
-                const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
+function autoSubmit() {
+    const subjectIndex = document.getElementById('subject-dropdown').value;
+    const question = quizData[subjectIndex].questions[currentQuestionIndex];
 
-                // Show feedback based on correctness
-                const feedback = document.createElement('div');
-                feedback.className = 'correct-answer';
+    // Check if an option was selected, if not mark as missed
+    const selectedOption = document.querySelector('input[name="question' + question.question_id + '"]:checked');
+    
+    const feedback = document.createElement('div');
+    feedback.className = 'correct-answer';
 
-                if (selectedOptionValue === correctOptionValue) {
-                    feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-                    feedback.style.color = 'green'; // Correct answer in green
-                } else {
-                    feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                    feedback.style.color = 'red'; // Incorrect answer in red
-                }
+    if (selectedOption) {
+        const selectedOptionValue = selectedOption.value;
+        const correctOptionValue = question.correct_options[0];
+        const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
-                document.querySelector('.question').appendChild(feedback);
+        // Correct answer logic
+        if (selectedOptionValue === correctOptionValue) {
+            feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
+            feedback.style.color = 'green';
+        } else {
+            const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
+            feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+            feedback.style.color = 'red';
+        }
+    } else {
+        // If no option selected, treat as missed
+        const correctOptionValue = question.correct_options[0];
+        const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
+        feedback.innerHTML = `You missed this question. The correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+        feedback.style.color = 'orange'; // Highlight missed question in orange
+    }
 
-                // Show explanation
-                if (question.explanation) {
-                    const explanation = document.createElement('div');
-                    explanation.className = 'question-explanation';
-                    explanation.innerHTML = `Explanation: ${question.explanation}`;
-                    document.querySelector('.question').appendChild(explanation);
-                }
+    document.querySelector('.question').appendChild(feedback);
 
-                // Color the options based on correctness
-                const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
-                options.forEach(option => {
-                    const optionItem = option.closest('li');
-                    if (option.value === correctOptionValue) {
-                        optionItem.style.backgroundColor = 'green'; // Correct option turns green
-                        optionItem.style.color = 'white'; // Text color for green
-                    } else if (option.value === selectedOptionValue) {
-                        optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
-                        optionItem.style.color = 'white'; // Text color for red
-                       
+    // Show explanation if available
+    if (question.explanation) {
+        const explanation = document.createElement('div');
+        explanation.className = 'question-explanation';
+        explanation.innerHTML = `Explanation: ${question.explanation}`;
+        document.querySelector('.question').appendChild(explanation);
+    }
+
+    // Color the options based on correctness
+    const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
+    options.forEach(option => {
+        const optionItem = option.closest('li');
+        if (option.value === question.correct_options[0]) {
+            optionItem.style.backgroundColor = 'green'; // Correct option turns green
+            optionItem.style.color = 'white'; // Text color for green
+        } else if (option.checked && option.value !== question.correct_options[0]) {
+            optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
+            optionItem.style.color = 'white'; // Text color for red
+        }
+
+        // Disable further selection
+        option.disabled = true;
+    });
+
+    // Update the next button to move to the next question
+    const nextButton = document.querySelector('.next-button');
+    nextButton.textContent = 'Next Question';
+    
+    // Save the current question index
+    saveLastQuestion();
+
+    // Proceed to next question or show quiz end
+    nextButton.onclick = () => {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
+            timeLeft = 30; // Reset the timer for the next question
+            displayQuestion();
+        } else {
+            showQuizEnd();
+        }
+    };
+
                     // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
                     }
