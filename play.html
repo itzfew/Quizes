@@ -246,48 +246,64 @@
         }
 
         function showExplanation() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
-            if (selectedOption) {
-                // Show correct answer and explanation
-                const question = quizData[subjectIndex].questions[currentQuestionIndex];
-                const correctAnswer = document.createElement('div');
-                correctAnswer.className = 'correct-answer';
-                correctAnswer.innerHTML = `The correct answer is Option ${question.correct_options[0]}: ${question.options.find(option => option.identifier === question.correct_options[0]).content}`;
-                document.querySelector('.question').appendChild(correctAnswer);
+    const subjectIndex = document.getElementById('subject-dropdown').value;
+    const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
+    if (selectedOption) {
+        const question = quizData[subjectIndex].questions[currentQuestionIndex];
+        const selectedOptionValue = selectedOption.value;
 
-                // Show explanation
-                if (question.explanation) {
-                    const explanation = document.createElement('div');
-                    explanation.className = 'question-explanation';
-                    explanation.innerHTML = `Explanation: ${question.explanation}`;
-                    document.querySelector('.question').appendChild(explanation);
-                }
+        // Find the selected option content
+        const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
+        const correctOptionValue = question.correct_options[0];
+        const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
-                // Disable further selection
-                const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
-                options.forEach(option => option.disabled = true);
+        // Show feedback based on correctness
+        const feedback = document.createElement('div');
+        feedback.className = 'correct-answer';
 
-                // Update button text
-                const nextButton = document.querySelector('.next-button');
-                nextButton.textContent = 'Next Question';
-
-                // Show next question on button click
-                nextButton.onclick = () => {
-                    currentQuestionIndex++;
-                    if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
-                        displayQuestion();
-                    } else {
-                        showQuizEnd();
-                    }
-                };
-
-                // Re-render MathJax content
-                MathJax.typesetPromise();
-            } else {
-                alert('Please select an option before proceeding.');
-            }
+        if (selectedOptionValue === correctOptionValue) {
+            feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
+            feedback.style.color = 'green'; // Correct answer in green
+        } else {
+            feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+            feedback.style.color = 'red'; // Incorrect answer in red
         }
+
+        document.querySelector('.question').appendChild(feedback);
+
+        // Show explanation
+        if (question.explanation) {
+            const explanation = document.createElement('div');
+            explanation.className = 'question-explanation';
+            explanation.innerHTML = `Explanation: ${question.explanation}`;
+            document.querySelector('.question').appendChild(explanation);
+        }
+
+        // Disable further selection
+        const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
+        options.forEach(option => option.disabled = true);
+
+        // Update button text
+        const nextButton = document.querySelector('.next-button');
+        nextButton.textContent = 'Next Question';
+
+        // Show next question on button click
+        nextButton.onclick = () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
+                displayQuestion();
+            } else {
+                showQuizEnd();
+            }
+        };
+
+        // Re-render MathJax content
+        MathJax.typesetPromise();
+    } else {
+        alert('Please select an option before proceeding.');
+    }
+}
+
 
         function showQuizEnd() {
             const quizContainer = document.getElementById('quiz-container');
