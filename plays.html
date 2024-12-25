@@ -5,196 +5,212 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
     <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
-}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
 
-.quiz-title {
-    font-size: 2.5em;
-    margin: 20px 0;
-    color: #333;
-    text-align: center;
-}
+        .quiz-title {
+            font-size: 2.5em;
+            margin: 20px 0;
+            color: #333;
+            text-align: center;
+        }
 
-.subject-title {
-    font-size: 2em;
-    margin: 20px 0;
-    color: #333;
-    text-align: center;
-}
+        .subject-title {
+            font-size: 2em;
+            margin: 20px 0;
+            color: #333;
+            text-align: center;
+        }
 
-.question {
-    margin-bottom: 30px;
-    padding: 20px;
-    border-bottom: 1px solid #ccc;
-    background-color: #fff;
-    border-radius: 10px;
-}
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-bottom: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 10px;
+        }
 
-.question-id {
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #555;
-}
+        .question-id {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+        }
 
-.question-content {
-    margin-bottom: 15px;
-    font-size: 1.2em;
-}
+        .question-content {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
 
-.question-subject, .question-explanation {
-    margin-top: 10px;
-    font-style: italic;
-    color: #777;
-}
+        /* New styles for handling column-based question layouts */
+        .question-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Makes columns flexible */
+            gap: 10px;
+            overflow-x: auto; /* Allows horizontal scrolling if needed */
+        }
 
-.options {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+        .question-column {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            overflow: hidden; /* Prevents content from spilling over */
+            word-wrap: break-word; /* Prevents words from spilling out */
+            white-space: normal; /* Makes content fit in the box */
+        }
 
-.options li {
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    transition: background-color 0.3s ease;
-}
+        .question-subject, .question-explanation {
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
+        }
 
-.options li:hover {
-    background-color: #e0e0e0;
-}
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-.options label {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
+        .options li {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
+        }
 
-.options input[type="radio"] {
-    margin-right: 10px;
-}
+        .options li:hover {
+            background-color: #e0e0e0;
+        }
 
-.correct-answer {
-    margin-top: 10px;
-    font-weight: bold;
-    color: green;
-}
+        .options label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
 
-.next-button {
-    background-color: #000;
-    color: white;
-    padding: 10px 20px;
-    border: 1px solid white;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-    width: 100%; /* Make button take full width */
-    text-align: center;
-    transition: background-color 0.3s ease;
-}
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
 
-.next-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
+        .correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
+            color: green;
+        }
 
-.progress-bar {
-    height: 10px;
-    background-color: #ccc;
-    margin-top: 20px;
-    width: 100%; /* Make progress bar take full width */
-    border-radius: 5px;
-    overflow: hidden;
-}
+        .next-button {
+            background-color: #000;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%; /* Make button take full width */
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
 
-.progress-bar-inner {
-    height: 100%;
-    background-color: #4caf50;
-    width: 0%;
-}
+        .next-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
 
-.timer {
-    font-size: 1.5em;
-    color: #d32f2f;
-    font-weight: bold;
-    text-align: center;
-}
+        .progress-bar {
+            height: 10px;
+            background-color: #ccc;
+            margin-top: 20px;
+            width: 100%; /* Make progress bar take full width */
+            border-radius: 5px;
+            overflow: hidden;
+        }
 
-#subject-dropdown {
-    display: block;
-    margin: 20px auto;
-    padding: 10px;
-    font-size: 1em;
-    width: 100%; /* Make dropdown take full width */
-}
+        .progress-bar-inner {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0%;
+        }
 
-/* Media query for small screens */
-@media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
+        .timer {
+            font-size: 1.5em;
+            color: #d32f2f;
+            font-weight: bold;
+            text-align: center;
+        }
 
-    #quiz-container {
-        padding: 15px;
-    }
+        #subject-dropdown {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 1em;
+            width: 100%; /* Make dropdown take full width */
+        }
 
-    .next-button {
-        padding: 10px;
-    }
+        /* Media query for small screens */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
 
-    .options li {
-        padding: 5px;
-    }
+            #quiz-container {
+                padding: 15px;
+            }
 
-    .subject-title {
-        font-size: 1.5em;
-    }
+            .next-button {
+                padding: 10px;
+            }
 
-    #subject-dropdown {
-        width: 100%; /* Ensure dropdown takes full width */
-    }
+            .options li {
+                padding: 5px;
+            }
 
-    /* Adjust the size of text for better readability on small screens */
-    .quiz-title {
-        font-size: 2em;
-    }
+            .subject-title {
+                font-size: 1.5em;
+            }
 
-    .question-content {
-        font-size: 1em; /* Slightly smaller text for questions */
-    }
+            #subject-dropdown {
+                width: 100%; /* Ensure dropdown takes full width */
+            }
 
-    .question-id, .question-subject {
-        font-size: 1em; /* Adjust text size */
-    }
+            /* Adjust the size of text for better readability on small screens */
+            .quiz-title {
+                font-size: 2em;
+            }
 
-    .progress-bar {
-        margin-top: 15px; /* Add some space for progress bar on small screens */
-    }
+            .question-content {
+                font-size: 1em; /* Slightly smaller text for questions */
+            }
 
-    .timer {
-        font-size: 1.2em;
-    }
-}
+            .question-id, .question-subject {
+                font-size: 1em; /* Adjust text size */
+            }
 
+            .progress-bar {
+                margin-top: 15px; /* Add some space for progress bar on small screens */
+            }
+
+            .timer {
+                font-size: 1.2em;
+            }
+        }
     </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
-    <div class="timer" id="timer"></div>
     <div id="quiz-container"></div>
 
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
-        let timerInterval;
-        let timeLeft = 60; // 60 seconds for each question
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
@@ -205,6 +221,7 @@ body {
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
+        // Fetch the JSON data
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
@@ -243,14 +260,14 @@ body {
             subjectTitle.textContent = `Subject: ${subject.title}`;
             quizContainer.appendChild(subjectTitle);
 
-            // Display question number
-            const questionNumber = document.createElement('div');
-            questionNumber.className = 'question-number';
-            questionNumber.textContent = `Question ${currentQuestionIndex + 1} of ${subject.questions.length}`;
-            quizContainer.appendChild(questionNumber);
-
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
+
+            // Display question_id
+            const questionId = document.createElement('div');
+            questionId.className = 'question-id';
+            questionId.textContent = `Question ID: ${question.question_id}`;
+            questionElement.appendChild(questionId);
 
             // Display question content
             const questionContent = document.createElement('div');
@@ -279,7 +296,7 @@ body {
 
             questionElement.appendChild(optionsList);
 
-            // Add Next button
+            // Add Submit button
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
             nextButton.textContent = 'Submit';
@@ -288,53 +305,22 @@ body {
 
             quizContainer.appendChild(questionElement);
 
-            // Start Timer
-            startTimer();
-
-            // Progress Bar
-            const progressBar = document.createElement('div');
-            progressBar.className = 'progress-bar';
-            const progressBarInner = document.createElement('div');
-            progressBarInner.className = 'progress-bar-inner';
-            progressBar.appendChild(progressBarInner);
-            quizContainer.appendChild(progressBar);
-
             // Re-render MathJax content
             MathJax.typesetPromise();
         }
 
-        function startTimer() {
-            timeLeft = 60; // Reset timer to 60 seconds
-            const timerElement = document.getElementById('timer');
-            timerElement.textContent = `Time Left: ${timeLeft}s`;
-
-            if (timerInterval) {
-                clearInterval(timerInterval);
-            }
-
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                timerElement.textContent = `Time Left: ${timeLeft}s`;
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    showExplanation();
-                }
-            }, 1000);
-        }
-
         function showExplanation() {
-            clearInterval(timerInterval); // Stop the timer
-
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
             if (selectedOption) {
+                // Show correct answer and explanation
                 const question = quizData[subjectIndex].questions[currentQuestionIndex];
                 const correctAnswer = document.createElement('div');
                 correctAnswer.className = 'correct-answer';
                 correctAnswer.innerHTML = `The correct answer is Option ${question.correct_options[0]}: ${question.options.find(option => option.identifier === question.correct_options[0]).content}`;
                 document.querySelector('.question').appendChild(correctAnswer);
 
+                // Show explanation
                 if (question.explanation) {
                     const explanation = document.createElement('div');
                     explanation.className = 'question-explanation';
@@ -350,6 +336,7 @@ body {
                 const nextButton = document.querySelector('.next-button');
                 nextButton.textContent = 'Next Question';
 
+                // Show next question on button click
                 nextButton.onclick = () => {
                     currentQuestionIndex++;
                     if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
@@ -358,11 +345,12 @@ body {
                         showQuizEnd();
                     }
                 };
+
+                // Re-render MathJax content
+                MathJax.typesetPromise();
             } else {
                 alert('Please select an option before proceeding.');
             }
-
-            MathJax.typesetPromise();
         }
 
         function showQuizEnd() {
