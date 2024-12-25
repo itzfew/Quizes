@@ -52,7 +52,7 @@
     border-radius: 5px;
     cursor: pointer;
     position: fixed; /* Fix position at the bottom of the screen */
-    bottom: 10px; /* Distance from the bottom edge */
+    bottom: 20px; /* Distance from the bottom edge */
     left: 0;
     width: 100%; /* Make button fill the full width */
     text-align: center;
@@ -282,8 +282,20 @@
             document.querySelector('.question').appendChild(explanation);
         }
 
-        // Disable further selection
+        // Color the options based on correctness
         const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
+        options.forEach(option => {
+            const optionItem = option.closest('li');
+            if (option.value === correctOptionValue) {
+                optionItem.style.backgroundColor = 'green'; // Correct option turns green
+                optionItem.style.color = 'white'; // Text color for green
+            } else if (option.value === selectedOptionValue) {
+                optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
+                optionItem.style.color = 'white'; // Text color for red
+            }
+        });
+
+        // Disable further selection
         options.forEach(option => option.disabled = true);
 
         // Update button text
@@ -306,6 +318,7 @@
         alert('Please select an option before proceeding.');
     }
 }
+
 
 
         function showQuizEnd() {
