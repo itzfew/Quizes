@@ -272,8 +272,8 @@
                 timerElement.textContent = `Time Left: ${timeLeft}s`;
 
                 if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    showExplanation();
+                    clearInterval(timer); // Stop the timer
+                    showExplanation(); // Automatically show explanation when time runs out
                 }
             }, 1000);
         }
@@ -324,9 +324,6 @@
                     } else if (option.value === selectedOptionValue) {
                         optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
                         optionItem.style.color = 'white'; // Text color for red
-                       
-                    // Re-render MathJax content
-            MathJax.typeset();
                     }
                 });
 
