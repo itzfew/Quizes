@@ -6,17 +6,22 @@
     <title>Interactive Quiz Game</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
             margin: 0;
-            padding: 0px;
+            padding: 0;
+            color: #333;
         }
 
         .quiz-title {
-            font-size: 2.5em;
+            font-size: 2.8em;
             margin: 20px 0;
-            color: #333;
+            color: #fff;
             text-align: center;
+            padding: 20px;
+            background: #3498db;
+            border-radius: 10px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
         }
 
         .subject-title {
@@ -24,66 +29,70 @@
             margin: 20px 0;
             color: #333;
             text-align: center;
+            font-weight: bold;
         }
 
         .question {
-            margin-bottom: 30px;
-            padding: 3px;
-            border-bottom: 1px solid #ccc;
-            overflow-x: auto; /* Enable horizontal scroll if content overflows */
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
         }
 
         .question-content {
-            margin-bottom: 15px;
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
-            max-width: 100%; /* Ensure content can overflow horizontally */
-            overflow-x: auto; /* Enable horizontal scroll within the question content */
-        }
-
-        .next-button {
-            background-color: #000; /* Button color */
-            color: white; /* Text color */
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            display: block;
-            width: 100%; /* Ensure the button fills its container */
-            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 20px;
         }
 
         .options li {
+            list-style-type: none;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
+            border: 2px solid #ddd;
+            padding: 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
         }
 
-        .options label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
+        .options li:hover {
+            background-color: #f2f2f2;
+            border-color: #3498db;
         }
 
         .options input[type="radio"] {
             margin-right: 10px;
         }
 
+        .next-button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .next-button:hover {
+            background-color: #2980b9;
+        }
+
+        .next-button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
         .question-id {
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             color: #555;
         }
 
-        .question-subject, .question-explanation {
-            margin-top: 10px;
+        .question-explanation {
+            margin-top: 15px;
             font-style: italic;
             color: #777;
         }
@@ -98,41 +107,69 @@
             display: block;
             margin: 20px auto;
             padding: 10px;
-            font-size: 1em;
+            font-size: 1.2em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 60%;
+            cursor: pointer;
+        }
+
+        #subject-dropdown:hover {
+            background-color: #2980b9;
+        }
+
+        #quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s ease;
         }
 
         img {
-            max-width: 100px; /* Set a maximum width for images */
-            height: auto; /* Maintain aspect ratio */
+            max-width: 120px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
         }
 
         @media (max-width: 600px) {
-            body {
-                padding: 0px;
-            }
-
-            #quiz-container {
-                padding: 3px;
-            }
-
-            .next-button {
-                padding: 10px;
-            }
-
-            .options li {
-                padding: 5px; /* Adjust padding for smaller screens */
+            .quiz-title {
+                font-size: 2.2em;
+                padding: 15px;
             }
 
             .subject-title {
-                font-size: 1.5em; /* Adjust title size for smaller screens */
+                font-size: 1.8em;
+            }
+
+            .next-button {
+                padding: 10px 20px;
+                font-size: 1em;
             }
 
             #subject-dropdown {
-                width: 100%;
+                width: 90%;
             }
 
             img {
-                max-width: 80px; /* Adjust image size for smaller screens */
+                max-width: 80px;
             }
         }
     </style>
@@ -140,9 +177,12 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-    <div class="quiz-title" id="quiz-title"></div>
+    <div class="quiz-title" id="quiz-title">Interactive Quiz Game</div>
     <select id="subject-dropdown"></select>
-    <div id="quiz-container"></div>
+    <div id="quiz-container">
+        <!-- Dynamic content will be injected here -->
+    </div>
+    
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
@@ -156,7 +196,6 @@
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
-        // Fetch the JSON data
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
@@ -198,7 +237,7 @@
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
 
-            // Display question_id
+            // Display question ID
             const questionId = document.createElement('div');
             questionId.className = 'question-id';
             questionId.textContent = `Question ID: ${question.question_id}`;
@@ -213,7 +252,6 @@
             // Display options
             const optionsList = document.createElement('ul');
             optionsList.className = 'options';
-
             question.options.forEach(option => {
                 const optionItem = document.createElement('li');
                 const optionLabel = document.createElement('label');
@@ -228,10 +266,9 @@
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
-
             questionElement.appendChild(optionsList);
 
-            // Add Submit button
+            // Add submit button
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
             nextButton.textContent = 'Submit';
@@ -240,22 +277,28 @@
 
             quizContainer.appendChild(questionElement);
 
-            // Re-render MathJax content
+            // Update progress bar
+            const progressBar = document.createElement('div');
+            progressBar.className = 'progress-bar';
+            const progress = document.createElement('div');
+            progress.className = 'progress';
+            progress.style.width = `${((currentQuestionIndex + 1) / subject.questions.length) * 100}%`;
+            progressBar.appendChild(progress);
+            quizContainer.appendChild(progressBar);
+
             MathJax.typesetPromise();
         }
 
         function showExplanation() {
             const subjectIndex = document.getElementById('subject-dropdown').value;
-            const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
+            const selectedOption = document.querySelector(`input[name="question${quizData[subjectIndex].questions[currentQuestionIndex].question_id}"]:checked`);
             if (selectedOption) {
-                // Show correct answer and explanation
                 const question = quizData[subjectIndex].questions[currentQuestionIndex];
                 const correctAnswer = document.createElement('div');
                 correctAnswer.className = 'correct-answer';
                 correctAnswer.innerHTML = `The correct answer is Option ${question.correct_options[0]}: ${question.options.find(option => option.identifier === question.correct_options[0]).content}`;
                 document.querySelector('.question').appendChild(correctAnswer);
 
-                // Show explanation
                 if (question.explanation) {
                     const explanation = document.createElement('div');
                     explanation.className = 'question-explanation';
@@ -263,15 +306,11 @@
                     document.querySelector('.question').appendChild(explanation);
                 }
 
-                // Disable further selection
-                const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
+                const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
                 options.forEach(option => option.disabled = true);
 
-                // Update button text
                 const nextButton = document.querySelector('.next-button');
                 nextButton.textContent = 'Next Question';
-
-                // Show next question on button click
                 nextButton.onclick = () => {
                     currentQuestionIndex++;
                     if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
@@ -281,7 +320,6 @@
                     }
                 };
 
-                // Re-render MathJax content
                 MathJax.typesetPromise();
             } else {
                 alert('Please select an option before proceeding.');
@@ -290,7 +328,7 @@
 
         function showQuizEnd() {
             const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = `<div class="subject-title">You have completed the quiz!</div>`;
+            quizContainer.innerHTML = `<div class="subject-title">You have completed the quiz! Congratulations!</div>`;
         }
     </script>
 </body>
