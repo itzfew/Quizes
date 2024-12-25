@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0px;
+            padding: 0;
         }
 
         .quiz-title {
@@ -285,7 +285,7 @@
 
             questionElement.appendChild(optionsList);
 
-            // Display timer
+            // Add timer
             const timerElement = document.createElement('div');
             timerElement.className = 'timer';
             timerElement.id = 'timer';
@@ -302,7 +302,7 @@
             // Display question number (e.g., 1/12)
             const questionNumber = document.createElement('div');
             questionNumber.className = 'question-id';
-            questionNumber.textContent = `${currentQuestionIndex + 1}/${quizData[subjectIndex].questions.length}`;
+            questionNumber.textContent = `${currentQuestionIndex + 1}/${subject.questions.length}`;
             quizContainer.appendChild(questionNumber);
 
             quizContainer.appendChild(questionElement);
