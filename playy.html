@@ -155,7 +155,7 @@
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
-        let userAnswers = [];  // Store user answers
+        let userAnswers = {}; // Store user answers in an object
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
@@ -260,57 +260,51 @@
             const subject = quizData[subjectIndex];
 
             subject.questions.forEach((question, index) => {
-                const selectedOption = document.querySelector('input[name="question' + question.question_id + '"]:checked');
+                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
                 const questionResult = document.createElement('div');
                 questionResult.className = 'question-result';
 
                 // Save the user selection
                 if (selectedOption) {
                     const selectedOptionValue = selectedOption.value;
-                    userAnswers[index] = selectedOptionValue;  // Save the selected answer
+                    userAnswers[question.question_id] = selectedOptionValue;  // Save the selected answer
                     const correctOptionValue = question.correct_options[0];
                     const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
                     const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
                     if (selectedOptionValue === correctOptionValue) {
                         correctAnswers++;
-                        questionResult.innerHTML = `Question ${question.question_id}: Correct! (You selected Option ${selectedOptionValue}: ${selectedOptionContent})`;
-                        questionResult.style.color = 'green';
+                        questionResult.innerHTML = `<strong>Question:</strong> ${question.content} <br><strong>Your Answer:</strong> ${selectedOptionContent} (Correct!)`;
                     } else {
-                        questionResult.innerHTML = `Question ${question.question_id}: Incorrect! (You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer was Option ${correctOptionValue}: ${correctOptionContent})`;
-                        questionResult.style.color = 'red';
+                        questionResult.innerHTML = `<strong>Question:</strong> ${question.content} <br><strong>Your Answer:</strong> ${selectedOptionContent} <br><strong>Correct Answer:</strong> ${correctOptionContent}`;
                     }
-                } else {
-                    userAnswers[index] = null;  // No answer selected
-                    questionResult.innerHTML = `Question ${question.question_id}: No answer selected`;
-                    questionResult.style.color = 'orange';
+
+                    // Explanation Dropdown
+                    const explanationDropdown = document.createElement('div');
+                    explanationDropdown.className = 'dropdown';
+                    const selectExplanation = document.createElement('select');
+                    const optionNoExplanation = document.createElement('option');
+                    optionNoExplanation.textContent = 'No Explanation';
+                    const optionShowExplanation = document.createElement('option');
+                    optionShowExplanation.textContent = 'Show Explanation';
+                    selectExplanation.appendChild(optionNoExplanation);
+                    selectExplanation.appendChild(optionShowExplanation);
+
+                    selectExplanation.onchange = () => {
+                        if (selectExplanation.value === 'Show Explanation') {
+                            const explanation = document.createElement('div');
+                            explanation.className = 'question-explanation';
+                            explanation.innerHTML = `Explanation: ${question.explanation}`;
+                            questionResult.appendChild(explanation);
+                            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                        }
+                    };
+
+                    explanationDropdown.appendChild(selectExplanation);
+                    questionResult.appendChild(explanationDropdown);
+
+                    resultContainer.appendChild(questionResult);
                 }
-
-                // Add a dropdown to show explanation for the question
-                const explanationDropdown = document.createElement('div');
-                explanationDropdown.className = 'dropdown';
-                const selectExplanation = document.createElement('select');
-                const optionNoExplanation = document.createElement('option');
-                optionNoExplanation.textContent = 'No Explanation';
-                const optionShowExplanation = document.createElement('option');
-                optionShowExplanation.textContent = 'Show Explanation';
-                selectExplanation.appendChild(optionNoExplanation);
-                selectExplanation.appendChild(optionShowExplanation);
-
-                selectExplanation.onchange = () => {
-                    if (selectExplanation.value === 'Show Explanation') {
-                        const explanation = document.createElement('div');
-                        explanation.className = 'question-explanation';
-                        explanation.innerHTML = `Explanation: ${question.explanation}`;
-                        questionResult.appendChild(explanation);
-                        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-                    }
-                };
-
-                explanationDropdown.appendChild(selectExplanation);
-                questionResult.appendChild(explanationDropdown);
-
-                resultContainer.appendChild(questionResult);
             });
 
             // Display score
@@ -325,6 +319,9 @@
 
             // Re-render MathJax content for explanations
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+            // Save results to localStorage for later reference
+            localStorage.setItem(`quizResults_${metaId}`, JSON.stringify(userAnswers));
         }
     </script>
 </body>
