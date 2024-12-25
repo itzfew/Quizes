@@ -257,23 +257,20 @@
             // Add Submit button
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
-            nextButton.textContent = 'Submit';
-            nextButton.onclick = showExplanation;
-            questionElement.appendChild(nextButton);
+            nextButton.textContent = 'Submit Answer';
+            quizContainer.appendChild(nextButton);
 
-            // Display question number (e.g., 1/12)
-            const questionNumber = document.createElement('div');
-            questionNumber.className = 'question-id';
-            questionNumber.textContent = `${currentQuestionIndex + 1}/${quizData[subjectIndex].questions.length}`;
-            quizContainer.appendChild(questionNumber);
+            // Reapply MathJax to render math expressions in the question
+            MathJax.typeset();
 
-            quizContainer.appendChild(questionElement);
-
-            // Start timer countdown
+            // Start the timer
             startTimer();
 
-            // Re-render MathJax content
-            MathJax.typeset(); // Reapply MathJax every time question is displayed
+            nextButton.onclick = () => {
+                showExplanation();
+            };
+
+            quizContainer.appendChild(questionElement);
         }
 
         function startTimer() {
