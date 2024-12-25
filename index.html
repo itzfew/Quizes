@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,77 +7,87 @@
     <!-- FontAwesome CDN for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+        /* Reset some default styling */
+        body, html {
             margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Style for the entire page */
+        body {
+            background-color: #fff; /* White background */
+            color: #333; /* Dark text color */
             padding: 20px;
         }
 
         h1 {
             text-align: center;
             color: #333;
-            font-size: 2em;
-            margin-bottom: 20px;
         }
 
-        .exam-list {
+        /* Style for the exam list container */
+        #exam-list {
+            width: 100%;
+            max-width: 1200px; /* Max width to maintain readability */
+            margin: 0 auto;
             list-style: none;
             padding: 0;
-            max-width: 800px;
-            margin: 0 auto;
         }
 
-        .exam-list li {
+        /* Exam item styling */
+        .exam-item {
             background-color: #fff;
-            margin-bottom: 12px;
+            border: 1px solid #333; /* Black border for contrast */
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .exam-item-header {
+            display: flex;
+            align-items: center;
             padding: 15px;
-            border: 2px solid #333;  /* Solid black border */
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .exam-list li:hover {
-            background-color: #e9e9e9;
-            transform: scale(1.05);  /* Slight zoom effect */
-        }
-
-        .exam-title {
-            font-size: 1.4em;
+            background-color: #333; /* Black background for exam headers */
+            color: #fff; /* White text */
+            font-size: 18px;
             font-weight: bold;
-            color: #333;
-            display: flex;
-            align-items: center;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
         }
 
-        .exam-title i {
+        .exam-item-header i {
             margin-right: 10px;
-            color: #007bff;
         }
 
-        .paper-title {
-            margin-left: 40px;
-            font-size: 1.1em;
-            color: #555;
-            display: flex;
-            align-items: center;
+        .exam-item-body {
+            padding: 10px;
+            background-color: #f9f9f9; /* Light gray background for paper list */
         }
 
-        .paper-title i {
+        .paper-item {
+            list-style-type: none;
+            padding: 10px;
+            background-color: #fff;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .paper-item:hover {
+            background-color: #e0e0e0; /* Light hover effect */
+        }
+
+        .paper-item i {
             margin-right: 10px;
-            color: #28a745;
-        }
-
-        .exam-list li a {
-            text-decoration: none;
-            color: inherit;
         }
     </style>
 </head>
 <body>
     <h1>Exam List</h1>
-    <ul id="exam-list" class="exam-list"></ul>
+    <ul id="exam-list"></ul>
     
     <script>
         // Fetch the JSON data
@@ -93,26 +103,41 @@
 
             data.forEach(exam => {
                 const examItem = document.createElement('li');
-                examItem.className = 'exam-title';
-                
-                // Add Font Awesome icon for exam
-                examItem.innerHTML = `<i class="fas fa-book"></i> ${exam.title}`;
-                examList.appendChild(examItem);
+                examItem.classList.add('exam-item');
 
+                // Create exam header with icon and title
+                const examHeader = document.createElement('div');
+                examHeader.classList.add('exam-item-header');
+                examHeader.innerHTML = `<i class="fas fa-book"></i> ${exam.title}`;
+
+                // Create exam body for the papers
+                const examBody = document.createElement('div');
+                examBody.classList.add('exam-item-body');
+
+                // Loop through papers and create list items
+                const paperList = document.createElement('ul');
                 exam.papers.forEach(paper => {
                     const paperItem = document.createElement('li');
-                    paperItem.className = 'paper-title';
-                    
-                    // Add Font Awesome icon for paper
+                    paperItem.classList.add('paper-item');
                     paperItem.innerHTML = `<i class="fas fa-file-alt"></i> ${paper.title} (${paper.year})`;
-                    
+
                     // Set click event to open the index page with query params
                     paperItem.addEventListener('click', () => {
                         window.location.href = `play.html?title=${encodeURIComponent(paper.title)}&metaId=${encodeURIComponent(paper.metaId)}`;
                     });
 
-                    examList.appendChild(paperItem);
+                    paperList.appendChild(paperItem);
                 });
+
+                // Append the paper list to the exam body
+                examBody.appendChild(paperList);
+
+                // Append the header and body to the exam item
+                examItem.appendChild(examHeader);
+                examItem.appendChild(examBody);
+
+                // Add the exam item to the list
+                examList.appendChild(examItem);
             });
         }
     </script>
