@@ -4,21 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
-<script type="module">
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                packages: {'[+]': ['ams', 'physics', 'chemistry', 'biology']} // Added packages for various subjects
-            },
-            loader: {load: ['[tex]/ams', '[tex]/physics', '[tex]/chemistry', '[tex]/biology']}, // Ensure these subject-related packages are loaded
-            svg: {
-                fontCache: 'global'
-            }
-        };
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
     <style>
         body {
             font-family: Arial, sans-serif;
