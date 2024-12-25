@@ -261,7 +261,7 @@
             startTimer();
 
             // Re-render MathJax content
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            MathJax.typeset();
 
         }
 
@@ -326,7 +326,7 @@
                         optionItem.style.color = 'white'; // Text color for red
                        
                     // Re-render MathJax content
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            MathJax.typeset();
                     }
                 });
 
