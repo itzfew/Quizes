@@ -248,48 +248,59 @@
         }
 
         function showExplanation() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
-            if (selectedOption) {
-                // Show correct answer and explanation
-                const question = quizData[subjectIndex].questions[currentQuestionIndex];
-                const correctAnswer = document.createElement('div');
-                correctAnswer.className = 'correct-answer';
-                correctAnswer.innerHTML = `The correct answer is Option ${question.correct_options[0]}: ${question.options.find(option => option.identifier === question.correct_options[0]).content}`;
-                document.querySelector('.question').appendChild(correctAnswer);
+    const subjectIndex = document.getElementById('subject-dropdown').value;
+    const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
+    const question = quizData[subjectIndex].questions[currentQuestionIndex];
+    
+    if (selectedOption) {
+        const selectedOptionValue = selectedOption.value;
+        const selectedOptionLabel = selectedOption.parentElement;
+        const correctAnswerIdentifier = question.correct_options[0];
+        
+        // Show user's selected option with color
+        selectedOptionLabel.style.backgroundColor = (selectedOptionValue === correctAnswerIdentifier) ? 'green' : 'red';
+        
+        // Show the correct answer with color
+        const correctAnswer = question.options.find(option => option.identifier === correctAnswerIdentifier);
+        const correctAnswerLabel = document.createElement('div');
+        correctAnswerLabel.className = 'correct-answer';
+        correctAnswerLabel.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionLabel.innerText} <br> But the correct answer is Option ${correctAnswer.identifier}: ${correctAnswer.content}`;
+        correctAnswerLabel.style.color = 'green';
+        document.querySelector('.question').appendChild(correctAnswerLabel);
 
-                // Show explanation
-                if (question.explanation) {
-                    const explanation = document.createElement('div');
-                    explanation.className = 'question-explanation';
-                    explanation.innerHTML = `Explanation: ${question.explanation}`;
-                    document.querySelector('.question').appendChild(explanation);
-                }
-
-                // Disable further selection
-                const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
-                options.forEach(option => option.disabled = true);
-
-                // Update button text
-                const nextButton = document.querySelector('.next-button');
-                nextButton.textContent = 'Next Question';
-
-                // Show next question on button click
-                nextButton.onclick = () => {
-                    currentQuestionIndex++;
-                    if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
-                        displayQuestion();
-                    } else {
-                        showQuizEnd();
-                    }
-                };
-
-                // Re-render MathJax content
-                MathJax.typesetPromise();
-            } else {
-                alert('Please select an option before proceeding.');
-            }
+        // Show explanation
+        if (question.explanation) {
+            const explanation = document.createElement('div');
+            explanation.className = 'question-explanation';
+            explanation.innerHTML = `Explanation: ${question.explanation}`;
+            document.querySelector('.question').appendChild(explanation);
         }
+
+        // Disable further selection
+        const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
+        options.forEach(option => option.disabled = true);
+
+        // Update button text to 'Next Question'
+        const nextButton = document.querySelector('.next-button');
+        nextButton.textContent = 'Next Question';
+
+        // Show next question on button click
+        nextButton.onclick = () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
+                displayQuestion();
+            } else {
+                showQuizEnd();
+            }
+        };
+
+        // Re-render MathJax content
+        MathJax.typesetPromise();
+    } else {
+        alert('Please select an option before proceeding.');
+    }
+}
+
 
         function showQuizEnd() {
             const quizContainer = document.getElementById('quiz-container');
