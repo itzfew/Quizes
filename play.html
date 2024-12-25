@@ -27,10 +27,18 @@
         }
 
         .question {
-            margin-bottom: 30px;
-            padding: 20px;
-            border-bottom: 1px solid #ccc;
-        }
+    margin-bottom: 30px;
+    padding: 20px;
+    border-bottom: 1px solid #ccc;
+    overflow-x: auto; /* Enable horizontal scroll if content overflows */
+}
+
+.question-content {
+    margin-bottom: 15px;
+    white-space: nowrap; /* Prevent content from wrapping, allowing horizontal scrolling */
+    max-width: 100%; /* Ensure content can overflow horizontally */
+}
+
 
         .question-id {
             font-weight: bold;
@@ -38,9 +46,7 @@
             color: #555;
         }
 
-        .question-content {
-            margin-bottom: 15px;
-        }
+    
 
         .question-subject, .question-explanation {
             margin-top: 10px;
