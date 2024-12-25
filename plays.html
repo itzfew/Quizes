@@ -9,14 +9,15 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
+            padding: 0px;
         }
 
         .quiz-title {
-            font-size: 2.5em;
-            margin: 20px 0;
+            font-size: 1.5em;
+            margin: 0px 0;
             color: #333;
             text-align: center;
+            border:2px solid black;
         }
 
         .subject-title {
@@ -28,48 +29,44 @@
 
         .question {
             margin-bottom: 30px;
-            padding: 15px;
+            padding: 3px;
             border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
-        }
-
-        .question-number {
-            font-size: 1.2em;
-            color: #444;
-            margin-bottom: 15px;
+            overflow-x: auto; /* Enable horizontal scroll if content overflows */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
         }
 
         .question-content {
             margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: normal;
-            max-width: 100%;
-            overflow-x: auto;
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
+            max-width: 100%; /* Ensure content can overflow horizontally */
+            overflow-x: auto; /* Enable horizontal scroll within the question content */
         }
 
-        .next-button {
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            display: block;
-            width: 100%;
-            text-align: center;
-        }
+      .next-button {
+        background-color: #000; /* Button color */
+        color: white; /* Text color */
+        padding: 10px 20px;
+        border: 1px solid white;
+        border-radius: 5px;
+        cursor: pointer;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        z-index: 1000; /* Ensure it's on top */
+    }
 
         .options li {
             margin-bottom: 10px;
             border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
+            overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
         }
 
         .options label {
@@ -108,13 +105,13 @@
         }
 
         img {
-            max-width: 100px;
-            height: auto;
+            max-width: 100px; /* Set a maximum width for images */
+            height: auto; /* Maintain aspect ratio */
         }
 
         @media (max-width: 600px) {
             body {
-                padding: 0;
+                padding: 0px;
             }
 
             #quiz-container {
@@ -126,11 +123,11 @@
             }
 
             .options li {
-                padding: 5px;
+                padding: 5px; /* Adjust padding for smaller screens */
             }
 
             .subject-title {
-                font-size: 1.5em;
+                font-size: 1.5em; /* Adjust title size for smaller screens */
             }
 
             #subject-dropdown {
@@ -138,7 +135,7 @@
             }
 
             img {
-                max-width: 80px;
+                max-width: 80px; /* Adjust image size for smaller screens */
             }
         }
     </style>
@@ -149,7 +146,6 @@
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
-
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
@@ -204,12 +200,6 @@
 
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
-
-            // Display question number
-            const questionNumber = document.createElement('div');
-            questionNumber.className = 'question-number';
-            questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
-            questionElement.appendChild(questionNumber);
 
             // Display question_id
             const questionId = document.createElement('div');
