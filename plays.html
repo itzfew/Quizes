@@ -163,6 +163,11 @@
             }
         }
     </style>
+
+    <!-- MathJax Script -->
+    <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
@@ -306,7 +311,8 @@
             startTimer();
 
             // Re-render MathJax content
-            MathJax.typesetPromise();
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, quizContainer]);
+
         }
 
         // Open modal for full-size image
