@@ -44,20 +44,18 @@
             overflow-x: auto; /* Enable horizontal scroll within the question content */
         }
 
-      .next-button {
-        background-color: #000; /* Button color */
-        color: white; /* Text color */
-        padding: 10px 20px;
-        border: 1px solid white;
-        border-radius: 5px;
-        cursor: pointer;
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: auto;
-        z-index: 1000; /* Ensure it's on top */
-    }
+        .next-button {
+            background-color: #000; /* Button color */
+            color: white; /* Text color */
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block;
+            width: 100%; /* Ensure the button fills its container */
+            text-align: center;
+        }
 
         .options li {
             margin-bottom: 10px;
@@ -250,43 +248,30 @@
         function showExplanation() {
     const subjectIndex = document.getElementById('subject-dropdown').value;
     const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
-    const question = quizData[subjectIndex].questions[currentQuestionIndex];
-
     if (selectedOption) {
+        const question = quizData[subjectIndex].questions[currentQuestionIndex];
         const selectedOptionValue = selectedOption.value;
-        const selectedOptionLabel = selectedOption.parentElement;
-        const correctAnswerIdentifier = question.correct_options[0];
-        
-        // Show correct answer (green) and highlight it
-        const correctAnswer = question.options.find(option => option.identifier === correctAnswerIdentifier);
-        const correctAnswerLabel = document.createElement('div');
-        correctAnswerLabel.className = 'correct-answer';
-        correctAnswerLabel.innerHTML = `The correct answer is Option ${correctAnswer.identifier}: ${correctAnswer.content}`;
-        correctAnswerLabel.style.color = 'green';
-        document.querySelector('.question').appendChild(correctAnswerLabel);
 
-        // If the user selected the wrong option, highlight their selected option in red
-        if (selectedOptionValue !== correctAnswerIdentifier) {
-            selectedOptionLabel.style.backgroundColor = 'red';
-            selectedOptionLabel.style.color = 'white';
+        // Find the selected option content
+        const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
+        const correctOptionValue = question.correct_options[0];
+        const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
+
+        // Show feedback based on correctness
+        const feedback = document.createElement('div');
+        feedback.className = 'correct-answer';
+
+        if (selectedOptionValue === correctOptionValue) {
+            feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
+            feedback.style.color = 'green'; // Correct answer in green
         } else {
-            selectedOptionLabel.style.backgroundColor = 'green';
-            selectedOptionLabel.style.color = 'white';
+            feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+            feedback.style.color = 'red'; // Incorrect answer in red
         }
 
-        // Display a message for the selected option
-        const answerMessage = document.createElement('div');
-        answerMessage.className = 'answer-message';
+        document.querySelector('.question').appendChild(feedback);
 
-        if (selectedOptionValue !== correctAnswerIdentifier) {
-            answerMessage.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionLabel.innerText} <br> But the correct answer is Option ${correctAnswer.identifier}: ${correctAnswer.content}`;
-        } else {
-            answerMessage.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionLabel.innerText} <br> This was correct!`;
-        }
-
-        document.querySelector('.question').appendChild(answerMessage);
-
-        // Show explanation if exists
+        // Show explanation
         if (question.explanation) {
             const explanation = document.createElement('div');
             explanation.className = 'question-explanation';
@@ -294,11 +279,11 @@
             document.querySelector('.question').appendChild(explanation);
         }
 
-        // Disable all options after submission
+        // Disable further selection
         const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
         options.forEach(option => option.disabled = true);
 
-        // Update button text to 'Next Question'
+        // Update button text
         const nextButton = document.querySelector('.next-button');
         nextButton.textContent = 'Next Question';
 
@@ -318,7 +303,6 @@
         alert('Please select an option before proceeding.');
     }
 }
-
 
 
         function showQuizEnd() {
