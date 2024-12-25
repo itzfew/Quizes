@@ -324,6 +324,9 @@
                     } else if (option.value === selectedOptionValue) {
                         optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
                         optionItem.style.color = 'white'; // Text color for red
+                       
+                    // Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
                     }
                 });
 
