@@ -6,146 +6,166 @@
     <title>Interactive Quiz Game</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #00c6ff, #0072ff); /* Vibrant background */
             margin: 0;
-            padding: 0px;
+            padding: 0;
+            color: white;
         }
 
         .quiz-title {
-            font-size: 1.5em;
-            margin: 0px 0;
-            color: #333;
+            font-size: 2em;
             text-align: center;
-            border:2px solid black;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
         }
 
         .subject-title {
-            font-size: 2em;
+            font-size: 1.8em;
             margin: 20px 0;
-            color: #333;
+            color: #fff;
             text-align: center;
+            font-weight: bold;
+        }
+
+        #quiz-container {
+            padding: 20px;
         }
 
         .question {
-            margin-bottom: 30px;
-            padding: 3px;
-            border-bottom: 1px solid #ccc;
-            overflow-x: auto; /* Enable horizontal scroll if content overflows */
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
         }
 
         .question-content {
             margin-bottom: 15px;
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
-            max-width: 100%; /* Ensure content can overflow horizontally */
-            overflow-x: auto; /* Enable horizontal scroll within the question content */
-        }
-
-        .next-button {
-            background-color: #000; /* Button color */
-            color: white; /* Text color */
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            position: fixed; /* Fix position at the bottom of the screen */
-            bottom: 0px; /* Distance from the bottom edge */
-            left: 0;
-            width: 100%; /* Make button fill the full width */
+            word-wrap: break-word;
+            white-space: normal;
+            font-size: 1.2em;
             text-align: center;
-            z-index: 1000; /* Ensure the button stays on top of other content */
         }
 
         .options li {
             margin-bottom: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
+            border: 2px solid #ccc;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: background-color 0.3s ease;
         }
 
-        .options label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
+        .options li:hover {
+            background-color: rgba(255, 255, 255, 0.4);
         }
 
         .options input[type="radio"] {
             margin-right: 10px;
         }
 
-        .question-id {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #555;
+        .next-button {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border: 1px solid #28a745;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
         }
 
-        .question-subject, .question-explanation {
-            margin-top: 10px;
-            font-style: italic;
-            color: #777;
+        .next-button:hover {
+            background-color: #218838;
+        }
+
+        .next-button:active {
+            background-color: #1e7e34;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #ddd;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar span {
+            display: block;
+            height: 100%;
+            width: 0;
+            background-color: #28a745;
+            transition: width 0.5s ease;
+        }
+
+        .timer {
+            font-size: 1.5em;
+            text-align: center;
+            margin: 20px 0;
         }
 
         .correct-answer {
-            margin-top: 10px;
             font-weight: bold;
-            color: green;
+            color: #28a745;
+        }
+
+        .incorrect-answer {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .question-id {
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            color: #fff;
         }
 
         #subject-dropdown {
             display: block;
             margin: 20px auto;
             padding: 10px;
-            font-size: 1em;
+            font-size: 1.2em;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
         }
 
         img {
-            max-width: 100px; /* Set a maximum width for images */
-            height: auto; /* Maintain aspect ratio */
+            max-width: 100px;
+            height: auto;
+            margin: 0 auto;
+            display: block;
         }
 
         @media (max-width: 600px) {
-            body {
-                padding: 0px;
-            }
-
-            #quiz-container {
-                padding: 3px;
-            }
-
-            .next-button {
-                padding: 10px;
+            .question {
+                padding: 15px;
             }
 
             .options li {
-                padding: 5px; /* Adjust padding for smaller screens */
+                padding: 10px;
             }
 
-            .subject-title {
-                font-size: 1.5em; /* Adjust title size for smaller screens */
-            }
-
-            #subject-dropdown {
-                width: 100%;
-            }
-
-            img {
-                max-width: 80px; /* Adjust image size for smaller screens */
+            .subject-title, .quiz-title {
+                font-size: 1.4em;
             }
         }
     </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
+
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
@@ -165,7 +185,6 @@
             .then(data => {
                 quizData = data;
                 populateSubjectDropdown();
-                loadLastQuestion();
                 displayQuestion();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
@@ -185,17 +204,6 @@
             };
         }
 
-        function loadLastQuestion() {
-            const savedQuestionIndex = localStorage.getItem(`lastQuestion_${metaId}`);
-            if (savedQuestionIndex) {
-                currentQuestionIndex = parseInt(savedQuestionIndex);
-            }
-        }
-
-        function saveLastQuestion() {
-            localStorage.setItem(`lastQuestion_${metaId}`, currentQuestionIndex);
-        }
-
         function displayQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
@@ -213,7 +221,7 @@
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
 
-            // Display question ID
+            // Display question_id
             const questionId = document.createElement('div');
             questionId.className = 'question-id';
             questionId.textContent = `Question ID: ${question.question_id}`;
@@ -246,7 +254,7 @@
 
             questionElement.appendChild(optionsList);
 
-            // Add Submit button
+            // Add next button
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
             nextButton.textContent = 'Submit';
@@ -255,11 +263,13 @@
 
             quizContainer.appendChild(questionElement);
 
-            // Display question number (e.g., 1/12)
-            const questionNumber = document.createElement('div');
-            questionNumber.className = 'question-id';
-            questionNumber.textContent = `${currentQuestionIndex + 1}/${quizData[subjectIndex].questions.length}`;
-            quizContainer.appendChild(questionNumber);
+            // Update progress bar
+            const progressBar = document.createElement('div');
+            progressBar.className = 'progress-bar';
+            const progressBarFill = document.createElement('span');
+            progressBarFill.style.width = `${((currentQuestionIndex + 1) / subject.questions.length) * 100}%`;
+            progressBar.appendChild(progressBarFill);
+            quizContainer.appendChild(progressBar);
 
             // Re-render MathJax content
             MathJax.typesetPromise();
@@ -279,16 +289,8 @@
 
                 // Show feedback based on correctness
                 const feedback = document.createElement('div');
-                feedback.className = 'correct-answer';
-
-                if (selectedOptionValue === correctOptionValue) {
-                    feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-                    feedback.style.color = 'green'; // Correct answer in green
-                } else {
-                    feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                    feedback.style.color = 'red'; // Incorrect answer in red
-                }
-
+                feedback.className = selectedOptionValue === correctOptionValue ? 'correct-answer' : 'incorrect-answer';
+                feedback.innerHTML = selectedOptionValue === correctOptionValue ? `Correct! Option ${correctOptionValue}: ${correctOptionContent}` : `Incorrect! You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
                 document.querySelector('.question').appendChild(feedback);
 
                 // Show explanation
@@ -299,30 +301,13 @@
                     document.querySelector('.question').appendChild(explanation);
                 }
 
-                // Color the options based on correctness
-                const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
-                options.forEach(option => {
-                    const optionItem = option.closest('li');
-                    if (option.value === correctOptionValue) {
-                        optionItem.style.backgroundColor = 'green'; // Correct option turns green
-                        optionItem.style.color = 'white'; // Text color for green
-                    } else if (option.value === selectedOptionValue) {
-                        optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
-                        optionItem.style.color = 'white'; // Text color for red
-                    }
-                });
-
                 // Disable further selection
+                const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
                 options.forEach(option => option.disabled = true);
 
                 // Update button text
                 const nextButton = document.querySelector('.next-button');
                 nextButton.textContent = 'Next Question';
-
-                // Save the current question index
-                saveLastQuestion();
-
-                // Show next question on button click
                 nextButton.onclick = () => {
                     currentQuestionIndex++;
                     if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
@@ -331,9 +316,6 @@
                         showQuizEnd();
                     }
                 };
-
-                // Re-render MathJax content
-                MathJax.typesetPromise();
             } else {
                 alert('Please select an option before proceeding.');
             }
@@ -341,7 +323,7 @@
 
         function showQuizEnd() {
             const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = `<div class="subject-title">You have completed the quiz!</div>`;
+            quizContainer.innerHTML = `<div class="subject-title">Congratulations! You've completed the quiz!</div>`;
         }
     </script>
 </body>
