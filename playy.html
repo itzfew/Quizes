@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Game</title>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .quiz-title {
+            font-size: 1.5em;
+            margin: 0px 0;
+            color: #333;
+            text-align: center;
+            border: 2px solid black;
+            padding: 10px;
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding: 3px;
+            border-bottom: 1px solid #ccc;
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .question-content {
+            margin-bottom: 15px;
+            word-wrap: break-word;
+            white-space: normal;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .options li {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .options label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .question-id {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .question-explanation {
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
+        }
+
+        .correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
+            color: green;
+        }
+
+        #subject-dropdown {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 1em;
+        }
+
+        .timer {
+            font-size: 1.5em;
+            text-align: center;
+            color: #d9534f;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .submit-button {
+            background-color: #000;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            margin: 20px auto;
+            display: block;
+        }
+
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0px;
+            }
+
+            .quiz-container {
+                padding: 3px;
+            }
+
+            .options li {
+                padding: 5px;
+            }
+
+            img {
+                max-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-title" id="quiz-title"></div>
+    <select id="subject-dropdown"></select>
+    <div class="timer" id="timer"></div>
+    <div id="quiz-container"></div>
+    <script>
+        let quizData = [];
+        let timeLeft = 120; // Timer for the entire quiz
+        let timer;
+        let isQuizOver = false;
+        const urlParams = new URLSearchParams(window.location.search);
+        const title = urlParams.get('title');
+        const metaId = urlParams.get('metaId');
+
+        if (title) {
+            document.getElementById('quiz-title').textContent = title;
+        }
+
+        const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
+
+        // Fetch the JSON data
+        fetch(jsonUrl)
+            .then(response => response.json())
+            .then(data => {
+                quizData = data;
+                populateSubjectDropdown();
+                displayQuiz();
+                startTimer();
+            })
+            .catch(error => console.error('Error fetching the JSON data:', error));
+
+        function populateSubjectDropdown() {
+            const subjectDropdown = document.getElementById('subject-dropdown');
+            quizData.forEach((subject, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = subject.title;
+                subjectDropdown.appendChild(option);
+            });
+
+            subjectDropdown.onchange = displayQuiz;
+        }
+
+        function displayQuiz() {
+            if (isQuizOver) return;
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';  // Clear previous content
+
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+
+            // Display all questions
+            subject.questions.forEach((question, questionIndex) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+
+                // Display question ID
+                const questionId = document.createElement('div');
+                questionId.className = 'question-id';
+                questionId.textContent = `Question ${questionIndex + 1}: ${question.content}`;
+                questionElement.appendChild(questionId);
+
+                // Display options
+                const optionsList = document.createElement('ul');
+                optionsList.className = 'options';
+                question.options.forEach(option => {
+                    const optionItem = document.createElement('li');
+                    const optionLabel = document.createElement('label');
+                    const optionInput = document.createElement('input');
+
+                    optionInput.type = 'radio';
+                    optionInput.name = `question${questionIndex}`;
+                    optionInput.value = option.identifier;
+
+                    optionLabel.appendChild(optionInput);
+                    optionLabel.innerHTML += option.content;
+                    optionItem.appendChild(optionLabel);
+                    optionsList.appendChild(optionItem);
+                });
+
+                questionElement.appendChild(optionsList);
+                quizContainer.appendChild(questionElement);
+            });
+
+            // Add a submit button to finish the quiz
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit Answers';
+            submitButton.onclick = submitQuiz;
+            quizContainer.appendChild(submitButton);
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                if (isQuizOver) return;
+                timeLeft--;
+                document.getElementById('timer').textContent = `Time Left: ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    submitQuiz();
+                }
+            }, 1000);
+        }
+
+        function submitQuiz() {
+            isQuizOver = true;
+            clearInterval(timer);
+
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+
+            // Check answers and show feedback
+            subject.questions.forEach((question, questionIndex) => {
+                const selectedOption = document.querySelector(`input[name="question${questionIndex}"]:checked`);
+                const questionElement = document.querySelectorAll('.question')[questionIndex];
+
+                if (selectedOption) {
+                    const selectedOptionValue = selectedOption.value;
+                    const correctOptionValue = question.correct_options[0];
+                    const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
+                    const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
+
+                    // Show feedback
+                    const feedback = document.createElement('div');
+                    feedback.className = 'correct-answer';
+                    if (selectedOptionValue === correctOptionValue) {
+                        feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
+                        feedback.style.color = 'green';
+                    } else {
+                        feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+                        feedback.style.color = 'red';
+                    }
+                    questionElement.appendChild(feedback);
+
+                    // Color the options
+                    const options = document.querySelectorAll(`input[name="question${questionIndex}"]`);
+                    options.forEach(option => {
+                        const optionItem = option.closest('li');
+                        if (option.value === correctOptionValue) {
+                            optionItem.style.backgroundColor = 'green';
+                            optionItem.style.color = 'white';
+                        } else if (option.value === selectedOptionValue) {
+                            optionItem.style.backgroundColor = 'red';
+                            optionItem.style.color = 'white';
+                        }
+                    });
+                }
+
+                // Show explanation if available
+                if (question.explanation) {
+                    const explanation = document.createElement('div');
+                    explanation.className = 'question-explanation';
+                    explanation.innerHTML = `Explanation: ${question.explanation}`;
+                    questionElement.appendChild(explanation);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
