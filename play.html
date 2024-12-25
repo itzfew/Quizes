@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,7 +20,7 @@
             margin: 0px 0;
             color: #333;
             text-align: center;
-            border:2px solid black;
+            border: 2px solid black;
         }
 
         .question {
@@ -258,7 +261,8 @@
             startTimer();
 
             // Re-render MathJax content
-            MathJax.typesetPromise();
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
         }
 
         function startTimer() {
