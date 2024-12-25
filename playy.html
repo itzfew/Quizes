@@ -220,6 +220,9 @@
             submitButton.textContent = 'Submit Answers';
             submitButton.onclick = submitQuiz;
             quizContainer.appendChild(submitButton);
+
+            // Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
         function startTimer() {
@@ -277,9 +280,12 @@
                             optionItem.style.color = 'white';
                         }
                     });
+
+                    // Disable further selection
+                    options.forEach(option => option.disabled = true);
                 }
 
-                // Show explanation if available
+                // Show explanation
                 if (question.explanation) {
                     const explanation = document.createElement('div');
                     explanation.className = 'question-explanation';
@@ -287,6 +293,9 @@
                     questionElement.appendChild(explanation);
                 }
             });
+
+            // Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
     </script>
 </body>
