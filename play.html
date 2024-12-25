@@ -27,59 +27,60 @@
         }
 
         .question {
-    margin-bottom: 30px;
-    padding: 3px;
-    border-bottom: 1px solid #ccc;
-    overflow-x: auto; /* Enable horizontal scroll if content overflows */
-}
+            margin-bottom: 30px;
+            padding: 3px;
+            border-bottom: 1px solid #ccc;
+            overflow-x: auto; /* Enable horizontal scroll if content overflows */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
+        }
 
-.question-content {
-    margin-bottom: 15px;
-    white-space: nowrap; /* Prevent content from wrapping */
-    max-width: 100%; /* Ensure content can overflow horizontally */
-    overflow-x: auto; /* Enable horizontal scroll within the question content */
-}
+        .question-content {
+            margin-bottom: 15px;
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
+            max-width: 100%; /* Ensure content can overflow horizontally */
+            overflow-x: auto; /* Enable horizontal scroll within the question content */
+        }
 
-.next-button {
-    background-color: #000; /* Button color */
-    color: white; /* Text color */
-    padding: 10px 20px;
-    border: 1px solid white;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-    display: block;
-    width: 100%; /* Ensure the button fills its container */
-    text-align: center;
-}
+        .next-button {
+            background-color: #000; /* Button color */
+            color: white; /* Text color */
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block;
+            width: 100%; /* Ensure the button fills its container */
+            text-align: center;
+        }
 
-.options li {
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
-}
+        .options li {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
+        }
 
-.options label {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
+        .options label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
 
-.options input[type="radio"] {
-    margin-right: 10px;
-}
-
-
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
 
         .question-id {
             font-weight: bold;
             margin-bottom: 10px;
             color: #555;
         }
-
-    
 
         .question-subject, .question-explanation {
             margin-top: 10px;
