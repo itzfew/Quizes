@@ -5,159 +5,183 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
 
-        .quiz-title {
-            font-size: 2.5em;
-            margin: 20px 0;
-            color: #333;
-            text-align: center;
-        }
+.quiz-title {
+    font-size: 2.5em;
+    margin: 20px 0;
+    color: #333;
+    text-align: center;
+}
 
-        .subject-title {
-            font-size: 2em;
-            margin: 20px 0;
-            color: #333;
-            text-align: center;
-        }
+.subject-title {
+    font-size: 2em;
+    margin: 20px 0;
+    color: #333;
+    text-align: center;
+}
 
-        .question {
-            margin-bottom: 30px;
-            padding: 20px;
-            border-bottom: 1px solid #ccc;
-            background-color: #fff;
-            border-radius: 10px;
-        }
+.question {
+    margin-bottom: 30px;
+    padding: 20px;
+    border-bottom: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 10px;
+}
 
-        .question-id {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #555;
-        }
+.question-id {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #555;
+}
 
-        .question-content {
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }
+.question-content {
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
 
-        .question-subject, .question-explanation {
-            margin-top: 10px;
-            font-style: italic;
-            color: #777;
-        }
+.question-subject, .question-explanation {
+    margin-top: 10px;
+    font-style: italic;
+    color: #777;
+}
 
-        .options {
-            list-style: none;
-            padding: 0;
-        }
+.options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
-        .options li {
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            transition: background-color 0.3s ease;
-        }
+.options li {
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
 
-        .options li:hover {
-            background-color: #e0e0e0;
-        }
+.options li:hover {
+    background-color: #e0e0e0;
+}
 
-        .options label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
+.options label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
 
-        .options input[type="radio"] {
-            margin-right: 10px;
-        }
+.options input[type="radio"] {
+    margin-right: 10px;
+}
 
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
-            color: green;
-        }
+.correct-answer {
+    margin-top: 10px;
+    font-weight: bold;
+    color: green;
+}
 
-        .next-button {
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            display: block;
-            width: 100%;
-            text-align: center;
-            transition: background-color 0.3s ease;
-        }
+.next-button {
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    border: 1px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%; /* Make button take full width */
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
 
-        .next-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
+.next-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
 
-        .progress-bar {
-            height: 10px;
-            background-color: #ccc;
-            margin-top: 20px;
-            width: 100%;
-            border-radius: 5px;
-            overflow: hidden;
-        }
+.progress-bar {
+    height: 10px;
+    background-color: #ccc;
+    margin-top: 20px;
+    width: 100%; /* Make progress bar take full width */
+    border-radius: 5px;
+    overflow: hidden;
+}
 
-        .progress-bar-inner {
-            height: 100%;
-            background-color: #4caf50;
-            width: 0%;
-        }
+.progress-bar-inner {
+    height: 100%;
+    background-color: #4caf50;
+    width: 0%;
+}
 
-        .timer {
-            font-size: 1.5em;
-            color: #d32f2f;
-            font-weight: bold;
-            text-align: center;
-        }
+.timer {
+    font-size: 1.5em;
+    color: #d32f2f;
+    font-weight: bold;
+    text-align: center;
+}
 
-        #subject-dropdown {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 1em;
-        }
+#subject-dropdown {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 1em;
+    width: 100%; /* Make dropdown take full width */
+}
 
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
+/* Media query for small screens */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
 
-            #quiz-container {
-                padding: 15px;
-            }
+    #quiz-container {
+        padding: 15px;
+    }
 
-            .next-button {
-                padding: 10px;
-            }
+    .next-button {
+        padding: 10px;
+    }
 
-            .options li {
-                padding: 5px;
-            }
+    .options li {
+        padding: 5px;
+    }
 
-            .subject-title {
-                font-size: 1.5em;
-            }
+    .subject-title {
+        font-size: 1.5em;
+    }
 
-            #subject-dropdown {
-                width: 100%;
-            }
-        }
+    #subject-dropdown {
+        width: 100%; /* Ensure dropdown takes full width */
+    }
+
+    /* Adjust the size of text for better readability on small screens */
+    .quiz-title {
+        font-size: 2em;
+    }
+
+    .question-content {
+        font-size: 1em; /* Slightly smaller text for questions */
+    }
+
+    .question-id, .question-subject {
+        font-size: 1em; /* Adjust text size */
+    }
+
+    .progress-bar {
+        margin-top: 15px; /* Add some space for progress bar on small screens */
+    }
+
+    .timer {
+        font-size: 1.2em;
+    }
+}
+
     </style>
 </head>
 <body>
