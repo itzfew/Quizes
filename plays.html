@@ -279,8 +279,20 @@
             document.querySelector('.question').appendChild(explanation);
         }
 
-        // Disable further selection
+        // Color the options based on correctness
         const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
+        options.forEach(option => {
+            const optionItem = option.closest('li');
+            if (option.value === correctOptionValue) {
+                optionItem.style.backgroundColor = 'green'; // Correct option turns green
+                optionItem.style.color = 'white'; // Text color for green
+            } else if (option.value === selectedOptionValue) {
+                optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
+                optionItem.style.color = 'white'; // Text color for red
+            }
+        });
+
+        // Disable further selection
         options.forEach(option => option.disabled = true);
 
         // Update button text
@@ -303,6 +315,7 @@
         alert('Please select an option before proceeding.');
     }
 }
+
 
 
         function showQuizEnd() {
