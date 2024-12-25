@@ -6,151 +6,138 @@
     <title>Interactive Quiz Game</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0px;
-}
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0px;
+        }
 
-.quiz-title {
-    font-size: 1.5em;
-    margin: 0px 0;
-    color: #333;
-    text-align: center;
-    border: 2px solid black;
-}
+        .quiz-title {
+            font-size: 1.5em;
+            margin: 0px 0;
+            color: #333;
+            text-align: center;
+            border:2px solid black;
+        }
 
-.subject-title {
-    font-size: 2em;
-    margin: 20px 0;
-    color: #333;
-    text-align: center;
-}
+        .subject-title {
+            font-size: 2em;
+            margin: 20px 0;
+            color: #333;
+            text-align: center;
+        }
 
-.question {
-    margin-bottom: 30px;
-    padding: 3px;
-    border-bottom: 1px solid #ccc;
-    overflow-x: auto;
-    word-wrap: break-word;
-    white-space: normal;
-}
+        .question {
+            margin-bottom: 30px;
+            padding: 3px;
+            border-bottom: 1px solid #ccc;
+            overflow-x: auto; /* Enable horizontal scroll if content overflows */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
+        }
 
-.question-content {
-    margin-bottom: 15px;
-    word-wrap: break-word;
-    white-space: normal;
-    max-width: 100%;
-    overflow-x: auto;
-}
+        .question-content {
+            margin-bottom: 15px;
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
+            max-width: 100%; /* Ensure content can overflow horizontally */
+            overflow-x: auto; /* Enable horizontal scroll within the question content */
+        }
 
-.next-button {
-    background-color: #000;
-    color: white;
-    padding: 10px 20px;
-    border: 1px solid white;
-    border-radius: 5px;
-    cursor: pointer;
-    position: fixed;
-    bottom: 10px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    z-index: 1000;
-}
+        .next-button {
+            background-color: #000; /* Button color */
+            color: white; /* Text color */
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            position: fixed; /* Fix position at the bottom of the screen */
+            bottom: 0px; /* Distance from the bottom edge */
+            left: 0;
+            width: 100%; /* Make button fill the full width */
+            text-align: center;
+            z-index: 1000; /* Ensure the button stays on top of other content */
+        }
 
-.options li {
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    overflow-x: auto;
-    word-wrap: break-word;
-    white-space: normal;
-}
+        .options li {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
+        }
 
-.options label {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
+        .options label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
 
-.options input[type="radio"] {
-    margin-right: 10px;
-}
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
 
-.question-id {
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #555;
-}
+        .question-id {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+        }
 
-.question-subject,
-.question-explanation {
-    margin-top: 10px;
-    font-style: italic;
-    color: #777;
-    word-wrap: break-word; /* Prevent overflow */
-    white-space: normal; /* Allow text to wrap */
-}
+        .question-subject, .question-explanation {
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
+        }
 
-.correct-answer {
-    margin-top: 10px;
-    font-weight: bold;
-    color: green;
-}
+        .correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
+            color: green;
+        }
 
-#subject-dropdown {
-    display: block;
-    margin: 20px auto;
-    padding: 10px;
-    font-size: 1em;
-}
+        #subject-dropdown {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 1em;
+        }
 
-img {
-    max-width: 100px;
-    height: auto;
-}
+        img {
+            max-width: 100px; /* Set a maximum width for images */
+            height: auto; /* Maintain aspect ratio */
+        }
 
-@media (max-width: 600px) {
-    body {
-        padding: 0px;
-    }
+        @media (max-width: 600px) {
+            body {
+                padding: 0px;
+            }
 
-    #quiz-container {
-        padding: 3px;
-    }
+            #quiz-container {
+                padding: 3px;
+            }
 
-    .next-button {
-        padding: 10px;
-    }
+            .next-button {
+                padding: 10px;
+            }
 
-    .options li {
-        padding: 5px;
-    }
+            .options li {
+                padding: 5px; /* Adjust padding for smaller screens */
+            }
 
-    .subject-title {
-        font-size: 1.5em;
-    }
+            .subject-title {
+                font-size: 1.5em; /* Adjust title size for smaller screens */
+            }
 
-    #subject-dropdown {
-        width: 100%;
-    }
+            #subject-dropdown {
+                width: 100%;
+            }
 
-    img {
-        max-width: 80px;
-    }
-
-    .question-explanation {
-        font-size: 1em; /* Adjust font size for smaller screens */
-        margin: 10px 0; /* Add vertical margin for readability */
-    }
-
-    .correct-answer {
-        font-size: 1em; /* Make the correct answer text responsive */
-    }
-}
-
+            img {
+                max-width: 80px; /* Adjust image size for smaller screens */
+            }
+        }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -178,6 +165,7 @@ img {
             .then(data => {
                 quizData = data;
                 populateSubjectDropdown();
+                loadLastQuestion();
                 displayQuestion();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
@@ -197,6 +185,17 @@ img {
             };
         }
 
+        function loadLastQuestion() {
+            const savedQuestionIndex = localStorage.getItem(`lastQuestion_${metaId}`);
+            if (savedQuestionIndex) {
+                currentQuestionIndex = parseInt(savedQuestionIndex);
+            }
+        }
+
+        function saveLastQuestion() {
+            localStorage.setItem(`lastQuestion_${metaId}`, currentQuestionIndex);
+        }
+
         function displayQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
@@ -214,7 +213,7 @@ img {
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
 
-            // Display question_id
+            // Display question ID
             const questionId = document.createElement('div');
             questionId.className = 'question-id';
             questionId.textContent = `Question ID: ${question.question_id}`;
@@ -256,82 +255,89 @@ img {
 
             quizContainer.appendChild(questionElement);
 
+            // Display question number (e.g., 1/12)
+            const questionNumber = document.createElement('div');
+            questionNumber.className = 'question-id';
+            questionNumber.textContent = `${currentQuestionIndex + 1}/${quizData[subjectIndex].questions.length}`;
+            quizContainer.appendChild(questionNumber);
+
             // Re-render MathJax content
             MathJax.typesetPromise();
         }
 
         function showExplanation() {
-    const subjectIndex = document.getElementById('subject-dropdown').value;
-    const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
-    if (selectedOption) {
-        const question = quizData[subjectIndex].questions[currentQuestionIndex];
-        const selectedOptionValue = selectedOption.value;
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
+            if (selectedOption) {
+                const question = quizData[subjectIndex].questions[currentQuestionIndex];
+                const selectedOptionValue = selectedOption.value;
 
-        // Find the selected option content
-        const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
-        const correctOptionValue = question.correct_options[0];
-        const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
+                // Find the selected option content
+                const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
+                const correctOptionValue = question.correct_options[0];
+                const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
-        // Show feedback based on correctness
-        const feedback = document.createElement('div');
-        feedback.className = 'correct-answer';
+                // Show feedback based on correctness
+                const feedback = document.createElement('div');
+                feedback.className = 'correct-answer';
 
-        if (selectedOptionValue === correctOptionValue) {
-            feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-            feedback.style.color = 'green'; // Correct answer in green
-        } else {
-            feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-            feedback.style.color = 'red'; // Incorrect answer in red
-        }
+                if (selectedOptionValue === correctOptionValue) {
+                    feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
+                    feedback.style.color = 'green'; // Correct answer in green
+                } else {
+                    feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+                    feedback.style.color = 'red'; // Incorrect answer in red
+                }
 
-        document.querySelector('.question').appendChild(feedback);
+                document.querySelector('.question').appendChild(feedback);
 
-        // Show explanation
-        if (question.explanation) {
-            const explanation = document.createElement('div');
-            explanation.className = 'question-explanation';
-            explanation.innerHTML = `Explanation: ${question.explanation}`;
-            document.querySelector('.question').appendChild(explanation);
-        }
+                // Show explanation
+                if (question.explanation) {
+                    const explanation = document.createElement('div');
+                    explanation.className = 'question-explanation';
+                    explanation.innerHTML = `Explanation: ${question.explanation}`;
+                    document.querySelector('.question').appendChild(explanation);
+                }
 
-        // Color the options based on correctness
-        const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
-        options.forEach(option => {
-            const optionItem = option.closest('li');
-            if (option.value === correctOptionValue) {
-                optionItem.style.backgroundColor = 'green'; // Correct option turns green
-                optionItem.style.color = 'white'; // Text color for green
-            } else if (option.value === selectedOptionValue) {
-                optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
-                optionItem.style.color = 'white'; // Text color for red
-            }
-        });
+                // Color the options based on correctness
+                const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
+                options.forEach(option => {
+                    const optionItem = option.closest('li');
+                    if (option.value === correctOptionValue) {
+                        optionItem.style.backgroundColor = 'green'; // Correct option turns green
+                        optionItem.style.color = 'white'; // Text color for green
+                    } else if (option.value === selectedOptionValue) {
+                        optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
+                        optionItem.style.color = 'white'; // Text color for red
+                    }
+                });
 
-        // Disable further selection
-        options.forEach(option => option.disabled = true);
+                // Disable further selection
+                options.forEach(option => option.disabled = true);
 
-        // Update button text
-        const nextButton = document.querySelector('.next-button');
-        nextButton.textContent = 'Next Question';
+                // Update button text
+                const nextButton = document.querySelector('.next-button');
+                nextButton.textContent = 'Next Question';
 
-        // Show next question on button click
-        nextButton.onclick = () => {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
-                displayQuestion();
+                // Save the current question index
+                saveLastQuestion();
+
+                // Show next question on button click
+                nextButton.onclick = () => {
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
+                        displayQuestion();
+                    } else {
+                        showQuizEnd();
+                    }
+                };
+
+                // Re-render MathJax content
+                MathJax.typesetPromise();
             } else {
-                showQuizEnd();
+                alert('Please select an option before proceeding.');
             }
-        };
-
-        // Re-render MathJax content
-        MathJax.typesetPromise();
-    } else {
-        alert('Please select an option before proceeding.');
-    }
-}
-
-
+        }
 
         function showQuizEnd() {
             const quizContainer = document.getElementById('quiz-container');
