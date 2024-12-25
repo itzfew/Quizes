@@ -4,21 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
-    <!-- Updated MathJax 3.x -->
-    <script type="module">
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                packages: {'[+]': ['ams', 'physics', 'chemistry', 'biology']} // Added packages for various subjects
-            },
-            loader: {load: ['[tex]/ams', '[tex]/physics', '[tex]/chemistry', '[tex]/biology']}, // Ensure these subject-related packages are loaded
-            svg: {
-                fontCache: 'global'
-            }
-        };
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -254,29 +242,30 @@
             timerElement.textContent = `Time Left: ${timeLeft}s`;
             quizContainer.appendChild(timerElement);
 
-            // Add next button
+            // Add Submit button
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
-            nextButton.textContent = 'Submit Answer';
-            quizContainer.appendChild(nextButton);
+            nextButton.textContent = 'Submit';
+            nextButton.onclick = showExplanation;
+            questionElement.appendChild(nextButton);
 
-            // Reapply MathJax to render math expressions in the question
-            setTimeout(() => {
-                MathJax.typeset(); // Reapply MathJax after content is loaded
-            }, 100);
-
-            // Start the timer
-            startTimer();
-
-            nextButton.onclick = () => {
-                showExplanation();
-            };
+            // Display question number (e.g., 1/12)
+            const questionNumber = document.createElement('div');
+            questionNumber.className = 'question-id';
+            questionNumber.textContent = `${currentQuestionIndex + 1}/${quizData[subjectIndex].questions.length}`;
+            quizContainer.appendChild(questionNumber);
 
             quizContainer.appendChild(questionElement);
+
+            // Start timer countdown
+            startTimer();
+
+            // Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
         }
 
         function startTimer() {
-            clearInterval(timer);
             timer = setInterval(() => {
                 timeLeft--;
                 const timerElement = document.getElementById('timer');
@@ -284,7 +273,7 @@
 
                 if (timeLeft <= 0) {
                     clearInterval(timer);
-                    showExplanation();
+                    showExplanation(); // Automatically submit when time runs out
                 }
             }, 1000);
         }
@@ -293,17 +282,17 @@
             clearInterval(timer); // Stop the timer when explanation is shown
 
             const subjectIndex = document.getElementById('subject-dropdown').value;
-            const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
+            const question = quizData[subjectIndex].questions[currentQuestionIndex];
+            const selectedOption = document.querySelector('input[name="question' + question.question_id + '"]:checked');
+            const nextButton = document.querySelector('.next-button');
+            
+            // If an option is selected, check if it's correct and display feedback
             if (selectedOption) {
-                const question = quizData[subjectIndex].questions[currentQuestionIndex];
                 const selectedOptionValue = selectedOption.value;
-
-                // Find the selected option content
-                const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
                 const correctOptionValue = question.correct_options[0];
+                const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
                 const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
-                // Show feedback based on correctness
                 const feedback = document.createElement('div');
                 feedback.className = 'correct-answer';
 
@@ -317,18 +306,13 @@
 
                 document.querySelector('.question').appendChild(feedback);
 
-                // Show explanation
+                // Display explanation if available
                 if (question.explanation) {
                     const explanation = document.createElement('div');
                     explanation.className = 'question-explanation';
                     explanation.innerHTML = `Explanation: ${question.explanation}`;
                     document.querySelector('.question').appendChild(explanation);
                 }
-
-                // Re-render MathJax content for feedback and explanation
-                setTimeout(() => {
-                    MathJax.typeset(); // Reapply MathJax after explanation
-                }, 100);
 
                 // Color the options based on correctness
                 const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
@@ -341,36 +325,34 @@
                         optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
                         optionItem.style.color = 'white'; // Text color for red
                     }
+
+                    // Disable further selection after time up
+                    option.disabled = true;
                 });
-
-                // Disable further selection
-                options.forEach(option => option.disabled = true);
-
-                // Update button text
-                const nextButton = document.querySelector('.next-button');
+                
+                // Change button text to "Next Question"
                 nextButton.textContent = 'Next Question';
 
-                // Save the current question index
+                // Save the current question index in local storage
                 saveLastQuestion();
 
-                // Show next question on button click
+                // Handle next question on button click
                 nextButton.onclick = () => {
                     currentQuestionIndex++;
                     if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
                         timeLeft = 30; // Reset the timer for the next question
-                        displayQuestion();
+                        displayQuestion(); // Show next question
                     } else {
-                        showQuizEnd();
+                        showQuizEnd(); // Show quiz end message if all questions are answered
                     }
                 };
             } else {
-                alert('Please select an option before proceeding.');
+                alert('Please select an option before the timer ends.'); // Alert if no option is selected
             }
         }
 
         function showQuizEnd() {
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = `<div class="subject-title">You have completed the quiz!</div>`;
+            alert("You've completed the quiz!");
         }
     </script>
 </body>
