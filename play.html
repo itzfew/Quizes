@@ -30,8 +30,6 @@
             margin-bottom: 30px;
             padding: 20px;
             border-bottom: 1px solid #ccc;
-            background-color: #fff;
-            border-radius: 10px;
         }
 
         .question-id {
@@ -42,40 +40,24 @@
 
         .question-content {
             margin-bottom: 15px;
-            font-size: 1.2em;
         }
 
-        /* Scrollable container for tables or large content */
-        .question-content.scrollable {
-            overflow-x: auto;
-            white-space: nowrap;
-            padding-bottom: 20px;
-        }
-
-        .question-columns {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-            overflow-x: auto;
+        .question-subject, .question-explanation {
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
         }
 
         .options {
             list-style: none;
             padding: 0;
-            margin: 0;
         }
 
         .options li {
             margin-bottom: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #ccc; /* Added solid border to each option */
             padding: 10px;
             border-radius: 5px;
-            background-color: #f9f9f9;
-            transition: background-color 0.3s ease;
-        }
-
-        .options li:hover {
-            background-color: #e0e0e0;
         }
 
         .options label {
@@ -95,16 +77,16 @@
         }
 
         .next-button {
-            background-color: #000;
-            color: white;
+            background-color: #000; /* Changed button color to black */
+            color: white; /* Changed text color to white */
             padding: 10px 20px;
-            border: 1px solid white;
+            border: 1px solid white; /* Added solid white border */
             border-radius: 5px;
             cursor: pointer;
             margin-top: 20px;
+            display: block;
             width: 100%;
             text-align: center;
-            transition: background-color 0.3s ease;
         }
 
         .next-button:disabled {
@@ -112,34 +94,16 @@
             cursor: not-allowed;
         }
 
-        .progress-bar {
-            height: 10px;
-            background-color: #ccc;
-            margin-top: 20px;
-            width: 100%;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .progress-bar-inner {
-            height: 100%;
-            background-color: #4caf50;
-            width: 0%;
-        }
-
-        .timer {
-            font-size: 1.5em;
-            color: #d32f2f;
-            font-weight: bold;
-            text-align: center;
-        }
-
         #subject-dropdown {
             display: block;
             margin: 20px auto;
             padding: 10px;
             font-size: 1em;
-            width: 100%;
+        }
+
+        img {
+            max-width: 100px; /* Set a maximum width for images */
+            height: auto; /* Maintain aspect ratio */
         }
 
         @media (max-width: 600px) {
@@ -147,48 +111,38 @@
                 padding: 10px;
             }
 
+            #quiz-container {
+                padding: 15px;
+            }
+
             .next-button {
                 padding: 10px;
             }
 
             .options li {
-                padding: 5px;
+                padding: 5px; /* Adjust padding for smaller screens */
             }
 
             .subject-title {
-                font-size: 1.5em;
+                font-size: 1.5em; /* Adjust title size for smaller screens */
             }
 
             #subject-dropdown {
                 width: 100%;
             }
 
-            .quiz-title {
-                font-size: 2em;
-            }
-
-            .question-content {
-                font-size: 1em;
-            }
-
-            .question-id, .question-subject {
-                font-size: 1em;
-            }
-
-            .progress-bar {
-                margin-top: 15px;
-            }
-
-            .timer {
-                font-size: 1.2em;
+            img {
+                max-width: 80px; /* Adjust image size for smaller screens */
             }
         }
     </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
-
+    <div id="quiz-container"></div>
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
@@ -202,6 +156,7 @@
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
+        // Fetch the JSON data
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
@@ -227,35 +182,35 @@
         }
 
         function displayQuestion() {
-            // Directly append to body
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
             const question = subject.questions[currentQuestionIndex];
 
+            // Display subject title
             const subjectTitle = document.createElement('div');
             subjectTitle.className = 'subject-title';
             subjectTitle.textContent = `Subject: ${subject.title}`;
-            document.body.appendChild(subjectTitle);
+            quizContainer.appendChild(subjectTitle);
 
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
 
+            // Display question_id
             const questionId = document.createElement('div');
             questionId.className = 'question-id';
             questionId.textContent = `Question ID: ${question.question_id}`;
             questionElement.appendChild(questionId);
 
+            // Display question content
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-
-            // Add 'scrollable' class if the question content contains large elements like a table
-            if (question.content.includes("<table") || question.content.includes("<img")) {
-                questionContent.classList.add('scrollable');
-            }
-
             questionContent.innerHTML = question.content;
             questionElement.appendChild(questionContent);
 
+            // Display options
             const optionsList = document.createElement('ul');
             optionsList.className = 'options';
 
@@ -276,14 +231,16 @@
 
             questionElement.appendChild(optionsList);
 
+            // Add Submit button
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
             nextButton.textContent = 'Submit';
             nextButton.onclick = showExplanation;
             questionElement.appendChild(nextButton);
 
-            document.body.appendChild(questionElement);
+            quizContainer.appendChild(questionElement);
 
+            // Re-render MathJax content
             MathJax.typesetPromise();
         }
 
@@ -291,12 +248,14 @@
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
             if (selectedOption) {
+                // Show correct answer and explanation
                 const question = quizData[subjectIndex].questions[currentQuestionIndex];
                 const correctAnswer = document.createElement('div');
                 correctAnswer.className = 'correct-answer';
                 correctAnswer.innerHTML = `The correct answer is Option ${question.correct_options[0]}: ${question.options.find(option => option.identifier === question.correct_options[0]).content}`;
                 document.querySelector('.question').appendChild(correctAnswer);
 
+                // Show explanation
                 if (question.explanation) {
                     const explanation = document.createElement('div');
                     explanation.className = 'question-explanation';
@@ -304,8 +263,15 @@
                     document.querySelector('.question').appendChild(explanation);
                 }
 
+                // Disable further selection
+                const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
+                options.forEach(option => option.disabled = true);
+
+                // Update button text
                 const nextButton = document.querySelector('.next-button');
                 nextButton.textContent = 'Next Question';
+
+                // Show next question on button click
                 nextButton.onclick = () => {
                     currentQuestionIndex++;
                     if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
@@ -315,6 +281,7 @@
                     }
                 };
 
+                // Re-render MathJax content
                 MathJax.typesetPromise();
             } else {
                 alert('Please select an option before proceeding.');
@@ -322,10 +289,8 @@
         }
 
         function showQuizEnd() {
-            const subjectTitle = document.createElement('div');
-            subjectTitle.className = 'subject-title';
-            subjectTitle.textContent = 'You have completed the quiz!';
-            document.body.appendChild(subjectTitle);
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = `<div class="subject-title">You have completed the quiz!</div>`;
         }
     </script>
 </body>
