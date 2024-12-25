@@ -344,7 +344,7 @@
                 nextButton.onclick = () => {
                     currentQuestionIndex++;
                     if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
-                        timeLeft = 30; // Reset the timer for the next question
+                        timeLeft = 120; // Reset the timer for the next question
                         displayQuestion();
                     } else {
                         showQuizEnd();
