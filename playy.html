@@ -187,11 +187,14 @@
                 questionId.textContent = `Question ID: ${question.question_id}`;
                 questionElement.appendChild(questionId);
 
-                // Display question content
+                // Display question content (with MathJax support)
                 const questionContent = document.createElement('div');
                 questionContent.className = 'question-content';
                 questionContent.innerHTML = question.content;
                 questionElement.appendChild(questionContent);
+
+                // Apply MathJax to question content
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 
                 // Display options
                 const optionsList = document.createElement('ul');
@@ -249,15 +252,17 @@
                     const questionElement = document.querySelector(`.question-id:contains('Question ID: ${question.question_id}')`).closest('.question');
                     questionElement.appendChild(feedback);
 
+                    // Show explanation and apply MathJax
                     if (question.explanation) {
                         const explanation = document.createElement('div');
                         explanation.className = 'question-explanation';
                         explanation.innerHTML = `Explanation: ${question.explanation}`;
                         questionElement.appendChild(explanation);
+                        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
                     }
 
                     // Color the options based on correctness
-                    const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+                    const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
                     options.forEach(option => {
                         const optionItem = option.closest('li');
                         if (option.value === correctOptionValue) {
