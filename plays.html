@@ -254,14 +254,16 @@
             timerElement.textContent = `Time Left: ${timeLeft}s`;
             quizContainer.appendChild(timerElement);
 
-            // Add Submit button
+            // Add next button
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
             nextButton.textContent = 'Submit Answer';
             quizContainer.appendChild(nextButton);
 
             // Reapply MathJax to render math expressions in the question
-            MathJax.typeset();
+            setTimeout(() => {
+                MathJax.typeset(); // Reapply MathJax after content is loaded
+            }, 100);
 
             // Start the timer
             startTimer();
@@ -324,7 +326,9 @@
                 }
 
                 // Re-render MathJax content for feedback and explanation
-                MathJax.typeset(); // Reapply MathJax after explanation
+                setTimeout(() => {
+                    MathJax.typeset(); // Reapply MathJax after explanation
+                }, 100);
 
                 // Color the options based on correctness
                 const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
