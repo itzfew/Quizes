@@ -266,99 +266,90 @@
         }
 
         function startTimer() {
-            timer = setInterval(() => {
-                timeLeft--;
-                const timerElement = document.getElementById('timer');
-                timerElement.textContent = `Time Left: ${timeLeft}s`;
+    timer = setInterval(() => {
+        timeLeft--;
+        const timerElement = document.getElementById('timer');
+        timerElement.textContent = `Time Left: ${timeLeft}s`;
 
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    showExplanation();
-                }
-            }, 1000);
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            showExplanation(); // Automatically submit when time runs out
+        }
+    }, 1000);
+}
+
+function showExplanation() {
+    clearInterval(timer); // Stop the timer when explanation is shown
+
+    const subjectIndex = document.getElementById('subject-dropdown').value;
+    const question = quizData[subjectIndex].questions[currentQuestionIndex];
+    const selectedOption = document.querySelector('input[name="question' + question.question_id + '"]:checked');
+    const nextButton = document.querySelector('.next-button');
+    
+    // If an option is selected, check if it's correct and display feedback
+    if (selectedOption) {
+        const selectedOptionValue = selectedOption.value;
+        const correctOptionValue = question.correct_options[0];
+        const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
+        const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
+
+        const feedback = document.createElement('div');
+        feedback.className = 'correct-answer';
+
+        if (selectedOptionValue === correctOptionValue) {
+            feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
+            feedback.style.color = 'green'; // Correct answer in green
+        } else {
+            feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+            feedback.style.color = 'red'; // Incorrect answer in red
         }
 
-        function showExplanation() {
-            clearInterval(timer); // Stop the timer when explanation is shown
+        document.querySelector('.question').appendChild(feedback);
 
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
-            if (selectedOption) {
-                const question = quizData[subjectIndex].questions[currentQuestionIndex];
-                const selectedOptionValue = selectedOption.value;
+        // Display explanation if available
+        if (question.explanation) {
+            const explanation = document.createElement('div');
+            explanation.className = 'question-explanation';
+            explanation.innerHTML = `Explanation: ${question.explanation}`;
+            document.querySelector('.question').appendChild(explanation);
+        }
 
-                // Find the selected option content
-                const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
-                const correctOptionValue = question.correct_options[0];
-                const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
-
-                // Show feedback based on correctness
-                const feedback = document.createElement('div');
-                feedback.className = 'correct-answer';
-
-                if (selectedOptionValue === correctOptionValue) {
-                    feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-                    feedback.style.color = 'green'; // Correct answer in green
-                } else {
-                    feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                    feedback.style.color = 'red'; // Incorrect answer in red
-                }
-
-                document.querySelector('.question').appendChild(feedback);
-
-                // Show explanation
-                if (question.explanation) {
-                    const explanation = document.createElement('div');
-                    explanation.className = 'question-explanation';
-                    explanation.innerHTML = `Explanation: ${question.explanation}`;
-                    document.querySelector('.question').appendChild(explanation);
-                }
-
-                // Color the options based on correctness
-                const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
-                options.forEach(option => {
-                    const optionItem = option.closest('li');
-                    if (option.value === correctOptionValue) {
-                        optionItem.style.backgroundColor = 'green'; // Correct option turns green
-                        optionItem.style.color = 'white'; // Text color for green
-                    } else if (option.value === selectedOptionValue) {
-                        optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
-                        optionItem.style.color = 'white'; // Text color for red
-                       
-                    // Re-render MathJax content
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-                    }
-                });
-
-                // Disable further selection
-                options.forEach(option => option.disabled = true);
-
-                // Update button text
-                const nextButton = document.querySelector('.next-button');
-                nextButton.textContent = 'Next Question';
-
-                // Save the current question index
-                saveLastQuestion();
-
-                // Show next question on button click
-                nextButton.onclick = () => {
-                    currentQuestionIndex++;
-                    if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
-                        timeLeft = 30; // Reset the timer for the next question
-                        displayQuestion();
-                    } else {
-                        showQuizEnd();
-                    }
-                };
-            } else {
-                alert('Please select an option before proceeding.');
+        // Color the options based on correctness
+        const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
+        options.forEach(option => {
+            const optionItem = option.closest('li');
+            if (option.value === correctOptionValue) {
+                optionItem.style.backgroundColor = 'green'; // Correct option turns green
+                optionItem.style.color = 'white'; // Text color for green
+            } else if (option.value === selectedOptionValue) {
+                optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
+                optionItem.style.color = 'white'; // Text color for red
             }
-        }
 
-        function showQuizEnd() {
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = `<div class="subject-title">You have completed the quiz!</div>`;
-        }
+            // Disable further selection after time up
+            option.disabled = true;
+        });
+        
+        // Change button text to "Next Question"
+        nextButton.textContent = 'Next Question';
+
+        // Save the current question index in local storage
+        saveLastQuestion();
+
+        // Handle next question on button click
+        nextButton.onclick = () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
+                timeLeft = 30; // Reset the timer for the next question
+                displayQuestion(); // Show next question
+            } else {
+                showQuizEnd(); // Show quiz end message if all questions are answered
+            }
+        };
+    } else {
+        alert('Please select an option before the timer ends.'); // Alert if no option is selected
+    }
+}
     </script>
 </body>
 </html>
