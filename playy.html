@@ -27,32 +27,32 @@
             margin-bottom: 30px;
             padding: 3px;
             border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
+            overflow-x: auto; /* Enable horizontal scroll if content overflows */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
         }
 
         .question-content {
             margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: normal;
-            max-width: 100%;
-            overflow-x: auto;
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
+            max-width: 100%; /* Ensure content can overflow horizontally */
+            overflow-x: auto; /* Enable horizontal scroll within the question content */
         }
 
         .next-button {
-            background-color: #000;
-            color: white;
+            background-color: #000; /* Button color */
+            color: white; /* Text color */
             padding: 10px 20px;
             border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
-            position: fixed;
-            bottom: 0px;
+            position: fixed; /* Fix position at the bottom of the screen */
+            bottom: 0px; /* Distance from the bottom edge */
             left: 0;
-            width: 100%;
+            width: 100%; /* Make button fill the full width */
             text-align: center;
-            z-index: 1000;
+            z-index: 1000; /* Ensure the button stays on top of other content */
         }
 
         .options li {
@@ -60,9 +60,9 @@
             border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
+            overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
         }
 
         .options label {
@@ -101,8 +101,8 @@
         }
 
         img {
-            max-width: 100px;
-            height: auto;
+            max-width: 100px; /* Set a maximum width for images */
+            height: auto; /* Maintain aspect ratio */
         }
 
         .timer {
@@ -126,11 +126,11 @@
             }
 
             .options li {
-                padding: 5px;
+                padding: 5px; /* Adjust padding for smaller screens */
             }
 
             img {
-                max-width: 80px;
+                max-width: 80px; /* Adjust image size for smaller screens */
             }
         }
     </style>
@@ -262,6 +262,7 @@
 
             // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
         }
 
         function startTimer() {
@@ -272,90 +273,91 @@
 
                 if (timeLeft <= 0) {
                     clearInterval(timer);
-                    autoSubmit(); // Automatically submit if time is up
+                    showExplanation();
                 }
             }, 1000);
         }
 
-        function autoSubmit() {
+        function showExplanation() {
+            clearInterval(timer); // Stop the timer when explanation is shown
+
             const subjectIndex = document.getElementById('subject-dropdown').value;
-            const question = quizData[subjectIndex].questions[currentQuestionIndex];
-
-            // Check if an option was selected, if not mark as missed
-            const selectedOption = document.querySelector('input[name="question' + question.question_id + '"]:checked');
-            
-            const feedback = document.createElement('div');
-            feedback.className = 'correct-answer';
-
+            const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
             if (selectedOption) {
+                const question = quizData[subjectIndex].questions[currentQuestionIndex];
                 const selectedOptionValue = selectedOption.value;
+
+                // Find the selected option content
+                const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
                 const correctOptionValue = question.correct_options[0];
                 const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
-                // Correct answer logic
+                // Show feedback based on correctness
+                const feedback = document.createElement('div');
+                feedback.className = 'correct-answer';
+
                 if (selectedOptionValue === correctOptionValue) {
                     feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-                    feedback.style.color = 'green';
+                    feedback.style.color = 'green'; // Correct answer in green
                 } else {
-                    const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
                     feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                    feedback.style.color = 'red';
+                    feedback.style.color = 'red'; // Incorrect answer in red
                 }
-            } else {
-                // If no option selected, treat as missed
-                const correctOptionValue = question.correct_options[0];
-                const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
-                feedback.innerHTML = `You missed this question. The correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                feedback.style.color = 'orange'; // Highlight missed question in orange
-            }
 
-            document.querySelector('.question').appendChild(feedback);
+                document.querySelector('.question').appendChild(feedback);
 
-            // Show explanation if available
-            if (question.explanation) {
-                const explanation = document.createElement('div');
-                explanation.className = 'question-explanation';
-                explanation.innerHTML = `Explanation: ${question.explanation}`;
-                document.querySelector('.question').appendChild(explanation);
-            }
-
-            // Color the options based on correctness
-            const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
-            options.forEach(option => {
-                const optionItem = option.closest('li');
-                if (option.value === question.correct_options[0]) {
-                    optionItem.style.backgroundColor = 'green'; // Correct option turns green
-                    optionItem.style.color = 'white'; // Text color for green
-                } else if (option.checked && option.value !== question.correct_options[0]) {
-                    optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
-                    optionItem.style.color = 'white'; // Text color for red
+                // Show explanation
+                if (question.explanation) {
+                    const explanation = document.createElement('div');
+                    explanation.className = 'question-explanation';
+                    explanation.innerHTML = `Explanation: ${question.explanation}`;
+                    document.querySelector('.question').appendChild(explanation);
                 }
+
+                // Color the options based on correctness
+                const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
+                options.forEach(option => {
+                    const optionItem = option.closest('li');
+                    if (option.value === correctOptionValue) {
+                        optionItem.style.backgroundColor = 'green'; // Correct option turns green
+                        optionItem.style.color = 'white'; // Text color for green
+                    } else if (option.value === selectedOptionValue) {
+                        optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
+                        optionItem.style.color = 'white'; // Text color for red
+                       
+                    // Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                    }
+                });
 
                 // Disable further selection
-                option.disabled = true;
-            });
+                options.forEach(option => option.disabled = true);
 
-            // Update the next button to move to the next question
-            const nextButton = document.querySelector('.next-button');
-            nextButton.textContent = 'Next Question';
-            
-            // Save the current question index
-            saveLastQuestion();
+                // Update button text
+                const nextButton = document.querySelector('.next-button');
+                nextButton.textContent = 'Next Question';
 
-            // Proceed to next question or show quiz end
-            nextButton.onclick = () => {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
-                    timeLeft = 30; // Reset the timer for the next question
-                    displayQuestion();
-                } else {
-                    showQuizEnd();
-                }
-            };
+                // Save the current question index
+                saveLastQuestion();
+
+                // Show next question on button click
+                nextButton.onclick = () => {
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
+                        timeLeft = 30; // Reset the timer for the next question
+                        displayQuestion();
+                    } else {
+                        showQuizEnd();
+                    }
+                };
+            } else {
+                alert('Please select an option before proceeding.');
+            }
         }
 
         function showQuizEnd() {
-            alert("Quiz finished!");
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = `<div class="subject-title">You have completed the quiz!</div>`;
         }
     </script>
 </body>
