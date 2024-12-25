@@ -27,17 +27,17 @@
             margin-bottom: 30px;
             padding: 3px;
             border-bottom: 1px solid #ccc;
-            overflow-x: auto; /* Enable horizontal scroll if content overflows */
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
         }
 
         .question-content {
             margin-bottom: 15px;
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
-            max-width: 100%; /* Ensure content can overflow horizontally */
-            overflow-x: auto; /* Enable horizontal scroll within the question content */
+            word-wrap: break-word;
+            white-space: normal;
+            max-width: 100%;
+            overflow-x: auto;
         }
 
         .options li {
@@ -45,9 +45,9 @@
             border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
-            overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
         }
 
         .options label {
@@ -86,13 +86,13 @@
         }
 
         img {
-            max-width: 100px; /* Set a maximum width for images */
-            height: auto; /* Maintain aspect ratio */
+            max-width: 100px;
+            height: auto;
         }
 
         .next-button {
-            background-color: #000; /* Button color */
-            color: white; /* Text color */
+            background-color: #000;
+            color: white;
             padding: 10px 20px;
             border: 1px solid white;
             border-radius: 5px;
@@ -109,6 +109,24 @@
             font-weight: bold;
         }
 
+        .result-container {
+            margin-top: 20px;
+        }
+
+        .score {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .dropdown {
+            margin-top: 10px;
+        }
+
+        .dropdown select {
+            padding: 5px;
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 0px;
@@ -119,11 +137,11 @@
             }
 
             .options li {
-                padding: 5px; /* Adjust padding for smaller screens */
+                padding: 5px;
             }
 
             img {
-                max-width: 80px; /* Adjust image size for smaller screens */
+                max-width: 80px;
             }
         }
     </style>
@@ -133,9 +151,11 @@
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
     <div id="result-container" style="display: none;"></div>
+
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
+        let userAnswers = [];  // Store user answers
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
@@ -239,13 +259,15 @@
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
 
-            subject.questions.forEach((question) => {
+            subject.questions.forEach((question, index) => {
                 const selectedOption = document.querySelector('input[name="question' + question.question_id + '"]:checked');
                 const questionResult = document.createElement('div');
                 questionResult.className = 'question-result';
 
+                // Save the user selection
                 if (selectedOption) {
                     const selectedOptionValue = selectedOption.value;
+                    userAnswers[index] = selectedOptionValue;  // Save the selected answer
                     const correctOptionValue = question.correct_options[0];
                     const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
                     const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
@@ -259,27 +281,45 @@
                         questionResult.style.color = 'red';
                     }
                 } else {
+                    userAnswers[index] = null;  // No answer selected
                     questionResult.innerHTML = `Question ${question.question_id}: No answer selected`;
                     questionResult.style.color = 'orange';
                 }
 
-                resultContainer.appendChild(questionResult);
+                // Add a dropdown to show explanation for the question
+                const explanationDropdown = document.createElement('div');
+                explanationDropdown.className = 'dropdown';
+                const selectExplanation = document.createElement('select');
+                const optionNoExplanation = document.createElement('option');
+                optionNoExplanation.textContent = 'No Explanation';
+                const optionShowExplanation = document.createElement('option');
+                optionShowExplanation.textContent = 'Show Explanation';
+                selectExplanation.appendChild(optionNoExplanation);
+                selectExplanation.appendChild(optionShowExplanation);
 
-                // Show explanation
-                if (question.explanation) {
-                    const explanation = document.createElement('div');
-                    explanation.className = 'question-explanation';
-                    explanation.innerHTML = `Explanation: ${question.explanation}`;
-                    resultContainer.appendChild(explanation);
-                }
+                selectExplanation.onchange = () => {
+                    if (selectExplanation.value === 'Show Explanation') {
+                        const explanation = document.createElement('div');
+                        explanation.className = 'question-explanation';
+                        explanation.innerHTML = `Explanation: ${question.explanation}`;
+                        questionResult.appendChild(explanation);
+                        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                    }
+                };
+
+                explanationDropdown.appendChild(selectExplanation);
+                questionResult.appendChild(explanationDropdown);
+
+                resultContainer.appendChild(questionResult);
             });
 
+            // Display score
             const score = document.createElement('div');
             score.className = 'score';
             score.innerHTML = `Your score: ${correctAnswers} out of ${subject.questions.length}`;
             resultContainer.appendChild(score);
 
-            // Show the result container and hide the quiz container
+            // Hide quiz container and show result container
             quizContainer.style.display = 'none';
             resultContainer.style.display = 'block';
 
