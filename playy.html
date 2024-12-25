@@ -343,30 +343,7 @@ function autoSubmit() {
         } else if (option.checked && option.value !== question.correct_options[0]) {
             optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
             optionItem.style.color = 'white'; // Text color for red
-        }
-
-        // Disable further selection
-        option.disabled = true;
-    });
-
-    // Update the next button to move to the next question
-    const nextButton = document.querySelector('.next-button');
-    nextButton.textContent = 'Next Question';
-    
-    // Save the current question index
-    saveLastQuestion();
-
-    // Proceed to next question or show quiz end
-    nextButton.onclick = () => {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
-            timeLeft = 30; // Reset the timer for the next question
-            displayQuestion();
-        } else {
-            showQuizEnd();
-        }
-    };
-
+        
                     // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
                     }
