@@ -273,11 +273,11 @@
             startTimer();
 
             // Re-render MathJax content
-            MathJax.typeset();
-
+            MathJax.typeset(); // Reapply MathJax every time question is displayed
         }
 
         function startTimer() {
+            clearInterval(timer);
             timer = setInterval(() => {
                 timeLeft--;
                 const timerElement = document.getElementById('timer');
@@ -325,6 +325,9 @@
                     explanation.innerHTML = `Explanation: ${question.explanation}`;
                     document.querySelector('.question').appendChild(explanation);
                 }
+
+                // Re-render MathJax content for feedback and explanation
+                MathJax.typeset(); // Reapply MathJax after explanation
 
                 // Color the options based on correctness
                 const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
