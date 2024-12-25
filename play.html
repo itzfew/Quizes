@@ -45,17 +45,20 @@
         }
 
         .next-button {
-            background-color: #000; /* Button color */
-            color: white; /* Text color */
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            display: block;
-            width: 100%; /* Ensure the button fills its container */
-            text-align: center;
-        }
+    background-color: #000; /* Button color */
+    color: white; /* Text color */
+    padding: 10px 20px;
+    border: 1px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+    position: fixed; /* Fix position at the bottom of the screen */
+    bottom: 10px; /* Distance from the bottom edge */
+    left: 0;
+    width: 100%; /* Make button fill the full width */
+    text-align: center;
+    z-index: 1000; /* Ensure the button stays on top of other content */
+}
+
 
         .options li {
             margin-bottom: 10px;
