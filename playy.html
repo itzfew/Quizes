@@ -268,11 +268,10 @@
                     const feedback = document.createElement('div');
 
                     if (selectedOptionValue === correctOptionValue) {
-                        feedback.innerHTML = `Correct! Option ${correctOptionValue}: ${correctOptionContent}`;
+                        // Correct option
                         feedback.classList.add('correct-answer');
                     } else {
-                        const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
-                        feedback.innerHTML = `Incorrect. You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+                        // Incorrect option
                         feedback.classList.add('incorrect-answer');
                     }
 
