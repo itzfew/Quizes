@@ -13,25 +13,40 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0px;
+            padding: 0;
         }
 
         .quiz-title {
             font-size: 1.5em;
-            margin: 0px 0;
+            margin: 20px 0;
             color: #333;
             text-align: center;
-            border: 2px solid black;
+            border: 2px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns by default */
+            gap: 20px;
+            margin: 20px;
+            padding: 10px;
         }
 
         .question {
-            margin-bottom: 30px;
-            padding: 3px;
-            border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
-            text-align: center; /* Ensures children (like the explanation button) are centered */
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .question:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
         .question-number {
@@ -43,10 +58,7 @@
 
         .question-content {
             margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: normal;
-            max-width: 100%;
-            overflow-x: auto;
+            color: #555;
         }
 
         .options li {
@@ -69,28 +81,40 @@
             margin-right: 10px;
         }
 
-        .question-id {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #555;
-        }
-
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
-            color: green;
-        }
-
-        #subject-dropdown {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
+        .explanation-button {
+            display: none; /* Hidden by default */
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            padding: 8px 16px;
+            cursor: pointer;
             font-size: 1em;
+            border-radius: 5px;
+            margin-top: 10px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            display: none; /* Initially hide the explanation button */
+            width: 150px; /* Fixed width for the button */
         }
 
-        img {
-            max-width: 100px;
-            height: auto;
+        .explanation-button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .explanation-content {
+            display: none;
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
+        }
+
+        .explanation-content.open {
+            display: block;
         }
 
         .submit-button {
@@ -108,61 +132,39 @@
             z-index: 1000;
         }
 
-        /* Explanation Button Styling */
-        .explanation-button {
-            display: none; /* Hidden by default */
-            background-color: white;
-            color: black;
-            border: 2px solid black;
-            padding: 8px 16px;
-            cursor: pointer;
-            font-size: 1em;
-            border-radius: 5px;
-            margin-top: 10px;
-            position: relative;
-            transition: background-color 0.3s, color 0.3s;
-            font-family: Arial, sans-serif;
+        /* Scorecard table styling */
+        .score-card {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            margin-left: auto;   /* Centers the button horizontally */
-            margin-right: auto;  /* Centers the button horizontally */
-            display: none; /* Initially hide the explanation button */
-            width: 150px;        /* Fixed width for the button */
+            margin-bottom: 20px;
         }
 
-        /* Optional: Add hover effect to change button color when hovered */
-        .explanation-button:hover {
-            background-color: black;
-            color: white;
-        }
-
-        .explanation-button i {
-            margin-left: 8px;
-        }
-
-        .explanation-button-container {
-            display: flex;
-            justify-content: center;
+        .score-card table {
             width: 100%;
+            text-align: center;
+            border-collapse: collapse;
         }
 
-        .explanation-content {
-            display: none;
-            margin-top: 10px;
-            font-style: italic;
-            color: #777;
+        .score-card th, .score-card td {
+            padding: 12px;
+            border: 1px solid #ddd;
         }
 
-        .explanation-content.open {
-            display: block;
+        /* Media Queries */
+        @media (max-width: 800px) {
+            .question-container {
+                grid-template-columns: 1fr; /* Single column on small screens */
+            }
         }
 
         @media (max-width: 600px) {
             body {
-                padding: 0px;
-            }
-
-            #quiz-container {
-                padding: 3px;
+                padding: 10px;
             }
 
             .submit-button {
@@ -170,19 +172,32 @@
             }
 
             .options li {
-                padding: 5px;
+                padding: 8px;
             }
 
-            img {
-                max-width: 80px;
+            .quiz-title {
+                font-size: 1.2em;
+                margin: 10px 0;
+            }
+
+            .question-number {
+                font-size: 1em;
+            }
+
+            .question-content {
+                font-size: 0.9em;
             }
         }
     </style>
 </head>
 <body>
+
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
-    <div id="quiz-container"></div>
+
+    <div id="quiz-container">
+        <div class="question-container" id="quiz-container"></div>
+    </div>
 
     <script>
         let currentQuestionIndex = 0;
@@ -317,7 +332,7 @@
                 // Show the explanation button after submission
                 explanationButton.style.display = 'block';
 
-                // Create feedback and show it after submission
+                // Show simplified feedback
                 const feedback = document.createElement('div');
                 feedback.className = 'correct-answer';
                 const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
@@ -369,8 +384,9 @@
 
             // Display the scorecard
             const scoreCard = document.createElement('div');
+            scoreCard.classList.add('score-card');
             scoreCard.innerHTML = `
-                <table style="width: 100%; text-align: center; border: 1px solid #ccc;">
+                <table>
                     <tr>
                         <th>Total Attempted</th>
                         <th>Correct</th>
@@ -403,11 +419,6 @@
             // Re-render MathJax content after the scorecard is displayed
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
-
-        // Prevent page refresh or navigation
-        window.onbeforeunload = function (event) {
-            return "Are you sure you want to leave? Your progress may be lost.";
-        };
     </script>
 </body>
 </html>
