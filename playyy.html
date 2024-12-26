@@ -33,6 +33,13 @@
             white-space: normal;
         }
 
+        .question-number {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
         .question-content {
             margin-bottom: 15px;
             word-wrap: break-word;
@@ -226,11 +233,11 @@
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question';
 
-                // Display question ID
-                const questionId = document.createElement('div');
-                questionId.className = 'question-id';
-                questionId.textContent = `Question ID: ${question.question_id}`;
-                questionElement.appendChild(questionId);
+                // Add Question Numbering
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.textContent = `Question ${index + 1}:`;
+                questionElement.appendChild(questionNumber);
 
                 // Display question content
                 const questionContent = document.createElement('div');
