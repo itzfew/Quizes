@@ -108,6 +108,7 @@
             font-size: 1em;
             border-radius: 5px;
             margin-top: 10px;
+            display: none; /* Initially hide the explanation button */
         }
 
         .explanation-content {
@@ -231,17 +232,17 @@
 
                 questionElement.appendChild(optionsList);
 
-                // Add explanation dropdown button
+                // Add explanation dropdown button (hidden by default)
                 const explanationButton = document.createElement('button');
                 explanationButton.className = 'explanation-button';
                 explanationButton.textContent = 'Show Explanation';
                 explanationButton.onclick = () => toggleExplanation(questionElement);
+                questionElement.appendChild(explanationButton);
 
-                // Create explanation content
+                // Create explanation content (hidden by default)
                 const explanationContent = document.createElement('div');
                 explanationContent.className = 'explanation-content';
                 explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-                questionElement.appendChild(explanationButton);
                 questionElement.appendChild(explanationContent);
 
                 quizContainer.appendChild(questionElement);
@@ -270,6 +271,10 @@
             subject.questions.forEach((question, index) => {
                 const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
                 const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
+                const explanationButton = questionElement.querySelector('.explanation-button');
+
+                // Show the explanation button after submission
+                explanationButton.style.display = 'block';
 
                 // Show feedback
                 const feedback = document.createElement('div');
