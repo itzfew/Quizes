@@ -394,6 +394,12 @@
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
 
+            // Smooth scroll to the scorecard
+            window.scrollTo({
+                top: quizContainer.offsetTop, 
+                behavior: 'smooth'
+            });
+
             // Re-render MathJax content after the scorecard is displayed
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
