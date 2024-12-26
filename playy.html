@@ -229,59 +229,70 @@
         }
 
         function showAllExplanations() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
+    const subjectIndex = document.getElementById('subject-dropdown').value;
+    const subject = quizData[subjectIndex];
 
-            subject.questions.forEach((question, index) => {
-                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+    subject.questions.forEach((question, index) => {
+        const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
 
-                if (selectedOption) {
-                    const selectedOptionValue = selectedOption.value;
-                    const correctOptionValue = question.correct_options[0];
-                    const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
+        const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
 
-                    // Show feedback based on correctness
-                    const feedback = document.createElement('div');
-                    feedback.className = 'correct-answer';
+        // Show explanation and feedback
+        const feedback = document.createElement('div');
+        feedback.className = 'correct-answer';
+        const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+        const correctOptionValue = question.correct_options[0];
+        const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
-                    if (selectedOptionValue === correctOptionValue) {
-                        feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-                        feedback.style.color = 'green'; // Correct answer in green
-                    } else {
-                        const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
-                        feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                        feedback.style.color = 'red'; // Incorrect answer in red
-                    }
+        if (selectedOption) {
+            const selectedOptionValue = selectedOption.value;
 
-                    const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
-                    questionElement.appendChild(feedback);
-
-                    // Show explanation
-                    if (question.explanation) {
-                        const explanation = document.createElement('div');
-                        explanation.className = 'question-explanation';
-                        explanation.innerHTML = `Explanation: ${question.explanation}`;
-                        questionElement.appendChild(explanation);
-                    }
-
-                    // Color the options based on correctness
-                    const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
-                    options.forEach(option => {
-                        const optionItem = option.closest('li');
-                        if (option.value === correctOptionValue) {
-                            optionItem.style.backgroundColor = 'green'; // Correct option turns green
-                            optionItem.style.color = 'white'; // Text color for green
-                        } else if (option.value === selectedOptionValue) {
-                            optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
-                            optionItem.style.color = 'white'; // Text color for red
-                        }
-                    });
-
-                    // Disable further selection
-                    options.forEach(option => option.disabled = true);
-                }
-            });
+            // Show feedback based on correctness
+            if (selectedOptionValue === correctOptionValue) {
+                feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
+                feedback.style.color = 'green'; // Correct answer in green
+            } else {
+                const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
+                feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+                feedback.style.color = 'red'; // Incorrect answer in red
+            }
+        } else {
+            feedback.innerHTML = `You missed this question. The correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+            feedback.style.color = 'red'; // Missed question in red
         }
+
+        questionElement.appendChild(feedback);
+
+        // Show explanation
+        if (question.explanation) {
+            const explanation = document.createElement('div');
+            explanation.className = 'question-explanation';
+            explanation.innerHTML = `Explanation: ${question.explanation}`;
+            questionElement.appendChild(explanation);
+        }
+
+        // Color the options based on correctness
+        options.forEach(option => {
+            const optionItem = option.closest('li');
+            if (option.value === correctOptionValue) {
+                optionItem.style.backgroundColor = 'green'; // Correct option turns green
+                optionItem.style.color = 'white'; // Text color for green
+            } else if (option.checked && option.value !== correctOptionValue) {
+                optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
+                optionItem.style.color = 'white'; // Text color for red
+            } else {
+                // Dim missed question options
+                optionItem.style.backgroundColor = '#f0f0f0'; // Light gray for missed option
+                optionItem.style.color = '#666'; // Dim text color
+            }
+
+            // Disable further selection
+            option.disabled = true;
+        });
+    });
+}
+
+                        
     </script>
 </body>
 </html>
