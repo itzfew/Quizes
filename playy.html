@@ -12,7 +12,7 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0px;
+            padding: 0;
         }
 
         .quiz-title {
@@ -66,21 +66,35 @@
             color: #555;
         }
 
-        .question-explanation {
-            margin-top: 10px;
-            font-style: italic;
-            color: #777;
-        }
-
         .correct-answer {
             margin-top: 10px;
             font-weight: bold;
             color: green;
         }
 
+        .incorrect-answer {
+            margin-top: 10px;
+            font-weight: bold;
+            color: red;
+        }
+
         .missed-question {
             background-color: #333;
             color: #aaa;
+        }
+
+        .view-explanation {
+            margin-top: 10px;
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+        .explanation {
+            display: none;
+            font-style: italic;
+            color: #777;
+            margin-top: 10px;
         }
 
         #subject-dropdown {
@@ -241,6 +255,10 @@
             subject.questions.forEach((question, index) => {
                 const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
 
+                const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
+                const explanationElement = document.createElement('div');
+                explanationElement.className = 'explanation';
+
                 if (selectedOption) {
                     const selectedOptionValue = selectedOption.value;
                     const correctOptionValue = question.correct_options[0];
@@ -248,54 +266,51 @@
 
                     // Show feedback based on correctness
                     const feedback = document.createElement('div');
-                    feedback.className = 'correct-answer';
 
                     if (selectedOptionValue === correctOptionValue) {
-                        feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-                        feedback.style.color = 'green'; // Correct answer in green
+                        feedback.innerHTML = `Correct! Option ${correctOptionValue}: ${correctOptionContent}`;
+                        feedback.classList.add('correct-answer');
                     } else {
                         const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
-                        feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                        feedback.style.color = 'red'; // Incorrect answer in red
+                        feedback.innerHTML = `Incorrect. You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+                        feedback.classList.add('incorrect-answer');
                     }
 
-                    const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
                     questionElement.appendChild(feedback);
-
-                    // Show explanation
-                    if (question.explanation) {
-                        const explanation = document.createElement('div');
-                        explanation.className = 'question-explanation';
-                        explanation.innerHTML = `Explanation: ${question.explanation}`;
-                        questionElement.appendChild(explanation);
-                    }
-
-                    // Color the options based on correctness
-                    const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
-                    options.forEach(option => {
-                        const optionItem = option.closest('li');
-                        if (option.value === correctOptionValue) {
-                            optionItem.style.backgroundColor = 'green'; // Correct option turns green
-                            optionItem.style.color = 'white'; // Text color for green
-                        } else if (option.value === selectedOptionValue) {
-                            optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
-                            optionItem.style.color = 'white'; // Text color for red
-                        }
-                    });
-
-                    // Disable further selection
-                    options.forEach(option => option.disabled = true);
+                    questionElement.classList.remove('missed-question'); // Remove missed styling if answered
                 } else {
-                    // If question is not answered, mark it as missed
-                    const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
                     questionElement.classList.add('missed-question'); // Dim the background color for missed question
                     allAnswered = false;
                 }
+
+                // Add View Explanation button
+                const viewExplanationButton = document.createElement('button');
+                viewExplanationButton.className = 'view-explanation';
+                viewExplanationButton.textContent = 'View Explanation';
+                viewExplanationButton.onclick = () => toggleExplanation(index);
+
+                questionElement.appendChild(viewExplanationButton);
+                questionElement.appendChild(explanationElement);
             });
 
-            // Update button text
+            // Update Submit button text
             const submitButton = document.querySelector('.submit-button');
             submitButton.textContent = 'Review Again';
+        }
+
+        function toggleExplanation(index) {
+            const explanationElements = document.querySelectorAll('.explanation');
+            const explanation = explanationElements[index];
+
+            // Toggle the visibility of the explanation
+            explanation.style.display = (explanation.style.display === 'none' || explanation.style.display === '') ? 'block' : 'none';
+
+            // Close other explanations
+            explanationElements.forEach((exp, i) => {
+                if (i !== index) {
+                    exp.style.display = 'none';
+                }
+            });
         }
     </script>
 </body>
