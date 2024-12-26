@@ -276,27 +276,25 @@
         // Show the explanation button after submission
         explanationButton.style.display = 'block';
 
-        // Show feedback
+        // Show simplified feedback
         const feedback = document.createElement('div');
         feedback.className = 'correct-answer';
         const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
         const correctOptionValue = question.correct_options[0];
-        const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
         if (selectedOption) {
             const selectedOptionValue = selectedOption.value;
-            const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
 
             // Correct or Incorrect Answer Feedback
             if (selectedOptionValue === correctOptionValue) {
-                feedback.innerHTML = `You are correct! Option ${selectedOptionValue}: ${selectedOptionContent}`;
+                feedback.innerHTML = "You are correct!";
                 feedback.style.color = 'green'; // Correct answer in green
             } else {
-                feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+                feedback.innerHTML = "You selected the wrong answer. The correct answer is: Option " + correctOptionValue;
                 feedback.style.color = 'red'; // Incorrect answer in red
             }
         } else {
-            feedback.innerHTML = `You did not select an option, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+            feedback.innerHTML = "You did not select an option, but the correct answer is: Option " + correctOptionValue;
             feedback.style.color = 'red'; // No selection made
         }
 
@@ -316,7 +314,6 @@
         });
     });
 }
-
 
         
     </script>
