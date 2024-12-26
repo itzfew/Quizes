@@ -7,21 +7,19 @@
     <!-- FontAwesome CDN for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Remove all unnecessary styles */
+        /* General reset and styling */
         body, html {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-        }
-
-        body {
-            background-color: #fff;
-            color: #333;
-            padding: 20px;
+            background-color: #fff; /* White body background */
+            color: #333; /* Dark text color */
         }
 
         h1 {
             text-align: center;
+            color: #000; /* Black title */
+            margin-top: 20px;
         }
 
         #exam-list {
@@ -36,6 +34,7 @@
         .exam-item-header {
             font-size: 18px;
             font-weight: bold;
+            color: #000;
         }
 
         .exam-item-body {
@@ -44,28 +43,39 @@
 
         .paper-item {
             list-style-type: none;
-            padding: 5px;
+            padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 2px solid #333; /* Dark border */
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #f4f4f4; /* Light gray background for paper items */
         }
 
         .paper-item:hover {
-            text-decoration: underline;
+            background-color: #e0e0e0; /* Slightly darker gray on hover */
         }
 
-        /* Style for the button */
+        /* Button styling for paper items */
         .btn-link {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 5px 10px;
+            background-color: #000; /* Black background */
+            color: #fff;
+            border: 1px solid #333;
+            padding: 8px 15px;
             cursor: pointer;
-            border-radius: 3px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-link i {
+            margin-right: 8px; /* Space between icon and text */
         }
 
         .btn-link:hover {
-            background-color: #45a049;
+            background-color: #444; /* Lighter black background on hover */
+            border-color: #ddd; /* Lighter border on hover */
         }
 
         /* Modal Styles */
@@ -77,24 +87,27 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
             overflow: auto;
         }
 
         .modal-content {
-            background-color: #fff;
+            background-color: #fff; /* White background for the modal */
             margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
+            padding: 25px;
+            border: 1px solid #333; /* Dark border */
             width: 80%;
             max-width: 400px;
             border-radius: 5px;
+            color: #333; /* Dark text color */
         }
 
         .modal-header {
             font-size: 18px;
             font-weight: bold;
-            margin-bottom: 15px;
+            color: #000;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .modal-buttons {
@@ -103,30 +116,40 @@
         }
 
         .modal-buttons button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
+            background-color: #000; /* Black button */
+            color: #fff;
+            border: 1px solid #fff;
             padding: 10px 15px;
             cursor: pointer;
             border-radius: 5px;
             width: 45%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-buttons button i {
+            margin-right: 8px; /* Space between icon and text */
         }
 
         .modal-buttons button:hover {
-            background-color: #45a049;
+            background-color: #444; /* Lighter black on hover */
+            border-color: #ddd;
         }
 
         /* Close button */
         .close {
             color: #aaa;
-            float: right;
             font-size: 28px;
             font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
 
         .close:hover,
         .close:focus {
-            color: black;
+            color: #000;
             text-decoration: none;
             cursor: pointer;
         }
@@ -142,8 +165,8 @@
             <span class="close">&times;</span>
             <div class="modal-header" id="modal-title"></div>
             <div class="modal-buttons">
-                <button id="playBtn">Play Test</button>
-                <button id="playCbtBtn">Play CBT</button>
+                <button id="playBtn"><i class="fas fa-play"></i> Play Test</button>
+                <button id="playCbtBtn"><i class="fas fa-chalkboard-teacher"></i> Play CBT</button>
             </div>
         </div>
     </div>
@@ -186,7 +209,7 @@
                     // Create button for the modal
                     const button = document.createElement('button');
                     button.classList.add('btn-link');
-                    button.textContent = 'Open';
+                    button.innerHTML = `<i class="fas fa-link"></i> Open`;
 
                     // Set click event for the button to open the modal
                     button.addEventListener('click', () => {
