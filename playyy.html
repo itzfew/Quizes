@@ -307,15 +307,7 @@
         function showAllExplanations() {
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
-            const quizContainer = document.getElementById('quiz-container');
-            const endTime = new Date(); // Record the time when the quiz is submitted
 
-            totalQuestions = subject.questions.length;
-            correctAnswers = 0;
-            incorrectAnswers = 0;
-            missedAnswers = 0;
-
-            // Loop through each question and calculate the score
             subject.questions.forEach((question, index) => {
                 const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
                 const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
@@ -366,6 +358,7 @@
             });
 
             // Calculate the time taken
+            const endTime = new Date(); // Record the time when the quiz is submitted
             const timeTakenInSeconds = Math.round((endTime - startTime) / 1000); // Time in seconds
             const timeTakenInMinutes = (timeTakenInSeconds / 60).toFixed(2);
             const avgTimePerQuestion = (timeTakenInSeconds / totalQuestions).toFixed(2);
@@ -383,7 +376,7 @@
                         <th>Avg. Time per Question (Seconds)</th>
                     </tr>
                     <tr>
-                        <td>${totalQuestions}</td>
+                        <td>${correctAnswers + incorrectAnswers}</td>
                         <td>${correctAnswers}</td>
                         <td>${incorrectAnswers}</td>
                         <td>${missedAnswers}</td>
@@ -394,11 +387,17 @@
             `;
 
             // Insert the scorecard at the top of the quiz container
+            const quizContainer = document.getElementById('quiz-container');
             quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
 
             // Re-render MathJax content after the scorecard is displayed
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
+
+        // Prevent page refresh or navigation
+        window.onbeforeunload = function (event) {
+            return "Are you sure you want to leave? Your progress may be lost.";
+        };
     </script>
 </body>
 </html>
