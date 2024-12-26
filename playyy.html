@@ -265,57 +265,60 @@
         }
 
         function showAllExplanations() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
+    const subjectIndex = document.getElementById('subject-dropdown').value;
+    const subject = quizData[subjectIndex];
 
-            subject.questions.forEach((question, index) => {
-                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-                const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
-                const explanationButton = questionElement.querySelector('.explanation-button');
+    subject.questions.forEach((question, index) => {
+        const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+        const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
+        const explanationButton = questionElement.querySelector('.explanation-button');
 
-                // Show the explanation button after submission
-                explanationButton.style.display = 'block';
+        // Show the explanation button after submission
+        explanationButton.style.display = 'block';
 
-                // Show feedback
-                const feedback = document.createElement('div');
-                feedback.className = 'correct-answer';
-                const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
-                const correctOptionValue = question.correct_options[0];
-                const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
+        // Show feedback
+        const feedback = document.createElement('div');
+        feedback.className = 'correct-answer';
+        const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+        const correctOptionValue = question.correct_options[0];
+        const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
-                if (selectedOption) {
-                    const selectedOptionValue = selectedOption.value;
+        if (selectedOption) {
+            const selectedOptionValue = selectedOption.value;
+            const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
 
-                    // Correct or Incorrect Answer Feedback
-                    if (selectedOptionValue === correctOptionValue) {
-                        feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-                        feedback.style.color = 'green'; // Correct answer in green
-                    } else {
-                        const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
-                        feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                        feedback.style.color = 'red'; // Incorrect answer in red
-                    }
-                } else {
-                    feedback.innerHTML = `You did not select an option, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                    feedback.style.color = 'red'; // No selection made
-                }
-
-                questionElement.appendChild(feedback);
-
-                // Color options based on correctness
-                options.forEach(option => {
-                    const optionItem = option.closest('li');
-                    if (option.value === correctOptionValue) {
-                        optionItem.style.backgroundColor = 'green';
-                        optionItem.style.color = 'white';
-                    } else if (option.checked) {
-                        optionItem.style.backgroundColor = 'red';
-                        optionItem.style.color = 'white';
-                    }
-                    option.disabled = true;
-                });
-            });
+            // Correct or Incorrect Answer Feedback
+            if (selectedOptionValue === correctOptionValue) {
+                feedback.innerHTML = `You are correct! Option ${selectedOptionValue}: ${selectedOptionContent}`;
+                feedback.style.color = 'green'; // Correct answer in green
+            } else {
+                feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+                feedback.style.color = 'red'; // Incorrect answer in red
+            }
+        } else {
+            feedback.innerHTML = `You did not select an option, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+            feedback.style.color = 'red'; // No selection made
         }
+
+        questionElement.appendChild(feedback);
+
+        // Color options based on correctness
+        options.forEach(option => {
+            const optionItem = option.closest('li');
+            if (option.value === correctOptionValue) {
+                optionItem.style.backgroundColor = 'green';
+                optionItem.style.color = 'white';
+            } else if (option.checked) {
+                optionItem.style.backgroundColor = 'red';
+                optionItem.style.color = 'white';
+            }
+            option.disabled = true;
+        });
+    });
+}
+
+
+        
     </script>
 </body>
 </html>
