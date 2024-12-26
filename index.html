@@ -7,81 +7,128 @@
     <!-- FontAwesome CDN for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Reset some default styling */
+        /* Remove all unnecessary styles */
         body, html {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
         }
 
-        /* Style for the entire page */
         body {
-            background-color: #fff; /* White background */
-            color: #333; /* Dark text color */
+            background-color: #fff;
+            color: #333;
             padding: 20px;
         }
 
         h1 {
             text-align: center;
-            color: #333;
         }
 
-        /* Style for the exam list container */
         #exam-list {
-            width: 100%;
-            max-width: 1200px; /* Max width to maintain readability */
-            margin: 0 auto;
-            list-style: none;
+            list-style-type: none;
             padding: 0;
         }
 
-        /* Exam item styling */
         .exam-item {
-            background-color: #fff;
-            border: 1px solid #333; /* Black border for contrast */
-            margin-bottom: 10px;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
         }
 
         .exam-item-header {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background-color: #333; /* Black background for exam headers */
-            color: #fff; /* White text */
             font-size: 18px;
             font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px 5px 0 0;
-        }
-
-        .exam-item-header i {
-            margin-right: 10px;
         }
 
         .exam-item-body {
-            padding: 10px;
-            background-color: #f9f9f9; /* Light gray background for paper list */
+            margin-top: 10px;
         }
 
         .paper-item {
             list-style-type: none;
-            padding: 10px;
-            background-color: #fff;
-            margin-bottom: 5px;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .paper-item:hover {
-            background-color: #e0e0e0; /* Light hover effect */
+            text-decoration: underline;
         }
 
-        .paper-item i {
-            margin-right: 10px;
+        /* Style for the button */
+        .btn-link {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .btn-link:hover {
+            background-color: #45a049;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 5px;
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-buttons button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 45%;
+        }
+
+        .modal-buttons button:hover {
+            background-color: #45a049;
+        }
+
+        /* Close button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -89,6 +136,18 @@
     <h1>Exam List</h1>
     <ul id="exam-list"></ul>
     
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header" id="modal-title"></div>
+            <div class="modal-buttons">
+                <button id="playBtn">Play Test</button>
+                <button id="playCbtBtn">Play CBT</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Fetch the JSON data
         fetch('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json')
@@ -105,10 +164,10 @@
                 const examItem = document.createElement('li');
                 examItem.classList.add('exam-item');
 
-                // Create exam header with icon and title
+                // Create exam header with title
                 const examHeader = document.createElement('div');
                 examHeader.classList.add('exam-item-header');
-                examHeader.innerHTML = `<i class="fas fa-book"></i> ${exam.title}`;
+                examHeader.innerHTML = `${exam.title}`;
 
                 // Create exam body for the papers
                 const examBody = document.createElement('div');
@@ -119,13 +178,24 @@
                 exam.papers.forEach(paper => {
                     const paperItem = document.createElement('li');
                     paperItem.classList.add('paper-item');
-                    paperItem.innerHTML = `<i class="fas fa-file-alt"></i> ${paper.title} (${paper.year})`;
+                    
+                    // Create paper title
+                    const paperTitle = document.createElement('span');
+                    paperTitle.textContent = `${paper.title} (${paper.year})`;
+                    
+                    // Create button for the modal
+                    const button = document.createElement('button');
+                    button.classList.add('btn-link');
+                    button.textContent = 'Open';
 
-                    // Set click event to open the index page with query params
-                    paperItem.addEventListener('click', () => {
-                        window.location.href = `play.html?title=${encodeURIComponent(paper.title)}&metaId=${encodeURIComponent(paper.metaId)}`;
+                    // Set click event for the button to open the modal
+                    button.addEventListener('click', () => {
+                        openModal(paper);
                     });
 
+                    // Append paper title and button to paperItem
+                    paperItem.appendChild(paperTitle);
+                    paperItem.appendChild(button);
                     paperList.appendChild(paperItem);
                 });
 
@@ -140,6 +210,42 @@
                 examList.appendChild(examItem);
             });
         }
+
+        // Modal functionality
+        const modal = document.getElementById('modal');
+        const closeBtn = document.querySelector('.close');
+        const playBtn = document.getElementById('playBtn');
+        const playCbtBtn = document.getElementById('playCbtBtn');
+        let currentPaper = null;
+
+        function openModal(paper) {
+            currentPaper = paper;
+            document.getElementById('modal-title').innerText = paper.title;
+
+            // Set the links for the buttons
+            playBtn.onclick = () => {
+                window.location.href = `play.html?title=${encodeURIComponent(paper.title)}&metaId=${encodeURIComponent(paper.metaId)}`;
+            };
+
+            playCbtBtn.onclick = () => {
+                window.location.href = `playcbt.html?title=${encodeURIComponent(paper.title)}&metaId=${encodeURIComponent(paper.metaId)}`;
+            };
+
+            // Show the modal
+            modal.style.display = "block";
+        }
+
+        // Close the modal
+        closeBtn.onclick = () => {
+            modal.style.display = "none";
+        };
+
+        // Close the modal if the user clicks anywhere outside the modal
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
     </script>
 </body>
 </html>
