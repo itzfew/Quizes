@@ -22,28 +22,30 @@
             color: #333;
             text-align: center;
             border: 2px solid black;
+            padding: 10px;
         }
 
-        .question-row {
-            display: flex;
-            margin-bottom: 30px;
-            justify-content: space-between;
-            border-bottom: 1px solid #ccc; /* Border between rows */
+        #subject-dropdown {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 1em;
+        }
+
+        #quiz-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
         }
 
         .question {
-            width: 48%; /* Each question takes 48% of the row's width */
-            margin-right: 2%; /* Space between questions */
-            padding: 3px;
-            border-right: 1px solid black; /* Black border between questions */
+            background-color: #fff;
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 10px;
             overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
-        }
-
-        .question:last-child {
-            margin-right: 0;
-            border-right: none; /* Remove right border for the last question in each row */
+            box-sizing: border-box;
         }
 
         .question-number {
@@ -57,8 +59,6 @@
             margin-bottom: 15px;
             word-wrap: break-word;
             white-space: normal;
-            max-width: 100%;
-            overflow-x: auto;
         }
 
         .options li {
@@ -81,30 +81,6 @@
             margin-right: 10px;
         }
 
-        .question-id {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #555;
-        }
-
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
-            color: green;
-        }
-
-        #subject-dropdown {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 1em;
-        }
-
-        img {
-            max-width: 100px;
-            height: auto;
-        }
-
         .submit-button {
             background-color: #000;
             color: white;
@@ -112,15 +88,11 @@
             border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
-            position: fixed;
-            bottom: 0px;
-            left: 0;
             width: 100%;
             text-align: center;
-            z-index: 1000;
+            margin-top: 20px;
         }
 
-        /* Explanation Button Styling */
         .explanation-button {
             display: none; /* Hidden by default */
             background-color: white;
@@ -133,28 +105,11 @@
             margin-top: 10px;
             position: relative;
             transition: background-color 0.3s, color 0.3s;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-left: auto;   /* Centers the button horizontally */
-            margin-right: auto;  /* Centers the button horizontally */
-            display: none; /* Initially hide the explanation button */
-            width: 150px;        /* Fixed width for the button */
         }
 
-        /* Optional: Add hover effect to change button color when hovered */
         .explanation-button:hover {
             background-color: black;
             color: white;
-        }
-
-        .explanation-button i {
-            margin-left: 8px;
-        }
-
-        .explanation-button-container {
-            display: flex;
-            justify-content: center;
-            width: 100%;
         }
 
         .explanation-content {
@@ -168,35 +123,15 @@
             display: block;
         }
 
-        @media (max-width: 600px) {
-            body {
-                padding: 0px;
-            }
+        .scorecard {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2em;
+        }
 
+        @media (max-width: 768px) {
             #quiz-container {
-                padding: 3px;
-            }
-
-            .submit-button {
-                padding: 10px;
-            }
-
-            .options li {
-                padding: 5px;
-            }
-
-            img {
-                max-width: 80px;
-            }
-
-            .question-row {
-                flex-direction: column; /* Stack questions vertically on smaller screens */
-            }
-
-            .question {
-                width: 100%; /* Full width for questions in mobile view */
-                margin-bottom: 20px;
-                border-right: none; /* No border between questions on mobile */
+                grid-template-columns: 1fr; /* Stack questions vertically on smaller screens */
             }
         }
     </style>
@@ -205,7 +140,6 @@
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
-
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
@@ -219,7 +153,6 @@
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
-        // Fetch the JSON data
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
@@ -257,9 +190,7 @@
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
 
-            let questionRow = document.createElement('div');
-            questionRow.className = 'question-row'; // Row for two questions
-
+            let questionCount = 0;
             subject.questions.forEach((question, index) => {
                 totalQuestions++;  // Increase total questions count
                 const questionElement = document.createElement('div');
@@ -311,15 +242,8 @@
                 explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
                 questionElement.appendChild(explanationContent);
 
-                // Add the question to the row
-                questionRow.appendChild(questionElement);
-
-                // Add a row after two questions
-                if ((index + 1) % 2 === 0 || index === subject.questions.length - 1) {
-                    quizContainer.appendChild(questionRow);
-                    questionRow = document.createElement('div');
-                    questionRow.className = 'question-row'; // New row
-                }
+                // Add the question to the grid container
+                quizContainer.appendChild(questionElement);
             });
 
             // Add Submit button
@@ -402,6 +326,7 @@
 
             // Display the scorecard
             const scoreCard = document.createElement('div');
+            scoreCard.className = 'scorecard';
             scoreCard.innerHTML = `
                 <table style="width: 100%; text-align: center; border: 1px solid #ccc;">
                     <tr>
@@ -429,7 +354,7 @@
 
             // Smooth scroll to the scorecard
             window.scrollTo({
-                top: quizContainer.offsetTop, 
+                top: quizContainer.offsetTop,
                 behavior: 'smooth'
             });
 
