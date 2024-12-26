@@ -9,16 +9,18 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
+        /* Global Styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0px;
+            padding: 0;
+            font-size: 1rem; /* Base font size for consistency */
         }
 
         .quiz-title {
-            font-size: 1.5em;
-            margin: 0px 0;
+            font-size: 1.5rem;  /* Set font size relative to base size */
+            margin: 0;
             color: #333;
             text-align: center;
             border: 2px solid black;
@@ -29,12 +31,13 @@
             display: block;
             margin: 20px auto;
             padding: 10px;
-            font-size: 1em;
+            font-size: 1rem; /* Consistent font size */
         }
 
+        /* Container for the questions, ensuring a responsive grid layout */
         #quiz-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Auto grid layout */
             gap: 20px;
             padding: 20px;
         }
@@ -50,7 +53,7 @@
 
         .question-number {
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.1rem; /* Slightly larger than the default text */
             color: #333;
             margin-bottom: 10px;
         }
@@ -59,6 +62,7 @@
             margin-bottom: 15px;
             word-wrap: break-word;
             white-space: normal;
+            font-size: 1rem; /* Consistent text size */
         }
 
         .options li {
@@ -75,6 +79,7 @@
             cursor: pointer;
             display: flex;
             align-items: center;
+            font-size: 1rem; /* Same font size */
         }
 
         .options input[type="radio"] {
@@ -91,6 +96,7 @@
             width: 100%;
             text-align: center;
             margin-top: 20px;
+            font-size: 1rem; /* Consistent size */
         }
 
         .explanation-button {
@@ -100,7 +106,7 @@
             border: 2px solid black;
             padding: 8px 16px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 1rem;
             border-radius: 5px;
             margin-top: 10px;
             position: relative;
@@ -126,12 +132,54 @@
         .scorecard {
             margin-top: 20px;
             text-align: center;
-            font-size: 1.2em;
+            font-size: 1.2rem; /* Keep text size consistent with the rest of the layout */
         }
 
         @media (max-width: 768px) {
+            body {
+                font-size: 0.9rem; /* Slightly smaller font for smaller screens */
+            }
+
             #quiz-container {
-                grid-template-columns: 1fr; /* Stack questions vertically on smaller screens */
+                grid-template-columns: 1fr; /* Stack questions vertically on small screens */
+            }
+
+            .quiz-title {
+                font-size: 1.25rem; /* Adjust font size for smaller screens */
+            }
+
+            .question-number {
+                font-size: 1.1rem; /* Consistent sizing across all screens */
+            }
+
+            .question-content {
+                font-size: 1rem; /* Maintain consistency */
+            }
+
+            .options li {
+                padding: 8px;
+            }
+
+            .submit-button {
+                font-size: 1rem; /* Ensure button text is readable */
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 0.85rem; /* Further adjust for very small screens */
+            }
+
+            .quiz-title {
+                font-size: 1.2rem; /* Smaller font for smaller devices */
+            }
+
+            .submit-button {
+                padding: 8px 16px;
+            }
+
+            .scorecard {
+                font-size: 1rem; /* Ensure scorecard text is not too large */
             }
         }
     </style>
@@ -242,8 +290,8 @@
                 explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
                 questionElement.appendChild(explanationContent);
 
-                // Add the question to the grid container
                 quizContainer.appendChild(questionElement);
+                questionCount++;
             });
 
             // Add Submit button
@@ -253,7 +301,6 @@
             submitButton.onclick = showAllExplanations;
             quizContainer.appendChild(submitButton);
 
-            // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
@@ -270,11 +317,8 @@
                 const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
                 const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
                 const explanationButton = questionElement.querySelector('.explanation-button');
-
-                // Show the explanation button after submission
                 explanationButton.style.display = 'block';
 
-                // Create feedback and show it after submission
                 const feedback = document.createElement('div');
                 feedback.className = 'correct-answer';
                 const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
@@ -283,25 +327,23 @@
                 if (selectedOption) {
                     const selectedOptionValue = selectedOption.value;
 
-                    // Correct or Incorrect Answer Feedback
                     if (selectedOptionValue === correctOptionValue) {
                         correctAnswers++;
                         feedback.innerHTML = "You are correct!";
-                        feedback.style.color = 'green'; // Correct answer in green
+                        feedback.style.color = 'green';
                     } else {
                         incorrectAnswers++;
                         feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                        feedback.style.color = 'red'; // Incorrect answer in red
+                        feedback.style.color = 'red';
                     }
                 } else {
                     missedAnswers++;
                     feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red'; // No selection made
+                    feedback.style.color = 'red';
                 }
 
                 questionElement.appendChild(feedback);
 
-                // Color options based on correctness
                 options.forEach(option => {
                     const optionItem = option.closest('li');
                     if (option.value === correctOptionValue) {
@@ -315,16 +357,12 @@
                 });
             });
 
-            // Calculate the time taken
-            const endTime = new Date(); // Record the time when the quiz is submitted
-            const timeTakenInSeconds = Math.round((endTime - startTime) / 1000); // Time in seconds
+            const endTime = new Date();
+            const timeTakenInSeconds = Math.round((endTime - startTime) / 1000);
             const timeTakenInMinutes = (timeTakenInSeconds / 60).toFixed(2);
-
-            // Calculate average time per attempt (total time taken / total attempts)
             const totalAttempts = correctAnswers + incorrectAnswers;
             const avgTimePerAttempt = totalAttempts > 0 ? (timeTakenInSeconds / totalAttempts).toFixed(2) : 0;
 
-            // Display the scorecard
             const scoreCard = document.createElement('div');
             scoreCard.className = 'scorecard';
             scoreCard.innerHTML = `
@@ -347,22 +385,17 @@
                     </tr>
                 </table>
             `;
-
-            // Insert the scorecard at the top of the quiz container
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
 
-            // Smooth scroll to the scorecard
             window.scrollTo({
                 top: quizContainer.offsetTop,
                 behavior: 'smooth'
             });
 
-            // Re-render MathJax content after the scorecard is displayed
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        // Prevent page refresh or navigation
         window.onbeforeunload = function (event) {
             return "Are you sure you want to leave? Your progress may be lost.";
         };
