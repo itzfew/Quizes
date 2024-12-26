@@ -123,7 +123,7 @@
             text-align: center;
             margin-left: auto;
             margin-right: auto;
-            display: block;
+            display: none; 
             width: 150px;
         }
 
@@ -315,10 +315,10 @@
 
                 questionElement.appendChild(optionsList);
 
-                // Add explanation button (hidden by default)
+                // Add explanation dropdown button (hidden by default)
                 const explanationButton = document.createElement('button');
                 explanationButton.className = 'explanation-button';
-                explanationButton.innerHTML = 'Show Explanation <i class="fa fa-chevron-down"></i>';
+                explanationButton.textContent = 'Show Explanation';
                 explanationButton.onclick = () => toggleExplanation(questionElement);
                 questionElement.appendChild(explanationButton);
 
@@ -327,6 +327,10 @@
                 explanationContent.className = 'explanation-content';
                 explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
                 questionElement.appendChild(explanationContent);
+
+                quizContainer.appendChild(questionElement);
+            });
+
 
                 quizContainer.appendChild(questionElement);
             });
