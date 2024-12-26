@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Game</title>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .quiz-title {
+            font-size: 1.5em;
+            margin: 0;
+            color: #333;
+            text-align: center;
+            border: 2px solid black;
+            padding: 10px;
+        }
+
+        #subject-dropdown {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 1em;
+        }
+
+        #quiz-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .question {
+            background-color: #fff;
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 10px;
+            overflow-x: auto;
+            box-sizing: border-box;
+        }
+
+        .question-number {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .question-content {
+            margin-bottom: 15px;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .options li {
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            padding: 8px;
+            border-radius: 5px;
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .options label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .submit-button {
+            background-color: #000;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .explanation-button {
+            display: none; /* Hidden by default */
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 5px;
+            margin-top: 10px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .explanation-button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .explanation-content {
+            display: none;
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
+        }
+
+        .explanation-content.open {
+            display: block;
+        }
+
+        .scorecard {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 1200px) {
+            .quiz-title {
+                font-size: 1.4em; /* Slightly smaller font */
+            }
+
+            .question-number {
+                font-size: 1em;
+            }
+
+            .question-content {
+                font-size: 0.9em; /* Reduce font size */
+            }
+
+            .options li {
+                font-size: 0.9em; /* Reduce font size */
+                padding: 8px;
+            }
+
+            .submit-button {
+                padding: 8px 16px; /* Smaller padding */
+            }
+
+            .explanation-button {
+                padding: 8px 14px; /* Smaller padding */
+            }
+        }
+
+        @media (max-width: 768px) {
+            #quiz-container {
+                grid-template-columns: 1fr; /* Stack questions vertically on smaller screens */
+                padding: 10px; /* Less padding for smaller screens */
+            }
+
+            .quiz-title {
+                font-size: 1.3em;
+            }
+
+            .question-number {
+                font-size: 1em;
+            }
+
+            .question-content {
+                font-size: 0.8em; /* Further reduce text size */
+                padding: 8px; /* Add padding for spacing */
+            }
+
+            .options li {
+                font-size: 0.8em; /* Smaller option text */
+                padding: 8px; /* Less padding */
+            }
+
+            .submit-button {
+                padding: 8px 16px; /* Slightly smaller button */
+                font-size: 0.9em; /* Smaller font size */
+            }
+
+            .explanation-button {
+                padding: 8px 14px;
+                font-size: 0.9em; /* Smaller font size */
+            }
+
+            .scorecard {
+                font-size: 1em; /* Adjust scorecard font size */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quiz-title {
+                font-size: 1.2em; /* Smaller font for very small screens */
+            }
+
+            .question-number {
+                font-size: 1em; /* Ensure the question number is legible */
+            }
+
+            .question-content {
+                font-size: 0.75em; /* Further reduce text size */
+            }
+
+            .options li {
+                font-size: 0.75em; /* Even smaller option text */
+                padding: 6px; /* Smaller padding */
+            }
+
+            .submit-button {
+                padding: 6px 12px; /* Even smaller button */
+            }
+
+            .explanation-button {
+                padding: 6px 12px;
+                font-size: 0.8em; /* Even smaller font size */
+            }
+
+            .scorecard {
+                font-size: 0.9em; /* Smaller font for the scorecard */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-title" id="quiz-title"></div>
+    <select id="subject-dropdown"></select>
+    <div id="quiz-container"></div>
+    <script>
+        let currentQuestionIndex = 0;
+        let quizData = [];
+        const urlParams = new URLSearchParams(window.location.search);
+        const title = urlParams.get('title');
+        const metaId = urlParams.get('metaId');
+
+        if (title) {
+            document.getElementById('quiz-title').textContent = title;
+        }
+
+        const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
+
+        fetch(jsonUrl)
+            .then(response => response.json())
+            .then(data => {
+                quizData = data;
+                populateSubjectDropdown();
+                displayAllQuestions();
+            })
+            .catch(error => console.error('Error fetching the JSON data:', error));
+
+        function populateSubjectDropdown() {
+            const subjectDropdown = document.getElementById('subject-dropdown');
+            quizData.forEach((subject, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = subject.title;
+                subjectDropdown.appendChild(option);
+            });
+
+            subjectDropdown.onchange = () => {
+                currentQuestionIndex = 0;
+                displayAllQuestions();
+            };
+        }
+
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let missedAnswers = 0;
+        let startTime = new Date();
+
+        function displayAllQuestions() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+
+            let questionCount = 0;
+            subject.questions.forEach((question, index) => {
+                totalQuestions++;  // Increase total questions count
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+
+                // Add Question Numbering
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.textContent = `Question ${index + 1}:`;
+                questionElement.appendChild(questionNumber);
+
+                // Display question content
+                const questionContent = document.createElement('div');
+                questionContent.className = 'question-content';
+                questionContent.innerHTML = question.content;
+                questionElement.appendChild(questionContent);
+
+                // Display options
+                const optionsList = document.createElement('ul');
+                optionsList.className = 'options';
+
+                question.options.forEach(option => {
+                    const optionItem = document.createElement('li');
+                    const optionLabel = document.createElement('label');
+                    const optionInput = document.createElement('input');
+
+                    optionInput.type = 'radio';
+                    optionInput.name = `question${questionCount}`;
+                    optionInput.value = option;
+                    optionLabel.appendChild(optionInput);
+                    optionLabel.appendChild(document.createTextNode(option));
+                    optionItem.appendChild(optionLabel);
+                    optionsList.appendChild(optionItem);
+                });
+
+                questionElement.appendChild(optionsList);
+
+                // Add explanation button
+                const explanationButton = document.createElement('button');
+                explanationButton.className = 'explanation-button';
+                explanationButton.textContent = 'View Explanation';
+                explanationButton.onclick = function () {
+                    const explanationContent = questionElement.querySelector('.explanation-content');
+                    explanationContent.classList.toggle('open');
+                };
+                questionElement.appendChild(explanationButton);
+
+                // Add explanation content
+                const explanationContent = document.createElement('div');
+                explanationContent.className = 'explanation-content';
+                explanationContent.textContent = question.explanation || "No explanation available.";
+                questionElement.appendChild(explanationContent);
+
+                quizContainer.appendChild(questionElement);
+                questionCount++;
+            });
+
+            displayScorecard();
+        }
+
+        function displayScorecard() {
+            const timeTaken = new Date() - startTime;
+            const seconds = Math.floor((timeTaken / 1000) % 60);
+            const minutes = Math.floor((timeTaken / 1000 / 60) % 60);
+            const timeFormatted = `${minutes}m ${seconds}s`;
+
+            const scorecard = document.createElement('div');
+            scorecard.className = 'scorecard';
+            scorecard.innerHTML = `
+                <p>Total Questions: ${totalQuestions}</p>
+                <p>Correct Answers: ${correctAnswers}</p>
+                <p>Incorrect Answers: ${incorrectAnswers}</p>
+                <p>Missed Answers: ${missedAnswers}</p>
+                <p>Time Taken: ${timeFormatted}</p>
+            `;
+            document.body.appendChild(scorecard);
+        }
+    </script>
+</body>
+</html>
