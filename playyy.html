@@ -12,7 +12,7 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
+            padding: 0px;
         }
 
         .quiz-title {
@@ -21,20 +21,23 @@
             color: #333;
             text-align: center;
             border: 2px solid black;
-            padding: 10px;
         }
 
         .question {
             margin-bottom: 30px;
-            padding: 10px;
+            padding: 3px;
             border-bottom: 1px solid #ccc;
-            background-color: #fff;
+            overflow-x: auto; /* Enable horizontal scroll if content overflows */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
         }
 
         .question-content {
             margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: normal;
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
+            max-width: 100%; /* Ensure content can overflow horizontally */
+            overflow-x: auto; /* Enable horizontal scroll within the question content */
         }
 
         .options li {
@@ -42,8 +45,9 @@
             border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
-            word-wrap: break-word;
-            white-space: normal;
+            overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
         }
 
         .options label {
@@ -62,33 +66,16 @@
             color: #555;
         }
 
-        .correct-answer {
-            font-weight: bold;
-            color: green;
-        }
-
-        .incorrect-answer {
-            font-weight: bold;
-            color: red;
-        }
-
-        .missed-question {
-            background-color: #333;
-            color: #aaa;
-        }
-
-        .view-explanation {
+        .question-explanation {
             margin-top: 10px;
-            cursor: pointer;
-            color: #007bff;
-            text-decoration: underline;
-        }
-
-        .explanation {
-            display: none;
             font-style: italic;
             color: #777;
+        }
+
+        .correct-answer {
             margin-top: 10px;
+            font-weight: bold;
+            color: green;
         }
 
         #subject-dropdown {
@@ -99,23 +86,23 @@
         }
 
         img {
-            max-width: 100px;
-            height: auto;
+            max-width: 100px; /* Set a maximum width for images */
+            height: auto; /* Maintain aspect ratio */
         }
 
         .submit-button {
-            background-color: #000;
-            color: white;
+            background-color: #000; /* Button color */
+            color: white; /* Text color */
             padding: 10px 20px;
             border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
-            position: fixed;
-            bottom: 0px;
+            position: fixed; /* Fix position at the bottom of the screen */
+            bottom: 0px; /* Distance from the bottom edge */
             left: 0;
-            width: 100%;
+            width: 100%; /* Make button fill the full width */
             text-align: center;
-            z-index: 1000;
+            z-index: 1000; /* Ensure the button stays on top of other content */
         }
 
         @media (max-width: 600px) {
@@ -132,11 +119,11 @@
             }
 
             .options li {
-                padding: 5px;
+                padding: 5px; /* Adjust padding for smaller screens */
             }
 
             img {
-                max-width: 80px;
+                max-width: 80px; /* Adjust image size for smaller screens */
             }
         }
     </style>
@@ -236,70 +223,76 @@
             submitButton.textContent = 'Submit All';
             submitButton.onclick = showAllExplanations;
             quizContainer.appendChild(submitButton);
+
+            // Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
         function showAllExplanations() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-            let allAnswered = true;
+    const subjectIndex = document.getElementById('subject-dropdown').value;
+    const subject = quizData[subjectIndex];
 
-            subject.questions.forEach((question, index) => {
-                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-                const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
-                const explanationElement = document.createElement('div');
-                explanationElement.className = 'explanation';
+    subject.questions.forEach((question, index) => {
+        const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
 
-                const correctOptionValue = question.correct_options[0];
-                const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
+        const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
 
-                if (selectedOption) {
-                    const selectedOptionValue = selectedOption.value;
-                    const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
+        // Show explanation and feedback
+        const feedback = document.createElement('div');
+        feedback.className = 'correct-answer';
+        const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+        const correctOptionValue = question.correct_options[0];
+        const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
-                    // Show feedback based on correctness
-                    const feedback = document.createElement('div');
-                    feedback.classList.add(selectedOptionValue === correctOptionValue ? 'correct-answer' : 'incorrect-answer');
-                    feedback.textContent = `Option ${selectedOptionValue}: ${selectedOptionContent}`;
-                    questionElement.appendChild(feedback);
-                } else {
-                    // If the question is missed, dim the background and show the correct option
-                    questionElement.classList.add('missed-question');
-                    const missedFeedback = document.createElement('div');
-                    missedFeedback.classList.add('correct-answer');
-                    missedFeedback.textContent = `Correct answer: Option ${correctOptionValue}: ${correctOptionContent}`;
-                    questionElement.appendChild(missedFeedback);
-                    allAnswered = false;
-                }
+        if (selectedOption) {
+            const selectedOptionValue = selectedOption.value;
 
-                // Add View Explanation button
-                const viewExplanationButton = document.createElement('button');
-                viewExplanationButton.className = 'view-explanation';
-                viewExplanationButton.textContent = 'View Explanation';
-                viewExplanationButton.onclick = () => toggleExplanation(index);
-
-                questionElement.appendChild(viewExplanationButton);
-                questionElement.appendChild(explanationElement);
-            });
-
-            // Update Submit button text
-            const submitButton = document.querySelector('.submit-button');
-            submitButton.textContent = allAnswered ? 'Review Again' : 'Review Again with Missed Questions';
+            // Show feedback based on correctness
+            if (selectedOptionValue === correctOptionValue) {
+                feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
+                feedback.style.color = 'green'; // Correct answer in green
+            } else {
+                const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
+                feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+                feedback.style.color = 'red'; // Incorrect answer in red
+            }
+        } else {
+            feedback.innerHTML = `You missed this question. The correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+            feedback.style.color = 'red'; // Missed question in red
         }
 
-        function toggleExplanation(index) {
-            const explanationElements = document.querySelectorAll('.explanation');
-            const explanation = explanationElements[index];
+        questionElement.appendChild(feedback);
 
-            // Toggle the visibility of the explanation
-            explanation.style.display = (explanation.style.display === 'none' || explanation.style.display === '') ? 'block' : 'none';
-
-            // Close other explanations
-            explanationElements.forEach((exp, i) => {
-                if (i !== index) {
-                    exp.style.display = 'none';
-                }
-            });
+        // Show explanation
+        if (question.explanation) {
+            const explanation = document.createElement('div');
+            explanation.className = 'question-explanation';
+            explanation.innerHTML = `Explanation: ${question.explanation}`;
+            questionElement.appendChild(explanation);
         }
+
+        // Color the options based on correctness
+        options.forEach(option => {
+            const optionItem = option.closest('li');
+            if (option.value === correctOptionValue) {
+                optionItem.style.backgroundColor = 'green'; // Correct option turns green
+                optionItem.style.color = 'white'; // Text color for green
+            } else if (option.checked && option.value !== correctOptionValue) {
+                optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
+                optionItem.style.color = 'white'; // Text color for red
+            } else {
+                // Dim missed question options
+                optionItem.style.backgroundColor = '#f0f0f0'; // Light gray for missed option
+                optionItem.style.color = '#666'; // Dim text color
+            }
+
+            // Disable further selection
+            option.disabled = true;
+        });
+    });
+}
+
+                        
     </script>
 </body>
 </html>
