@@ -31,6 +31,7 @@
             overflow-x: auto;
             word-wrap: break-word;
             white-space: normal;
+            
         }
 
         .question-number {
@@ -108,41 +109,31 @@
         }
 
         /* Explanation Button Styling */
-.explanation-button {
-    display: none; /* Hidden by default */
-    background-color: white;
-    color: black;
-    border: 2px solid black;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 1em;
-    border-radius: 5px;
-    margin-top: 10px;
-    position: relative;
-    transition: background-color 0.3s, color 0.3s;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin-left: auto;   /* Centers the button horizontally */
-    margin-right: auto;  /* Centers the button horizontally */
-    display: none; /* Initially hide the explanation button */
-    width: 150px;        /* Fixed width for the button */
-}
+        .explanation-button {
+            display: none; /* Hidden by default */
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 5px;
+            margin-top: 10px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-left: auto;   /* Centers the button horizontally */
+            margin-right: auto;  /* Centers the button horizontally */
+            display: none; /* Initially hide the explanation button */
+            width: 150px;        /* Fixed width for the button */
+        }
 
-/* Optional: Add hover effect to change button color when hovered */
-.explanation-button:hover {
-    background-color: black;
-    color: white;
-}
-
-.question {
-    margin-bottom: 30px;
-    padding: 3px;
-    border-bottom: 1px solid #ccc;
-    overflow-x: auto;
-    word-wrap: break-word;
-    white-space: normal;
-    
-}
+        /* Optional: Add hover effect to change button color when hovered */
+        .explanation-button:hover {
+            background-color: black;
+            color: white;
+        }
 
         .explanation-button i {
             margin-left: 8px;
@@ -231,6 +222,12 @@
             };
         }
 
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let missedAnswers = 0;
+        let startTime = new Date();
+
         function displayAllQuestions() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
@@ -239,6 +236,7 @@
             const subject = quizData[subjectIndex];
 
             subject.questions.forEach((question, index) => {
+                totalQuestions++;  // Increase total questions count
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question';
 
@@ -275,7 +273,6 @@
 
                 questionElement.appendChild(optionsList);
 
-                
                 // Add explanation dropdown button (hidden by default)
                 const explanationButton = document.createElement('button');
                 explanationButton.className = 'explanation-button';
@@ -320,7 +317,7 @@
                 // Show the explanation button after submission
                 explanationButton.style.display = 'block';
 
-                // Show simplified feedback
+                // Create feedback and show it after submission
                 const feedback = document.createElement('div');
                 feedback.className = 'correct-answer';
                 const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
@@ -331,14 +328,17 @@
 
                     // Correct or Incorrect Answer Feedback
                     if (selectedOptionValue === correctOptionValue) {
+                        correctAnswers++;
                         feedback.innerHTML = "You are correct!";
                         feedback.style.color = 'green'; // Correct answer in green
                     } else {
-                        feedback.innerHTML = "You selected the wrong answer. The correct answer is: Option " + correctOptionValue;
+                        incorrectAnswers++;
+                        feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
                         feedback.style.color = 'red'; // Incorrect answer in red
                     }
                 } else {
-                    feedback.innerHTML = "You did not select an option, but the correct answer is: Option " + correctOptionValue;
+                    missedAnswers++;
+                    feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
                     feedback.style.color = 'red'; // No selection made
                 }
 
@@ -357,7 +357,51 @@
                     option.disabled = true;
                 });
             });
+
+            // Calculate the time taken
+            const endTime = new Date(); // Record the time when the quiz is submitted
+            const timeTakenInSeconds = Math.round((endTime - startTime) / 1000); // Time in seconds
+            const timeTakenInMinutes = (timeTakenInSeconds / 60).toFixed(2);
+
+            // Calculate average time per attempt (total time taken / total attempts)
+            const totalAttempts = correctAnswers + incorrectAnswers;
+            const avgTimePerAttempt = totalAttempts > 0 ? (timeTakenInSeconds / totalAttempts).toFixed(2) : 0;
+
+            // Display the scorecard
+            const scoreCard = document.createElement('div');
+            scoreCard.innerHTML = `
+                <table style="width: 100%; text-align: center; border: 1px solid #ccc;">
+                    <tr>
+                        <th>Total Attempted</th>
+                        <th>Correct</th>
+                        <th>Incorrect</th>
+                        <th>Missed</th>
+                        <th>Total Time (Minutes)</th>
+                        <th>Avg. Time per Attempt (Seconds)</th>
+                    </tr>
+                    <tr>
+                        <td>${totalAttempts}</td>
+                        <td>${correctAnswers}</td>
+                        <td>${incorrectAnswers}</td>
+                        <td>${missedAnswers}</td>
+                        <td>${timeTakenInMinutes}</td>
+                        <td>${avgTimePerAttempt}</td>
+                    </tr>
+                </table>
+            `;
+
+            // Insert the scorecard at the top of the quiz container
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
+
+            // Re-render MathJax content after the scorecard is displayed
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
+
+        // Prevent page refresh or navigation
+        window.onbeforeunload = function (event) {
+            return "Are you sure you want to leave? Your progress may be lost.";
+        };
     </script>
 </body>
 </html>
