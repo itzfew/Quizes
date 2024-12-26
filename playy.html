@@ -27,17 +27,17 @@
             margin-bottom: 30px;
             padding: 3px;
             border-bottom: 1px solid #ccc;
-            overflow-x: auto; /* Enable horizontal scroll if content overflows */
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
         }
 
         .question-content {
             margin-bottom: 15px;
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
-            max-width: 100%; /* Ensure content can overflow horizontally */
-            overflow-x: auto; /* Enable horizontal scroll within the question content */
+            word-wrap: break-word;
+            white-space: normal;
+            max-width: 100%;
+            overflow-x: auto;
         }
 
         .options li {
@@ -45,9 +45,8 @@
             border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
-            overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
+            word-wrap: break-word;
+            white-space: normal;
         }
 
         .options label {
@@ -67,13 +66,11 @@
         }
 
         .correct-answer {
-            margin-top: 10px;
             font-weight: bold;
             color: green;
         }
 
         .incorrect-answer {
-            margin-top: 10px;
             font-weight: bold;
             color: red;
         }
@@ -105,23 +102,23 @@
         }
 
         img {
-            max-width: 100px; /* Set a maximum width for images */
-            height: auto; /* Maintain aspect ratio */
+            max-width: 100px;
+            height: auto;
         }
 
         .submit-button {
-            background-color: #000; /* Button color */
-            color: white; /* Text color */
+            background-color: #000;
+            color: white;
             padding: 10px 20px;
             border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
-            position: fixed; /* Fix position at the bottom of the screen */
-            bottom: 0px; /* Distance from the bottom edge */
+            position: fixed;
+            bottom: 0px;
             left: 0;
-            width: 100%; /* Make button fill the full width */
+            width: 100%;
             text-align: center;
-            z-index: 1000; /* Ensure the button stays on top of other content */
+            z-index: 1000;
         }
 
         @media (max-width: 600px) {
@@ -138,11 +135,11 @@
             }
 
             .options li {
-                padding: 5px; /* Adjust padding for smaller screens */
+                padding: 5px;
             }
 
             img {
-                max-width: 80px; /* Adjust image size for smaller screens */
+                max-width: 80px;
             }
         }
     </style>
@@ -242,52 +239,39 @@
             submitButton.textContent = 'Submit All';
             submitButton.onclick = showAllExplanations;
             quizContainer.appendChild(submitButton);
-
-            // Re-render MathJax content
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
         function showAllExplanations() {
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
-            let allAnswered = true; // To check if all questions are answered
+            let allAnswered = true;
 
             subject.questions.forEach((question, index) => {
                 const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-
                 const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
                 const explanationElement = document.createElement('div');
                 explanationElement.className = 'explanation';
 
+                const correctOptionValue = question.correct_options[0];
+                const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
+
                 if (selectedOption) {
                     const selectedOptionValue = selectedOption.value;
-                    const correctOptionValue = question.correct_options[0];
-                    const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
+                    const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
 
                     // Show feedback based on correctness
                     const feedback = document.createElement('div');
-
-                    if (selectedOptionValue === correctOptionValue) {
-                        // Correct option
-                        feedback.classList.add('correct-answer');
-                    } else {
-                        // Incorrect option
-                        feedback.classList.add('incorrect-answer');
-                    }
-
+                    feedback.classList.add(selectedOptionValue === correctOptionValue ? 'correct-answer' : 'incorrect-answer');
+                    feedback.textContent = `Option ${selectedOptionValue}: ${selectedOptionContent}`;
                     questionElement.appendChild(feedback);
                 } else {
-                    // If the question is missed, dim the entire question background and show the correct answer in green
+                    // If the question is missed, dim the background and show the correct option
                     questionElement.classList.add('missed-question');
-
-                    const correctOptionValue = question.correct_options[0];
-                    const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
-
-                    const feedback = document.createElement('div');
-                    feedback.classList.add('correct-answer');
-                    feedback.textContent = `Correct answer: ${correctOptionContent}`;
-                    questionElement.appendChild(feedback);
-                    allAnswered = false; // Mark as unanswered
+                    const missedFeedback = document.createElement('div');
+                    missedFeedback.classList.add('correct-answer');
+                    missedFeedback.textContent = `Correct answer: Option ${correctOptionValue}: ${correctOptionContent}`;
+                    questionElement.appendChild(missedFeedback);
+                    allAnswered = false;
                 }
 
                 // Add View Explanation button
