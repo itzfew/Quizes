@@ -31,7 +31,7 @@
             overflow-x: auto;
             word-wrap: break-word;
             white-space: normal;
-            
+            text-align: center; /* Ensures children (like the explanation button) are centered */
         }
 
         .question-number {
@@ -393,6 +393,12 @@
             // Insert the scorecard at the top of the quiz container
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
+
+            // Smooth scroll to the scorecard
+            window.scrollTo({
+                top: quizContainer.offsetTop, 
+                behavior: 'smooth'
+            });
 
             // Re-render MathJax content after the scorecard is displayed
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
