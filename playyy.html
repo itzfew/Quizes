@@ -107,9 +107,8 @@
             z-index: 1000;
         }
 
-        /* Explanation Button Styling */
         .explanation-button {
-            display: none; /* Hidden by default */
+            display: none;
             background-color: white;
             color: black;
             border: 2px solid black;
@@ -122,16 +121,19 @@
             transition: background-color 0.3s, color 0.3s;
             font-family: Arial, sans-serif;
             text-align: center;
-            margin-left: auto;   /* Centers the button horizontally */
-            margin-right: auto;  /* Centers the button horizontally */
-            display: block;      /* Makes the button a block element */
-            width: 150px;        /* Fixed width for the button */
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            width: 150px;
         }
 
-        /* Optional: Add hover effect to change button color when hovered */
         .explanation-button:hover {
             background-color: black;
             color: white;
+        }
+
+        .explanation-button i {
+            margin-left: 8px;
         }
 
         .question {
@@ -141,11 +143,7 @@
             overflow-x: auto;
             word-wrap: break-word;
             white-space: normal;
-            text-align: center; /* Ensures children (like the explanation button) are centered */
-        }
-
-        .explanation-button i {
-            margin-left: 8px;
+            text-align: center;
         }
 
         .explanation-button-container {
@@ -163,6 +161,23 @@
 
         .explanation-content.open {
             display: block;
+        }
+
+        #score-card {
+            margin: 20px auto;
+            padding: 10px;
+            max-width: 80%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        #score-card td, #score-card th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #score-card th {
+            background-color: #f2f2f2;
         }
 
         @media (max-width: 600px) {
@@ -191,11 +206,36 @@
 <body>
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
+    <div id="score-card" style="display:none;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Total Attempts</th>
+                    <th>Correct</th>
+                    <th>Incorrect</th>
+                    <th>Missed</th>
+                    <th>Time Taken (s)</th>
+                    <th>Average Time/Question (s)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="total-attempts">0</td>
+                    <td id="correct-answers">0</td>
+                    <td id="incorrect-answers">0</td>
+                    <td id="missed-questions">0</td>
+                    <td id="total-time">0</td>
+                    <td id="avg-time">0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <div id="quiz-container"></div>
 
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
+        let startTime = Date.now();
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
@@ -275,7 +315,7 @@
 
                 questionElement.appendChild(optionsList);
 
-                // Add explanation dropdown button (hidden by default)
+                // Add explanation button (hidden by default)
                 const explanationButton = document.createElement('button');
                 explanationButton.className = 'explanation-button';
                 explanationButton.innerHTML = 'Show Explanation <i class="fa fa-chevron-down"></i>';
@@ -308,23 +348,27 @@
         }
 
         function showAllExplanations() {
-            if (!confirm("Are you sure you want to submit the quiz? You cannot undo this action.")) {
-                return;
-            }
-
-            let score = 0;
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
-
+            let totalAttempts = 0;
+            let correctAnswers = 0;
+            let incorrectAnswers = 0;
+            let missedQuestions = 0;
+            let totalTime = 0;
+            
             subject.questions.forEach((question, index) => {
                 const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
                 const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
                 const explanationButton = questionElement.querySelector('.explanation-button');
 
-                // Show the explanation button after submission
+                // Show explanation button after submission
                 explanationButton.style.display = 'block';
 
-                // Show simplified feedback
+                // Track the time taken for each question
+                const questionTime = (Date.now() - startTime) / 1000;
+                totalTime += questionTime;
+
+                // Feedback handling
                 const feedback = document.createElement('div');
                 feedback.className = 'correct-answer';
                 const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
@@ -333,20 +377,20 @@
                 if (selectedOption) {
                     const selectedOptionValue = selectedOption.value;
 
-                    // Correct or Incorrect Answer Feedback
+                    totalAttempts++;
                     if (selectedOptionValue === correctOptionValue) {
+                        correctAnswers++;
                         feedback.innerHTML = "You are correct!";
-                        feedback.style.color = 'green'; // Correct answer in green
-                        score += 4; // Award 4 points for correct answer
+                        feedback.style.color = 'green';
                     } else {
+                        incorrectAnswers++;
                         feedback.innerHTML = "You selected the wrong answer. The correct answer is: Option " + correctOptionValue;
-                        feedback.style.color = 'red'; // Incorrect answer in red
-                        score -= 1; // Deduct 1 point for wrong answer
+                        feedback.style.color = 'red';
                     }
                 } else {
+                    missedQuestions++;
                     feedback.innerHTML = "You did not select an option, but the correct answer is: Option " + correctOptionValue;
-                    feedback.style.color = 'red'; // No selection made
-                    score += 0; // No points for missed answers
+                    feedback.style.color = 'red';
                 }
 
                 questionElement.appendChild(feedback);
@@ -365,8 +409,16 @@
                 });
             });
 
-            // Display the final score
-            alert(`Your final score is: ${score}`);
+            // Show Score Card
+            const avgTime = totalAttempts > 0 ? (totalTime / totalAttempts).toFixed(2) : 0;
+            document.getElementById('total-attempts').textContent = totalAttempts;
+            document.getElementById('correct-answers').textContent = correctAnswers;
+            document.getElementById('incorrect-answers').textContent = incorrectAnswers;
+            document.getElementById('missed-questions').textContent = missedQuestions;
+            document.getElementById('total-time').textContent = totalTime.toFixed(2);
+            document.getElementById('avg-time').textContent = avgTime;
+
+            document.getElementById('score-card').style.display = 'block';
         }
     </script>
 </body>
