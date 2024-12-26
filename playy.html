@@ -27,17 +27,17 @@
             margin-bottom: 30px;
             padding: 3px;
             border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
+            overflow-x: auto; /* Enable horizontal scroll if content overflows */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
         }
 
         .question-content {
             margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: normal;
-            max-width: 100%;
-            overflow-x: auto;
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
+            max-width: 100%; /* Ensure content can overflow horizontally */
+            overflow-x: auto; /* Enable horizontal scroll within the question content */
         }
 
         .options li {
@@ -45,9 +45,9 @@
             border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
+            overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
         }
 
         .options label {
@@ -86,45 +86,23 @@
         }
 
         img {
-            max-width: 100px;
-            height: auto;
+            max-width: 100px; /* Set a maximum width for images */
+            height: auto; /* Maintain aspect ratio */
         }
 
-        .next-button {
-            background-color: #000;
-            color: white;
+        .submit-button {
+            background-color: #000; /* Button color */
+            color: white; /* Text color */
             padding: 10px 20px;
             border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
-            display: block;
+            position: fixed; /* Fix position at the bottom of the screen */
+            bottom: 0px; /* Distance from the bottom edge */
+            left: 0;
+            width: 100%; /* Make button fill the full width */
             text-align: center;
-        }
-
-        .timer {
-            font-size: 1.5em;
-            text-align: center;
-            color: #d9534f;
-            font-weight: bold;
-        }
-
-        .result-container {
-            margin-top: 20px;
-        }
-
-        .score {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        .dropdown {
-            margin-top: 10px;
-        }
-
-        .dropdown select {
-            padding: 5px;
+            z-index: 1000; /* Ensure the button stays on top of other content */
         }
 
         @media (max-width: 600px) {
@@ -136,12 +114,16 @@
                 padding: 3px;
             }
 
+            .submit-button {
+                padding: 10px;
+            }
+
             .options li {
-                padding: 5px;
+                padding: 5px; /* Adjust padding for smaller screens */
             }
 
             img {
-                max-width: 80px;
+                max-width: 80px; /* Adjust image size for smaller screens */
             }
         }
     </style>
@@ -150,12 +132,9 @@
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
-    <div id="result-container" style="display: none;"></div>
-
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
-        let userAnswers = {}; // Store user answers in an object
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
@@ -208,14 +187,11 @@
                 questionId.textContent = `Question ID: ${question.question_id}`;
                 questionElement.appendChild(questionId);
 
-                // Display question content (with MathJax support)
+                // Display question content
                 const questionContent = document.createElement('div');
                 questionContent.className = 'question-content';
                 questionContent.innerHTML = question.content;
                 questionElement.appendChild(questionContent);
-
-                // Apply MathJax to question content
-                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 
                 // Display options
                 const optionsList = document.createElement('ul');
@@ -237,91 +213,74 @@
                 });
 
                 questionElement.appendChild(optionsList);
+
                 quizContainer.appendChild(questionElement);
             });
 
-            // Add Submit button for all questions
+            // Add Submit button
             const submitButton = document.createElement('button');
-            submitButton.className = 'next-button';
+            submitButton.className = 'submit-button';
             submitButton.textContent = 'Submit All';
-            submitButton.onclick = showExplanations;
+            submitButton.onclick = showAllExplanations;
             quizContainer.appendChild(submitButton);
+
+            // Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function showExplanations() {
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = '';  // Hide all questions after submission
-
-            const resultContainer = document.getElementById('result-container');
-            resultContainer.innerHTML = '';
-
-            let correctAnswers = 0;
+        function showAllExplanations() {
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
 
             subject.questions.forEach((question, index) => {
                 const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-                const questionResult = document.createElement('div');
-                questionResult.className = 'question-result';
 
-                // Save the user selection
                 if (selectedOption) {
                     const selectedOptionValue = selectedOption.value;
-                    userAnswers[question.question_id] = selectedOptionValue;  // Save the selected answer
                     const correctOptionValue = question.correct_options[0];
-                    const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
                     const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
+                    // Show feedback based on correctness
+                    const feedback = document.createElement('div');
+                    feedback.className = 'correct-answer';
+
                     if (selectedOptionValue === correctOptionValue) {
-                        correctAnswers++;
-                        questionResult.innerHTML = `<strong>Question:</strong> ${question.content} <br><strong>Your Answer:</strong> ${selectedOptionContent} (Correct!)`;
+                        feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
+                        feedback.style.color = 'green'; // Correct answer in green
                     } else {
-                        questionResult.innerHTML = `<strong>Question:</strong> ${question.content} <br><strong>Your Answer:</strong> ${selectedOptionContent} <br><strong>Correct Answer:</strong> ${correctOptionContent}`;
+                        const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
+                        feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
+                        feedback.style.color = 'red'; // Incorrect answer in red
                     }
 
-                    // Explanation Dropdown
-                    const explanationDropdown = document.createElement('div');
-                    explanationDropdown.className = 'dropdown';
-                    const selectExplanation = document.createElement('select');
-                    const optionNoExplanation = document.createElement('option');
-                    optionNoExplanation.textContent = 'No Explanation';
-                    const optionShowExplanation = document.createElement('option');
-                    optionShowExplanation.textContent = 'Show Explanation';
-                    selectExplanation.appendChild(optionNoExplanation);
-                    selectExplanation.appendChild(optionShowExplanation);
+                    const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
+                    questionElement.appendChild(feedback);
 
-                    selectExplanation.onchange = () => {
-                        if (selectExplanation.value === 'Show Explanation') {
-                            const explanation = document.createElement('div');
-                            explanation.className = 'question-explanation';
-                            explanation.innerHTML = `Explanation: ${question.explanation}`;
-                            questionResult.appendChild(explanation);
-                            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                    // Show explanation
+                    if (question.explanation) {
+                        const explanation = document.createElement('div');
+                        explanation.className = 'question-explanation';
+                        explanation.innerHTML = `Explanation: ${question.explanation}`;
+                        questionElement.appendChild(explanation);
+                    }
+
+                    // Color the options based on correctness
+                    const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+                    options.forEach(option => {
+                        const optionItem = option.closest('li');
+                        if (option.value === correctOptionValue) {
+                            optionItem.style.backgroundColor = 'green'; // Correct option turns green
+                            optionItem.style.color = 'white'; // Text color for green
+                        } else if (option.value === selectedOptionValue) {
+                            optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
+                            optionItem.style.color = 'white'; // Text color for red
                         }
-                    };
+                    });
 
-                    explanationDropdown.appendChild(selectExplanation);
-                    questionResult.appendChild(explanationDropdown);
-
-                    resultContainer.appendChild(questionResult);
+                    // Disable further selection
+                    options.forEach(option => option.disabled = true);
                 }
             });
-
-            // Display score
-            const score = document.createElement('div');
-            score.className = 'score';
-            score.innerHTML = `Your score: ${correctAnswers} out of ${subject.questions.length}`;
-            resultContainer.appendChild(score);
-
-            // Hide quiz container and show result container
-            quizContainer.style.display = 'none';
-            resultContainer.style.display = 'block';
-
-            // Re-render MathJax content for explanations
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-
-            // Save results to localStorage for later reference
-            localStorage.setItem(`quizResults_${metaId}`, JSON.stringify(userAnswers));
         }
     </script>
 </body>
