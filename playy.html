@@ -7,6 +7,7 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,6 +31,13 @@
             overflow-x: auto;
             word-wrap: break-word;
             white-space: normal;
+        }
+
+        .question-number {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
         }
 
         .question-content {
@@ -99,16 +107,51 @@
             z-index: 1000;
         }
 
-        .explanation-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-size: 1em;
-            border-radius: 5px;
-            margin-top: 10px;
-            display: none; /* Initially hide the explanation button */
+        /* Explanation Button Styling */
+.explanation-button {
+    display: none; /* Hidden by default */
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 5px;
+    margin-top: 10px;
+    position: relative;
+    transition: background-color 0.3s, color 0.3s;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-left: auto;   /* Centers the button horizontally */
+    margin-right: auto;  /* Centers the button horizontally */
+    display: block;      /* Makes the button a block element */
+    width: 150px;        /* Fixed width for the button */
+}
+
+/* Optional: Add hover effect to change button color when hovered */
+.explanation-button:hover {
+    background-color: black;
+    color: white;
+}
+
+.question {
+    margin-bottom: 30px;
+    padding: 3px;
+    border-bottom: 1px solid #ccc;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: normal;
+    text-align: center; /* Ensures children (like the explanation button) are centered */
+}
+
+        .explanation-button i {
+            margin-left: 8px;
+        }
+
+        .explanation-button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
         }
 
         .explanation-content {
@@ -199,11 +242,11 @@
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question';
 
-                // Display question ID
-                const questionId = document.createElement('div');
-                questionId.className = 'question-id';
-                questionId.textContent = `Question ID: ${question.question_id}`;
-                questionElement.appendChild(questionId);
+                // Add Question Numbering
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.textContent = `Question ${index + 1}:`;
+                questionElement.appendChild(questionNumber);
 
                 // Display question content
                 const questionContent = document.createElement('div');
@@ -235,7 +278,7 @@
                 // Add explanation dropdown button (hidden by default)
                 const explanationButton = document.createElement('button');
                 explanationButton.className = 'explanation-button';
-                explanationButton.textContent = 'Show Explanation';
+                explanationButton.innerHTML = 'Show Explanation <i class="fa fa-chevron-down"></i>';
                 explanationButton.onclick = () => toggleExplanation(questionElement);
                 questionElement.appendChild(explanationButton);
 
@@ -265,57 +308,55 @@
         }
 
         function showAllExplanations() {
-    const subjectIndex = document.getElementById('subject-dropdown').value;
-    const subject = quizData[subjectIndex];
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
 
-    subject.questions.forEach((question, index) => {
-        const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-        const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
-        const explanationButton = questionElement.querySelector('.explanation-button');
+            subject.questions.forEach((question, index) => {
+                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+                const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
+                const explanationButton = questionElement.querySelector('.explanation-button');
 
-        // Show the explanation button after submission
-        explanationButton.style.display = 'block';
+                // Show the explanation button after submission
+                explanationButton.style.display = 'block';
 
-        // Show simplified feedback
-        const feedback = document.createElement('div');
-        feedback.className = 'correct-answer';
-        const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
-        const correctOptionValue = question.correct_options[0];
+                // Show simplified feedback
+                const feedback = document.createElement('div');
+                feedback.className = 'correct-answer';
+                const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+                const correctOptionValue = question.correct_options[0];
 
-        if (selectedOption) {
-            const selectedOptionValue = selectedOption.value;
+                if (selectedOption) {
+                    const selectedOptionValue = selectedOption.value;
 
-            // Correct or Incorrect Answer Feedback
-            if (selectedOptionValue === correctOptionValue) {
-                feedback.innerHTML = "You are correct!";
-                feedback.style.color = 'green'; // Correct answer in green
-            } else {
-                feedback.innerHTML = "You selected the wrong answer. The correct answer is: Option " + correctOptionValue;
-                feedback.style.color = 'red'; // Incorrect answer in red
-            }
-        } else {
-            feedback.innerHTML = "You did not select an option, but the correct answer is: Option " + correctOptionValue;
-            feedback.style.color = 'red'; // No selection made
+                    // Correct or Incorrect Answer Feedback
+                    if (selectedOptionValue === correctOptionValue) {
+                        feedback.innerHTML = "You are correct!";
+                        feedback.style.color = 'green'; // Correct answer in green
+                    } else {
+                        feedback.innerHTML = "You selected the wrong answer. The correct answer is: Option " + correctOptionValue;
+                        feedback.style.color = 'red'; // Incorrect answer in red
+                    }
+                } else {
+                    feedback.innerHTML = "You did not select an option, but the correct answer is: Option " + correctOptionValue;
+                    feedback.style.color = 'red'; // No selection made
+                }
+
+                questionElement.appendChild(feedback);
+
+                // Color options based on correctness
+                options.forEach(option => {
+                    const optionItem = option.closest('li');
+                    if (option.value === correctOptionValue) {
+                        optionItem.style.backgroundColor = 'green';
+                        optionItem.style.color = 'white';
+                    } else if (option.checked) {
+                        optionItem.style.backgroundColor = 'red';
+                        optionItem.style.color = 'white';
+                    }
+                    option.disabled = true;
+                });
+            });
         }
-
-        questionElement.appendChild(feedback);
-
-        // Color options based on correctness
-        options.forEach(option => {
-            const optionItem = option.closest('li');
-            if (option.value === correctOptionValue) {
-                optionItem.style.backgroundColor = 'green';
-                optionItem.style.color = 'white';
-            } else if (option.checked) {
-                optionItem.style.backgroundColor = 'red';
-                optionItem.style.color = 'white';
-            }
-            option.disabled = true;
-        });
-    });
-}
-
-        
     </script>
 </body>
 </html>
