@@ -124,7 +124,7 @@
     text-align: center;
     margin-left: auto;   /* Centers the button horizontally */
     margin-right: auto;  /* Centers the button horizontally */
-    display: block;      /* Makes the button a block element */
+    display: none; /* Initially hide the explanation button */
     width: 150px;        /* Fixed width for the button */
 }
 
@@ -275,10 +275,11 @@
 
                 questionElement.appendChild(optionsList);
 
+                
                 // Add explanation dropdown button (hidden by default)
                 const explanationButton = document.createElement('button');
                 explanationButton.className = 'explanation-button';
-                explanationButton.innerHTML = 'Show Explanation <i class="fa fa-chevron-down"></i>';
+                explanationButton.textContent = 'Show Explanation';
                 explanationButton.onclick = () => toggleExplanation(questionElement);
                 questionElement.appendChild(explanationButton);
 
