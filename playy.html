@@ -78,6 +78,11 @@
             color: green;
         }
 
+        .missed-question {
+            background-color: #333;
+            color: #aaa;
+        }
+
         #subject-dropdown {
             display: block;
             margin: 20px auto;
@@ -231,6 +236,7 @@
         function showAllExplanations() {
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
+            let allAnswered = true; // To check if all questions are answered
 
             subject.questions.forEach((question, index) => {
                 const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
@@ -279,8 +285,17 @@
 
                     // Disable further selection
                     options.forEach(option => option.disabled = true);
+                } else {
+                    // If question is not answered, mark it as missed
+                    const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
+                    questionElement.classList.add('missed-question'); // Dim the background color for missed question
+                    allAnswered = false;
                 }
             });
+
+            // Update button text
+            const submitButton = document.querySelector('.submit-button');
+            submitButton.textContent = 'Review Again';
         }
     </script>
 </body>
