@@ -108,41 +108,41 @@
         }
 
         /* Explanation Button Styling */
-.explanation-button {
-    display: none; /* Hidden by default */
-    background-color: white;
-    color: black;
-    border: 2px solid black;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 1em;
-    border-radius: 5px;
-    margin-top: 10px;
-    position: relative;
-    transition: background-color 0.3s, color 0.3s;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin-left: auto;   /* Centers the button horizontally */
-    margin-right: auto;  /* Centers the button horizontally */
-    display: block;      /* Makes the button a block element */
-    width: 150px;        /* Fixed width for the button */
-}
+        .explanation-button {
+            display: none; /* Hidden by default */
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 5px;
+            margin-top: 10px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-left: auto;   /* Centers the button horizontally */
+            margin-right: auto;  /* Centers the button horizontally */
+            display: block;      /* Makes the button a block element */
+            width: 150px;        /* Fixed width for the button */
+        }
 
-/* Optional: Add hover effect to change button color when hovered */
-.explanation-button:hover {
-    background-color: black;
-    color: white;
-}
+        /* Optional: Add hover effect to change button color when hovered */
+        .explanation-button:hover {
+            background-color: black;
+            color: white;
+        }
 
-.question {
-    margin-bottom: 30px;
-    padding: 3px;
-    border-bottom: 1px solid #ccc;
-    overflow-x: auto;
-    word-wrap: break-word;
-    white-space: normal;
-    text-align: center; /* Ensures children (like the explanation button) are centered */
-}
+        .question {
+            margin-bottom: 30px;
+            padding: 3px;
+            border-bottom: 1px solid #ccc;
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
+            text-align: center; /* Ensures children (like the explanation button) are centered */
+        }
 
         .explanation-button i {
             margin-left: 8px;
@@ -308,6 +308,11 @@
         }
 
         function showAllExplanations() {
+            if (!confirm("Are you sure you want to submit the quiz? You cannot undo this action.")) {
+                return;
+            }
+
+            let score = 0;
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
 
@@ -332,13 +337,16 @@
                     if (selectedOptionValue === correctOptionValue) {
                         feedback.innerHTML = "You are correct!";
                         feedback.style.color = 'green'; // Correct answer in green
+                        score += 4; // Award 4 points for correct answer
                     } else {
                         feedback.innerHTML = "You selected the wrong answer. The correct answer is: Option " + correctOptionValue;
                         feedback.style.color = 'red'; // Incorrect answer in red
+                        score -= 1; // Deduct 1 point for wrong answer
                     }
                 } else {
                     feedback.innerHTML = "You did not select an option, but the correct answer is: Option " + correctOptionValue;
                     feedback.style.color = 'red'; // No selection made
+                    score += 0; // No points for missed answers
                 }
 
                 questionElement.appendChild(feedback);
@@ -356,6 +364,9 @@
                     option.disabled = true;
                 });
             });
+
+            // Display the final score
+            alert(`Your final score is: ${score}`);
         }
     </script>
 </body>
