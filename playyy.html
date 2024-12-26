@@ -236,6 +236,7 @@
             const subject = quizData[subjectIndex];
 
             subject.questions.forEach((question, index) => {
+                totalQuestions++;  // Increase total questions count
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question';
 
@@ -361,7 +362,10 @@
             const endTime = new Date(); // Record the time when the quiz is submitted
             const timeTakenInSeconds = Math.round((endTime - startTime) / 1000); // Time in seconds
             const timeTakenInMinutes = (timeTakenInSeconds / 60).toFixed(2);
-            const avgTimePerQuestion = (timeTakenInSeconds / totalQuestions).toFixed(2);
+
+            // Calculate average time per attempt (total time taken / total attempts)
+            const totalAttempts = correctAnswers + incorrectAnswers;
+            const avgTimePerAttempt = totalAttempts > 0 ? (timeTakenInSeconds / totalAttempts).toFixed(2) : 0;
 
             // Display the scorecard
             const scoreCard = document.createElement('div');
@@ -373,15 +377,15 @@
                         <th>Incorrect</th>
                         <th>Missed</th>
                         <th>Total Time (Minutes)</th>
-                        <th>Avg. Time per Question (Seconds)</th>
+                        <th>Avg. Time per Attempt (Seconds)</th>
                     </tr>
                     <tr>
-                        <td>${correctAnswers + incorrectAnswers}</td>
+                        <td>${totalAttempts}</td>
                         <td>${correctAnswers}</td>
                         <td>${incorrectAnswers}</td>
                         <td>${missedAnswers}</td>
                         <td>${timeTakenInMinutes}</td>
-                        <td>${avgTimePerQuestion}</td>
+                        <td>${avgTimePerAttempt}</td>
                     </tr>
                 </table>
             `;
