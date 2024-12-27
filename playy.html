@@ -221,6 +221,14 @@
                 questionContent.innerHTML = question.content;
                 questionElement.appendChild(questionContent);
 
+                // Check if the question contains an image
+                const hasImage = questionContent.querySelector('img') !== null;
+
+                // If the question contains an image, skip adding it to the DOM and don't include it in PDF
+                if (hasImage) {
+                    return;
+                }
+
                 // Options
                 const optionsList = document.createElement('ul');
                 optionsList.className = 'options';
