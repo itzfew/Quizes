@@ -127,6 +127,13 @@
         <option value="50">50 Questions</option>
     </select>
 
+    <!-- Answer/Explanation Dropdown -->
+    <select id="answer-explanation-dropdown">
+        <option value="without">Without Answers</option>
+        <option value="with">With Answers</option>
+        <option value="explanation">With Explanation</option>
+    </select>
+
     <!-- Quiz Container -->
     <div id="quiz-container"></div>
 
@@ -138,7 +145,7 @@
         let totalQuestionsRequested = 0;
         let quizData = [];
         let selectedSubject = '';
-        const urlParams = new URLSearchParams(window.location.search);
+        let answerExplanationMode = 'without'; // Default mode (without answers)
 
         // Fetch the list of exams
         fetch("https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json")
@@ -219,14 +226,6 @@
                 questionContent.innerHTML = question.content;
                 questionElement.appendChild(questionContent);
 
-                // Check if the question contains an image
-                const hasImage = questionContent.querySelector('img') !== null;
-
-                // If the question contains an image, skip adding it to the DOM and don't include it in PDF
-                if (hasImage) {
-                    return;
-                }
-
                 // Options
                 const optionsList = document.createElement('ul');
                 optionsList.className = 'options';
@@ -242,14 +241,45 @@
                     optionLabel.innerHTML += option.content;
                     optionItem.appendChild(optionLabel);
                     optionsList.appendChild(optionItem);
+
+                    // Automatically select the correct option if mode is 'With Answers'
+                    if (answerExplanationMode === 'with' && question.correct_options.includes(option.identifier)) {
+                        optionInput.checked = true;
+                    }
                 });
 
                 questionElement.appendChild(optionsList);
+
+                // Show answer or explanation based on selection
+                if (answerExplanationMode === 'with') {
+                    showAnswer(question, questionElement);
+                } else if (answerExplanationMode === 'explanation') {
+                    showExplanation(question, questionElement);
+                }
+
                 quizContainer.appendChild(questionElement);
             });
 
             // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        // Function to display the correct answer
+        function showAnswer(question, questionElement) {
+            const answerElement = document.createElement('div');
+            answerElement.className = 'answer';
+            answerElement.textContent = `Correct Answer: ${question.correct_options.join(', ')}`;
+            questionElement.appendChild(answerElement);
+        }
+
+        // Function to display the explanation
+        function showExplanation(question, questionElement) {
+            if (question.explanation) {
+                const explanationElement = document.createElement('div');
+                explanationElement.className = 'explanation';
+                explanationElement.innerHTML = `<strong>Explanation:</strong> ${question.explanation}`;
+                questionElement.appendChild(explanationElement);
+            }
         }
 
         // Event listener for changing the number of questions to display
@@ -259,6 +289,17 @@
                 fetchQuestionsForSubject(selectedSubject);
             }
         };
+
+        // Event listener for answer/explanation mode
+        document.getElementById('answer-explanation-dropdown').onchange = function () {
+            answerExplanationMode = this.value;
+            if (selectedSubject && totalQuestionsRequested) {
+                fetchQuestionsForSubject(selectedSubject);
+            }
+        };
+
+        // Set default answer/explanation dropdown value to "Without Answers"
+        document.getElementById('answer-explanation-dropdown').value = 'without';
 
         // Generate PDF of all questions
         document.getElementById('generate-pdf').onclick = function () {
