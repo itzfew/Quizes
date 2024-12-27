@@ -109,13 +109,12 @@
     <!-- Subject Dropdown -->
     <select id="subject-dropdown">
         <option value="">Select a Subject</option>
-        <option value="Physics">Physics</option>
-        <option value="Chemistry">Chemistry</option>
-        <option value="Mathematics">Mathematics</option>
+        <option value="Biology">Biology</option>
     </select>
 
     <!-- Question Count Dropdown -->
     <select id="question-count-dropdown">
+        <option value="">Select number of questions</option>
         <option value="5">5 Questions</option>
         <option value="10">10 Questions</option>
         <option value="15">15 Questions</option>
@@ -155,8 +154,7 @@
             const subjectDropdown = document.getElementById('subject-dropdown');
             subjectDropdown.onchange = function () {
                 selectedSubject = subjectDropdown.value;
-                if (selectedSubject) {
-                    totalQuestionsRequested = parseInt(document.getElementById('question-count-dropdown').value);
+                if (selectedSubject && totalQuestionsRequested) {
                     fetchQuestionsForSubject(selectedSubject);
                 }
             };
@@ -257,7 +255,7 @@
         // Event listener for changing the number of questions to display
         document.getElementById('question-count-dropdown').onchange = function () {
             totalQuestionsRequested = parseInt(this.value);
-            if (selectedSubject) {
+            if (selectedSubject && totalQuestionsRequested) {
                 fetchQuestionsForSubject(selectedSubject);
             }
         };
