@@ -257,14 +257,28 @@
         // Generate PDF of all questions
         document.getElementById('generate-pdf').onclick = function () {
             const quizContainer = document.getElementById('quiz-container');
+
+            // Use html2canvas with custom settings to handle images
             const opt = {
-                margin:       1,
-                filename:     'quiz_questions.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                margin: 1,
+                filename: 'quiz_questions.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true, // Allow images from other origins
+                    logging: true, // Enable debugging in the console
+                    letterRendering: true, // Ensure better text rendering
+                    width: quizContainer.scrollWidth, // Set width explicitly
+                    height: quizContainer.scrollHeight // Set height explicitly
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'letter',
+                    orientation: 'portrait'
+                }
             };
 
+            // Generate PDF
             html2pdf().from(quizContainer).set(opt).save();
         };
     </script>
