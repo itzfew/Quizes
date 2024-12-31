@@ -264,7 +264,8 @@
                 optionInput.value = option.identifier;
 
                 // Check if there's a previous selection and select the option
-                if (localStorage.getItem(`answer_${question.question_id}`) === option.identifier) {
+                const userAnswer = localStorage.getItem(`answer_${question.question_id}`);
+                if (userAnswer === option.identifier) {
                     optionInput.checked = true;
                 }
 
