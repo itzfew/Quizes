@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
+
+    <!-- MathJax 3 Configuration for Inline Math -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
         body {
@@ -169,61 +180,6 @@
             }
         }
     </style>
-      <style>
-  mjx-container[display="block"] {
-    display: block;
-    margin: 1em 0;
-  }
-  </style>
-  <script>
-  MathJax = {
-    //
-    //  Load only TeX input and the contextual menu
-    //
-    loader: {load: ['input/tex', 'ui/menu']},
-    //
-    //  When page is ready:
-    //    disable the assistive-mathml menu item
-    //    render the document
-    //
-    startup: {
-      pageReady() {
-        MathJax.startup.document.menu.menu.findID('Accessibility', 'AssistiveMml').disable();
-        MathJax._.mathjax.mathjax.handleRetriesFor(() => MathJax.startup.document.render());
-      }
-    },
-    //
-    //  Use dollar signs for in-line delimiters in addition to the usual ones
-    //
-    tex: {inlineMath: {'[+]': [['$', '$']]}},
-    //
-    //  Override the usual typeset render action with one that generates MathML output
-    //
-    options: {
-      menuOptions: {
-        settings: {
-          assistiveMml: false
-        }
-      },
-      renderActions: {
-        assistiveMml: [],  // disable assistive mathml
-        typeset: [150,
-          (doc) => {for (math of doc.math) {MathJax.config.renderMathML(math, doc)}},
-          (math, doc) => MathJax.config.renderMathML(math, doc)
-        ]
-      }
-    },
-    //
-    // The action to use for rendering MathML
-    //
-    renderMathML(math, doc) {
-      math.typesetRoot = document.createElement('mjx-container');
-      math.typesetRoot.innerHTML = MathJax.startup.toMML(math.root);
-      math.display && math.typesetRoot.setAttribute('display', 'block');
-    }
-  };
-  </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js"></script>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
@@ -336,7 +292,7 @@
             quizContainer.appendChild(submitButton);
 
             // Re-render MathJax content for inline math
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            MathJax.typeset();
         }
 
         function toggleExplanation(questionElement) {
@@ -357,15 +313,51 @@
                 explanationButton.style.display = 'block';
 
                 // Create feedback and show it after submission
-                const explanationContent = questionElement.querySelector('.explanation-content');
-                if (selectedOption && selectedOption.value === question.answer) {
-                    explanationContent.innerHTML = `Explanation: Correct! ${question.explanation || 'No explanation available.'}`;
+                const feedback = document.createElement('div');
+                feedback.className = 'correct-answer';
+                const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+                const correctOptionValue = question.correct_options[0];
+
+                if (selectedOption) {
+                    const selectedOptionValue = selectedOption.value;
+
+                    // Correct or Incorrect Answer Feedback
+                    if (selectedOptionValue === correctOptionValue) {
+                        feedback.innerHTML = "You are correct!";
+                        feedback.style.color = 'green'; // Correct answer in green
+                    } else {
+                        feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
+                        feedback.style.color = 'red'; // Incorrect answer in red
+                    }
                 } else {
-                    explanationContent.innerHTML = `Explanation: Incorrect. ${question.explanation || 'No explanation available.'}`;
+                    feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
+                    feedback.style.color = 'red'; // No selection made
                 }
-                explanationContent.classList.add('open');
+
+                questionElement.appendChild(feedback);
+
+                // Color options based on correctness
+                options.forEach(option => {
+                    const optionItem = option.closest('li');
+                    if (option.value === correctOptionValue) {
+                        optionItem.style.backgroundColor = 'green';
+                        optionItem.style.color = 'white';
+                    } else if (option.checked) {
+                        optionItem.style.backgroundColor = 'red';
+                        optionItem.style.color = 'white';
+                    }
+                    option.disabled = true;
+                });
             });
+
+            // Re-render MathJax content for inline math
+            MathJax.typeset();
         }
+
+        // Prevent page refresh or navigation
+        window.onbeforeunload = function (event) {
+            return "Are you sure you want to leave? Your progress may be lost.";
+        };
     </script>
 </body>
 </html>
