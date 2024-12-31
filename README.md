@@ -1,4 +1,4 @@
-# [Repository Name]
+# Quizes
 
 This project consists of a user interface that provides access to various questions obtained from publicly available sources such as [examsnet.com](https://www.examsnet.com), [questions.examside.com](https://www.questions.examside.com), and other educational websites. These questions are intended to aid in studying and exam preparation.
 
