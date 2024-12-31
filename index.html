@@ -13,53 +13,72 @@
             padding: 0;
             font-family: Arial, sans-serif;
             background-color: #fff; /* White body background */
-            color: #333; /* Dark text color */
+            color: #333; /* Dark text for readability */
         }
 
         h1 {
             text-align: center;
             color: #000; /* Black title */
-            margin-top: 20px;
+            margin-top: 30px;
+            font-size: 32px;
         }
 
         #exam-list {
             list-style-type: none;
             padding: 0;
-        }
-
-        .exam-item {
-            margin-bottom: 15px;
-        }
-
-        .exam-item-header {
-            font-size: 18px;
-            font-weight: bold;
-            color: #000;
-        }
-
-        .exam-item-body {
             margin-top: 10px;
         }
 
-        .paper-item {
-            list-style-type: none;
+        .exam-item {
+            background-color: #1f1f1f; /* Dark gray background for exam items */
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .exam-item-header {
+            background-color: #000; /* Black background */
+            color: #fff;
             padding: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .exam-item-header span {
+            margin-left: 10px;
+            font-size: 18px;
+        }
+
+        .exam-item-body {
+            padding: 10px 15px;
+            display: none; /* Hidden by default */
+            background-color: #f4f4f4; /* Light gray for paper body */
+        }
+
+        .paper-item {
+            background-color: #000; /* Dark gray for paper items */
+            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 2px solid #333; /* Dark border */
-            border-radius: 5px;
-            margin-bottom: 10px;
-            background-color: #f4f4f4; /* Light gray background for paper items */
         }
 
         .paper-item:hover {
-            background-color: #e0e0e0; /* Slightly darker gray on hover */
+            background-color: #555; /* Slightly lighter gray on hover */
         }
 
-        /* Button styling for paper items */
+        .paper-title {
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
         .btn-link {
-            background-color: #000; /* Black background */
+            background-color: #000;
             color: #fff;
             border: 1px solid #333;
             padding: 8px 15px;
@@ -70,12 +89,12 @@
         }
 
         .btn-link i {
-            margin-right: 8px; /* Space between icon and text */
+            margin-right: 8px;
         }
 
         .btn-link:hover {
-            background-color: #444; /* Lighter black background on hover */
-            border-color: #ddd; /* Lighter border on hover */
+            background-color: #333; /* Lighter black on hover */
+            border-color: #ddd;
         }
 
         /* Modal Styles */
@@ -95,11 +114,10 @@
             background-color: #fff; /* White background for the modal */
             margin: 15% auto;
             padding: 25px;
-            border: 1px solid #333; /* Dark border */
+            border: 1px solid #ccc;
             width: 80%;
             max-width: 400px;
-            border-radius: 5px;
-            color: #333; /* Dark text color */
+            border-radius: 8px;
         }
 
         .modal-header {
@@ -116,9 +134,9 @@
         }
 
         .modal-buttons button {
-            background-color: #000; /* Black button */
+            background-color: #000000;
             color: #fff;
-            border: 1px solid #fff;
+            border: 1px solid #007bff;
             padding: 10px 15px;
             cursor: pointer;
             border-radius: 5px;
@@ -129,12 +147,11 @@
         }
 
         .modal-buttons button i {
-            margin-right: 8px; /* Space between icon and text */
+            margin-right: 8px;
         }
 
         .modal-buttons button:hover {
-            background-color: #444; /* Lighter black on hover */
-            border-color: #ddd;
+            background-color: #0056b3;
         }
 
         /* Close button */
@@ -158,7 +175,7 @@
 <body>
     <h1>Exam List</h1>
     <ul id="exam-list"></ul>
-    
+
     <!-- Modal -->
     <div id="modal" class="modal">
         <div class="modal-content">
@@ -187,10 +204,10 @@
                 const examItem = document.createElement('li');
                 examItem.classList.add('exam-item');
 
-                // Create exam header with title
+                // Create exam header with title and '>'
                 const examHeader = document.createElement('div');
                 examHeader.classList.add('exam-item-header');
-                examHeader.innerHTML = `${exam.title}`;
+                examHeader.innerHTML = `${exam.title}<span>&gt;</span>`;  // Adding the ">" after exam title
 
                 // Create exam body for the papers
                 const examBody = document.createElement('div');
@@ -204,15 +221,17 @@
                     
                     // Create paper title
                     const paperTitle = document.createElement('span');
+                    paperTitle.classList.add('paper-title');
                     paperTitle.textContent = `${paper.title} (${paper.year})`;
-                    
+
                     // Create button for the modal
                     const button = document.createElement('button');
                     button.classList.add('btn-link');
                     button.innerHTML = `<i class="fas fa-link"></i> Open`;
 
                     // Set click event for the button to open the modal
-                    button.addEventListener('click', () => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();  // Prevent the click from triggering exam list toggle
                         openModal(paper);
                     });
 
@@ -228,6 +247,12 @@
                 // Append the header and body to the exam item
                 examItem.appendChild(examHeader);
                 examItem.appendChild(examBody);
+
+                // Add a click event to toggle visibility of exam papers (only when clicking the header)
+                examHeader.addEventListener('click', () => {
+                    const isOpen = examBody.style.display === 'block';
+                    examBody.style.display = isOpen ? 'none' : 'block';
+                });
 
                 // Add the exam item to the list
                 examList.appendChild(examItem);
