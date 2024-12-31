@@ -12,7 +12,7 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0px;
+            padding: 0;
         }
 
         .quiz-title {
@@ -82,7 +82,7 @@
             margin-top: 10px;
             font-style: italic;
             color: #777;
-            display: none; /* Explanation hidden initially */
+            display: none; /* Hide explanation initially */
         }
 
         .correct-answer {
@@ -110,11 +110,14 @@
             font-weight: bold;
         }
 
-        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
         .mathjax-inline {
             white-space: nowrap;
             display: inline-block;
             font-size: 1.1em;
+        }
+
+        .question-content span {
+            display: inline-block;
         }
 
         @media (max-width: 600px) {
@@ -144,12 +147,11 @@
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
-
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
         let timer;
-        let timeLeft = 120; // 30 seconds timer for each question
+        let timeLeft = 120;
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
@@ -286,17 +288,17 @@
         }
 
         function showExplanation() {
-            clearInterval(timer); // Stop the timer when explanation is shown
+            clearInterval(timer);
 
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
             if (selectedOption) {
                 const question = quizData[subjectIndex].questions[currentQuestionIndex];
                 const selectedOptionValue = selectedOption.value;
-
-                // Find the selected option content
-                const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
                 const correctOptionValue = question.correct_options[0];
+
+                // Find the selected option content and correct answer content
+                const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
                 const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
                 // Show feedback based on correctness
@@ -305,46 +307,49 @@
 
                 if (selectedOptionValue === correctOptionValue) {
                     feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-                    feedback.style.color = 'green'; // Correct answer in green
+                    feedback.style.color = 'green';
                 } else {
                     feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                    feedback.style.color = 'red'; // Incorrect answer in red
+                    feedback.style.color = 'red';
                 }
 
                 document.querySelector('.question').appendChild(feedback);
 
-                // Add "Show Explanation" Button
-                const showExplanationButton = document.createElement('button');
-                showExplanationButton.className = 'next-button';
-                showExplanationButton.textContent = 'Show Explanation';
-                showExplanationButton.onclick = () => {
-                    const explanation = document.createElement('div');
-                    explanation.className = 'question-explanation';
-                    explanation.innerHTML = `Explanation: ${question.explanation}`;
-                    document.querySelector('.question').appendChild(explanation);
-
-                    // Re-render MathJax content after displaying explanation
-                    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                // Create the "View Explanation" button
+                const viewExplanationButton = document.createElement('button');
+                viewExplanationButton.className = 'next-button';
+                viewExplanationButton.textContent = 'View Explanation';
+                viewExplanationButton.onclick = () => {
+                    showFullExplanation(question);
                 };
 
-                document.querySelector('.question').appendChild(showExplanationButton);
+                // Add the button to the question container
+                document.querySelector('.question').appendChild(viewExplanationButton);
 
-                // Disable further selection
+                // Color the options based on correctness
                 const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
+                options.forEach(option => {
+                    const optionItem = option.closest('li');
+                    if (option.value === correctOptionValue) {
+                        optionItem.style.backgroundColor = 'green';
+                        optionItem.style.color = 'white';
+                    } else if (option.value === selectedOptionValue) {
+                        optionItem.style.backgroundColor = 'red';
+                        optionItem.style.color = 'white';
+                    }
+                });
+
                 options.forEach(option => option.disabled = true);
 
-                // Update button text
                 const nextButton = document.querySelector('.next-button');
                 nextButton.textContent = 'Next Question';
 
-                // Save the current question index
                 saveLastQuestion();
 
-                // Show next question on button click
                 nextButton.onclick = () => {
                     currentQuestionIndex++;
                     if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
-                        timeLeft = 120; // Reset the timer for the next question
+                        timeLeft = 120;
                         displayQuestion();
                     } else {
                         showQuizEnd();
@@ -353,6 +358,16 @@
             } else {
                 alert('Please select an option before proceeding.');
             }
+        }
+
+        function showFullExplanation(question) {
+            const explanation = document.createElement('div');
+            explanation.className = 'question-explanation';
+            explanation.innerHTML = `Explanation: ${question.explanation}`;
+            document.querySelector('.question').appendChild(explanation);
+
+            const viewExplanationButton = document.querySelector('.next-button');
+            viewExplanationButton.disabled = true;
         }
 
         function showQuizEnd() {
