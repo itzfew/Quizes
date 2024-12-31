@@ -7,12 +7,13 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0px;
+            padding: 0;
         }
 
         .quiz-title {
@@ -27,32 +28,24 @@
             margin-bottom: 30px;
             padding: 3px;
             border-bottom: 1px solid #ccc;
-            overflow-x: auto; /* Enable horizontal scroll if content overflows */
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .question-number {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
         }
 
         .question-content {
             margin-bottom: 15px;
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
-            max-width: 100%; /* Ensure content can overflow horizontally */
-            overflow-x: auto; /* Enable horizontal scroll within the question content */
-        }
-
-        .next-button {
-            background-color: #000; /* Button color */
-            color: white; /* Text color */
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            position: fixed; /* Fix position at the bottom of the screen */
-            bottom: 0px; /* Distance from the bottom edge */
-            left: 0;
-            width: 100%; /* Make button fill the full width */
-            text-align: center;
-            z-index: 1000; /* Ensure the button stays on top of other content */
+            word-wrap: break-word;
+            white-space: normal;
+            max-width: 100%;
+            overflow-x: auto;
         }
 
         .options li {
@@ -60,9 +53,9 @@
             border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
-            overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
-            word-wrap: break-word; /* Automatically wrap long words */
-            white-space: normal; /* Allow text to break and wrap */
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
         }
 
         .options label {
@@ -81,12 +74,6 @@
             color: #555;
         }
 
-        .question-explanation {
-            margin-top: 10px;
-            font-style: italic;
-            color: #777;
-        }
-
         .correct-answer {
             margin-top: 10px;
             font-weight: bold;
@@ -101,15 +88,80 @@
         }
 
         img {
-            max-width: 100px; /* Set a maximum width for images */
-            height: auto; /* Maintain aspect ratio */
+            max-width: 100px;
+            height: auto;
         }
 
-        .timer {
-            font-size: 1.5em;
+        .submit-button, .next-button {
+            background-color: #000;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
             text-align: center;
-            color: #d9534f;
-            font-weight: bold;
+            width: 100%;
+        }
+
+        .submit-button {
+            display: block;
+        }
+
+        .next-button {
+            display: none;
+        }
+
+        /* Explanation Button Styling */
+        .explanation-button {
+            display: none; /* Hidden by default */
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 5px;
+            margin-top: 10px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-left: auto;   /* Centers the button horizontally */
+            margin-right: auto;  /* Centers the button horizontally */
+            width: 150px;        /* Fixed width for the button */
+        }
+
+        .explanation-button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .explanation-button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .explanation-content {
+            display: none;
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
+        }
+
+        .explanation-content.open {
+            display: block;
+        }
+
+        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
+        }
+
+        .question-content span {
+            display: inline-block;
         }
 
         @media (max-width: 600px) {
@@ -121,16 +173,16 @@
                 padding: 3px;
             }
 
-            .next-button {
+            .submit-button {
                 padding: 10px;
             }
 
             .options li {
-                padding: 5px; /* Adjust padding for smaller screens */
+                padding: 5px;
             }
 
             img {
-                max-width: 80px; /* Adjust image size for smaller screens */
+                max-width: 80px;
             }
         }
     </style>
@@ -139,11 +191,10 @@
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
+
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
-        let timer;
-        let timeLeft = 120; // 30 seconds timer for each question
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
@@ -154,14 +205,12 @@
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
-        // Fetch the JSON data
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
                 quizData = data;
                 populateSubjectDropdown();
-                loadLastQuestion();
-                displayQuestion();
+                displayCurrentQuestion();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
@@ -176,22 +225,17 @@
 
             subjectDropdown.onchange = () => {
                 currentQuestionIndex = 0;
-                displayQuestion();
+                displayCurrentQuestion();
             };
         }
 
-        function loadLastQuestion() {
-            const savedQuestionIndex = localStorage.getItem(`lastQuestion_${metaId}`);
-            if (savedQuestionIndex) {
-                currentQuestionIndex = parseInt(savedQuestionIndex);
-            }
-        }
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let missedAnswers = 0;
+        let startTime = new Date();
 
-        function saveLastQuestion() {
-            localStorage.setItem(`lastQuestion_${metaId}`, currentQuestionIndex);
-        }
-
-        function displayQuestion() {
+        function displayCurrentQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
@@ -199,22 +243,23 @@
             const subject = quizData[subjectIndex];
             const question = subject.questions[currentQuestionIndex];
 
+            totalQuestions = subject.questions.length;
+
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
 
-            // Display question ID
-            const questionId = document.createElement('div');
-            questionId.className = 'question-id';
-            questionId.textContent = `Question ID: ${question.question_id}`;
-            questionElement.appendChild(questionId);
+            const questionNumber = document.createElement('div');
+            questionNumber.className = 'question-number';
+            questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
+            questionElement.appendChild(questionNumber);
 
-            // Display question content
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content;
+            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            });
             questionElement.appendChild(questionContent);
 
-            // Display options
             const optionsList = document.createElement('ul');
             optionsList.className = 'options';
 
@@ -235,130 +280,94 @@
 
             questionElement.appendChild(optionsList);
 
-            // Display timer
-            const timerElement = document.createElement('div');
-            timerElement.className = 'timer';
-            timerElement.id = 'timer';
-            timerElement.textContent = `Time Left: ${timeLeft}s`;
-            quizContainer.appendChild(timerElement);
+            const explanationButton = document.createElement('button');
+            explanationButton.className = 'explanation-button';
+            explanationButton.textContent = 'View Explanation';
+            explanationButton.onclick = () => toggleExplanation(questionElement);
+            questionElement.appendChild(explanationButton);
 
-            // Add Submit button
+            const explanationContent = document.createElement('div');
+            explanationContent.className = 'explanation-content';
+            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
+            questionElement.appendChild(explanationContent);
+
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit';
+            submitButton.onclick = () => submitAnswer(questionElement, question, submitButton);
+            questionElement.appendChild(submitButton);
+
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
-            nextButton.textContent = 'Submit';
-            nextButton.onclick = showExplanation;
+            nextButton.textContent = 'Next';
+            nextButton.onclick = () => nextQuestion();
             questionElement.appendChild(nextButton);
 
-            // Display question number (e.g., 1/12)
-            const questionNumber = document.createElement('div');
-            questionNumber.className = 'question-id';
-            questionNumber.textContent = `${currentQuestionIndex + 1}/${quizData[subjectIndex].questions.length}`;
-            quizContainer.appendChild(questionNumber);
-
             quizContainer.appendChild(questionElement);
-
-            // Start timer countdown
-            startTimer();
-
-            // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-
         }
 
-        function startTimer() {
-            timer = setInterval(() => {
-                timeLeft--;
-                const timerElement = document.getElementById('timer');
-                timerElement.textContent = `Time Left: ${timeLeft}s`;
+        function submitAnswer(questionElement, question, submitButton) {
+            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+            const feedback = document.createElement('div');
+            feedback.className = 'correct-answer';
 
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    showExplanation();
-                }
-            }, 1000);
-        }
+            const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+            const correctOptionValue = question.correct_options[0];
 
-        function showExplanation() {
-            clearInterval(timer); // Stop the timer when explanation is shown
-
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
             if (selectedOption) {
-                const question = quizData[subjectIndex].questions[currentQuestionIndex];
                 const selectedOptionValue = selectedOption.value;
 
-                // Find the selected option content
-                const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
-                const correctOptionValue = question.correct_options[0];
-                const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
-
-                // Show feedback based on correctness
-                const feedback = document.createElement('div');
-                feedback.className = 'correct-answer';
-
                 if (selectedOptionValue === correctOptionValue) {
-                    feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-                    feedback.style.color = 'green'; // Correct answer in green
+                    correctAnswers++;
+                    feedback.innerHTML = "You are correct!";
+                    feedback.style.color = 'green';
                 } else {
-                    feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                    feedback.style.color = 'red'; // Incorrect answer in red
+                    incorrectAnswers++;
+                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
+                    feedback.style.color = 'red';
                 }
-
-                document.querySelector('.question').appendChild(feedback);
-
-                // Show explanation
-                if (question.explanation) {
-                    const explanation = document.createElement('div');
-                    explanation.className = 'question-explanation';
-                    explanation.innerHTML = `Explanation: ${question.explanation}`;
-                    document.querySelector('.question').appendChild(explanation);
-                }
-
-                // Color the options based on correctness
-                const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
-                options.forEach(option => {
-                    const optionItem = option.closest('li');
-                    if (option.value === correctOptionValue) {
-                        optionItem.style.backgroundColor = 'green'; // Correct option turns green
-                        optionItem.style.color = 'white'; // Text color for green
-                    } else if (option.value === selectedOptionValue) {
-                        optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
-                        optionItem.style.color = 'white'; // Text color for red
-                       
-                    // Re-render MathJax content
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-                    }
-                });
-
-                // Disable further selection
-                options.forEach(option => option.disabled = true);
-
-                // Update button text
-                const nextButton = document.querySelector('.next-button');
-                nextButton.textContent = 'Next Question';
-
-                // Save the current question index
-                saveLastQuestion();
-
-                // Show next question on button click
-                nextButton.onclick = () => {
-                    currentQuestionIndex++;
-                    if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
-                        timeLeft = 120; // Reset the timer for the next question
-                        displayQuestion();
-                    } else {
-                        showQuizEnd();
-                    }
-                };
             } else {
-                alert('Please select an option before proceeding.');
+                missedAnswers++;
+                feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
+                feedback.style.color = 'red';
+            }
+
+            questionElement.appendChild(feedback);
+
+            options.forEach(option => {
+                option.disabled = true;
+                const optionItem = option.closest('li');
+                if (option.value === correctOptionValue) {
+                    optionItem.style.backgroundColor = 'green';
+                    optionItem.style.color = 'white';
+                } else if (option.checked) {
+                    optionItem.style.backgroundColor = 'red';
+                    optionItem.style.color = 'white';
+                }
+            });
+
+            submitButton.style.display = 'none';
+            questionElement.querySelector('.next-button').style.display = 'block';
+            questionElement.querySelector('.explanation-button').style.display = 'block';
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        function toggleExplanation(questionElement) {
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            explanationContent.classList.toggle('open');
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                displayCurrentQuestion();
+            } else {
+                alert("You've completed the quiz!");
             }
         }
 
-        function showQuizEnd() {
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = `<div class="subject-title">You have completed the quiz!</div>`;
-        }
     </script>
 </body>
 </html>
