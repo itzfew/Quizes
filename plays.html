@@ -13,7 +13,7 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0px;
+            padding: 0;
         }
 
         .quiz-title {
@@ -31,7 +31,6 @@
             overflow-x: auto;
             word-wrap: break-word;
             white-space: normal;
-            
         }
 
         .question-number {
@@ -156,6 +155,18 @@
             display: block;
         }
 
+        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
+        }
+
+        /* Ensuring that MathJax inline formulas don't break or overflow */
+        .question-content span {
+            display: inline-block;
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 0px;
@@ -177,23 +188,6 @@
                 max-width: 80px;
             }
         }
-            .math-inline {
-        display: inline-block;
-        white-space: nowrap;
-        margin: 0;
-    }
-
-    /* Make sure MathJax equations do not introduce too much vertical space */
-    .mjx-chtml {
-        display: inline-block; /* Keep math equations inline with text */
-        margin: 0; /* Remove any margin introduced by MathJax */
-        padding: 0; /* Remove any padding */
-    }
-
-    /* Adjust the display math (block math) to prevent line breaks */
-    .mjx-display {
-        margin: 10px 0; /* Add some space for block math, but not too much */
-    }
     </style>
 </head>
 <body>
@@ -263,10 +257,13 @@
                 questionNumber.textContent = `Question ${index + 1}:`;
                 questionElement.appendChild(questionNumber);
 
-                // Display question content
+                // Display question content with MathJax inline
                 const questionContent = document.createElement('div');
                 questionContent.className = 'question-content';
-                questionContent.innerHTML = question.content;
+                // Wrap math in the mathjax-inline class
+                questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                });
                 questionElement.appendChild(questionContent);
 
                 // Display options
@@ -427,4 +424,4 @@
         };
     </script>
 </body>
-</html>  
+</html>
