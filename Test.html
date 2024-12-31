@@ -9,12 +9,11 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
-        /* Your existing CSS styles remain unchanged */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0px;
+            padding: 0;
         }
 
         .quiz-title {
@@ -49,24 +48,79 @@
             overflow-x: auto;
         }
 
-        .options li {
+        .options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);  /* 2 columns per row */
+    gap: 10px;  /* Space between options */
+}
+
+.options li {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: normal;
+    display: flex;
+    align-items: center;
+    font-size: 1em; /* Adjust text size for better readability */
+}
+
+.options label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.options input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* Make the text responsive */
+@media (max-width: 768px) {
+    .options {
+        grid-template-columns: 1fr;  /* 1 column per row on smaller screens */
+    }
+
+    .options li {
+        font-size: 0.9em;  /* Adjust font size for smaller screens */
+        padding: 8px;  /* Reduce padding for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .options li {
+        font-size: 0.8em;  /* Further reduce font size for very small screens */
+        padding: 6px;  /* Further reduce padding */
+    }
+}
+
+
+        .question-id {
+            font-weight: bold;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
+            color: #555;
+        }
+
+        .correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
+            color: green;
+        }
+
+        #subject-dropdown {
+            display: block;
+            margin: 20px auto;
             padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
+            font-size: 1em;
         }
 
-        .options label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .options input[type="radio"] {
-            margin-right: 10px;
+        img {
+            max-width: 100px;
+            height: auto;
         }
 
         .submit-button {
@@ -84,13 +138,75 @@
             z-index: 1000;
         }
 
-        select {
-            margin: 10px;
-            padding: 10px;
+        /* Explanation Button Styling */
+        .explanation-button {
+            display: none; /* Hidden by default */
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            padding: 8px 16px;
+            cursor: pointer;
             font-size: 1em;
+            border-radius: 5px;
+            margin-top: 10px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-left: auto;   /* Centers the button horizontally */
+            margin-right: auto;  /* Centers the button horizontally */
+            display: none; /* Initially hide the explanation button */
+            width: 150px;        /* Fixed width for the button */
+        }
+
+        /* Optional: Add hover effect to change button color when hovered */
+        .explanation-button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .explanation-button i {
+            margin-left: 8px;
+        }
+
+        .explanation-button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .explanation-content {
+            display: none;
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
+        }
+
+        .explanation-content.open {
+            display: block;
+        }
+
+        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
+        }
+
+        /* Ensuring that MathJax inline formulas don't break or overflow */
+        .question-content span {
+            display: inline-block;
         }
 
         @media (max-width: 600px) {
+            body {
+                padding: 0px;
+            }
+
+            #quiz-container {
+                padding: 3px;
+            }
+
             .submit-button {
                 padding: 10px;
             }
@@ -98,125 +214,90 @@
             .options li {
                 padding: 5px;
             }
+
+            img {
+                max-width: 80px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
-
-    <!-- Subject Dropdown -->
-    <select id="subject-dropdown">
-        <option value="">Select a Subject</option>
-        <option value="Physics">Physics</option>
-        <option value="Chemistry">Chemistry</option>
-        <option value="Mathematics">Mathematics</option>
-    </select>
-
-    <!-- Question Count Dropdown -->
-    <select id="question-count-dropdown">
-        <option value="5">5 Questions</option>
-        <option value="10">10 Questions</option>
-        <option value="15">15 Questions</option>
-        <option value="20">20 Questions</option>
-        <option value="25">25 Questions</option>
-        <option value="30">30 Questions</option>
-        <option value="35">35 Questions</option>
-        <option value="40">40 Questions</option>
-        <option value="45">45 Questions</option>
-        <option value="50">50 Questions</option>
-    </select>
-
-    <!-- Quiz Container -->
+    <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
 
     <script>
-        let allQuestions = [];
-        let totalQuestionsRequested = 0;
+        let currentQuestionIndex = 0;
         let quizData = [];
-        let selectedSubject = '';
         const urlParams = new URLSearchParams(window.location.search);
+        const title = urlParams.get('title');
+        const metaId = urlParams.get('metaId');
 
-        // Fetch the list of exams
-        fetch("https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json")
+        if (title) {
+            document.getElementById('quiz-title').textContent = title;
+        }
+
+        const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
+
+        // Fetch the JSON data
+        fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
-                quizData = data; // Store the fetched data
-                populateSubjectDropdown(); // Populate the subject dropdown
+                quizData = data;
+                populateSubjectDropdown();
+                displayAllQuestions();
             })
-            .catch(error => console.error('Error fetching the exams JSON data:', error));
+            .catch(error => console.error('Error fetching the JSON data:', error));
 
-        // Populate the subject dropdown dynamically if required
         function populateSubjectDropdown() {
             const subjectDropdown = document.getElementById('subject-dropdown');
-            subjectDropdown.onchange = function () {
-                selectedSubject = subjectDropdown.value;
-                if (selectedSubject) {
-                    totalQuestionsRequested = parseInt(document.getElementById('question-count-dropdown').value);
-                    fetchQuestionsForSubject(selectedSubject);
-                }
+            quizData.forEach((subject, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = subject.title;
+                subjectDropdown.appendChild(option);
+            });
+
+            subjectDropdown.onchange = () => {
+                currentQuestionIndex = 0;
+                displayAllQuestions();
             };
         }
 
-        // Fetch questions for the selected subject
-        function fetchQuestionsForSubject(subject) {
-            allQuestions = [];  // Clear previous questions
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let missedAnswers = 0;
+        let startTime = new Date();
 
-            quizData.forEach(examGroup => {
-                examGroup.papers.forEach(paper => {
-                    const metaId = paper.metaId;
-                    const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
-
-                    // Fetch the questions for each paper
-                    fetch(jsonUrl)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.forEach(subjectData => {
-                                if (subjectData.title === subject) {
-                                    allQuestions.push(...subjectData.questions); // Add questions for the selected subject
-                                }
-                            });
-
-                            // Once all questions are fetched, display them
-                            displayQuestions();
-                        })
-                        .catch(error => console.error('Error fetching the quiz questions:', error));
-                });
-            });
-        }
-
-        // Function to display the selected number of questions
-        function displayQuestions() {
+        function displayAllQuestions() {
             const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = ''; // Clear previous questions
+            quizContainer.innerHTML = '';
 
-            if (allQuestions.length === 0) {
-                quizContainer.innerHTML = '<p>No questions available for this subject.</p>';
-                return;
-            }
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
 
-            // Sort the questions by their question_id
-            allQuestions.sort((a, b) => a.question_id - b.question_id);
-
-            // Select the number of questions based on user input (from the dropdown)
-            const questionsToDisplay = allQuestions.slice(0, totalQuestionsRequested);
-
-            questionsToDisplay.forEach((question, index) => {
+            subject.questions.forEach((question, index) => {
+                totalQuestions++;  // Increase total questions count
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question';
 
-                // Question Number
+                // Add Question Numbering
                 const questionNumber = document.createElement('div');
                 questionNumber.className = 'question-number';
                 questionNumber.textContent = `Question ${index + 1}:`;
                 questionElement.appendChild(questionNumber);
 
-                // Question Content
+                // Display question content with MathJax inline
                 const questionContent = document.createElement('div');
                 questionContent.className = 'question-content';
-                questionContent.innerHTML = question.content;
+                // Wrap math in the mathjax-inline class
+                questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                });
                 questionElement.appendChild(questionContent);
 
-                // Options
+                // Display options
                 const optionsList = document.createElement('ul');
                 optionsList.className = 'options';
 
@@ -224,9 +305,11 @@
                     const optionItem = document.createElement('li');
                     const optionLabel = document.createElement('label');
                     const optionInput = document.createElement('input');
+
                     optionInput.type = 'radio';
                     optionInput.name = `question${question.question_id}`;
                     optionInput.value = option.identifier;
+
                     optionLabel.appendChild(optionInput);
                     optionLabel.innerHTML += option.content;
                     optionItem.appendChild(optionLabel);
@@ -234,23 +317,140 @@
                 });
 
                 questionElement.appendChild(optionsList);
+
+                // Add explanation dropdown button (hidden by default)
+                const explanationButton = document.createElement('button');
+                explanationButton.className = 'explanation-button';
+                explanationButton.textContent = 'Show Explanation';
+                explanationButton.onclick = () => toggleExplanation(questionElement);
+                questionElement.appendChild(explanationButton);
+
+                // Create explanation content (hidden by default)
+                const explanationContent = document.createElement('div');
+                explanationContent.className = 'explanation-content';
+                explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
+                questionElement.appendChild(explanationContent);
+
                 quizContainer.appendChild(questionElement);
             });
+
+            // Add Submit button
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit All';
+            submitButton.onclick = showAllExplanations;
+            quizContainer.appendChild(submitButton);
 
             // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        // Event listener for changing the number of questions to display
-        document.getElementById('question-count-dropdown').onchange = function () {
-            totalQuestionsRequested = parseInt(this.value);
-            if (selectedSubject) {
-                fetchQuestionsForSubject(selectedSubject);
-            }
-        };
+        function toggleExplanation(questionElement) {
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            explanationContent.classList.toggle('open');
+        }
+
+        function showAllExplanations() {
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+
+            subject.questions.forEach((question, index) => {
+                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+                const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
+                const explanationButton = questionElement.querySelector('.explanation-button');
+
+                // Show the explanation button after submission
+                explanationButton.style.display = 'block';
+
+                // Create feedback and show it after submission
+                const feedback = document.createElement('div');
+                feedback.className = 'correct-answer';
+                const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+                const correctOptionValue = question.correct_options[0];
+
+                if (selectedOption) {
+                    const selectedOptionValue = selectedOption.value;
+
+                    // Correct or Incorrect Answer Feedback
+                    if (selectedOptionValue === correctOptionValue) {
+                        correctAnswers++;
+                        feedback.innerHTML = "You are correct!";
+                        feedback.style.color = 'green'; // Correct answer in green
+                    } else {
+                        incorrectAnswers++;
+                        feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
+                        feedback.style.color = 'red'; // Incorrect answer in red
+                    }
+                } else {
+                    missedAnswers++;
+                    feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
+                    feedback.style.color = 'red'; // No selection made
+                }
+
+                questionElement.appendChild(feedback);
+
+                // Color options based on correctness
+                options.forEach(option => {
+                    const optionItem = option.closest('li');
+                    if (option.value === correctOptionValue) {
+                        optionItem.style.backgroundColor = 'green';
+                        optionItem.style.color = 'white';
+                    } else if (option.checked) {
+                        optionItem.style.backgroundColor = 'red';
+                        optionItem.style.color = 'white';
+                    }
+                    option.disabled = true;
+                });
+            });
+
+            // Calculate the time taken
+            const endTime = new Date(); // Record the time when the quiz is submitted
+            const timeTakenInSeconds = Math.round((endTime - startTime) / 1000); // Time in seconds
+            const timeTakenInMinutes = (timeTakenInSeconds / 60).toFixed(2);
+
+            // Calculate average time per attempt (total time taken / total attempts)
+            const totalAttempts = correctAnswers + incorrectAnswers;
+            const avgTimePerAttempt = totalAttempts > 0 ? (timeTakenInSeconds / totalAttempts).toFixed(2) : 0;
+
+            // Display the scorecard
+            const scoreCard = document.createElement('div');
+            scoreCard.innerHTML = `
+                <table style="width: 100%; text-align: center; border: 1px solid #ccc;">
+                    <tr>
+                        <th>Total Attempted</th>
+                        <th>Correct</th>
+                        <th>Incorrect</th>
+                        <th>Missed</th>
+                        <th>Total Time (Minutes)</th>
+                        <th>Avg. Time per Attempt (Seconds)</th>
+                    </tr>
+                    <tr>
+                        <td>${totalAttempts}</td>
+                        <td>${correctAnswers}</td>
+                        <td>${incorrectAnswers}</td>
+                        <td>${missedAnswers}</td>
+                        <td>${timeTakenInMinutes}</td>
+                        <td>${avgTimePerAttempt}</td>
+                    </tr>
+                </table>
+            `;
+
+            // Insert the scorecard at the top of the quiz container
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
+
+            // Smooth scroll to the scorecard
+            window.scrollTo({
+                top: quizContainer.offsetTop, 
+                behavior: 'smooth'
+            });
+
+            // Re-render MathJax content after the scorecard is displayed
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
 
         // Prevent page refresh or navigation
-        window.onbeforeunload = function () {
+        window.onbeforeunload = function (event) {
             return "Are you sure you want to leave? Your progress may be lost.";
         };
     </script>
