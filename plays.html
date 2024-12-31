@@ -7,7 +7,6 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,9 +27,6 @@
             margin-bottom: 30px;
             padding: 3px;
             border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
         }
 
         .question-number {
@@ -42,10 +38,6 @@
 
         .question-content {
             margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: normal;
-            max-width: 100%;
-            overflow-x: auto;
         }
 
         .options li {
@@ -53,9 +45,6 @@
             border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
         }
 
         .options label {
@@ -68,10 +57,26 @@
             margin-right: 10px;
         }
 
-        .question-id {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #555;
+        .submit-button, .next-button, .previous-button {
+            background-color: #000;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .submit-button {
+            display: block;
+        }
+
+        .next-button {
+            display: block;
+        }
+
+        .previous-button {
+            display: block;
         }
 
         .correct-answer {
@@ -80,55 +85,14 @@
             color: green;
         }
 
-        #subject-dropdown {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 1em;
-        }
-
-        img {
-            max-width: 100px;
-            height: auto;
-        }
-
-        .submit-button, .next-button, .previous-button {
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-            width: 100%;
-            display: none; /* Hide initially */
-        }
-
-        .submit-button {
-            display: block;
-        }
-
-        .previous-button {
-            display: block;
-        }
-
         .explanation-button {
-            display: none; /* Hidden by default */
+            display: none;
+            margin-top: 10px;
             background-color: white;
             color: black;
             border: 2px solid black;
-            padding: 8px 16px;
             cursor: pointer;
-            font-size: 1em;
-            border-radius: 5px;
-            margin-top: 10px;
-            position: relative;
-            transition: background-color 0.3s, color 0.3s;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-left: auto;   /* Centers the button horizontally */
-            margin-right: auto;  /* Centers the button horizontally */
-            width: 150px;        /* Fixed width for the button */
+            padding: 8px 16px;
         }
 
         .explanation-button:hover {
@@ -145,28 +109,6 @@
 
         .explanation-content.open {
             display: block;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 0px;
-            }
-
-            #quiz-container {
-                padding: 3px;
-            }
-
-            .submit-button {
-                padding: 10px;
-            }
-
-            .options li {
-                padding: 5px;
-            }
-
-            img {
-                max-width: 80px;
-            }
         }
     </style>
 </head>
@@ -214,7 +156,6 @@
         }
 
         function loadQuizState() {
-            // Load the current question index and answers from localStorage
             if (localStorage.getItem('currentQuestionIndex')) {
                 currentQuestionIndex = parseInt(localStorage.getItem('currentQuestionIndex'), 10);
             }
@@ -223,8 +164,6 @@
         let totalQuestions = 0;
         let correctAnswers = 0;
         let incorrectAnswers = 0;
-        let missedAnswers = 0;
-        let startTime = new Date();
 
         function displayCurrentQuestion() {
             const quizContainer = document.getElementById('quiz-container');
@@ -246,9 +185,7 @@
 
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
+            questionContent.innerHTML = question.content;
             questionElement.appendChild(questionContent);
 
             const optionsList = document.createElement('ul');
@@ -258,14 +195,13 @@
                 const optionItem = document.createElement('li');
                 const optionLabel = document.createElement('label');
                 const optionInput = document.createElement('input');
-
                 optionInput.type = 'radio';
                 optionInput.name = `question${question.question_id}`;
                 optionInput.value = option.identifier;
 
-                // Check if there's a previous selection and select the option
-                const userAnswer = localStorage.getItem(`answer_${question.question_id}`);
-                if (userAnswer === option.identifier) {
+                // Check if this option was previously selected
+                const selectedAnswer = localStorage.getItem(`answer_${question.question_id}`);
+                if (selectedAnswer === option.identifier) {
                     optionInput.checked = true;
                 }
 
@@ -307,8 +243,6 @@
             questionElement.appendChild(previousButton);
 
             quizContainer.appendChild(questionElement);
-
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
         function submitAnswer(questionElement, question, submitButton) {
@@ -335,13 +269,13 @@
                 // Save the selected answer in localStorage
                 localStorage.setItem(`answer_${question.question_id}`, selectedOptionValue);
             } else {
-                missedAnswers++;
-                feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
+                feedback.innerHTML = `You didn't select an answer. The correct answer is: Option ${correctOptionValue}`;
                 feedback.style.color = 'red';
             }
 
             questionElement.appendChild(feedback);
 
+            // Disable the options after submission
             options.forEach(option => {
                 option.disabled = true;
                 const optionItem = option.closest('li');
@@ -357,8 +291,6 @@
             submitButton.style.display = 'none';
             questionElement.querySelector('.next-button').style.display = 'block';
             questionElement.querySelector('.explanation-button').style.display = 'block';
-
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
         function toggleExplanation(questionElement) {
@@ -383,11 +315,6 @@
                 displayCurrentQuestion();
             }
         }
-
-        // Prevent page refresh or navigation
-        window.onbeforeunload = function (event) {
-            return "Are you sure you want to leave? Your progress may be lost.";
-        };
     </script>
 </body>
 </html>
