@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -272,7 +272,7 @@
 
                 questionElement.appendChild(optionsList);
 
-                // Add explanation dropdown button (hidden by default)
+                // Explanation button
                 const explanationButton = document.createElement('button');
                 explanationButton.className = 'explanation-button';
                 explanationButton.textContent = 'Show Explanation';
@@ -287,13 +287,6 @@
 
                 quizContainer.appendChild(questionElement);
             });
-
-            // Add Submit button
-            const submitButton = document.createElement('button');
-            submitButton.className = 'submit-button';
-            submitButton.textContent = 'Submit All';
-            submitButton.onclick = showAllExplanations;
-            quizContainer.appendChild(submitButton);
 
             // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
@@ -313,7 +306,6 @@
                 const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
                 const explanationButton = questionElement.querySelector('.explanation-button');
 
-                // Show the explanation button after submission
                 explanationButton.style.display = 'block';
 
                 // Create feedback and show it after submission
@@ -325,20 +317,19 @@
                 if (selectedOption) {
                     const selectedOptionValue = selectedOption.value;
 
-                    // Correct or Incorrect Answer Feedback
                     if (selectedOptionValue === correctOptionValue) {
                         correctAnswers++;
                         feedback.innerHTML = "You are correct!";
-                        feedback.style.color = 'green'; // Correct answer in green
+                        feedback.style.color = 'green'; 
                     } else {
                         incorrectAnswers++;
                         feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                        feedback.style.color = 'red'; // Incorrect answer in red
+                        feedback.style.color = 'red'; 
                     }
                 } else {
                     missedAnswers++;
                     feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red'; // No selection made
+                    feedback.style.color = 'red';
                 }
 
                 questionElement.appendChild(feedback);
@@ -357,16 +348,10 @@
                 });
             });
 
-            // Calculate the time taken
-            const endTime = new Date(); // Record the time when the quiz is submitted
-            const timeTakenInSeconds = Math.round((endTime - startTime) / 1000); // Time in seconds
+            const endTime = new Date();
+            const timeTakenInSeconds = Math.round((endTime - startTime) / 1000);
             const timeTakenInMinutes = (timeTakenInSeconds / 60).toFixed(2);
 
-            // Calculate average time per attempt (total time taken / total attempts)
-            const totalAttempts = correctAnswers + incorrectAnswers;
-            const avgTimePerAttempt = totalAttempts > 0 ? (timeTakenInSeconds / totalAttempts).toFixed(2) : 0;
-
-            // Display the scorecard
             const scoreCard = document.createElement('div');
             scoreCard.innerHTML = `
                 <table style="width: 100%; text-align: center; border: 1px solid #ccc;">
@@ -379,34 +364,25 @@
                         <th>Avg. Time per Attempt (Seconds)</th>
                     </tr>
                     <tr>
-                        <td>${totalAttempts}</td>
+                        <td>${correctAnswers + incorrectAnswers}</td>
                         <td>${correctAnswers}</td>
                         <td>${incorrectAnswers}</td>
                         <td>${missedAnswers}</td>
                         <td>${timeTakenInMinutes}</td>
-                        <td>${avgTimePerAttempt}</td>
+                        <td>${(timeTakenInSeconds / (correctAnswers + incorrectAnswers)).toFixed(2)}</td>
                     </tr>
                 </table>
             `;
-
-            // Insert the scorecard at the top of the quiz container
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
 
-            // Smooth scroll to the scorecard
             window.scrollTo({
                 top: quizContainer.offsetTop, 
                 behavior: 'smooth'
             });
 
-            // Re-render MathJax content after the scorecard is displayed
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
-
-        // Prevent page refresh or navigation
-        window.onbeforeunload = function (event) {
-            return "Are you sure you want to leave? Your progress may be lost.";
-        };
     </script>
 </body>
 </html>
