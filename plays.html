@@ -99,12 +99,8 @@
             border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
-            position: fixed;
-            bottom: 0px;
-            left: 0;
-            width: 100%;
             text-align: center;
-            z-index: 1000;
+            width: 100%;
         }
 
         /* Explanation Button Styling */
@@ -300,14 +296,67 @@
             explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
             questionElement.appendChild(explanationContent);
 
+            // Add Submit Button for this question
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit';
+            submitButton.onclick = () => submitAnswer(questionElement, question);
+            questionElement.appendChild(submitButton);
+
             quizContainer.appendChild(questionElement);
 
-            // Add "Next" button
+            // Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        function submitAnswer(questionElement, question) {
+            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+            const feedback = document.createElement('div');
+            feedback.className = 'correct-answer';
+
+            const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+            const correctOptionValue = question.correct_options[0];
+
+            if (selectedOption) {
+                const selectedOptionValue = selectedOption.value;
+
+                // Correct or Incorrect Answer Feedback
+                if (selectedOptionValue === correctOptionValue) {
+                    correctAnswers++;
+                    feedback.innerHTML = "You are correct!";
+                    feedback.style.color = 'green'; // Correct answer in green
+                } else {
+                    incorrectAnswers++;
+                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
+                    feedback.style.color = 'red'; // Incorrect answer in red
+                }
+            } else {
+                missedAnswers++;
+                feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
+                feedback.style.color = 'red'; // No selection made
+            }
+
+            questionElement.appendChild(feedback);
+
+            // Disable options after submission
+            options.forEach(option => {
+                option.disabled = true;
+                const optionItem = option.closest('li');
+                if (option.value === correctOptionValue) {
+                    optionItem.style.backgroundColor = 'green';
+                    optionItem.style.color = 'white';
+                } else if (option.checked) {
+                    optionItem.style.backgroundColor = 'red';
+                    optionItem.style.color = 'white';
+                }
+            });
+
+            // Show "Next" or "Submit All" based on the current question
             const nextButton = document.createElement('button');
             nextButton.className = 'submit-button';
-            nextButton.textContent = currentQuestionIndex === totalQuestions - 1 ? 'Submit All' : 'Next';
+            nextButton.textContent = currentQuestionIndex === totalQuestions - 1 ? 'Submit All' : 'Next Question';
             nextButton.onclick = currentQuestionIndex === totalQuestions - 1 ? showAllExplanations : nextQuestion;
-            quizContainer.appendChild(nextButton);
+            questionElement.appendChild(nextButton);
 
             // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
