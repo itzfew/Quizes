@@ -14,6 +14,8 @@
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            position: relative;
+            min-height: 100vh;
         }
 
         .quiz-title {
@@ -124,11 +126,9 @@
             text-align: center;
             margin-left: auto;   /* Centers the button horizontally */
             margin-right: auto;  /* Centers the button horizontally */
-            display: none; /* Initially hide the explanation button */
             width: 150px;        /* Fixed width for the button */
         }
 
-        /* Optional: Add hover effect to change button color when hovered */
         .explanation-button:hover {
             background-color: black;
             color: white;
@@ -155,16 +155,32 @@
             display: block;
         }
 
-        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
-        .mathjax-inline {
-            white-space: nowrap;
-            display: inline-block;
-            font-size: 1.1em;
+        /* Centering the loader */
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
         }
 
-        /* Ensuring that MathJax inline formulas don't break or overflow */
-        .question-content span {
-            display: inline-block;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Ensure it's above all other content */
         }
 
         @media (max-width: 600px) {
@@ -188,49 +204,19 @@
                 max-width: 80px;
             }
         }
-        /* Simple loader animation */
-.loader {
-  border: 8px solid #f3f3f3; /* Light grey */
-  border-top: 8px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 2s linear infinite;
-}
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
- 
     </style>
 </head>
 <body>
     <!-- Add this to the body to show a loading spinner -->
-<div id="loading" style="display: none; text-align: center; padding: 50px;">
-  <div class="loader"></div>
-</div>
+    <div id="loading" style="display: none;">
+        <div class="loader"></div>
+    </div>
+    
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
-<script>
-  // Show loading spinner while fetching quiz data
-  const loadingDiv = document.getElementById('loading');
-  loadingDiv.style.display = 'block';
-
-  fetch(jsonUrl)
-    .then(response => response.json())
-    .then(data => {
-      quizData = data;
-      populateSubjectDropdown();
-      displayAllQuestions();
-      loadingDiv.style.display = 'none';  // Hide the loading spinner when data is loaded
-    })
-    .catch(error => {
-      console.error('Error fetching the JSON data:', error);
-      loadingDiv.innerHTML = 'Failed to load quiz data.';
-    });
-</script> 
+    
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
@@ -244,6 +230,10 @@
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
+        // Show loading spinner while fetching quiz data
+        const loadingDiv = document.getElementById('loading');
+        loadingDiv.style.display = 'flex'; // Show the loader
+
         // Fetch the JSON data
         fetch(jsonUrl)
             .then(response => response.json())
@@ -251,8 +241,12 @@
                 quizData = data;
                 populateSubjectDropdown();
                 displayAllQuestions();
+                loadingDiv.style.display = 'none';  // Hide the loading spinner when data is loaded
             })
-            .catch(error => console.error('Error fetching the JSON data:', error));
+            .catch(error => {
+                console.error('Error fetching the JSON data:', error);
+                loadingDiv.innerHTML = 'Failed to load quiz data.';
+            });
 
         function populateSubjectDropdown() {
             const subjectDropdown = document.getElementById('subject-dropdown');
@@ -269,12 +263,6 @@
             };
         }
 
-        let totalQuestions = 0;
-        let correctAnswers = 0;
-        let incorrectAnswers = 0;
-        let missedAnswers = 0;
-        let startTime = new Date();
-
         function displayAllQuestions() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
@@ -283,7 +271,6 @@
             const subject = quizData[subjectIndex];
 
             subject.questions.forEach((question, index) => {
-                totalQuestions++;  // Increase total questions count
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question';
 
@@ -293,13 +280,10 @@
                 questionNumber.textContent = `Question ${index + 1}:`;
                 questionElement.appendChild(questionNumber);
 
-                // Display question content with MathJax inline
+                // Display question content
                 const questionContent = document.createElement('div');
                 questionContent.className = 'question-content';
-                // Wrap math in the mathjax-inline class
-                questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                });
+                questionContent.innerHTML = question.content;
                 questionElement.appendChild(questionContent);
 
                 // Display options
@@ -322,142 +306,9 @@
                 });
 
                 questionElement.appendChild(optionsList);
-
-                // Add explanation dropdown button (hidden by default)
-                const explanationButton = document.createElement('button');
-                explanationButton.className = 'explanation-button';
-                explanationButton.textContent = 'Show Explanation';
-                explanationButton.onclick = () => toggleExplanation(questionElement);
-                questionElement.appendChild(explanationButton);
-
-                // Create explanation content (hidden by default)
-                const explanationContent = document.createElement('div');
-                explanationContent.className = 'explanation-content';
-                explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-                questionElement.appendChild(explanationContent);
-
                 quizContainer.appendChild(questionElement);
             });
-
-            // Add Submit button
-            const submitButton = document.createElement('button');
-            submitButton.className = 'submit-button';
-            submitButton.textContent = 'Submit All';
-            submitButton.onclick = showAllExplanations;
-            quizContainer.appendChild(submitButton);
-
-            // Re-render MathJax content
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
-
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
-        }
-
-        function showAllExplanations() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-
-            subject.questions.forEach((question, index) => {
-                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-                const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
-                const explanationButton = questionElement.querySelector('.explanation-button');
-
-                // Show the explanation button after submission
-                explanationButton.style.display = 'block';
-
-                // Create feedback and show it after submission
-                const feedback = document.createElement('div');
-                feedback.className = 'correct-answer';
-                const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
-                const correctOptionValue = question.correct_options[0];
-
-                if (selectedOption) {
-                    const selectedOptionValue = selectedOption.value;
-
-                    // Correct or Incorrect Answer Feedback
-                    if (selectedOptionValue === correctOptionValue) {
-                        correctAnswers++;
-                        feedback.innerHTML = "You are correct!";
-                        feedback.style.color = 'green'; // Correct answer in green
-                    } else {
-                        incorrectAnswers++;
-                        feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                        feedback.style.color = 'red'; // Incorrect answer in red
-                    }
-                } else {
-                    missedAnswers++;
-                    feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red'; // No selection made
-                }
-
-                questionElement.appendChild(feedback);
-
-                // Color options based on correctness
-                options.forEach(option => {
-                    const optionItem = option.closest('li');
-                    if (option.value === correctOptionValue) {
-                        optionItem.style.backgroundColor = 'green';
-                        optionItem.style.color = 'white';
-                    } else if (option.checked) {
-                        optionItem.style.backgroundColor = 'red';
-                        optionItem.style.color = 'white';
-                    }
-                    option.disabled = true;
-                });
-            });
-
-            // Calculate the time taken
-            const endTime = new Date(); // Record the time when the quiz is submitted
-            const timeTakenInSeconds = Math.round((endTime - startTime) / 1000); // Time in seconds
-            const timeTakenInMinutes = (timeTakenInSeconds / 60).toFixed(2);
-
-            // Calculate average time per attempt (total time taken / total attempts)
-            const totalAttempts = correctAnswers + incorrectAnswers;
-            const avgTimePerAttempt = totalAttempts > 0 ? (timeTakenInSeconds / totalAttempts).toFixed(2) : 0;
-
-            // Display the scorecard
-            const scoreCard = document.createElement('div');
-            scoreCard.innerHTML = `
-                <table style="width: 100%; text-align: center; border: 1px solid #ccc;">
-                    <tr>
-                        <th>Total Attempted</th>
-                        <th>Correct</th>
-                        <th>Incorrect</th>
-                        <th>Missed</th>
-                        <th>Total Time (Minutes)</th>
-                        <th>Avg. Time per Attempt (Seconds)</th>
-                    </tr>
-                    <tr>
-                        <td>${totalAttempts}</td>
-                        <td>${correctAnswers}</td>
-                        <td>${incorrectAnswers}</td>
-                        <td>${missedAnswers}</td>
-                        <td>${timeTakenInMinutes}</td>
-                        <td>${avgTimePerAttempt}</td>
-                    </tr>
-                </table>
-            `;
-
-            // Insert the scorecard at the top of the quiz container
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
-
-            // Smooth scroll to the scorecard
-            window.scrollTo({
-                top: quizContainer.offsetTop, 
-                behavior: 'smooth'
-            });
-
-            // Re-render MathJax content after the scorecard is displayed
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        }
-
-        // Prevent page refresh or navigation
-        window.onbeforeunload = function (event) {
-            return "Are you sure you want to leave? Your progress may be lost.";
-        };
     </script>
 </body>
 </html>
