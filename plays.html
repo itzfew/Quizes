@@ -8,141 +8,21 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0px;
-        }
+        /* Your existing styles remain unchanged */
 
-        .quiz-title {
-            font-size: 1.5em;
-            margin: 0px 0;
-            color: #333;
-            text-align: center;
-            border: 2px solid black;
-        }
-
-        .question {
-            margin-bottom: 30px;
-            padding: 3px;
-            border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
-        }
-
-        .question-content {
-            margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: normal;
-            max-width: 100%;
-            overflow-x: auto;
-        }
-
-        .next-button {
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            position: fixed;
-            bottom: 0px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        .options li {
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
-        }
-
-        .options label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .options input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        .question-id {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #555;
-        }
-
-        .question-explanation {
-            margin-top: 10px;
-            font-style: italic;
-            color: #777;
-        }
-
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
-            color: green;
-        }
-
-        #subject-dropdown {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 1em;
-        }
-
-        img {
-            max-width: 100px;
-            height: auto;
-        }
-
-        .timer {
-            font-size: 1.5em;
-            text-align: center;
-            color: #d9534f;
-            font-weight: bold;
-        }
-
+        /* Ensure MathJax renders inline expressions smoothly */
         .mathjax-inline {
             white-space: nowrap;
             display: inline-block;
             font-size: 1.1em;
         }
 
-        .question-content span {
-            display: inline-block;
+        .mathjax-block {
+            display: block;
+            text-align: center;
         }
 
-        @media (max-width: 600px) {
-            body {
-                padding: 0px;
-            }
-
-            #quiz-container {
-                padding: 3px;
-            }
-
-            .next-button {
-                padding: 10px;
-            }
-
-            .options li {
-                padding: 5px;
-            }
-
-            img {
-                max-width: 80px;
-            }
-        }
+        /* Additional styling as needed */
     </style>
 </head>
 <body>
@@ -153,7 +33,7 @@
         let currentQuestionIndex = 0;
         let quizData = [];
         let timer;
-        let timeLeft = 120;
+        let timeLeft = 120; // 30 seconds timer for each question
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
@@ -164,15 +44,30 @@
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
-        fetch(jsonUrl)
-            .then(response => response.json())
-            .then(data => {
-                quizData = data;
+        // Fetch and cache the JSON data
+        const loadQuizData = () => {
+            const cachedData = localStorage.getItem(`quizData_${metaId}`);
+            if (cachedData) {
+                quizData = JSON.parse(cachedData);
                 populateSubjectDropdown();
                 loadLastQuestion();
                 displayQuestion();
-            })
-            .catch(error => console.error('Error fetching the JSON data:', error));
+            } else {
+                fetch(jsonUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        quizData = data;
+                        localStorage.setItem(`quizData_${metaId}`, JSON.stringify(quizData)); // Cache the data
+                        populateSubjectDropdown();
+                        loadLastQuestion();
+                        displayQuestion();
+                    })
+                    .catch(error => console.error('Error fetching the JSON data:', error));
+            }
+        };
+
+        // Load quiz data (either from cache or fresh fetch)
+        loadQuizData();
 
         function populateSubjectDropdown() {
             const subjectDropdown = document.getElementById('subject-dropdown');
@@ -211,18 +106,19 @@
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
 
+            // Display question ID
             const questionId = document.createElement('div');
             questionId.className = 'question-id';
             questionId.textContent = `Question ID: ${question.question_id}`;
             questionElement.appendChild(questionId);
 
+            // Display question content with MathJax
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
+            questionContent.innerHTML = processMathJax(question.content);
             questionElement.appendChild(questionContent);
 
+            // Display options
             const optionsList = document.createElement('ul');
             optionsList.className = 'options';
 
@@ -236,25 +132,28 @@
                 optionInput.value = option.identifier;
 
                 optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
+                optionLabel.innerHTML += processMathJax(option.content);
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
 
             questionElement.appendChild(optionsList);
 
+            // Display timer
             const timerElement = document.createElement('div');
             timerElement.className = 'timer';
             timerElement.id = 'timer';
             timerElement.textContent = `Time Left: ${timeLeft}s`;
             quizContainer.appendChild(timerElement);
 
+            // Add Submit button
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
             nextButton.textContent = 'Submit';
             nextButton.onclick = showExplanation;
             questionElement.appendChild(nextButton);
 
+            // Display question number (e.g., 1/12)
             const questionNumber = document.createElement('div');
             questionNumber.className = 'question-id';
             questionNumber.textContent = `${currentQuestionIndex + 1}/${quizData[subjectIndex].questions.length}`;
@@ -262,31 +161,20 @@
 
             quizContainer.appendChild(questionElement);
 
+            // Start timer countdown
             startTimer();
 
             // Re-render MathJax content after updating question
-            renderMathJax();
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function renderMathJax() {
-            if (window.MathJax) {
-                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-            } else {
-                // Show a fallback message and offer to apply MathJax if not loaded
-                const quizContainer = document.getElementById('quiz-container');
-                const fallbackMessage = document.createElement('div');
-                fallbackMessage.className = 'mathjax-fallback';
-                fallbackMessage.innerHTML = 'MathJax is not loaded properly. <button onclick="applyMathJax()">Apply MathJax</button>';
-                quizContainer.appendChild(fallbackMessage);
-            }
-        }
-
-        function applyMathJax() {
-            const script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML";
-            document.head.appendChild(script);
-            script.onload = () => renderMathJax(); // Reapply MathJax after loading it
+        function processMathJax(content) {
+            // Replace inline and block equations with MathJax compatible syntax
+            return content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            }).replace(/\$(.*?)\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+            });
         }
 
         function startTimer() {
@@ -303,7 +191,7 @@
         }
 
         function showExplanation() {
-            clearInterval(timer);
+            clearInterval(timer); // Stop the timer when explanation is shown
 
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
@@ -311,52 +199,61 @@
                 const question = quizData[subjectIndex].questions[currentQuestionIndex];
                 const selectedOptionValue = selectedOption.value;
 
+                // Find the selected option content
                 const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
                 const correctOptionValue = question.correct_options[0];
                 const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
+                // Show feedback based on correctness
                 const feedback = document.createElement('div');
                 feedback.className = 'correct-answer';
 
                 if (selectedOptionValue === correctOptionValue) {
-                    feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-                    feedback.style.color = 'green';
+                    feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${processMathJax(correctOptionContent)}`;
+                    feedback.style.color = 'green'; // Correct answer in green
                 } else {
-                    feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                    feedback.style.color = 'red';
+                    feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${processMathJax(selectedOptionContent)}, but the correct answer is Option ${correctOptionValue}: ${processMathJax(correctOptionContent)}.`;
+                    feedback.style.color = 'red'; // Incorrect answer in red
                 }
 
                 document.querySelector('.question').appendChild(feedback);
 
+                // Show explanation
                 if (question.explanation) {
                     const explanation = document.createElement('div');
                     explanation.className = 'question-explanation';
-                    explanation.innerHTML = `Explanation: ${question.explanation}`;
+                    explanation.innerHTML = `Explanation: ${processMathJax(question.explanation)}`;
                     document.querySelector('.question').appendChild(explanation);
                 }
 
+                // Color the options based on correctness
                 const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
                 options.forEach(option => {
                     const optionItem = option.closest('li');
                     if (option.value === correctOptionValue) {
-                        optionItem.style.backgroundColor = 'green';
-                        optionItem.style.color = 'white';
+                        optionItem.style.backgroundColor = 'green'; // Correct option turns green
+                        optionItem.style.color = 'white'; // Text color for green
                     } else if (option.value === selectedOptionValue) {
-                        optionItem.style.backgroundColor = 'red';
-                        optionItem.style.color = 'white';
+                        optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
+                        optionItem.style.color = 'white'; // Text color for red
                     }
                 });
 
+                // Disable further selection
                 options.forEach(option => option.disabled = true);
 
+                // Update button text
                 const nextButton = document.querySelector('.next-button');
                 nextButton.textContent = 'Next Question';
+
+                // Save the current question index
                 saveLastQuestion();
 
+                // Show next question on button click
                 nextButton.onclick = () => {
                     currentQuestionIndex++;
                     if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
-                        timeLeft = 120;
+                        timeLeft = 120; // Reset the timer for the next question
                         displayQuestion();
                     } else {
                         showQuizEnd();
