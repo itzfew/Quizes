@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam List</title>
+    <title>Quizes</title>
     <!-- FontAwesome CDN for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -12,37 +12,101 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #f4f7fc; /* Light background for an app-like feel */
+            background-color: #fff; /* White background */
             color: #333; /* Dark text for readability */
+            box-sizing: border-box; /* Make sure padding doesn't affect layout */
         }
 
-        h1 {
-            text-align: center;
-            color: #333; /* Dark title */
-            margin-top: 30px;
-            font-size: 36px;
+        /* Header Section */
+        header {
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #ffffff; /* white background */
+            color: black;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            border: black 1px solid; 
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%; /* Circular logo */
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            margin: 0;
             font-weight: bold;
+        }
+
+        .header-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-buttons a {
+            text-decoration: none;
+            color: white;
+            margin-left: 20px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background-color: #333;
+        }
+
+        .header-buttons a:hover {
+            background-color: #555;
+        }
+
+        .header-buttons i {
+            margin-right: 8px;
+        }
+
+        /* Black line below the header */
+        header + hr {
+            margin-top: 0;
+            border: none;
+            border-top: 2px solid #000; /* Solid black line */
+        }
+
+        /* Adjust the rest of the page below the header */
+        main {
+            margin-top: 80px; /* Add margin to avoid content hiding behind the header */
+            padding: 20px;
         }
 
         #exam-list {
             list-style-type: none;
             padding: 0;
             margin-top: 20px;
-            max-width: 800px;
-            margin: 20px auto; /* Center the exam list */
+            max-width: 1000px;
+            margin: 20px auto;
         }
 
         .exam-item {
-            border: 2px solid #ccc; /* Light gray border */
+            border: 2px solid #ccc;
             margin-bottom: 15px;
             border-radius: 8px;
             cursor: pointer;
             padding: 10px;
-            background-color: #fff; /* White background for a clean look */
+            background-color: #fff;
         }
 
         .exam-item:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .exam-item-header {
@@ -54,35 +118,35 @@
             font-weight: bold;
             padding: 15px;
             border-radius: 5px;
-            background-color: #f1f1f1; /* Light gray for the header */
+            background-color: #f1f1f1;
         }
 
         .exam-item-header i {
-            font-size: 18px; /* Chevron icon size */
+            font-size: 18px;
             color: #555;
         }
 
         .exam-item-body {
             padding: 10px 15px;
-            display: none; /* Hidden by default */
+            display: none;
             background-color: #f9f9f9;
             border-radius: 5px;
             margin-top: 10px;
         }
 
         .paper-item {
-            border: 1px solid #ccc; /* Light gray border for paper items */
+            border: 1px solid #ccc;
             margin-bottom: 12px;
             padding: 12px;
             border-radius: 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #fff; /* Paper items white background */
+            background-color: #fff;
         }
 
         .paper-item:hover {
-            background-color: #f1f1f1; /* Light gray on hover */
+            background-color: #f1f1f1;
         }
 
         .paper-title {
@@ -120,12 +184,12 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
+            background-color: rgba(0, 0, 0, 0.7);
             overflow: auto;
         }
 
         .modal-content {
-            background-color: #fff; /* White background for the modal */
+            background-color: #fff;
             margin: 15% auto;
             padding: 25px;
             border: 1px solid #ccc;
@@ -184,10 +248,63 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+            }
+
+            .header-buttons {
+                margin-top: 10px;
+                flex-direction: column;
+            }
+
+            .header-buttons a {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+            .exam-item-header {
+                font-size: 18px;
+            }
+
+            .paper-title {
+                font-size: 14px;
+            }
+
+            .btn-link {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Exam List</h1>
+
+<!-- Header Section -->
+<header>
+    <div class="logo">
+        <!-- Logo with provided image URL -->
+        <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40"> <!-- Image size 40x40px -->
+        <h1>Quizes</h1>
+    </div>
+    <div class="header-buttons">
+        <a href="https://t.me/NEETJEECHANNEL" target="_blank">
+            <i class="fab fa-telegram-plane"></i> Telegram
+        </a>
+        <a href="https://t.me/FREESTUDYApp" target="_blank">
+            <i class="fab fa-telegram-plane"></i> Dawoalod App
+        </a>
+    </div>
+</header>
+
+<!-- Solid black line below the header -->
+<hr>
+
+<!-- Main content -->
+<main>
     <ul id="exam-list"></ul>
 
     <!-- Modal -->
@@ -201,115 +318,116 @@
             </div>
         </div>
     </div>
+</main>
 
-    <script>
-        // Fetch the JSON data
-        fetch('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json')
-            .then(response => response.json())
-            .then(data => {
-                displayExams(data);
-            })
-            .catch(error => console.error('Error fetching the JSON data:', error));
+<script>
+    // Fetch the JSON data
+    fetch('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json')
+        .then(response => response.json())
+        .then(data => {
+            displayExams(data);
+        })
+        .catch(error => console.error('Error fetching the JSON data:', error));
 
-        function displayExams(data) {
-            const examList = document.getElementById('exam-list');
+    function displayExams(data) {
+        const examList = document.getElementById('exam-list');
 
-            data.forEach(exam => {
-                const examItem = document.createElement('li');
-                examItem.classList.add('exam-item');
+        data.forEach(exam => {
+            const examItem = document.createElement('li');
+            examItem.classList.add('exam-item');
 
-                // Create exam header with title and dropdown icon
-                const examHeader = document.createElement('div');
-                examHeader.classList.add('exam-item-header');
-                examHeader.innerHTML = `${exam.title}<i class="fas fa-chevron-down"></i>`;  // Chevron icon
+            // Create exam header with title and '>'
+            const examHeader = document.createElement('div');
+            examHeader.classList.add('exam-item-header');
+            examHeader.innerHTML = `${exam.title}<i class="fas fa-chevron-down"></i>`; // Adding chevron icon
 
-                // Create exam body for the papers
-                const examBody = document.createElement('div');
-                examBody.classList.add('exam-item-body');
+            // Create exam body for the papers
+            const examBody = document.createElement('div');
+            examBody.classList.add('exam-item-body');
 
-                // Loop through papers and create list items
-                const paperList = document.createElement('ul');
-                exam.papers.forEach(paper => {
-                    const paperItem = document.createElement('li');
-                    paperItem.classList.add('paper-item');
-                    
-                    // Create paper title
-                    const paperTitle = document.createElement('span');
-                    paperTitle.classList.add('paper-title');
-                    paperTitle.textContent = `${paper.title} (${paper.year})`;
+            // Loop through papers and create list items
+            const paperList = document.createElement('ul');
+            exam.papers.forEach(paper => {
+                const paperItem = document.createElement('li');
+                paperItem.classList.add('paper-item');
+                
+                // Create paper title
+                const paperTitle = document.createElement('span');
+                paperTitle.classList.add('paper-title');
+                paperTitle.textContent = `${paper.title} (${paper.year})`;
 
-                    // Create button for the modal
-                    const button = document.createElement('button');
-                    button.classList.add('btn-link');
-                    button.innerHTML = `<i class="fas fa-link"></i> Open`;
+                // Create button for the modal
+                const button = document.createElement('button');
+                button.classList.add('btn-link');
+                button.innerHTML = `<i class="fas fa-link"></i> Open`;
 
-                    // Set click event for the button to open the modal
-                    button.addEventListener('click', (e) => {
-                        e.stopPropagation();  // Prevent the click from triggering exam list toggle
-                        openModal(paper);
-                    });
-
-                    // Append paper title and button to paperItem
-                    paperItem.appendChild(paperTitle);
-                    paperItem.appendChild(button);
-                    paperList.appendChild(paperItem);
+                // Set click event for the button to open the modal
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();  // Prevent the click from triggering exam list toggle
+                    openModal(paper);
                 });
 
-                // Append the paper list to the exam body
-                examBody.appendChild(paperList);
-
-                // Append the header and body to the exam item
-                examItem.appendChild(examHeader);
-                examItem.appendChild(examBody);
-
-                // Add a click event to toggle visibility of exam papers (only when clicking the header)
-                examHeader.addEventListener('click', () => {
-                    const isOpen = examBody.style.display === 'block';
-                    examBody.style.display = isOpen ? 'none' : 'block';
-                    examHeader.querySelector('i').classList.toggle('fa-chevron-up');  // Change icon on toggle
-                    examHeader.querySelector('i').classList.toggle('fa-chevron-down');
-                });
-
-                // Add the exam item to the list
-                examList.appendChild(examItem);
+                // Append paper title and button to paperItem
+                paperItem.appendChild(paperTitle);
+                paperItem.appendChild(button);
+                paperList.appendChild(paperItem);
             });
-        }
 
-        // Modal functionality
-        const modal = document.getElementById('modal');
-        const closeBtn = document.querySelector('.close');
-        const playBtn = document.getElementById('playBtn');
-        const playCbtBtn = document.getElementById('playCbtBtn');
-        let currentPaper = null;
+            // Append the paper list to the exam body
+            examBody.appendChild(paperList);
 
-        function openModal(paper) {
-            currentPaper = paper;
-            document.getElementById('modal-title').innerText = paper.title;
+            // Append the header and body to the exam item
+            examItem.appendChild(examHeader);
+            examItem.appendChild(examBody);
 
-            // Set the links for the buttons
-            playBtn.onclick = () => {
-                window.location.href = `play.html?title=${encodeURIComponent(paper.title)}&metaId=${encodeURIComponent(paper.metaId)}`;
-            };
+            // Add a click event to toggle visibility of exam papers (only when clicking the header)
+            examHeader.addEventListener('click', () => {
+                const isOpen = examBody.style.display === 'block';
+                examBody.style.display = isOpen ? 'none' : 'block';
+                examHeader.querySelector('i').classList.toggle('fa-chevron-up');
+                examHeader.querySelector('i').classList.toggle('fa-chevron-down');
+            });
 
-            playCbtBtn.onclick = () => {
-                window.location.href = `playcbt.html?title=${encodeURIComponent(paper.title)}&metaId=${encodeURIComponent(paper.metaId)}`;
-            };
+            // Add the exam item to the list
+            examList.appendChild(examItem);
+        });
+    }
 
-            // Show the modal
-            modal.style.display = "block";
-        }
+    // Modal functionality
+    const modal = document.getElementById('modal');
+    const closeBtn = document.querySelector('.close');
+    const playBtn = document.getElementById('playBtn');
+    const playCbtBtn = document.getElementById('playCbtBtn');
+    let currentPaper = null;
 
-        // Close the modal
-        closeBtn.onclick = () => {
+    function openModal(paper) {
+        currentPaper = paper;
+        document.getElementById('modal-title').innerText = paper.title;
+
+        // Set the links for the buttons
+        playBtn.onclick = () => {
+            window.location.href = `play.html?title=${encodeURIComponent(paper.title)}&metaId=${encodeURIComponent(paper.metaId)}`;
+        };
+
+        playCbtBtn.onclick = () => {
+            window.location.href = `playcbt.html?title=${encodeURIComponent(paper.title)}&metaId=${encodeURIComponent(paper.metaId)}`;
+        };
+
+        // Show the modal
+        modal.style.display = "block";
+    }
+
+    // Close the modal
+    closeBtn.onclick = () => {
+        modal.style.display = "none";
+    };
+
+    // Close the modal if the user clicks anywhere outside the modal
+    window.onclick = (event) => {
+        if (event.target === modal) {
             modal.style.display = "none";
-        };
-
-        // Close the modal if the user clicks anywhere outside the modal
-        window.onclick = (event) => {
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        };
-    </script>
+        }
+    };
+</script>
 </body>
 </html>
