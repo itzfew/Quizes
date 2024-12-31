@@ -7,7 +7,7 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,7 +31,6 @@
             overflow-x: auto;
             word-wrap: break-word;
             white-space: normal;
-            
         }
 
         .question-number {
@@ -246,10 +245,10 @@
                 questionNumber.textContent = `Question ${index + 1}:`;
                 questionElement.appendChild(questionNumber);
 
-                // Display question content
+                // Display question content with MathJax support
                 const questionContent = document.createElement('div');
                 questionContent.className = 'question-content';
-                questionContent.innerHTML = question.content;
+                questionContent.innerHTML = question.content; // MathJax inline content here
                 questionElement.appendChild(questionContent);
 
                 // Display options
