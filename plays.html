@@ -286,7 +286,7 @@
             // Add explanation dropdown button (hidden by default)
             const explanationButton = document.createElement('button');
             explanationButton.className = 'explanation-button';
-            explanationButton.textContent = 'Show Explanation';
+            explanationButton.textContent = 'View Explanation';
             explanationButton.onclick = () => toggleExplanation(questionElement);
             questionElement.appendChild(explanationButton);
 
@@ -300,7 +300,7 @@
             const submitButton = document.createElement('button');
             submitButton.className = 'submit-button';
             submitButton.textContent = 'Submit';
-            submitButton.onclick = () => submitAnswer(questionElement, question);
+            submitButton.onclick = () => submitAnswer(questionElement, question, submitButton);
             questionElement.appendChild(submitButton);
 
             quizContainer.appendChild(questionElement);
@@ -309,7 +309,7 @@
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function submitAnswer(questionElement, question) {
+        function submitAnswer(questionElement, question, submitButton) {
             const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
             const feedback = document.createElement('div');
             feedback.className = 'correct-answer';
@@ -351,12 +351,12 @@
                 }
             });
 
-            // Show "Next" or "Submit All" based on the current question
-            const nextButton = document.createElement('button');
-            nextButton.className = 'submit-button';
-            nextButton.textContent = currentQuestionIndex === totalQuestions - 1 ? 'Submit All' : 'Next Question';
-            nextButton.onclick = currentQuestionIndex === totalQuestions - 1 ? showAllExplanations : nextQuestion;
-            questionElement.appendChild(nextButton);
+            // Hide the submit button
+            submitButton.style.display = 'none';
+
+            // Show the "View Explanation" button
+            const explanationButton = questionElement.querySelector('.explanation-button');
+            explanationButton.style.display = 'block';
 
             // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
@@ -365,31 +365,6 @@
         function toggleExplanation(questionElement) {
             const explanationContent = questionElement.querySelector('.explanation-content');
             explanationContent.classList.toggle('open');
-        }
-
-        function nextQuestion() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-
-            // Increment the current question index
-            if (currentQuestionIndex < subject.questions.length - 1) {
-                currentQuestionIndex++;
-                displayCurrentQuestion();
-            }
-        }
-
-        function showAllExplanations() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-
-            subject.questions.forEach((question, index) => {
-                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-                const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
-                const explanationButton = questionElement.querySelector('.explanation-button');
-
-                // Show the explanation button after submission
-                explanationButton.style.display = 'block';
-            });
         }
     </script>
 </body>
