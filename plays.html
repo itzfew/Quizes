@@ -56,66 +56,28 @@
             overflow-x: auto;
             word-wrap: break-word;
             white-space: normal;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
         .options label {
             cursor: pointer;
             display: flex;
             align-items: center;
-            flex-grow: 1;
         }
 
         .options input[type="radio"] {
             margin-right: 10px;
         }
 
-        .options img {
-            max-width: 150px; /* Limit the image width */
-            height: auto;
-            display: block;
-            margin: 0 auto;
-            transition: transform 0.3s ease; /* Smooth scaling on hover */
-            cursor: pointer; /* Pointer cursor on hover */
+        .question-id {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
         }
 
-        .options img:hover {
-            transform: scale(1.05); /* Slight zoom on hover for a preview effect */
-        }
-
-        /* Lightbox container */
-        .lightbox {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .lightbox img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Close button for lightbox */
-        .lightbox .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 2em;
-            color: white;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
+        .correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
+            color: green;
         }
 
         #subject-dropdown {
@@ -123,6 +85,11 @@
             margin: 20px auto;
             padding: 10px;
             font-size: 1em;
+        }
+
+        img {
+            max-width: 100px;
+            height: auto;
         }
 
         .submit-button {
@@ -138,6 +105,66 @@
             width: 100%;
             text-align: center;
             z-index: 1000;
+        }
+
+        /* Explanation Button Styling */
+        .explanation-button {
+            display: none; /* Hidden by default */
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 5px;
+            margin-top: 10px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-left: auto;   /* Centers the button horizontally */
+            margin-right: auto;  /* Centers the button horizontally */
+            display: none; /* Initially hide the explanation button */
+            width: 150px;        /* Fixed width for the button */
+        }
+
+        /* Optional: Add hover effect to change button color when hovered */
+        .explanation-button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .explanation-button i {
+            margin-left: 8px;
+        }
+
+        .explanation-button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .explanation-content {
+            display: none;
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
+        }
+
+        .explanation-content.open {
+            display: block;
+        }
+
+        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
+        }
+
+        /* Ensuring that MathJax inline formulas don't break or overflow */
+        .question-content span {
+            display: inline-block;
         }
 
         @media (max-width: 600px) {
@@ -161,19 +188,49 @@
                 max-width: 80px;
             }
         }
+        /* Simple loader animation */
+.loader {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+ 
     </style>
 </head>
 <body>
+    <!-- Add this to the body to show a loading spinner -->
+<div id="loading" style="display: none; text-align: center; padding: 50px;">
+  <div class="loader"></div>
+</div>
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
+<script>
+  // Show loading spinner while fetching quiz data
+  const loadingDiv = document.getElementById('loading');
+  loadingDiv.style.display = 'block';
 
-    <!-- Lightbox Modal -->
-    <div class="lightbox" id="lightbox">
-        <button class="close-btn" id="close-lightbox">&times;</button>
-        <img id="lightbox-image" src="" alt="Full Image">
-    </div>
-
+  fetch(jsonUrl)
+    .then(response => response.json())
+    .then(data => {
+      quizData = data;
+      populateSubjectDropdown();
+      displayAllQuestions();
+      loadingDiv.style.display = 'none';  // Hide the loading spinner when data is loaded
+    })
+    .catch(error => {
+      console.error('Error fetching the JSON data:', error);
+      loadingDiv.innerHTML = 'Failed to load quiz data.';
+    });
+</script> 
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
@@ -212,6 +269,12 @@
             };
         }
 
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let missedAnswers = 0;
+        let startTime = new Date();
+
         function displayAllQuestions() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
@@ -220,6 +283,7 @@
             const subject = quizData[subjectIndex];
 
             subject.questions.forEach((question, index) => {
+                totalQuestions++;  // Increase total questions count
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question';
 
@@ -232,7 +296,10 @@
                 // Display question content with MathJax inline
                 const questionContent = document.createElement('div');
                 questionContent.className = 'question-content';
-                questionContent.innerHTML = question.content;
+                // Wrap math in the mathjax-inline class
+                questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                });
                 questionElement.appendChild(questionContent);
 
                 // Display options
@@ -255,6 +322,20 @@
                 });
 
                 questionElement.appendChild(optionsList);
+
+                // Add explanation dropdown button (hidden by default)
+                const explanationButton = document.createElement('button');
+                explanationButton.className = 'explanation-button';
+                explanationButton.textContent = 'Show Explanation';
+                explanationButton.onclick = () => toggleExplanation(questionElement);
+                questionElement.appendChild(explanationButton);
+
+                // Create explanation content (hidden by default)
+                const explanationContent = document.createElement('div');
+                explanationContent.className = 'explanation-content';
+                explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
+                questionElement.appendChild(explanationContent);
+
                 quizContainer.appendChild(questionElement);
             });
 
@@ -264,49 +345,119 @@
             submitButton.textContent = 'Submit All';
             submitButton.onclick = showAllExplanations;
             quizContainer.appendChild(submitButton);
+
+            // Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        function toggleExplanation(questionElement) {
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            explanationContent.classList.toggle('open');
         }
 
         function showAllExplanations() {
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
+
             subject.questions.forEach((question, index) => {
+                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
                 const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
-                const explanationContent = document.createElement('div');
-                explanationContent.className = 'explanation-content';
-                explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-                questionElement.appendChild(explanationContent);
-            });
-        }
+                const explanationButton = questionElement.querySelector('.explanation-button');
 
-        // Lightbox functionality
-        document.addEventListener('DOMContentLoaded', function () {
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImage = document.getElementById('lightbox-image');
-            const closeLightbox = document.getElementById('close-lightbox');
+                // Show the explanation button after submission
+                explanationButton.style.display = 'block';
 
-            // Select all images in the options
-            const optionImages = document.querySelectorAll('.options img');
+                // Create feedback and show it after submission
+                const feedback = document.createElement('div');
+                feedback.className = 'correct-answer';
+                const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+                const correctOptionValue = question.correct_options[0];
 
-            // Add click event to each image
-            optionImages.forEach(image => {
-                image.addEventListener('click', function () {
-                    lightbox.style.display = 'flex';  // Show lightbox
-                    lightboxImage.src = image.src;   // Set lightbox image source
+                if (selectedOption) {
+                    const selectedOptionValue = selectedOption.value;
+
+                    // Correct or Incorrect Answer Feedback
+                    if (selectedOptionValue === correctOptionValue) {
+                        correctAnswers++;
+                        feedback.innerHTML = "You are correct!";
+                        feedback.style.color = 'green'; // Correct answer in green
+                    } else {
+                        incorrectAnswers++;
+                        feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
+                        feedback.style.color = 'red'; // Incorrect answer in red
+                    }
+                } else {
+                    missedAnswers++;
+                    feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
+                    feedback.style.color = 'red'; // No selection made
+                }
+
+                questionElement.appendChild(feedback);
+
+                // Color options based on correctness
+                options.forEach(option => {
+                    const optionItem = option.closest('li');
+                    if (option.value === correctOptionValue) {
+                        optionItem.style.backgroundColor = 'green';
+                        optionItem.style.color = 'white';
+                    } else if (option.checked) {
+                        optionItem.style.backgroundColor = 'red';
+                        optionItem.style.color = 'white';
+                    }
+                    option.disabled = true;
                 });
             });
 
-            // Close the lightbox when clicking the close button
-            closeLightbox.addEventListener('click', function () {
-                lightbox.style.display = 'none';  // Hide lightbox
+            // Calculate the time taken
+            const endTime = new Date(); // Record the time when the quiz is submitted
+            const timeTakenInSeconds = Math.round((endTime - startTime) / 1000); // Time in seconds
+            const timeTakenInMinutes = (timeTakenInSeconds / 60).toFixed(2);
+
+            // Calculate average time per attempt (total time taken / total attempts)
+            const totalAttempts = correctAnswers + incorrectAnswers;
+            const avgTimePerAttempt = totalAttempts > 0 ? (timeTakenInSeconds / totalAttempts).toFixed(2) : 0;
+
+            // Display the scorecard
+            const scoreCard = document.createElement('div');
+            scoreCard.innerHTML = `
+                <table style="width: 100%; text-align: center; border: 1px solid #ccc;">
+                    <tr>
+                        <th>Total Attempted</th>
+                        <th>Correct</th>
+                        <th>Incorrect</th>
+                        <th>Missed</th>
+                        <th>Total Time (Minutes)</th>
+                        <th>Avg. Time per Attempt (Seconds)</th>
+                    </tr>
+                    <tr>
+                        <td>${totalAttempts}</td>
+                        <td>${correctAnswers}</td>
+                        <td>${incorrectAnswers}</td>
+                        <td>${missedAnswers}</td>
+                        <td>${timeTakenInMinutes}</td>
+                        <td>${avgTimePerAttempt}</td>
+                    </tr>
+                </table>
+            `;
+
+            // Insert the scorecard at the top of the quiz container
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
+
+            // Smooth scroll to the scorecard
+            window.scrollTo({
+                top: quizContainer.offsetTop, 
+                behavior: 'smooth'
             });
 
-            // Close the lightbox if clicking outside the image
-            lightbox.addEventListener('click', function (event) {
-                if (event.target === lightbox) {
-                    lightbox.style.display = 'none';
-                }
-            });
-        });
+            // Re-render MathJax content after the scorecard is displayed
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        // Prevent page refresh or navigation
+        window.onbeforeunload = function (event) {
+            return "Are you sure you want to leave? Your progress may be lost.";
+        };
     </script>
 </body>
 </html>
