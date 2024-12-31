@@ -20,5 +20,5 @@ This project is open-source, and you are free to use, modify, and distribute it 
 
 ## Inspiration
 
-This site ([Quiz Portal](https://itzfew.github.io/Quizes/)) is inspired by the [JEENEETards project](https://github.com/skndash96/jeeneetards), which provides valuable educational resources for JEE/NEET preparation.
+This site ([Quizes](https://itzfew.github.io/Quizes/)) is inspired by the [JEENEETards project](https://github.com/skndash96/jeeneetards), which provides valuable educational resources for JEE/NEET preparation.
 
