@@ -363,7 +363,10 @@
                 alert("You've completed the quiz!");
             }
         }
-
+// Prevent page refresh or navigation
+        window.onbeforeunload = function (event) {
+            return "Are you sure you want to leave? Your progress may be lost.";
+        };
     </script>
 </body>
 </html>
