@@ -12,75 +12,89 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #fff; /* White body background */
+            background-color: #f4f7fc; /* Light background for an app-like feel */
             color: #333; /* Dark text for readability */
         }
 
         h1 {
             text-align: center;
-            color: #000; /* Black title */
+            color: #333; /* Dark title */
             margin-top: 30px;
-            font-size: 32px;
+            font-size: 36px;
+            font-weight: bold;
         }
 
         #exam-list {
             list-style-type: none;
             padding: 0;
-            margin-top: 10px;
+            margin-top: 20px;
+            max-width: 800px;
+            margin: 20px auto; /* Center the exam list */
         }
 
         .exam-item {
-            background-color: #1f1f1f; /* Dark gray background for exam items */
-            margin-bottom: 20px;
+            border: 2px solid #ccc; /* Light gray border */
+            margin-bottom: 15px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             cursor: pointer;
+            padding: 10px;
+            background-color: #fff; /* White background for a clean look */
+        }
+
+        .exam-item:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow on hover */
         }
 
         .exam-item-header {
-            background-color: #000; /* Black background */
-            color: #fff;
-            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333;
             font-size: 20px;
             font-weight: bold;
-            text-align: center;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f1f1f1; /* Light gray for the header */
         }
 
-        .exam-item-header span {
-            margin-left: 10px;
-            font-size: 18px;
+        .exam-item-header i {
+            font-size: 18px; /* Chevron icon size */
+            color: #555;
         }
 
         .exam-item-body {
             padding: 10px 15px;
             display: none; /* Hidden by default */
-            background-color: #f4f4f4; /* Light gray for paper body */
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-top: 10px;
         }
 
         .paper-item {
-            background-color: #000; /* Dark gray for paper items */
-            margin-bottom: 10px;
+            border: 1px solid #ccc; /* Light gray border for paper items */
+            margin-bottom: 12px;
             padding: 12px;
             border-radius: 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background-color: #fff; /* Paper items white background */
         }
 
         .paper-item:hover {
-            background-color: #555; /* Slightly lighter gray on hover */
+            background-color: #f1f1f1; /* Light gray on hover */
         }
 
         .paper-title {
-            color: white;
             font-size: 16px;
             font-weight: bold;
+            color: #333;
         }
 
         .btn-link {
-            background-color: #000;
+            background-color: #007bff;
             color: #fff;
-            border: 1px solid #333;
+            border: 1px solid #007bff;
             padding: 8px 15px;
             cursor: pointer;
             border-radius: 5px;
@@ -93,8 +107,8 @@
         }
 
         .btn-link:hover {
-            background-color: #333; /* Lighter black on hover */
-            border-color: #ddd;
+            background-color: #0056b3;
+            border-color: #0056b3;
         }
 
         /* Modal Styles */
@@ -204,10 +218,10 @@
                 const examItem = document.createElement('li');
                 examItem.classList.add('exam-item');
 
-                // Create exam header with title and '>'
+                // Create exam header with title and dropdown icon
                 const examHeader = document.createElement('div');
                 examHeader.classList.add('exam-item-header');
-                examHeader.innerHTML = `${exam.title}<span>&gt;</span>`;  // Adding the ">" after exam title
+                examHeader.innerHTML = `${exam.title}<i class="fas fa-chevron-down"></i>`;  // Chevron icon
 
                 // Create exam body for the papers
                 const examBody = document.createElement('div');
@@ -252,6 +266,8 @@
                 examHeader.addEventListener('click', () => {
                     const isOpen = examBody.style.display === 'block';
                     examBody.style.display = isOpen ? 'none' : 'block';
+                    examHeader.querySelector('i').classList.toggle('fa-chevron-up');  // Change icon on toggle
+                    examHeader.querySelector('i').classList.toggle('fa-chevron-down');
                 });
 
                 // Add the exam item to the list
