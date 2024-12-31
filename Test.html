@@ -27,32 +27,32 @@
             margin-bottom: 30px;
             padding: 3px;
             border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
+            overflow-x: auto; /* Enable horizontal scroll if content overflows */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
         }
 
         .question-content {
             margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: normal;
-            max-width: 100%;
-            overflow-x: auto;
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
+            max-width: 100%; /* Ensure content can overflow horizontally */
+            overflow-x: auto; /* Enable horizontal scroll within the question content */
         }
 
         .next-button {
-            background-color: #000;
-            color: white;
+            background-color: #000; /* Button color */
+            color: white; /* Text color */
             padding: 10px 20px;
             border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
-            position: fixed;
-            bottom: 0px;
+            position: fixed; /* Fix position at the bottom of the screen */
+            bottom: 0px; /* Distance from the bottom edge */
             left: 0;
-            width: 100%;
+            width: 100%; /* Make button fill the full width */
             text-align: center;
-            z-index: 1000;
+            z-index: 1000; /* Ensure the button stays on top of other content */
         }
 
         .options li {
@@ -60,9 +60,9 @@
             border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
+            overflow-x: auto; /* Enable horizontal scroll for the option list if needed */
+            word-wrap: break-word; /* Automatically wrap long words */
+            white-space: normal; /* Allow text to break and wrap */
         }
 
         .options label {
@@ -101,8 +101,8 @@
         }
 
         img {
-            max-width: 100px;
-            height: auto;
+            max-width: 100px; /* Set a maximum width for images */
+            height: auto; /* Maintain aspect ratio */
         }
 
         .timer {
@@ -111,7 +111,18 @@
             color: #d9534f;
             font-weight: bold;
         }
+        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
+        }
 
+        /* Ensuring that MathJax inline formulas don't break or overflow */
+        .question-content span {
+            display: inline-block;
+        }
+ 
         @media (max-width: 600px) {
             body {
                 padding: 0px;
@@ -126,11 +137,11 @@
             }
 
             .options li {
-                padding: 5px;
+                padding: 5px; /* Adjust padding for smaller screens */
             }
 
             img {
-                max-width: 80px;
+                max-width: 80px; /* Adjust image size for smaller screens */
             }
         }
     </style>
@@ -139,12 +150,11 @@
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
-
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
         let timer;
-        let timeLeft = 120;
+        let timeLeft = 120; // 30 seconds timer for each question
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
@@ -155,6 +165,7 @@
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
+        // Fetch the JSON data
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
@@ -202,18 +213,19 @@
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
 
+            // Display question ID
             const questionId = document.createElement('div');
             questionId.className = 'question-id';
             questionId.textContent = `Question ID: ${question.question_id}`;
             questionElement.appendChild(questionId);
 
+            // Display question content
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
+            questionContent.innerHTML = question.content;
             questionElement.appendChild(questionContent);
 
+            // Display options
             const optionsList = document.createElement('ul');
             optionsList.className = 'options';
 
@@ -234,18 +246,21 @@
 
             questionElement.appendChild(optionsList);
 
+            // Display timer
             const timerElement = document.createElement('div');
             timerElement.className = 'timer';
             timerElement.id = 'timer';
             timerElement.textContent = `Time Left: ${timeLeft}s`;
             quizContainer.appendChild(timerElement);
 
+            // Add Submit button
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
             nextButton.textContent = 'Submit';
             nextButton.onclick = showExplanation;
             questionElement.appendChild(nextButton);
 
+            // Display question number (e.g., 1/12)
             const questionNumber = document.createElement('div');
             questionNumber.className = 'question-id';
             questionNumber.textContent = `${currentQuestionIndex + 1}/${quizData[subjectIndex].questions.length}`;
@@ -253,9 +268,12 @@
 
             quizContainer.appendChild(questionElement);
 
+            // Start timer countdown
             startTimer();
+// Wrap math in the mathjax-inline class
+                questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
 
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
         function startTimer() {
@@ -272,7 +290,7 @@
         }
 
         function showExplanation() {
-            clearInterval(timer);
+            clearInterval(timer); // Stop the timer when explanation is shown
 
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const selectedOption = document.querySelector('input[name="question' + quizData[subjectIndex].questions[currentQuestionIndex].question_id + '"]:checked');
@@ -280,55 +298,63 @@
                 const question = quizData[subjectIndex].questions[currentQuestionIndex];
                 const selectedOptionValue = selectedOption.value;
 
+                // Find the selected option content
                 const selectedOptionContent = question.options.find(option => option.identifier === selectedOptionValue).content;
                 const correctOptionValue = question.correct_options[0];
                 const correctOptionContent = question.options.find(option => option.identifier === correctOptionValue).content;
 
+                // Show feedback based on correctness
                 const feedback = document.createElement('div');
                 feedback.className = 'correct-answer';
 
                 if (selectedOptionValue === correctOptionValue) {
                     feedback.innerHTML = `You are correct! Option ${correctOptionValue}: ${correctOptionContent}`;
-                    feedback.style.color = 'green';
+                    feedback.style.color = 'green'; // Correct answer in green
                 } else {
                     feedback.innerHTML = `You selected Option ${selectedOptionValue}: ${selectedOptionContent}, but the correct answer is Option ${correctOptionValue}: ${correctOptionContent}.`;
-                    feedback.style.color = 'red';
+                    feedback.style.color = 'red'; // Incorrect answer in red
                 }
 
                 document.querySelector('.question').appendChild(feedback);
 
+                // Show explanation
                 if (question.explanation) {
                     const explanation = document.createElement('div');
                     explanation.className = 'question-explanation';
-                    explanation.innerHTML = `Explanation: ${question.explanation.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                        return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                    })}`;
+                    explanation.innerHTML = `Explanation: ${question.explanation}`;
                     document.querySelector('.question').appendChild(explanation);
                 }
 
+                // Color the options based on correctness
                 const options = document.querySelectorAll('input[name="question' + question.question_id + '"]');
                 options.forEach(option => {
                     const optionItem = option.closest('li');
                     if (option.value === correctOptionValue) {
-                        optionItem.style.backgroundColor = 'green';
-                        optionItem.style.color = 'white';
+                        optionItem.style.backgroundColor = 'green'; // Correct option turns green
+                        optionItem.style.color = 'white'; // Text color for green
                     } else if (option.value === selectedOptionValue) {
-                        optionItem.style.backgroundColor = 'red';
-                        optionItem.style.color = 'white';
-                    }
+                        optionItem.style.backgroundColor = 'red'; // Incorrect option turns red
+                        optionItem.style.color = 'white'; // Text color for red
+
+            // Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
                 });
 
+                // Disable further selection
                 options.forEach(option => option.disabled = true);
 
+                // Update button text
                 const nextButton = document.querySelector('.next-button');
                 nextButton.textContent = 'Next Question';
 
+                // Save the current question index
                 saveLastQuestion();
 
+                // Show next question on button click
                 nextButton.onclick = () => {
                     currentQuestionIndex++;
                     if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
-                        timeLeft = 120;
+                        timeLeft = 120; // Reset the timer for the next question
                         displayQuestion();
                     } else {
                         showQuizEnd();
