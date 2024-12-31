@@ -92,7 +92,7 @@
             height: auto;
         }
 
-        .submit-button {
+        .submit-button, .next-button {
             background-color: #000;
             color: white;
             padding: 10px 20px;
@@ -101,6 +101,14 @@
             cursor: pointer;
             text-align: center;
             width: 100%;
+        }
+
+        .submit-button {
+            display: block;
+        }
+
+        .next-button {
+            display: none;
         }
 
         /* Explanation Button Styling */
@@ -123,14 +131,9 @@
             width: 150px;        /* Fixed width for the button */
         }
 
-        /* Optional: Add hover effect to change button color when hovered */
         .explanation-button:hover {
             background-color: black;
             color: white;
-        }
-
-        .explanation-button i {
-            margin-left: 8px;
         }
 
         .explanation-button-container {
@@ -157,7 +160,6 @@
             font-size: 1.1em;
         }
 
-        /* Ensuring that MathJax inline formulas don't break or overflow */
         .question-content span {
             display: inline-block;
         }
@@ -203,7 +205,6 @@
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
-        // Fetch the JSON data
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
@@ -242,19 +243,16 @@
             const subject = quizData[subjectIndex];
             const question = subject.questions[currentQuestionIndex];
 
-            // Total number of questions
             totalQuestions = subject.questions.length;
 
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
 
-            // Add Question Numbering
             const questionNumber = document.createElement('div');
             questionNumber.className = 'question-number';
             questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
             questionElement.appendChild(questionNumber);
 
-            // Display question content with MathJax inline
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
             questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
@@ -262,7 +260,6 @@
             });
             questionElement.appendChild(questionContent);
 
-            // Display options
             const optionsList = document.createElement('ul');
             optionsList.className = 'options';
 
@@ -283,29 +280,30 @@
 
             questionElement.appendChild(optionsList);
 
-            // Add explanation dropdown button (hidden by default)
             const explanationButton = document.createElement('button');
             explanationButton.className = 'explanation-button';
             explanationButton.textContent = 'View Explanation';
             explanationButton.onclick = () => toggleExplanation(questionElement);
             questionElement.appendChild(explanationButton);
 
-            // Create explanation content (hidden by default)
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
             explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
             questionElement.appendChild(explanationContent);
 
-            // Add Submit Button for this question
             const submitButton = document.createElement('button');
             submitButton.className = 'submit-button';
             submitButton.textContent = 'Submit';
             submitButton.onclick = () => submitAnswer(questionElement, question, submitButton);
             questionElement.appendChild(submitButton);
 
-            quizContainer.appendChild(questionElement);
+            const nextButton = document.createElement('button');
+            nextButton.className = 'next-button';
+            nextButton.textContent = 'Next';
+            nextButton.onclick = () => nextQuestion();
+            questionElement.appendChild(nextButton);
 
-            // Re-render MathJax content
+            quizContainer.appendChild(questionElement);
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
@@ -320,25 +318,23 @@
             if (selectedOption) {
                 const selectedOptionValue = selectedOption.value;
 
-                // Correct or Incorrect Answer Feedback
                 if (selectedOptionValue === correctOptionValue) {
                     correctAnswers++;
                     feedback.innerHTML = "You are correct!";
-                    feedback.style.color = 'green'; // Correct answer in green
+                    feedback.style.color = 'green';
                 } else {
                     incorrectAnswers++;
                     feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red'; // Incorrect answer in red
+                    feedback.style.color = 'red';
                 }
             } else {
                 missedAnswers++;
                 feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
-                feedback.style.color = 'red'; // No selection made
+                feedback.style.color = 'red';
             }
 
             questionElement.appendChild(feedback);
 
-            // Disable options after submission
             options.forEach(option => {
                 option.disabled = true;
                 const optionItem = option.closest('li');
@@ -351,14 +347,10 @@
                 }
             });
 
-            // Hide the submit button
             submitButton.style.display = 'none';
+            questionElement.querySelector('.next-button').style.display = 'block';
+            questionElement.querySelector('.explanation-button').style.display = 'block';
 
-            // Show the "View Explanation" button
-            const explanationButton = questionElement.querySelector('.explanation-button');
-            explanationButton.style.display = 'block';
-
-            // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
@@ -366,6 +358,16 @@
             const explanationContent = questionElement.querySelector('.explanation-content');
             explanationContent.classList.toggle('open');
         }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                displayCurrentQuestion();
+            } else {
+                alert("You've completed the quiz!");
+            }
+        }
+
     </script>
 </body>
 </html>
