@@ -219,6 +219,7 @@
             color: #777;
         }
 
+        
         /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
         .mathjax-inline {
             white-space: nowrap;
@@ -350,7 +351,9 @@
             questionContent.className = 'question-content';
             questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
+            }).replace(/\$(.*?)\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+            });  // Handling both $$ and $ inline and block math
             questionElement.appendChild(questionContent);
 
             const optionsList = document.createElement('ul');
@@ -397,7 +400,7 @@
             questionElement.appendChild(nextButton);
 
             quizContainer.appendChild(questionElement);
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Ensure MathJax renders the math
         }
 
         function submitAnswer(questionElement, question, submitButton) {
@@ -444,7 +447,7 @@
             questionElement.querySelector('.next-button').style.display = 'block';
             questionElement.querySelector('.explanation-button').style.display = 'block';
 
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Ensure MathJax re-renders the math
         }
 
         function toggleExplanation(questionElement) {
