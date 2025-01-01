@@ -73,7 +73,7 @@
             margin-right: 8px;
         }
 
-/* Black line below the header */
+        /* Black line below the header */
         header + hr {
             margin-top: 0;
             border: none;
@@ -181,7 +181,7 @@
             display: none;
         }
 
-.explanation-button {
+        .explanation-button {
             display: none;
             margin-top: 10px;
             background-color: white;
@@ -209,16 +209,17 @@
         }
 
         
-.explanation-content.open {
-    display: block;
-    background-color: #FFF59D; /* Yellow background */
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-    font-style: italic;
-    color: #777;
-}
+        .explanation-content.open {
+            display: block;
+            background-color: #FFF59D; /* Yellow background */
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
+        }
 
+        
         /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
         .mathjax-inline {
             white-space: nowrap;
@@ -251,6 +252,7 @@
                 max-width: 80px;
             }
         }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             header {
@@ -273,14 +275,13 @@
 </head>
 <body>
     <!-- Header Section -->
-<header>
-    <div class="logo">
-        <!-- Logo with provided image URL -->
-        <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40"> <!-- Image size 40x40px -->
-        <h1>Quizes</h1>
-    </div>
-    
-</header>
+    <header>
+        <div class="logo">
+            <!-- Logo with provided image URL -->
+            <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40"> <!-- Image size 40x40px -->
+            <h1>Quizes</h1>
+        </div>
+    </header>
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
@@ -350,6 +351,8 @@
             questionContent.className = 'question-content';
             questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            }).replace(/\$(.*?)\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
             });
             questionElement.appendChild(questionContent);
 
@@ -366,7 +369,11 @@
                 optionInput.value = option.identifier;
 
                 optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
+                optionLabel.innerHTML += option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                }).replace(/\$(.*?)\$/g, (match, p1) => {
+                    return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+                });
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
@@ -381,7 +388,11 @@
 
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
+            explanationContent.innerHTML = `Explanation: ${question.explanation ? question.explanation.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            }).replace(/\$(.*?)\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+            }) : 'No explanation available.'}`;
             questionElement.appendChild(explanationContent);
 
             const submitButton = document.createElement('button');
@@ -397,7 +408,7 @@
             questionElement.appendChild(nextButton);
 
             quizContainer.appendChild(questionElement);
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Ensure MathJax renders the math
         }
 
         function submitAnswer(questionElement, question, submitButton) {
@@ -444,7 +455,7 @@
             questionElement.querySelector('.next-button').style.display = 'block';
             questionElement.querySelector('.explanation-button').style.display = 'block';
 
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Ensure MathJax re-renders the math
         }
 
         function toggleExplanation(questionElement) {
@@ -460,7 +471,8 @@
                 alert("You've completed the quiz!");
             }
         }
-// Prevent page refresh or navigation
+        
+        // Prevent page refresh or navigation
         window.onbeforeunload = function (event) {
             return "Are you sure you want to leave? Your progress may be lost.";
         };
