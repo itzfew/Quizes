@@ -353,7 +353,7 @@
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
             }).replace(/\$(.*?)\$/g, (match, p1) => {
                 return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-            });  // Handling both $$ and $ inline and block math
+            });
             questionElement.appendChild(questionContent);
 
             const optionsList = document.createElement('ul');
@@ -369,7 +369,11 @@
                 optionInput.value = option.identifier;
 
                 optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
+                optionLabel.innerHTML += option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                }).replace(/\$(.*?)\$/g, (match, p1) => {
+                    return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+                });
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
@@ -384,7 +388,11 @@
 
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
+            explanationContent.innerHTML = `Explanation: ${question.explanation ? question.explanation.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            }).replace(/\$(.*?)\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+            }) : 'No explanation available.'}`;
             questionElement.appendChild(explanationContent);
 
             const submitButton = document.createElement('button');
