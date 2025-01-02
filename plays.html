@@ -93,6 +93,13 @@
             border: 2px solid black;
         }
 
+        .timer {
+            font-size: 1.2em;
+            color: red;
+            font-weight: bold;
+            margin-left: auto;
+            margin-right: 20px;
+        }
 
         .question {
             margin-bottom: 30px;
@@ -208,7 +215,6 @@
             color: #777;
         }
 
-        
         .explanation-content.open {
             display: block;
             background-color: #FFF59D; /* Yellow background */
@@ -219,7 +225,6 @@
             color: #777;
         }
 
-        
         /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
         .mathjax-inline {
             white-space: nowrap;
@@ -271,16 +276,23 @@
                 margin-top: 10px;
             }
 
+            /* Enable horizontal scrolling */
+            .question-content, .options li {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+
     </style>
 </head>
 <body>
     <!-- Header Section -->
     <header>
         <div class="logo">
-            <!-- Logo with provided image URL -->
             <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40"> <!-- Image size 40x40px -->
             <h1>Quizes</h1>
         </div>
+        <div class="timer" id="timer"></div>
     </header>
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
@@ -289,6 +301,9 @@
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
+        let totalQuestions = 0;
+        let timerInterval;
+        let timeRemaining = 300; // Timer set to 5 minutes (300 seconds)
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
@@ -305,6 +320,7 @@
                 quizData = data;
                 populateSubjectDropdown();
                 displayCurrentQuestion();
+                startTimer();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
@@ -322,12 +338,6 @@
                 displayCurrentQuestion();
             };
         }
-
-        let totalQuestions = 0;
-        let correctAnswers = 0;
-        let incorrectAnswers = 0;
-        let missedAnswers = 0;
-        let startTime = new Date();
 
         function displayCurrentQuestion() {
             const quizContainer = document.getElementById('quiz-container');
@@ -411,6 +421,20 @@
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Ensure MathJax renders the math
         }
 
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                document.getElementById('timer').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Time's up! You've completed the quiz.");
+                }
+            }, 1000);
+        }
+
         function submitAnswer(questionElement, question, submitButton) {
             const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
             const feedback = document.createElement('div');
@@ -423,16 +447,13 @@
                 const selectedOptionValue = selectedOption.value;
 
                 if (selectedOptionValue === correctOptionValue) {
-                    correctAnswers++;
                     feedback.innerHTML = "You are correct!";
                     feedback.style.color = 'green';
                 } else {
-                    incorrectAnswers++;
                     feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
                     feedback.style.color = 'red';
                 }
             } else {
-                missedAnswers++;
                 feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
                 feedback.style.color = 'red';
             }
