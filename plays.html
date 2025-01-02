@@ -124,28 +124,27 @@
         }
 
         .options li {
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    white-space: nowrap; /* Prevent the text from wrapping to the next line */
-    word-wrap: normal; /* Prevent text from breaking into new lines */
-    max-width: 100%; /* Allow options to take up full width */
-}
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto; /* Enable horizontal scrolling */
+            white-space: nowrap; /* Prevent the text from wrapping to the next line */
+            word-wrap: normal; /* Prevent text from breaking into new lines */
+            max-width: 100%; /* Allow options to take up full width */
+        }
 
-.options label {
-    display: flex;
-    align-items: center;
-    width: 100%; /* Ensure the label takes full width */
-    overflow-x: auto; /* Allow horizontal scroll for label */
-    white-space: nowrap; /* Prevent text from wrapping */
-}
+        .options label {
+            display: flex;
+            align-items: center;
+            width: 100%; /* Ensure the label takes full width */
+            overflow-x: auto; /* Allow horizontal scroll for label */
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
 
-.options input[type="radio"] {
-    margin-right: 10px;
-}
-
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
 
         .question-id {
             font-weight: bold;
@@ -228,7 +227,6 @@
             color: #777;
         }
 
-        
         /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
         .mathjax-inline {
             white-space: nowrap;
@@ -279,19 +277,18 @@
                 margin-left: 0;
                 margin-top: 10px;
             }
-            /* Additional adjustments for mobile */
-@media (max-width: 600px) {
-    .options li {
-        padding: 5px; /* Reduced padding on smaller screens */
-    }
 
-    .options label {
-        font-size: 14px; /* Adjust font size for smaller screens */
-    }
-}
-            
-        /* Other styles remain unchanged... */
-        /* Quiz container, question styles, options, etc. */
+            /* Additional adjustments for mobile */
+            @media (max-width: 600px) {
+                .options li {
+                    padding: 5px; /* Reduced padding on smaller screens */
+                }
+
+                .options label {
+                    font-size: 14px; /* Adjust font size for smaller screens */
+                }
+            }
+        }
     </style>
 </head>
 <body>
@@ -304,7 +301,7 @@
         </div>
         <div class="time" id="timer">00:00</div>
     </header>
-        <div class="quiz-title" id="quiz-title"></div>
+        
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
 
@@ -421,98 +418,54 @@
 
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation ? question.explanation.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            }).replace(/\$(.*?)\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-            }) : 'No explanation available.'}`;
+            explanationContent.textContent = question.explanation;
             questionElement.appendChild(explanationContent);
+
+            quizContainer.appendChild(questionElement);
 
             const submitButton = document.createElement('button');
             submitButton.className = 'submit-button';
-            submitButton.textContent = 'Submit';
-            submitButton.onclick = () => submitAnswer(questionElement, question, submitButton);
-            questionElement.appendChild(submitButton);
-
+            submitButton.textContent = 'Submit Answer';
+            submitButton.onclick = () => submitAnswer(question);
+            quizContainer.appendChild(submitButton);
+            
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
-            nextButton.textContent = 'Next';
+            nextButton.textContent = 'Next Question';
             nextButton.onclick = () => nextQuestion();
-            questionElement.appendChild(nextButton);
-
-            quizContainer.appendChild(questionElement);
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Ensure MathJax renders the math
-        }
-
-        function submitAnswer(questionElement, question, submitButton) {
-            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-            const feedback = document.createElement('div');
-            feedback.className = 'correct-answer';
-
-            const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
-            const correctOptionValue = question.correct_options[0];
-
-            if (selectedOption) {
-                const selectedOptionValue = selectedOption.value;
-
-                if (selectedOptionValue === correctOptionValue) {
-                    correctAnswers++;
-                    feedback.innerHTML = "You are correct!";
-                    feedback.style.color = 'green';
-                } else {
-                    incorrectAnswers++;
-                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red';
-                }
-            } else {
-                missedAnswers++;
-                feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
-                feedback.style.color = 'red';
-            }
-
-            questionElement.appendChild(feedback);
-
-            options.forEach(option => {
-                option.disabled = true;
-                const optionItem = option.closest('li');
-                if (option.value === correctOptionValue) {
-                    optionItem.style.backgroundColor = 'green';
-                    optionItem.style.color = 'white';
-                } else if (option.checked) {
-                    optionItem.style.backgroundColor = 'red';
-                    optionItem.style.color = 'white';
-                }
-            });
-
-            submitButton.style.display = 'none';
-            questionElement.querySelector('.next-button').style.display = 'block';
-            questionElement.querySelector('.explanation-button').style.display = 'block';
-
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Ensure MathJax re-renders the math
+            quizContainer.appendChild(nextButton);
         }
 
         function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
+            const explanation = questionElement.querySelector('.explanation-content');
+            explanation.classList.toggle('open');
+        }
+
+        function submitAnswer(question) {
+            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+            if (!selectedOption) return;
+
+            const isCorrect = selectedOption.value === question.answer;
+            if (isCorrect) {
+                correctAnswers++;
+            } else {
+                incorrectAnswers++;
+            }
+
+            document.querySelector('.submit-button').style.display = 'none';
+            document.querySelector('.next-button').style.display = 'block';
         }
 
         function nextQuestion() {
-            if (currentQuestionIndex < totalQuestions - 1) {
+            if (currentQuestionIndex + 1 < totalQuestions) {
                 currentQuestionIndex++;
                 displayCurrentQuestion();
             } else {
-                clearInterval(timerInterval); // Stop the timer when quiz ends
-                alert("You've completed the quiz!");
+                alert('Quiz finished!');
             }
         }
 
-        // Start timer when quiz starts
-        startTimer();
-
-        // Prevent page refresh or navigation
-        window.onbeforeunload = function (event) {
-            return "Are you sure you want to leave? Your progress may be lost.";
-        };
+        startTimer(); // Start timer when quiz is loaded
     </script>
 </body>
 </html>
