@@ -124,24 +124,28 @@
         }
 
         .options li {
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
-        }
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent the text from wrapping to the next line */
+    word-wrap: normal; /* Prevent text from breaking into new lines */
+    max-width: 100%; /* Allow options to take up full width */
+}
 
-        .options label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
+.options label {
+    display: flex;
+    align-items: center;
+    width: 100%; /* Ensure the label takes full width */
+    overflow-x: auto; /* Allow horizontal scroll for label */
+    white-space: nowrap; /* Prevent text from wrapping */
+}
 
-        .options input[type="radio"] {
-            margin-right: 10px;
-        }
+.options input[type="radio"] {
+    margin-right: 10px;
+}
+
 
         .question-id {
             font-weight: bold;
@@ -275,6 +279,17 @@
                 margin-left: 0;
                 margin-top: 10px;
             }
+            /* Additional adjustments for mobile */
+@media (max-width: 600px) {
+    .options li {
+        padding: 5px; /* Reduced padding on smaller screens */
+    }
+
+    .options label {
+        font-size: 14px; /* Adjust font size for smaller screens */
+    }
+}
+            
         /* Other styles remain unchanged... */
         /* Quiz container, question styles, options, etc. */
     </style>
