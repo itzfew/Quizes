@@ -6,47 +6,84 @@
     <title>Quizes</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <style>
-        #submit-btn {
-    position: fixed;
-    bottom: 1px;
-    left: 0%;
-    padding: 10px 20px;
-    background-color: #000000;
-    color: white;
-    font-size: 18px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 0;
-}
-
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
         }
-        
-        select, input, button {
-            padding: 10px;
-            margin: 10px;
-            font-size: 16px;
-            width: 100%;
-            box-sizing: border-box;
+
+        header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
         }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
         .container {
             padding: 20px;
             max-width: 800px;
-            margin: 0 auto;
+            margin: 20px auto;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
+        .container label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        select, input, button {
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #submit-btn {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
         .question-container {
             margin-top: 20px;
             border-top: 2px solid #ccc;
             padding-top: 10px;
         }
+
         .question {
             background-color: #fff;
             border: 1px solid #ccc;
@@ -54,44 +91,57 @@
             margin-bottom: 15px;
             border-radius: 8px;
         }
+
         .question h3 {
             margin: 0;
             font-size: 18px;
         }
+
         .options {
             margin-top: 10px;
         }
+
         .options label {
             display: block;
         }
+
         .result {
             margin-top: 20px;
         }
+
         .correct {
             color: green;
         }
+
         .incorrect {
             color: red;
         }
+
         .missed {
             color: black;
         }
+
         #quiz-container {
             display: none;
         }
+
         #result-container {
             display: none;
         }
+
         #start-btn {
             display: block;
         }
+
         #num-questions, #paper-title {
             width: 100%;
             box-sizing: border-box;
         }
+
         .hidden {
             display: none;
         }
+
     </style>
 </head>
 <body>
