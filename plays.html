@@ -205,6 +205,11 @@
             let totalNegativeMarks = 0;
             userAnswers = [];
 
+            // Hide quiz elements
+            document.getElementById('question-container').style.display = 'none';
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('submit-btn').style.display = 'none';
+
             currentQuestions.forEach((question, index) => {
                 const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
                 if (selectedOption) {
@@ -225,6 +230,9 @@
                         totalScore += question.marks;
                     } else if (userAnswer !== '') {
                         totalNegativeMarks += question.negMarks; // Deduct negative marks for incorrect answer
+                    } else {
+                        // If question is missed, give zero marks
+                        totalScore += 0;  // No points for missed question
                     }
                     userAnswers.push(userAnswer);
                 }
@@ -254,6 +262,9 @@
             });
 
             resultContainer.innerHTML = resultText;
+
+            // Apply MathJax to the results
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, resultContainer]);
         }
     </script>
 </body>
