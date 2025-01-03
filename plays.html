@@ -165,16 +165,27 @@
                 const optionsDiv = document.createElement('div');
                 optionsDiv.classList.add('options');
 
-                question.options.forEach((option, optionIndex) => {
-                    const optionInput = document.createElement('input');
-                    optionInput.type = 'radio';
-                    optionInput.name = `question${index}`;
-                    optionInput.value = optionIndex;
-                    const optionLabel = document.createElement('label');
-                    optionLabel.innerHTML = option.content;
-                    optionsDiv.appendChild(optionInput);
-                    optionsDiv.appendChild(optionLabel);
-                });
+                // Check if the question has options
+                if (question.options && question.options.length > 0) {
+                    // If options are available, display them as A, B, C, D, etc.
+                    question.options.forEach((option, optionIndex) => {
+                        const optionInput = document.createElement('input');
+                        optionInput.type = 'radio';
+                        optionInput.name = `question${index}`;
+                        optionInput.value = String.fromCharCode(65 + optionIndex); // A, B, C, D, etc.
+                        const optionLabel = document.createElement('label');
+                        optionLabel.innerHTML = `${String.fromCharCode(65 + optionIndex)}. ${option.content}`;
+                        optionsDiv.appendChild(optionInput);
+                        optionsDiv.appendChild(optionLabel);
+                    });
+                } else {
+                    // If no options, create a text input for the integer answer
+                    const inputField = document.createElement('input');
+                    inputField.type = 'number';
+                    inputField.name = `question${index}`;
+                    inputField.placeholder = 'Enter your answer';
+                    optionsDiv.appendChild(inputField);
+                }
 
                 questionDiv.appendChild(optionsDiv);
                 container.appendChild(questionDiv);
@@ -190,14 +201,21 @@
             currentQuestions.forEach((question, index) => {
                 const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
                 if (selectedOption) {
-                    const answerIndex = parseInt(selectedOption.value);
-                    userAnswers.push(answerIndex);
+                    const answer = selectedOption.value;
+                    userAnswers.push(answer);
 
-                    if (answerIndex === question.correctOption) {
+                    // Check if the selected option matches the correct answer
+                    if (answer === question.correct_options) {
                         score++;
                     }
                 } else {
-                    userAnswers.push(null);
+                    // If there is no option selected, check for text input field answer
+                    const inputField = document.querySelector(`input[name="question${index}"]`);
+                    const userAnswer = inputField ? parseInt(inputField.value.trim()) : '';
+                    if (userAnswer === question.answer) {  // Updated to check against 'answer' for input questions
+                        score++;
+                    }
+                    userAnswers.push(userAnswer);
                 }
             });
 
@@ -210,13 +228,13 @@
 
             let resultText = `<h2>Your Score: ${score} / ${currentQuestions.length}</h2>`;
             currentQuestions.forEach((question, index) => {
-                const correct = userAnswers[index] === question.correctOption;
+                const correct = userAnswers[index] === (question.answer || question.correct_options); // Updated check
                 resultText += `
                     <div class="explanation ${correct ? 'correct' : 'incorrect'}">
                         <strong>Q${index + 1}: ${question.content}</strong><br>
-                        <span>Your answer: ${question.options[userAnswers[index]]?.content || 'No answer'}</span><br>
-                        <span>Correct answer: ${question.options[question.correctOption]?.content}</span><br>
-                        <span>Explanation: ${question.explanation}</span><br>
+                        <span>Your answer: ${userAnswers[index] || 'No answer'}</span><br>
+                        <span>Correct answer: ${question.answer || question.correct_options}</span><br>
+                        <span>Explanation: ${question.explanation || 'No explanation available'}</span><br>
                         <small>Source: ${question.paperTitle || 'Not Provided'}</small>
                     </div>
                 `;
