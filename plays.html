@@ -85,12 +85,16 @@
         }
 
         .question {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-        }
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    width: 100%;  /* Ensures the width is flexible */
+    max-width: 100%;  /* Ensures it doesn't overflow container */
+    box-sizing: border-box; /* Prevents it from exceeding container width */
+    overflow-x: auto; /* Adds horizontal scrolling if content overflows */
+}
 
         .question h3 {
             margin: 0;
