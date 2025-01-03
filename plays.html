@@ -6,168 +6,96 @@
     <title>Math and Science Quiz</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <style>
-        * {
-            box-sizing: border-box;
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #f4f4f4;
         }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f7f7f7;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 800px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-        }
-
-        label {
-            font-size: 1em;
-            margin-bottom: 10px;
-            display: block;
-            font-weight: bold;
-            color: #333;
-        }
-
+        
         select, input, button {
-            padding: 12px 16px;
-            font-size: 1em;
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
             width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 20px;
             box-sizing: border-box;
         }
-
-        select:focus, input:focus, button:focus {
-            outline: none;
-            border-color: #009688;
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-
         .question-container {
             margin-top: 20px;
+            border-top: 2px solid #ccc;
+            padding-top: 10px;
         }
-
         .question {
             background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .question h3 {
+            border: 1px solid #ccc;
+            padding: 10px;
             margin-bottom: 15px;
-            font-size: 1.2em;
-            color: #333;
+            border-radius: 8px;
         }
-
+        .question h3 {
+            margin: 0;
+            font-size: 18px;
+        }
         .options {
-            display: flex;
-            flex-direction: column;
+            margin-top: 10px;
         }
-
         .options label {
-            margin: 8px 0;
-            font-size: 1.1em;
-            color: #555;
+            display: block;
         }
-
         .result {
-            margin-top: 30px;
+            margin-top: 20px;
         }
-
         .correct {
             color: green;
-            font-weight: bold;
         }
-
         .incorrect {
             color: red;
-            font-weight: bold;
         }
-
         .missed {
-            color: #555;
+            color: black;
         }
-
         #quiz-container {
             display: none;
         }
-
         #result-container {
             display: none;
-            text-align: center;
-            font-size: 1.2em;
         }
-
-        button {
-            background-color: #009688;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        #start-btn {
+            display: block;
         }
-
-        button:hover {
-            background-color: #00796b;
+        #num-questions, #paper-title {
+            width: 100%;
+            box-sizing: border-box;
         }
-
-        /* Media Queries for Responsive Design */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.5em;
-            }
-
-            .question {
-                padding: 15px;
-            }
-
-            .options label {
-                font-size: 1em;
-            }
-
-            select, input, button {
-                font-size: 1em;
-                padding: 10px 14px;
-            }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <header>
         <h1>Math and Science Quiz</h1>
+    </header>
 
-        <div>
+    <div class="container">
+        <div id="quiz-setup">
             <label for="paper-title">Choose Exam Paper:</label>
             <select id="paper-title"></select>
-        </div>
 
-        <div>
             <label for="num-questions">Enter number of questions to display:</label>
             <input type="number" id="num-questions" min="1" max="10">
-        </div>
 
-        <button id="start-btn">Start Quiz</button>
+            <button id="start-btn">Start Quiz</button>
+        </div>
 
         <div id="quiz-container">
             <button id="submit-btn">Submit Quiz</button>
@@ -213,15 +141,19 @@
             }
 
             const selectedPapers = papers.find(exam => exam.title === selectedTitle).papers;
+
             const questions = [];
 
+            // Loop through each paper and aggregate questions from all subject groups
             let paperPromises = selectedPapers.map(paper => {
                 const paperUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${paper.metaId}.json`;
                 return fetch(paperUrl)
                     .then(response => response.json())
                     .then(data => {
+                        // Loop through each subject group and get the questions
                         data.forEach(subjectGroup => {
                             if (subjectGroup.questions && subjectGroup.questions.length > 0) {
+                                // Add the questions from this subject group to the questions array
                                 subjectGroup.questions.forEach(question => {
                                     questions.push(question);
                                 });
@@ -230,24 +162,27 @@
                     });
             });
 
+            // After fetching all JSONs, shuffle and display questions
             Promise.all(paperPromises).then(() => {
                 if (questions.length >= numQuestions) {
                     const shuffledQuestions = getRandomQuestions(questions, numQuestions);
                     currentQuestions = shuffledQuestions;
                     displayQuestions(currentQuestions);
-                    document.getElementById('quiz-container').style.display = 'block';
-                    document.getElementById('start-btn').style.display = 'none';
+                    document.getElementById('quiz-container').style.display = 'block'; // Show quiz container
+                    document.getElementById('start-btn').style.display = 'none'; // Hide start button
+                    document.getElementById('quiz-setup').classList.add('hidden'); // Hide setup inputs
                 }
             });
         }
 
+        // Function to shuffle and select random questions
         function getRandomQuestions(allQuestions, numQuestions) {
             return allQuestions.sort(() => Math.random() - Math.random()).slice(0, numQuestions);
         }
 
         function displayQuestions(questions) {
             const container = document.getElementById('question-container');
-            container.innerHTML = '';
+            container.innerHTML = ''; // Clear previous questions
 
             questions.forEach((question, index) => {
                 const questionDiv = document.createElement('div');
@@ -260,18 +195,21 @@
                 const optionsDiv = document.createElement('div');
                 optionsDiv.classList.add('options');
 
+                // Check if the question has options
                 if (question.options && question.options.length > 0) {
+                    // If options are available, display them as A, B, C, D, etc.
                     question.options.forEach((option, optionIndex) => {
                         const optionInput = document.createElement('input');
                         optionInput.type = 'radio';
                         optionInput.name = `question${index}`;
-                        optionInput.value = String.fromCharCode(65 + optionIndex);
+                        optionInput.value = String.fromCharCode(65 + optionIndex); // A, B, C, D, etc.
                         const optionLabel = document.createElement('label');
                         optionLabel.innerHTML = `${String.fromCharCode(65 + optionIndex)}. ${option.content}`;
                         optionsDiv.appendChild(optionInput);
                         optionsDiv.appendChild(optionLabel);
                     });
                 } else {
+                    // If no options, create a text input for the integer answer
                     const inputField = document.createElement('input');
                     inputField.type = 'number';
                     inputField.name = `question${index}`;
@@ -283,6 +221,7 @@
                 container.appendChild(questionDiv);
             });
 
+            // Apply MathJax to the questions and options
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, container]);
         }
 
@@ -301,7 +240,7 @@
             let score = 0;
             const resultContainer = document.getElementById('result-container');
             resultContainer.innerHTML = "<h2>Quiz Results</h2>";
-            resultContainer.style.display = 'block';
+            resultContainer.style.display = 'block'; // Show the result container
 
             currentQuestions.forEach((question, index) => {
                 const userAnswer = getUserAnswer(index);
@@ -318,6 +257,7 @@
                 let answerClass = '';
 
                 if (question.options && question.options.length > 0) {
+                    // Multiple-choice question
                     const userSelectedOption = String.fromCharCode(65 + question.options.findIndex(option => option.content === userAnswer));
 
                     if (userAnswer === correctAnswer[0]) {
@@ -336,6 +276,7 @@
                         score -= 1;
                     }
                 } else {
+                    // Integer question
                     const userIntegerAnswer = parseInt(userAnswer);
                     const correctIntegerAnswer = parseInt(question.answer);
 
@@ -346,7 +287,7 @@
                         score += 4;
                     } else if (userAnswer === '') {
                         resultText = "Missed";
-                        answerFeedback = `You missed this question. Correct answer: ${question.answer}`;
+                        answerFeedback = `You missed this question. Correct answer: ${question.answer} `;
                         answerClass = 'missed';
                     } else {
                         resultText = "Incorrect";
@@ -367,12 +308,14 @@
                 answerFeedbackDiv.innerHTML = answerFeedback;
                 questionDiv.appendChild(answerFeedbackDiv);
 
+                // Show explanation if available
                 if (question.explanation) {
                     const explanationDiv = document.createElement('p');
                     explanationDiv.innerHTML = `<strong>Explanation:</strong> ${question.explanation}`;
                     questionDiv.appendChild(explanationDiv);
                 }
 
+                // Apply MathJax to the explanations and results
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, questionDiv]);
             });
 
@@ -380,6 +323,7 @@
             scoreDiv.innerHTML = `<h3>Your Total Score: ${score}</h3>`;
             resultContainer.appendChild(scoreDiv);
 
+            // Hide quiz container after submission
             document.getElementById('quiz-container').style.display = 'none';
         }
     </script>
