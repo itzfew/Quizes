@@ -7,40 +7,267 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
+                body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
         }
-
+        /* Header Section */
         header {
             display: flex;
             align-items: center;
-            gap: 10px;
+            padding: 15px 30px;
+            background-color: #ffffff; /* white background */
+            color: black;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            border: black 1px solid; 
         }
 
-        header h1 {
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%; /* Circular logo */
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
             margin: 0;
+            font-weight: bold;
         }
 
-        #exam-selection {
-            margin-top: 20px;
+        .header-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-buttons a {
+            text-decoration: none;
+            color: white;
+            margin-left: 20px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background-color: #333;
+        }
+
+        .header-buttons a:hover {
+            background-color: #555;
+        }
+
+        .header-buttons i {
+            margin-right: 8px;
+        }
+
+/* Black line below the header */
+        header + hr {
+            margin-top: 0;
+            border: none;
+            border-top: 2px solid #000; /* Solid black line */
+        }
+
+        /* Adjust the rest of the page below the header */
+        main {
+            margin-top: 80px; /* Add margin to avoid content hiding behind the header */
+            padding: 20px;
+        }
+        .quiz-title {
+            font-size: 1.5em;
+            margin: 70px 0; /* Add a margin on top to give space between header and title */
+            color: #333;
+            text-align: center;
+            border: 2px solid black;
         }
 
         .question {
-            margin: 20px 0;
+            margin-bottom: 30px;
+            padding: 3px;
+            border-bottom: 1px solid #ccc;
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .question-number {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .question-content {
+            margin-bottom: 15px;
+            word-wrap: break-word;
+            white-space: normal;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .options li {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .options label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .question-id {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
+            color: green;
+        }
+
+        #subject-dropdown {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 1em;
+        }
+
+        img {
+            max-width: 100px;
+            height: auto;
         }
 
         .submit-button {
-            margin-top: 20px;
+            background-color: #000;
+            color: white;
             padding: 10px 20px;
-            font-size: 16px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 1000;
         }
+
+        .explanation-button {
+            display: none;
+            margin-top: 10px;
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            cursor: pointer;
+            padding: 8px 16px;
+        }
+
+        .explanation-button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .explanation-button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .explanation-content {
+            display: none;
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
+        }
+
+        .explanation-content.open {
+    display: block;
+    background-color: #FFF59D; /* Yellow background */
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-style: italic;
+    color: #777;
+}
+
+
+        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
+        }
+
+        /* Ensuring that MathJax inline formulas don't break or overflow */
+        .question-content span {
+            display: inline-block;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0px;
+            }
+
+            #quiz-container {
+                padding: 3px;
+            }
+
+            .submit-button {
+                padding: 10px;
+            }
+
+            .options li {
+                padding: 5px;
+            }
+
+            img {
+                max-width: 80px;
+            }
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+            }
+
+            .header-buttons {
+                margin-top: 10px;
+                flex-direction: column;
+            }
+
+            .header-buttons a {
+                margin-left: 0;
+                margin-top: 10px;
+            }
     </style>
 </head>
 <body>
-    <!-- Header Section -->
     <header>
         <div class="logo">
             <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40">
@@ -48,7 +275,6 @@
         </div>
     </header>
 
-    <!-- Exam selection and quiz setup -->
     <div id="exam-selection">
         <h2>Select an Exam</h2>
         <select id="exam-dropdown"></select>
@@ -70,14 +296,13 @@
     <script>
         let quizData = [];
         let totalQuestions = 0;
+        let userAnswers = {};
 
         // Fetch exams and populate dropdown
         fetch('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json')
             .then(response => response.json())
-            .then(data => {
-                populateExamDropdown(data);
-            })
-            .catch(error => console.error('Error fetching the exams data:', error));
+            .then(data => populateExamDropdown(data))
+            .catch(error => console.error('Error fetching exams:', error));
 
         function populateExamDropdown(exams) {
             const examDropdown = document.getElementById('exam-dropdown');
@@ -135,22 +360,18 @@
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
             questions.forEach((question, index) => {
-                totalQuestions++;
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question';
 
                 const questionNumber = document.createElement('div');
-                questionNumber.className = 'question-number';
                 questionNumber.textContent = `Question ${index + 1}:`;
                 questionElement.appendChild(questionNumber);
 
                 const questionContent = document.createElement('div');
-                questionContent.className = 'question-content';
                 questionContent.innerHTML = question.content;
                 questionElement.appendChild(questionContent);
 
                 const optionsList = document.createElement('ul');
-                optionsList.className = 'options';
                 question.options.forEach(option => {
                     const optionItem = document.createElement('li');
                     const optionLabel = document.createElement('label');
@@ -163,6 +384,10 @@
                     optionLabel.innerHTML += option.content;
                     optionItem.appendChild(optionLabel);
                     optionsList.appendChild(optionItem);
+
+                    optionInput.onchange = () => {
+                        userAnswers[index] = optionInput.value;
+                    };
                 });
 
                 questionElement.appendChild(optionsList);
@@ -172,14 +397,48 @@
             const submitButton = document.createElement('button');
             submitButton.className = 'submit-button';
             submitButton.textContent = 'Submit All';
-            submitButton.onclick = showAllExplanations;
+            submitButton.onclick = () => showResults(questions);
             quizContainer.appendChild(submitButton);
 
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function showAllExplanations() {
-            alert('Feature to show explanations is under development.');
+        function showResults(questions) {
+            let score = 0;
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+
+            questions.forEach((question, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+
+                const questionContent = document.createElement('div');
+                questionContent.innerHTML = question.content;
+                questionElement.appendChild(questionContent);
+
+                const userAnswer = userAnswers[index];
+                const correctAnswer = question.correctAnswer;
+                if (userAnswer === correctAnswer) {
+                    score++;
+                    questionElement.innerHTML += `<div class="correct-answer">Your Answer: Correct!</div>`;
+                } else {
+                    questionElement.innerHTML += `<div class="wrong-answer">Your Answer: Incorrect!</div>`;
+                }
+
+                const explanation = document.createElement('div');
+                explanation.className = 'explanation';
+                explanation.textContent = `Explanation: ${question.explanation}`;
+                questionElement.appendChild(explanation);
+
+                quizContainer.appendChild(questionElement);
+            });
+
+            const results = document.createElement('div');
+            results.id = 'results';
+            results.textContent = `Your Score: ${score} / ${questions.length}`;
+            quizContainer.appendChild(results);
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
     </script>
 </body>
