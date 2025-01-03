@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Quiz Game</title>
+    <title>Quiz Game</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <style>
         body {
@@ -64,7 +64,7 @@
 </head>
 <body>
 
-    <h1>Math Quiz Game</h1>
+    <h1>Math and Science Quiz</h1>
 
     <div>
         <label for="paper-title">Choose Exam Paper:</label>
@@ -101,7 +101,7 @@
             papers.forEach(exam => {
                 const option = document.createElement('option');
                 option.value = exam.title;
-                option.textContent = exam.title;
+                option.textContent = exam.title; // Display paper title only
                 paperSelect.appendChild(option);
             });
         }
@@ -122,26 +122,32 @@
 
             const questions = [];
 
-            // Loop through each paper and aggregate questions
-            selectedPapers.forEach(paper => {
+            // Loop through each paper and aggregate questions from all subject groups
+            let paperPromises = selectedPapers.map(paper => {
                 const paperUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${paper.metaId}.json`;
-                fetch(paperUrl)
+                return fetch(paperUrl)
                     .then(response => response.json())
                     .then(data => {
-                        // Push questions from all papers into one array
-                        data[0].questions.forEach(question => {
-                            question.paperTitle = paper.title; // Attach paper title for later use
-                            questions.push(question);
+                        // Loop through each subject group and get the questions
+                        data.forEach(subjectGroup => {
+                            if (subjectGroup.questions && subjectGroup.questions.length > 0) {
+                                // Add the questions from this subject group to the questions array
+                                subjectGroup.questions.forEach(question => {
+                                    questions.push(question);
+                                });
+                            }
                         });
-
-                        // After processing all the papers, shuffle questions
-                        if (questions.length >= numQuestions) {
-                            const shuffledQuestions = getRandomQuestions(questions, numQuestions);
-                            currentQuestions = shuffledQuestions;
-                            displayQuestions(currentQuestions);
-                            document.getElementById('submit-btn').style.display = 'inline-block';
-                        }
                     });
+            });
+
+            // After fetching all JSONs, shuffle and display questions
+            Promise.all(paperPromises).then(() => {
+                if (questions.length >= numQuestions) {
+                    const shuffledQuestions = getRandomQuestions(questions, numQuestions);
+                    currentQuestions = shuffledQuestions;
+                    displayQuestions(currentQuestions);
+                    document.getElementById('submit-btn').style.display = 'inline-block';
+                }
             });
         }
 
@@ -159,7 +165,7 @@
                 questionDiv.classList.add('question');
 
                 const questionTitle = document.createElement('h3');
-                questionTitle.innerHTML = `${index + 1}. ${question.content} <small> (From: ${question.paperTitle}) </small>`;
+                questionTitle.innerHTML = `${index + 1}. ${question.content}`; // Do not show subject
                 questionDiv.appendChild(questionTitle);
 
                 const optionsDiv = document.createElement('div');
@@ -243,7 +249,6 @@
                         <span>Marks for this question: ${question.marks}</span><br>
                         <span>Negative Marks for wrong answer: ${question.negMarks}</span><br>
                         <span>Explanation: ${question.explanation || 'No explanation available'}</span><br>
-                        <small>Source: ${question.paperTitle || 'Not Provided'}</small>
                     </div>
                 `;
             });
