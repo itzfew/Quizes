@@ -7,8 +7,8 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
-    <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+ <style>
                 body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -266,26 +266,24 @@
                 margin-top: 10px;
             }
     </style>
+
 </head>
 <body>
     <!-- Header Section -->
-    <header>
-        <div class="logo">
-            <!-- Logo with provided image URL -->
-            <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40"> <!-- Image size 40x40px -->
-            <h1>Quizzes</h1>
-        </div>
-    </header>
-
-    <div id="exam-selection">
-        <h2>Select an Exam</h2>
-        <select id="exam-dropdown"></select>
-        <button id="select-exam-button">Select Exam</button>
+<header>
+    <div class="logo">
+        <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40">
+        <h1>Quizes</h1>
     </div>
+</header>
 
-    <div id="question-selection" style="display: none;">
-        <h2>Select Number of Questions</h2>
-        <select id="question-count-dropdown">
+<!-- Exam selection and quiz setup -->
+<div id="exam-selection">
+    <h2>Select an Exam</h2>
+    <select id="exam-dropdown"></select>
+    <div id="questions-count-container" style="display:none;">
+        <h3>Select number of questions to attempt</h3>
+        <select id="questions-count-dropdown">
             <option value="10">10</option>
             <option value="20">20</option>
             <option value="30">30</option>
@@ -293,10 +291,12 @@
             <option value="50">50</option>
             <option value="custom">Custom</option>
         </select>
-        <button id="start-quiz-button">Start Quiz</button>
     </div>
+    <button id="start-quiz-button" style="display:none;">Start Quiz</button>
+</div>
 
-    <div id="quiz-container" style="display: none;"></div>
+<div class="quiz-title" id="quiz-title"></div>
+<div id="quiz-container"></div>
 
     <script>
     // Fetch the exams data
