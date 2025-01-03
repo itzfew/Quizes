@@ -3,169 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Quiz Game</title>
-    <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
+    <title>Math Quiz Game</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 20px;
             padding: 20px;
+            background-color: #f4f4f4;
         }
-        .question, .question-number, .question-content, .options {
-            margin: 10px 0;
-        }
-        .explanation-button, .submit-button {
-            margin-top: 10px;
+        select, input, button {
             padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
         }
-        .explanation-content {
+        .question-container {
+            margin-top: 20px;
+            border-top: 2px solid #ccc;
+            padding-top: 10px;
+        }
+        .question {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        .question h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .options {
             margin-top: 10px;
-            display: none;
         }
-        .explanation-content.open {
+        .options label {
             display: block;
         }
-        table {
+        .result-container {
             margin-top: 20px;
-            border-collapse: collapse;
-            width: 100%;
+            padding: 20px;
+            background-color: #e9e9e9;
+            border-radius: 8px;
         }
-        table, th, td {
-            border: 1px solid black;
+        .result-container h2 {
+            font-size: 24px;
         }
-        th, td {
-            padding: 8px;
-            text-align: center;
+        .explanation {
+            margin-top: 10px;
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .explanation.correct {
+            background-color: #d4edda;
+        }
+        .explanation.incorrect {
+            background-color: #f8d7da;
         }
     </style>
 </head>
 <body>
-    <!-- Header Section -->
-    <header>
-        <div class="logo">
-            <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40">
-            <h1>Quizes</h1>
-        </div>
-    </header>
 
-    <div id="quiz-title" class="quiz-title"></div>
-    <div id="setup-container">
-        <label for="question-count">Number of Questions:</label>
-        <input type="number" id="question-count" min="1" placeholder="Enter number of questions" />
-        <button id="start-quiz">Start Quiz</button>
+    <h1>Math Quiz Game</h1>
+
+    <div>
+        <label for="paper-title">Choose Exam Paper:</label>
+        <select id="paper-title"></select>
     </div>
-    <div id="quiz-container"></div>
+
+    <div>
+        <label for="num-questions">Enter number of questions to display:</label>
+        <input type="number" id="num-questions" min="1" max="10">
+    </div>
+
+    <button id="start-btn">Start Quiz</button>
+    <button id="submit-btn" style="display:none;">Submit Quiz</button>
+
+    <div class="question-container" id="question-container"></div>
+    <div class="result-container" id="result-container" style="display:none;"></div>
 
     <script>
-        let quizData = [];
-        let selectedQuestions = [];
-        const urlParams = new URLSearchParams(window.location.search);
-        const title = urlParams.get('title');
-        const metaId = urlParams.get('metaId');
+        const examsDataUrl = 'https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json';
+        let papers = [];
+        let currentQuestions = [];
+        let userAnswers = [];
 
-        if (title) {
-            document.getElementById('quiz-title').textContent = title;
-        }
-
-        const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
-
-        fetch(jsonUrl)
+        // Fetch exams data
+        fetch(examsDataUrl)
             .then(response => response.json())
             .then(data => {
-                quizData = data;
-                document.getElementById('start-quiz').disabled = false; // Enable start button once data is loaded
-            })
-            .catch(error => console.error('Error fetching JSON:', error));
-
-        document.getElementById('start-quiz').addEventListener('click', () => {
-            const questionCount = parseInt(document.getElementById('question-count').value, 10);
-            if (isNaN(questionCount) || questionCount <= 0) {
-                alert('Please enter a valid number of questions.');
-                return;
-            }
-            startQuiz(questionCount);
-        });
-
-        function startQuiz(questionCount) {
-            // Clear setup container
-            document.getElementById('setup-container').style.display = 'none';
-
-            // Randomly select questions
-            const subjectIndex = 0; // For simplicity, using the first subject
-            const questions = quizData[subjectIndex]?.questions || [];
-            selectedQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, questionCount);
-
-            displayQuestions();
-        }
-
-        function displayQuestions() {
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = '';
-
-            selectedQuestions.forEach((question, index) => {
-                const questionElement = document.createElement('div');
-                questionElement.className = 'question';
-
-                const questionNumber = document.createElement('div');
-                questionNumber.className = 'question-number';
-                questionNumber.textContent = `Question ${index + 1}:`;
-                questionElement.appendChild(questionNumber);
-
-                const questionContent = document.createElement('div');
-                questionContent.className = 'question-content';
-                questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                });
-                questionElement.appendChild(questionContent);
-
-                const optionsList = document.createElement('ul');
-                optionsList.className = 'options';
-                question.options.forEach(option => {
-                    const optionItem = document.createElement('li');
-                    const optionLabel = document.createElement('label');
-                    const optionInput = document.createElement('input');
-
-                    optionInput.type = 'radio';
-                    optionInput.name = `question${question.question_id}`;
-                    optionInput.value = option.identifier;
-
-                    optionLabel.appendChild(optionInput);
-                    optionLabel.innerHTML += option.content;
-                    optionItem.appendChild(optionLabel);
-                    optionsList.appendChild(optionItem);
-                });
-                questionElement.appendChild(optionsList);
-
-                quizContainer.appendChild(questionElement);
+                papers = data;
+                populatePaperTitles();
             });
 
-            const submitButton = document.createElement('button');
-            submitButton.className = 'submit-button';
-            submitButton.textContent = 'Submit Quiz';
-            submitButton.onclick = showResults;
-            quizContainer.appendChild(submitButton);
-
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        function populatePaperTitles() {
+            const paperSelect = document.getElementById('paper-title');
+            papers.forEach(exam => {
+                const option = document.createElement('option');
+                option.value = exam.title;
+                option.textContent = exam.title;
+                paperSelect.appendChild(option);
+            });
         }
 
-        function showResults() {
-            const quizContainer = document.getElementById('quiz-container');
-            let correctAnswers = 0;
+        document.getElementById('start-btn').addEventListener('click', startQuiz);
+        document.getElementById('submit-btn').addEventListener('click', submitQuiz);
 
-            selectedQuestions.forEach((question, index) => {
-                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-                if (selectedOption && selectedOption.value === question.correct_options[0]) {
-                    correctAnswers++;
+        function startQuiz() {
+            const selectedTitle = document.getElementById('paper-title').value;
+            const numQuestions = parseInt(document.getElementById('num-questions').value);
+
+            if (!selectedTitle || isNaN(numQuestions) || numQuestions <= 0) {
+                alert("Please select a paper and enter a valid number of questions.");
+                return;
+            }
+
+            const selectedPapers = papers.find(exam => exam.title === selectedTitle).papers;
+
+            const questions = [];
+
+            // Loop through each paper and aggregate questions
+            selectedPapers.forEach(paper => {
+                const paperUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${paper.metaId}.json`;
+                fetch(paperUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Push questions from all papers into one array
+                        data[0].questions.forEach(question => {
+                            question.paperTitle = paper.title; // Attach paper title for later use
+                            questions.push(question);
+                        });
+
+                        // After processing all the papers, shuffle questions
+                        if (questions.length >= numQuestions) {
+                            const shuffledQuestions = getRandomQuestions(questions, numQuestions);
+                            currentQuestions = shuffledQuestions;
+                            displayQuestions(currentQuestions);
+                            document.getElementById('submit-btn').style.display = 'inline-block';
+                        }
+                    });
+            });
+        }
+
+        // Function to shuffle and select random questions
+        function getRandomQuestions(allQuestions, numQuestions) {
+            return allQuestions.sort(() => Math.random() - Math.random()).slice(0, numQuestions);
+        }
+
+        function displayQuestions(questions) {
+            const container = document.getElementById('question-container');
+            container.innerHTML = ''; // Clear previous questions
+
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+
+                const questionTitle = document.createElement('h3');
+                questionTitle.innerHTML = `${index + 1}. ${question.content} <small> (From: ${question.paperTitle}) </small>`;
+                questionDiv.appendChild(questionTitle);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('options');
+
+                question.options.forEach((option, optionIndex) => {
+                    const optionInput = document.createElement('input');
+                    optionInput.type = 'radio';
+                    optionInput.name = `question${index}`;
+                    optionInput.value = optionIndex;
+                    const optionLabel = document.createElement('label');
+                    optionLabel.innerHTML = option.content;
+                    optionsDiv.appendChild(optionInput);
+                    optionsDiv.appendChild(optionLabel);
+                });
+
+                questionDiv.appendChild(optionsDiv);
+                container.appendChild(questionDiv);
+            });
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, container]);
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            userAnswers = [];
+
+            currentQuestions.forEach((question, index) => {
+                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selectedOption) {
+                    const answerIndex = parseInt(selectedOption.value);
+                    userAnswers.push(answerIndex);
+
+                    if (answerIndex === question.correctOption) {
+                        score++;
+                    }
+                } else {
+                    userAnswers.push(null);
                 }
             });
 
-            quizContainer.innerHTML = `<h2>You answered ${correctAnswers} out of ${selectedQuestions.length} questions correctly!</h2>`;
+            showResults(score);
+        }
+
+        function showResults(score) {
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.style.display = 'block';
+
+            let resultText = `<h2>Your Score: ${score} / ${currentQuestions.length}</h2>`;
+            currentQuestions.forEach((question, index) => {
+                const correct = userAnswers[index] === question.correctOption;
+                resultText += `
+                    <div class="explanation ${correct ? 'correct' : 'incorrect'}">
+                        <strong>Q${index + 1}: ${question.content}</strong><br>
+                        <span>Your answer: ${question.options[userAnswers[index]]?.content || 'No answer'}</span><br>
+                        <span>Correct answer: ${question.options[question.correctOption]?.content}</span><br>
+                        <span>Explanation: ${question.explanation}</span><br>
+                        <small>Source: ${question.paperTitle || 'Not Provided'}</small>
+                    </div>
+                `;
+            });
+
+            resultContainer.innerHTML = resultText;
         }
     </script>
 </body>
