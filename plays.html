@@ -7,8 +7,8 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
- <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
+    <style>
                 body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -264,159 +264,151 @@
             .header-buttons a {
                 margin-left: 0;
                 margin-top: 10px;
-            }
+}
     </style>
-
 </head>
 <body>
     <!-- Header Section -->
-<header>
-    <div class="logo">
-        <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40">
-        <h1>Quizes</h1>
-    </div>
-</header>
+    <header>
+        <div class="logo">
+            <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40">
+            <h1>Quizzes</h1>
+        </div>
+    </header>
 
-<!-- Exam selection and quiz setup -->
-<div id="exam-selection">
-    <h2>Select an Exam</h2>
-    <select id="exam-dropdown"></select>
-    <div id="questions-count-container" style="display:none;">
-        <h3>Select number of questions to attempt</h3>
-        <select id="questions-count-dropdown">
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="30">30</option>
-            <option value="40">40</option>
-            <option value="50">50</option>
-            <option value="custom">Custom</option>
-        </select>
+    <!-- Exam selection and quiz setup -->
+    <div id="exam-selection">
+        <h2>Select an Exam</h2>
+        <select id="exam-dropdown"></select>
+        <div id="questions-count-container" style="display:none;">
+            <h3>Select Number of Questions</h3>
+            <select id="questions-count-dropdown">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <button id="start-quiz-button" style="display:none;">Start Quiz</button>
     </div>
-    <button id="start-quiz-button" style="display:none;">Start Quiz</button>
-</div>
 
-<div class="quiz-title" id="quiz-title"></div>
-<div id="quiz-container"></div>
+    <div id="quiz-container"></div>
 
     <script>
-    // Fetch the exams data
-    fetch('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json')
-        .then(response => response.json())
-        .then(data => {
-            populateExamDropdown(data);
-        })
-        .catch(error => console.error('Error fetching the exams data:', error));
+        let quizData = [];
+        let totalQuestions = 0;
 
-    function populateExamDropdown(exams) {
-        const examDropdown = document.getElementById('exam-dropdown');
-        exams.forEach((examData) => {
-            const option = document.createElement('option');
-            option.value = examData.title;
-            option.textContent = examData.title;
-            examDropdown.appendChild(option);
-        });
-
-        examDropdown.onchange = () => {
-            document.getElementById('questions-count-container').style.display = 'block';
-            document.getElementById('start-quiz-button').style.display = 'block';
-        };
-    }
-
-    document.getElementById('start-quiz-button').onclick = () => {
-        const selectedExam = document.getElementById('exam-dropdown').value;
-        const questionsCount = document.getElementById('questions-count-dropdown').value;
-        fetchAllQuestions(selectedExam, questionsCount);
-    };
-
-    function fetchAllQuestions(examTitle, questionsCount) {
+        // Fetch exams and populate dropdown
         fetch('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json')
             .then(response => response.json())
-            .then(exams => {
-                const selectedExam = exams.find(e => e.title === examTitle);
-                if (!selectedExam) {
-                    console.error('Selected exam not found.');
-                    return;
-                }
+            .then(data => {
+                populateExamDropdown(data);
+            })
+            .catch(error => console.error('Error fetching the exams data:', error));
 
-                // Collect all metaIds
-                const metaIds = selectedExam.papers.map(paper => paper.metaId);
-                const fetchPromises = metaIds.map(metaId =>
-                    fetch(`https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`)
-                        .then(response => response.json())
-                );
-
-                Promise.all(fetchPromises)
-                    .then(results => {
-                        const allQuestions = results.flatMap(subject => subject.flatMap(s => s.questions));
-                        const questions = getRandomQuestions(allQuestions, questionsCount);
-                        displayQuestions(questions);
-                    })
-                    .catch(error => console.error('Error fetching questions:', error));
+        function populateExamDropdown(exams) {
+            const examDropdown = document.getElementById('exam-dropdown');
+            exams.forEach((exam) => {
+                const option = document.createElement('option');
+                option.value = exam.title;
+                option.textContent = exam.title;
+                examDropdown.appendChild(option);
             });
-    }
 
-    function getRandomQuestions(allQuestions, count) {
-        const randomQuestions = [];
-        while (randomQuestions.length < count) {
-            const randomIndex = Math.floor(Math.random() * allQuestions.length);
-            if (!randomQuestions.includes(allQuestions[randomIndex])) {
-                randomQuestions.push(allQuestions[randomIndex]);
-            }
+            examDropdown.onchange = () => {
+                document.getElementById('questions-count-container').style.display = 'block';
+                document.getElementById('start-quiz-button').style.display = 'block';
+            };
         }
-        return randomQuestions;
-    }
 
-    function displayQuestions(questions) {
-        const quizContainer = document.getElementById('quiz-container');
-        quizContainer.innerHTML = '';
-        questions.forEach((question, index) => {
-            totalQuestions++;
-            const questionElement = document.createElement('div');
-            questionElement.className = 'question';
+        document.getElementById('start-quiz-button').onclick = () => {
+            const selectedExam = document.getElementById('exam-dropdown').value;
+            const questionsCount = parseInt(document.getElementById('questions-count-dropdown').value, 10);
+            fetchAllQuestions(selectedExam, questionsCount);
+        };
 
-            const questionNumber = document.createElement('div');
-            questionNumber.className = 'question-number';
-            questionNumber.textContent = `Question ${index + 1}:`;
-            questionElement.appendChild(questionNumber);
+        function fetchAllQuestions(examTitle, questionsCount) {
+            fetch('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json')
+                .then(response => response.json())
+                .then(exams => {
+                    const selectedExam = exams.find(e => e.title === examTitle);
+                    if (!selectedExam) {
+                        console.error('Selected exam not found.');
+                        return;
+                    }
 
-            const questionContent = document.createElement('div');
-            questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content;
-            questionElement.appendChild(questionContent);
+                    const metaIds = selectedExam.papers.map(paper => paper.metaId);
+                    const fetchPromises = metaIds.map(metaId =>
+                        fetch(`https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`)
+                            .then(response => response.json())
+                    );
 
-            const optionsList = document.createElement('ul');
-            optionsList.className = 'options';
-            question.options.forEach(option => {
-                const optionItem = document.createElement('li');
-                const optionLabel = document.createElement('label');
-                const optionInput = document.createElement('input');
-                optionInput.type = 'radio';
-                optionInput.name = `question${question.question_id}`;
-                optionInput.value = option.identifier;
+                    Promise.all(fetchPromises)
+                        .then(results => {
+                            quizData = results.flatMap(subject => subject.flatMap(s => s.questions));
+                            const questions = getRandomQuestions(quizData, questionsCount);
+                            displayQuestions(questions);
+                        })
+                        .catch(error => console.error('Error fetching quiz data:', error));
+                });
+        }
 
-                optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
-                optionItem.appendChild(optionLabel);
-                optionsList.appendChild(optionItem);
+        function getRandomQuestions(allQuestions, count) {
+            const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function displayQuestions(questions) {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            questions.forEach((question, index) => {
+                totalQuestions++;
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.textContent = `Question ${index + 1}:`;
+                questionElement.appendChild(questionNumber);
+
+                const questionContent = document.createElement('div');
+                questionContent.className = 'question-content';
+                questionContent.innerHTML = question.content;
+                questionElement.appendChild(questionContent);
+
+                const optionsList = document.createElement('ul');
+                optionsList.className = 'options';
+                question.options.forEach(option => {
+                    const optionItem = document.createElement('li');
+                    const optionLabel = document.createElement('label');
+                    const optionInput = document.createElement('input');
+                    optionInput.type = 'radio';
+                    optionInput.name = `question${index}`;
+                    optionInput.value = option.identifier;
+
+                    optionLabel.appendChild(optionInput);
+                    optionLabel.innerHTML += option.content;
+                    optionItem.appendChild(optionLabel);
+                    optionsList.appendChild(optionItem);
+                });
+
+                questionElement.appendChild(optionsList);
+                quizContainer.appendChild(questionElement);
             });
 
-            questionElement.appendChild(optionsList);
-            quizContainer.appendChild(questionElement);
-        });
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit All';
+            submitButton.onclick = showAllExplanations;
+            quizContainer.appendChild(submitButton);
 
-        const submitButton = document.createElement('button');
-        submitButton.className = 'submit-button';
-        submitButton.textContent = 'Submit All';
-        submitButton.onclick = showAllExplanations;
-        quizContainer.appendChild(submitButton);
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
 
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-    }
-
-    function showAllExplanations() {
-        // Handle explanation display and results
-    }
-</script>
-
+        function showAllExplanations() {
+            alert('Feature to show explanations is under development.');
+        }
+    </script>
 </body>
 </html>
