@@ -299,119 +299,124 @@
     <div id="quiz-container" style="display: none;"></div>
 
     <script>
-        let examData = [];
-        let selectedExam = null;
-        let questionCount = 0;
+    // Fetch the exams data
+    fetch('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json')
+        .then(response => response.json())
+        .then(data => {
+            populateExamDropdown(data);
+        })
+        .catch(error => console.error('Error fetching the exams data:', error));
 
-        // Fetch the exams list
+    function populateExamDropdown(exams) {
+        const examDropdown = document.getElementById('exam-dropdown');
+        exams.forEach((examData) => {
+            const option = document.createElement('option');
+            option.value = examData.title;
+            option.textContent = examData.title;
+            examDropdown.appendChild(option);
+        });
+
+        examDropdown.onchange = () => {
+            document.getElementById('questions-count-container').style.display = 'block';
+            document.getElementById('start-quiz-button').style.display = 'block';
+        };
+    }
+
+    document.getElementById('start-quiz-button').onclick = () => {
+        const selectedExam = document.getElementById('exam-dropdown').value;
+        const questionsCount = document.getElementById('questions-count-dropdown').value;
+        fetchAllQuestions(selectedExam, questionsCount);
+    };
+
+    function fetchAllQuestions(examTitle, questionsCount) {
         fetch('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json')
             .then(response => response.json())
-            .then(data => {
-                examData = data;
-                populateExamDropdown();
-            })
-            .catch(error => console.error('Error fetching the exams data:', error));
+            .then(exams => {
+                const selectedExam = exams.find(e => e.title === examTitle);
+                if (!selectedExam) {
+                    console.error('Selected exam not found.');
+                    return;
+                }
 
-        // Populate exam dropdown with exam titles
-        function populateExamDropdown() {
-            const examDropdown = document.getElementById('exam-dropdown');
-            examData.forEach(exam => {
-                const option = document.createElement('option');
-                option.value = exam.title;
-                option.textContent = exam.title;
-                examDropdown.appendChild(option);
+                // Collect all metaIds
+                const metaIds = selectedExam.papers.map(paper => paper.metaId);
+                const fetchPromises = metaIds.map(metaId =>
+                    fetch(`https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`)
+                        .then(response => response.json())
+                );
+
+                Promise.all(fetchPromises)
+                    .then(results => {
+                        const allQuestions = results.flatMap(subject => subject.flatMap(s => s.questions));
+                        const questions = getRandomQuestions(allQuestions, questionsCount);
+                        displayQuestions(questions);
+                    })
+                    .catch(error => console.error('Error fetching questions:', error));
             });
-        }
+    }
 
-        // Handle exam selection
-        document.getElementById('select-exam-button').onclick = function() {
-            const examTitle = document.getElementById('exam-dropdown').value;
-            selectedExam = examData.find(exam => exam.title === examTitle);
-            if (selectedExam) {
-                document.getElementById('exam-selection').style.display = 'none';
-                document.getElementById('question-selection').style.display = 'block';
+    function getRandomQuestions(allQuestions, count) {
+        const randomQuestions = [];
+        while (randomQuestions.length < count) {
+            const randomIndex = Math.floor(Math.random() * allQuestions.length);
+            if (!randomQuestions.includes(allQuestions[randomIndex])) {
+                randomQuestions.push(allQuestions[randomIndex]);
             }
-        };
-
-        // Handle question count selection and quiz start
-        document.getElementById('start-quiz-button').onclick = function() {
-            questionCount = document.getElementById('question-count-dropdown').value;
-            if (questionCount === 'custom') {
-                // Handle custom logic for number of questions if needed
-                alert('Custom selection logic goes here.');
-            }
-            fetchQuestionsAndStartQuiz();
-        };
-
-        // Fetch random questions and start the quiz
-        function fetchQuestionsAndStartQuiz() {
-            // Fetch a random selection of questions from the selected exam
-            const randomPaper = selectedExam.papers[Math.floor(Math.random() * selectedExam.papers.length)];
-            const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${randomPaper.metaId}.json`;
-
-            fetch(jsonUrl)
-                .then(response => response.json())
-                .then(data => {
-                    const selectedQuestions = getRandomQuestions(data.questions, questionCount);
-                    displayQuizQuestions(selectedQuestions);
-                })
-                .catch(error => console.error('Error fetching questions:', error));
         }
+        return randomQuestions;
+    }
 
-        // Get a random selection of questions
-        function getRandomQuestions(allQuestions, count) {
-            const shuffledQuestions = allQuestions.sort(() => 0.5 - Math.random());
-            return shuffledQuestions.slice(0, parseInt(count));
-        }
+    function displayQuestions(questions) {
+        const quizContainer = document.getElementById('quiz-container');
+        quizContainer.innerHTML = '';
+        questions.forEach((question, index) => {
+            totalQuestions++;
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question';
 
-        // Display the selected questions in the quiz
-        function displayQuizQuestions(questions) {
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = '';  // Clear previous questions
+            const questionNumber = document.createElement('div');
+            questionNumber.className = 'question-number';
+            questionNumber.textContent = `Question ${index + 1}:`;
+            questionElement.appendChild(questionNumber);
 
-            questions.forEach((question, index) => {
-                const questionElement = document.createElement('div');
-                questionElement.className = 'question';
+            const questionContent = document.createElement('div');
+            questionContent.className = 'question-content';
+            questionContent.innerHTML = question.content;
+            questionElement.appendChild(questionContent);
 
-                // Add Question Numbering
-                const questionNumber = document.createElement('div');
-                questionNumber.className = 'question-number';
-                questionNumber.textContent = `Question ${index + 1}:`;
-                questionElement.appendChild(questionNumber);
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options';
+            question.options.forEach(option => {
+                const optionItem = document.createElement('li');
+                const optionLabel = document.createElement('label');
+                const optionInput = document.createElement('input');
+                optionInput.type = 'radio';
+                optionInput.name = `question${question.question_id}`;
+                optionInput.value = option.identifier;
 
-                // Display question content
-                const questionContent = document.createElement('div');
-                questionContent.className = 'question-content';
-                questionContent.innerHTML = question.content;
-                questionElement.appendChild(questionContent);
-
-                // Display options
-                const optionsList = document.createElement('ul');
-                optionsList.className = 'options';
-
-                question.options.forEach(option => {
-                    const optionItem = document.createElement('li');
-                    const optionLabel = document.createElement('label');
-                    const optionInput = document.createElement('input');
-
-                    optionInput.type = 'radio';
-                    optionInput.name = `question${question.question_id}`;
-                    optionInput.value = option.identifier;
-
-                    optionLabel.appendChild(optionInput);
-                    optionLabel.innerHTML += option.content;
-                    optionItem.appendChild(optionLabel);
-                    optionsList.appendChild(optionItem);
-                });
-
-                questionElement.appendChild(optionsList);
-                quizContainer.appendChild(questionElement);
+                optionLabel.appendChild(optionInput);
+                optionLabel.innerHTML += option.content;
+                optionItem.appendChild(optionLabel);
+                optionsList.appendChild(optionItem);
             });
 
-            // Show the quiz container and hide the question selection
-            quizContainer.style.display = 'block';
-            document.getElementById('question-selection').style.display = 'none';
-        }
-    </script>
+            questionElement.appendChild(optionsList);
+            quizContainer.appendChild(questionElement);
+        });
+
+        const submitButton = document.createElement('button');
+        submitButton.className = 'submit-button';
+        submitButton.textContent = 'Submit All';
+        submitButton.onclick = showAllExplanations;
+        quizContainer.appendChild(submitButton);
+
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    }
+
+    function showAllExplanations() {
+        // Handle explanation display and results
+    }
+</script>
+
 </body>
 </html>
