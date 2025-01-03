@@ -195,7 +195,8 @@
         }
 
         function submitQuiz() {
-            let score = 0;
+            let totalScore = 0;
+            let totalNegativeMarks = 0;
             userAnswers = [];
 
             currentQuestions.forEach((question, index) => {
@@ -206,27 +207,32 @@
 
                     // Check if the selected option matches the correct answer
                     if (answer === question.correct_options) {
-                        score++;
+                        totalScore += question.marks; // Add marks for correct answer
+                    } else {
+                        totalNegativeMarks += question.negMarks; // Deduct negative marks for wrong answer
                     }
                 } else {
                     // If there is no option selected, check for text input field answer
                     const inputField = document.querySelector(`input[name="question${index}"]`);
                     const userAnswer = inputField ? parseInt(inputField.value.trim()) : '';
                     if (userAnswer === question.answer) {  // Updated to check against 'answer' for input questions
-                        score++;
+                        totalScore += question.marks;
+                    } else if (userAnswer !== '') {
+                        totalNegativeMarks += question.negMarks; // Deduct negative marks for incorrect answer
                     }
                     userAnswers.push(userAnswer);
                 }
             });
 
-            showResults(score);
+            const finalScore = totalScore - totalNegativeMarks; // Calculate the final score
+            showResults(finalScore);
         }
 
-        function showResults(score) {
+        function showResults(finalScore) {
             const resultContainer = document.getElementById('result-container');
             resultContainer.style.display = 'block';
 
-            let resultText = `<h2>Your Score: ${score} / ${currentQuestions.length}</h2>`;
+            let resultText = `<h2>Your Final Score: ${finalScore} / ${currentQuestions.length * 4}</h2>`; // Assuming max marks per question is 4
             currentQuestions.forEach((question, index) => {
                 const correct = userAnswers[index] === (question.answer || question.correct_options); // Updated check
                 resultText += `
@@ -234,6 +240,8 @@
                         <strong>Q${index + 1}: ${question.content}</strong><br>
                         <span>Your answer: ${userAnswers[index] || 'No answer'}</span><br>
                         <span>Correct answer: ${question.answer || question.correct_options}</span><br>
+                        <span>Marks for this question: ${question.marks}</span><br>
+                        <span>Negative Marks for wrong answer: ${question.negMarks}</span><br>
                         <span>Explanation: ${question.explanation || 'No explanation available'}</span><br>
                         <small>Source: ${question.paperTitle || 'Not Provided'}</small>
                     </div>
