@@ -274,26 +274,23 @@
             });
             questionElement.appendChild(questionContent);
 
-            // Create options list for the question
-            const optionsList = document.createElement('ul');
-            optionsList.className = 'options';
+            // Create custom options (A, B, C, D)
+            const customOptions = document.createElement('div');
+            customOptions.className = 'custom-options';
 
-            question.options.forEach(option => {
-                const optionItem = document.createElement('li');
-                const optionLabel = document.createElement('label');
-                const optionInput = document.createElement('input');
-                optionInput.value = option.identifier;
-                optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+            ['A', 'B', 'C', 'D'].forEach((letter, index) => {
+                const customOptionItem = document.createElement('div');
+                customOptionItem.className = 'custom-option';
+                customOptionItem.textContent = `${letter}. ${question.options[index].content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">$$${p1}$$</span>`;
                 }).replace(/\$(.*?)\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-                });
-                optionItem.appendChild(optionLabel);
-                optionsList.appendChild(optionItem);
+                })}`;
+                customOptionItem.onclick = () => selectCustomOption(customOptionItem, letter, question);
+                customOptions.appendChild(customOptionItem);
             });
 
-            questionElement.appendChild(optionsList);
+            questionElement.appendChild(customOptions);
 
             // Show timer
             const timerElement = document.createElement('div');
