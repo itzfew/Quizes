@@ -178,6 +178,16 @@
         .mathjax-inline {
             font-size: 18px;
         }
+
+        ul.options {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul.options li {
+            margin: 8px 0;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -277,10 +287,10 @@
             // Create custom options (A, B, C, D) for the user to select
             const customOptions = document.createElement('div');
             customOptions.className = 'custom-options';
-            ['A', 'B', 'C', 'D'].forEach(letter => {
+            ['A', 'B', 'C', 'D'].forEach((letter, index) => {
                 const customOptionItem = document.createElement('div');
                 customOptionItem.className = 'custom-option';
-                customOptionItem.textContent = letter;
+                customOptionItem.textContent = `${letter}: ${question.options[index].content}`; // Prepend A, B, C, D
                 customOptionItem.onclick = () => selectCustomOption(customOptionItem, letter, question);
                 customOptions.appendChild(customOptionItem);
             });
@@ -323,16 +333,22 @@
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        let selectedCustomOption = null;
+        let selectedCustomOption = '';
+        function selectCustomOption(element, letter, question) {
+            const allOptions = document.querySelectorAll('.custom-option');
+            allOptions.forEach(opt => opt.classList.remove('selected'));
 
-        function selectCustomOption(optionElement, optionLetter, question) {
-            // Clear previous selection
-            const customOptions = document.querySelectorAll('.custom-option');
-            customOptions.forEach(option => option.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedCustomOption = letter;
 
-            // Highlight the selected custom option
-            optionElement.classList.add('selected');
-            selectedCustomOption = optionLetter;
+            // Show explanation content and mark the answer
+            const correctAnswer = question.correctAnswer;
+            const submitButton = document.querySelector('.submit-button');
+            if (selectedCustomOption === correctAnswer) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+            }
         }
 
         function submitAnswer(questionElement, question, submitButton) {
@@ -384,8 +400,6 @@
                 alert("You've completed the quiz!");
             }
         }
-
-        startTimer();
     </script>
 </body>
 </html>
