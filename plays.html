@@ -8,7 +8,6 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -104,10 +103,10 @@
             });
             questionElement.appendChild(questionContent);
 
+            // Show actual options above custom options
             const optionsList = document.createElement('div');
-            optionsList.className = 'options';
+            optionsList.className = 'actual-options';
 
-            // Create options as numbered (1, 2, 3, 4)
             question.options.forEach((option, index) => {
                 const optionItem = document.createElement('div');
                 optionItem.className = 'option-item';
@@ -116,13 +115,21 @@
                 }).replace(/\$(.*?)\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
                 })}`;
-
-                // Add event listener to select the option
-                optionItem.onclick = () => selectOption(optionItem, option.identifier);
                 optionsList.appendChild(optionItem);
             });
-
             questionElement.appendChild(optionsList);
+
+            // Create custom options (1, 2, 3, 4) for the user to select
+            const customOptions = document.createElement('div');
+            customOptions.className = 'custom-options';
+            ['1', '2', '3', '4'].forEach(num => {
+                const customOptionItem = document.createElement('div');
+                customOptionItem.className = 'custom-option';
+                customOptionItem.textContent = `Option ${num}`;
+                customOptionItem.onclick = () => selectCustomOption(customOptionItem, num, question);
+                customOptions.appendChild(customOptionItem);
+            });
+            questionElement.appendChild(customOptions);
 
             const explanationButton = document.createElement('button');
             explanationButton.className = 'explanation-button';
@@ -155,54 +162,48 @@
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function selectOption(optionElement, optionIdentifier) {
-            const options = document.querySelectorAll('.option-item');
-            options.forEach(option => option.classList.remove('selected'));
+        let selectedCustomOption = null;
+
+        function selectCustomOption(optionElement, optionNumber, question) {
+            // Clear previous selection
+            const customOptions = document.querySelectorAll('.custom-option');
+            customOptions.forEach(option => option.classList.remove('selected'));
+
+            // Highlight the selected custom option
             optionElement.classList.add('selected');
+            selectedCustomOption = optionNumber;
+
+            // Option number corresponds to actual options
+            console.log(`User selected Option ${selectedCustomOption}:`, question.options[selectedCustomOption - 1].content);
         }
 
         function submitAnswer(questionElement, question, submitButton) {
-            const selectedOption = document.querySelector('.option-item.selected');
+            if (!selectedCustomOption) {
+                alert("Please select an option!");
+                return;
+            }
+
+            const correctOptionValue = question.correct_options[0];
             const feedback = document.createElement('div');
             feedback.className = 'correct-answer';
 
-            const correctOptionValue = question.correct_options[0];
-
-            if (selectedOption) {
-                const selectedOptionValue = selectedOption.textContent.split(':')[0].trim();
-
-                if (selectedOptionValue === correctOptionValue) {
-                    correctAnswers++;
-                    feedback.innerHTML = "You are correct!";
-                    feedback.style.color = 'green';
-                } else {
-                    incorrectAnswers++;
-                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red';
-                }
+            if (selectedCustomOption === correctOptionValue) {
+                correctAnswers++;
+                feedback.innerHTML = "You are correct!";
+                feedback.style.color = 'green';
             } else {
-                missedAnswers++;
-                feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
+                incorrectAnswers++;
+                feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
                 feedback.style.color = 'red';
             }
 
             questionElement.appendChild(feedback);
 
-            questionElement.querySelectorAll('.option-item').forEach(option => {
-                if (option.textContent.includes(correctOptionValue)) {
-                    option.style.backgroundColor = 'green';
-                    option.style.color = 'white';
-                } else if (option.classList.contains('selected')) {
-                    option.style.backgroundColor = 'red';
-                    option.style.color = 'white';
-                }
-            });
-
+            // Disable further interaction and show next button
+            questionElement.querySelectorAll('.custom-option').forEach(option => option.classList.add('disabled'));
             submitButton.style.display = 'none';
             questionElement.querySelector('.next-button').style.display = 'block';
             questionElement.querySelector('.explanation-button').style.display = 'block';
-
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
         function toggleExplanation(questionElement) {
