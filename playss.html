@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +13,6 @@
             background-color: #fff;
             color: #333;
             box-sizing: border-box;
-            position: relative;
         }
 
         header {
@@ -87,9 +85,25 @@
             color: white;
         }
 
+        .option-item {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
         .explanation-button,
         .submit-button,
         .next-button {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            width: 48%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
             margin-top: 15px;
             padding: 12px;
             background-color: black;
@@ -108,7 +122,6 @@
         .next-button:hover {
             background-color: #333;
         }
-
         .next-button {
             display: none;
         }
@@ -185,27 +198,6 @@
             margin: 8px 0;
             font-size: 16px;
         }
-
-        .fixed-buttons {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            justify-content: space-between;
-            width: 80%;
-        }
-
-        .fixed-buttons button {
-            width: 48%;
-            padding: 12px;
-            font-size: 16px;
-            border-radius: 5px;
-        }
-
-        .fa {
-            margin-right: 10px;
-        }
     </style>
 </head>
 <body>
@@ -216,12 +208,6 @@
         <option value="" disabled selected>Select a Subject</option>
     </select>
     <div id="quiz-container"></div>
-
-    <!-- Fixed buttons -->
-    <div class="fixed-buttons">
-        <button class="explanation-button" id="explanation-btn"><i class="fas fa-info-circle"></i>View Explanation</button>
-        <button class="submit-button" id="submit-btn"><i class="fas fa-check-circle"></i>Submit</button>
-    </div>
 
     <script>
         let currentQuestionIndex = 0;
@@ -307,29 +293,131 @@
                 return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
             });
             questionElement.appendChild(questionContent);
+// Create a list to display options with A, B, C, D labels
+const optionsList = document.createElement('ul');
+optionsList.className = 'options';
 
-            // Create list to display options
-            const optionsList = document.createElement('ul');
-            optionsList.className = 'options';
-            question.options.forEach((option, index) => {
-                const optionItem = document.createElement('li');
-                const optionLabel = document.createElement('label');
+question.options.forEach((option, index) => {
+    const optionItem = document.createElement('li');
+    const optionLabel = document.createElement('label');
 
-                const optionLabelText = String.fromCharCode(65 + index);
-                optionLabel.innerHTML = `${optionLabelText}. ${option.content}`;
-                optionItem.appendChild(optionLabel);
-                optionsList.appendChild(optionItem);
+    // Label options with A, B, C, D
+    const optionLabelText = String.fromCharCode(65 + index);  // A, B, C, D
+    optionLabel.innerHTML = `${optionLabelText}. ${option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+    }).replace(/\$(.*?)\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+    })}`;
+
+    optionItem.appendChild(optionLabel);
+    optionsList.appendChild(optionItem);
+});
+
+questionElement.appendChild(optionsList);
+
+            // Create custom options (A, B, C, D) for the user to select
+            const customOptions = document.createElement('div');
+            customOptions.className = 'custom-options';
+            ['A', 'B', 'C', 'D'].forEach((letter, index) => {
+                const customOptionItem = document.createElement('div');
+                customOptionItem.className = 'custom-option';
+                customOptionItem.textContent = letter;
+                customOptionItem.onclick = () => selectCustomOption(customOptionItem, letter, question);
+                customOptions.appendChild(customOptionItem);
             });
+            questionElement.appendChild(customOptions);
 
-            questionElement.appendChild(optionsList);
+            // Show timer
+            const timerElement = document.createElement('div');
+            timerElement.className = 'timer';
+            timerElement.id = 'timer';
+            questionElement.appendChild(timerElement);
+
+            const explanationButton = document.createElement('button');
+            explanationButton.className = 'explanation-button';
+            explanationButton.textContent = 'View Explanation';
+            explanationButton.onclick = () => toggleExplanation(questionElement);
+            questionElement.appendChild(explanationButton);
+
+            const explanationContent = document.createElement('div');
+            explanationContent.className = 'explanation-content';
+            explanationContent.innerHTML = `Explanation: ${question.explanation ? question.explanation.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            }).replace(/\$(.*?)\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+            }) : 'No explanation available.'}`;
+            questionElement.appendChild(explanationContent);
+
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit';
+            submitButton.onclick = () => submitAnswer(questionElement, question, submitButton);
+            questionElement.appendChild(submitButton);
+
+            const nextButton = document.createElement('button');
+            nextButton.className = 'next-button';
+            nextButton.textContent = 'Next';
+            nextButton.onclick = () => nextQuestion();
+            questionElement.appendChild(nextButton);
+
             quizContainer.appendChild(questionElement);
-
-            // Start the timer when the question is displayed
-            startTimer();
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        // Handling explanation and navigation
+        let selectedCustomOption = '';
+        function selectCustomOption(element, letter, question) {
+            const allOptions = document.querySelectorAll('.custom-option');
+            allOptions.forEach(opt => opt.classList.remove('selected'));
+
+            element.classList.add('selected');
+            selectedCustomOption = letter;
+
+            // Show explanation content and mark the answer
+            const correctAnswer = question.correctAnswer;
+            const submitButton = document.querySelector('.submit-button');
+            if (selectedCustomOption === correctAnswer) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+            }
+        }
+
+                function submitAnswer(questionElement, question, submitButton) {
+            if (!selectedCustomOption) {
+                alert("Please select an option!");
+                return;
+            }
+
+            const correctOptionValue = question.correct_options[0];
+            const feedback = document.createElement('div');
+            feedback.className = 'correct-answer';
+
+            // Show user selection and feedback
+            const selectedOption = question.options[selectedCustomOption.charCodeAt(0) - 65];
+            feedback.innerHTML = `You selected: Option ${selectedCustomOption}: `;
+            
+            // If correct, show green feedback
+            if (selectedCustomOption === correctOptionValue) {
+                correctAnswers++;
+                feedback.classList.add('correct');
+                feedback.innerHTML += " - Correct!";
+            } else {
+                incorrectAnswers++;
+                feedback.classList.add('incorrect');
+                feedback.innerHTML += ` - Incorrect! The correct answer is: Option ${correctOptionValue}`;
+            }
+
+            // Move feedback above explanation
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            questionElement.insertBefore(feedback, explanationContent);
+
+            questionElement.querySelectorAll('.custom-option').forEach(option => option.classList.add('disabled'));
+            submitButton.style.display = 'none';
+            questionElement.querySelector('.next-button').style.display = 'block';
+
+            questionElement.querySelector('.explanation-content').classList.add('open');
+        }
+
         function toggleExplanation(questionElement) {
             const explanationContent = questionElement.querySelector('.explanation-content');
             explanationContent.classList.toggle('open');
