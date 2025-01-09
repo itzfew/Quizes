@@ -210,11 +210,17 @@
             question.options.forEach((option, index) => {
                 const optionItem = document.createElement('div');
                 optionItem.className = 'option-item';
-                optionItem.textContent = `${index + 1}: ${option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                
+                // Dynamically render MathML, HTML, and LaTeX
+                optionItem.innerHTML = option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">$$${p1}$$</span>`;
                 }).replace(/\$(.*?)\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-                })}`;
+                }).replace(/<math(.*?)<\/math>/g, (match) => {
+                    return match; // directly render MathML
+                }).replace(/<.*?>/g, (match) => {
+                    return match; // directly render HTML
+                });
                 optionsList.appendChild(optionItem);
             });
             questionElement.appendChild(optionsList);
