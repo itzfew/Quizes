@@ -4,37 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
-    <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #fff; /* White background */
+            color: #333; /* Dark text for readability */
             box-sizing: border-box;
         }
 
         #quiz-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #f9f9f9; /* Light gray background */
             padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .question-content {
             margin: 20px 0;
+            font-size: 18px;
+            line-height: 1.5;
         }
 
         .custom-options div {
-            background-color: #f1f1f1;
-            padding: 10px;
-            margin: 5px 0;
+            background-color: #444;
+            padding: 12px;
+            margin: 8px 0;
             cursor: pointer;
             border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 16px;
         }
 
         .custom-options div:hover {
-            background-color: #ddd;
+            background-color: #555;
         }
 
         .custom-options .selected {
@@ -44,17 +51,27 @@
 
         .option-item {
             margin-bottom: 10px;
+            font-size: 16px;
         }
 
         .explanation-button,
         .submit-button,
         .next-button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #4caf50;
+            margin-top: 15px;
+            padding: 12px;
+            background-color: black;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .explanation-button:hover,
+        .submit-button:hover,
+        .next-button:hover {
+            background-color: #333;
         }
 
         .next-button {
@@ -62,7 +79,7 @@
         }
 
         .correct-answer {
-            margin-top: 10px;
+            margin-top: 20px;
             font-size: 18px;
             font-weight: bold;
         }
@@ -70,33 +87,51 @@
         .explanation-content {
             margin-top: 20px;
             font-size: 16px;
+            background-color: #eee;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            font-style: italic;
+            color: #555;
         }
 
-        .disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        .open {
+        .explanation-content.open {
             display: block;
         }
 
-        .hidden {
-            display: none;
-        }
-
-        .mathjax-inline {
-            font-size: 18px;
+        .disabled {
+            background-color: #888;
+            cursor: not-allowed;
         }
 
         .correct {
             background-color: green;
             color: white;
+            padding: 10px;
+            border-radius: 5px;
         }
 
         .incorrect {
             background-color: red;
             color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .question-number {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .question-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .mathjax-inline {
+            font-size: 18px;
         }
     </style>
 </head>
@@ -109,10 +144,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
-
-        if (title) {
-            document.getElementById('quiz-title').textContent = title;
-        }
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
@@ -144,8 +175,7 @@
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
-            const subjectIndex = 0; // Default to the first subject
-            const subject = quizData[subjectIndex];
+            const subject = quizData[0];  // Assume the first subject
             const question = subject.questions[currentQuestionIndex];
 
             totalQuestions = subject.questions.length;
@@ -176,7 +206,7 @@
                 optionItem.className = 'option-item';
                 
                 // Dynamically render MathML, HTML, and LaTeX
-                optionItem.innerHTML = option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                optionItem.innerHTML = `${String.fromCharCode(65 + index)}. ` + option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">$$${p1}$$</span>`;
                 }).replace(/\$(.*?)\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
@@ -200,12 +230,6 @@
                 customOptions.appendChild(customOptionItem);
             });
             questionElement.appendChild(customOptions);
-
-            const explanationButton = document.createElement('button');
-            explanationButton.className = 'explanation-button';
-            explanationButton.textContent = 'View Explanation';
-            explanationButton.onclick = () => toggleExplanation(questionElement);
-            questionElement.appendChild(explanationButton);
 
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
@@ -242,9 +266,6 @@
             // Highlight the selected custom option
             optionElement.classList.add('selected');
             selectedCustomOption = optionLetter;
-
-            // Option letter corresponds to actual options
-            console.log(`User selected Option ${selectedCustomOption}:`, question.options[optionLetter.charCodeAt(0) - 65].content);
         }
 
         function submitAnswer(questionElement, question, submitButton) {
@@ -278,12 +299,9 @@
             questionElement.querySelectorAll('.custom-option').forEach(option => option.classList.add('disabled'));
             submitButton.style.display = 'none';
             questionElement.querySelector('.next-button').style.display = 'block';
-            questionElement.querySelector('.explanation-button').style.display = 'block';
-        }
 
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
+            // Show explanation after submission
+            questionElement.querySelector('.explanation-content').classList.add('open');
         }
 
         function nextQuestion() {
@@ -291,16 +309,11 @@
                 currentQuestionIndex++;
                 displayCurrentQuestion();
             } else {
-                clearInterval(timerInterval);
                 alert("You've completed the quiz!");
             }
         }
 
         startTimer();
-
-        window.onbeforeunload = function (event) {
-            return "Are you sure you want to leave? Your progress may be lost.";
-        };
     </script>
 </body>
 </html>
