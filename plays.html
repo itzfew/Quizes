@@ -108,6 +108,15 @@
             font-size: 18px;
         }
 
+        .correct {
+            background-color: green;
+            color: white;
+        }
+
+        .incorrect {
+            background-color: red;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -293,14 +302,19 @@
             const feedback = document.createElement('div');
             feedback.className = 'correct-answer';
 
+            // Show user selection and feedback
+            const selectedOption = question.options[selectedCustomOption - 1];
+            feedback.innerHTML = `You selected: Option ${selectedCustomOption}: ${selectedOption.content}`;
+            
+            // If correct, show green feedback
             if (selectedCustomOption === correctOptionValue) {
                 correctAnswers++;
-                feedback.innerHTML = "You are correct!";
-                feedback.style.color = 'green';
+                feedback.classList.add('correct');
+                feedback.innerHTML += " - Correct!";
             } else {
                 incorrectAnswers++;
-                feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                feedback.style.color = 'red';
+                feedback.classList.add('incorrect');
+                feedback.innerHTML += ` - Incorrect! The correct answer is: Option ${correctOptionValue}`;
             }
 
             questionElement.appendChild(feedback);
