@@ -15,6 +15,32 @@
             box-sizing: border-box;
         }
 
+        header {
+            background-color: #f4f4f4;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .quiz-title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        select {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 20px 0;
+            font-size: 18px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+        }
+
         #quiz-container {
             max-width: 800px;
             margin: 50px auto;
@@ -136,8 +162,13 @@
     </style>
 </head>
 <body>
-        <div class="quiz-title" id="quiz-title"></div>
-    <select id="subject-dropdown"></select>
+    <header>
+        <div class="quiz-title" id="quiz-title">Interactive Quiz Game</div>
+    </header>
+    <div class="quiz-title" id="quiz-title-header"></div>
+    <select id="subject-dropdown">
+        <option value="" disabled selected>Select a Subject</option>
+    </select>
     <div id="quiz-container"></div>
 
     <script>
@@ -153,9 +184,28 @@
             .then(response => response.json())
             .then(data => {
                 quizData = data;
-                displayCurrentQuestion();
+                if (title) {
+                    document.getElementById('quiz-title-header').textContent = title;
+                    document.getElementById('quiz-title').textContent = title;
+                }
+                populateSubjectDropdown();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
+
+        function populateSubjectDropdown() {
+            const subjectDropdown = document.getElementById('subject-dropdown');
+            quizData.forEach((subject, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = subject.title;
+                subjectDropdown.appendChild(option);
+            });
+
+            subjectDropdown.onchange = () => {
+                currentQuestionIndex = 0;
+                displayCurrentQuestion();
+            };
+        }
 
         let totalQuestions = 0;
         let correctAnswers = 0;
@@ -177,7 +227,8 @@
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
-            const subject = quizData[0];  // Assume the first subject
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
             const question = subject.questions[currentQuestionIndex];
 
             totalQuestions = subject.questions.length;
@@ -232,6 +283,12 @@
                 customOptions.appendChild(customOptionItem);
             });
             questionElement.appendChild(customOptions);
+
+            const explanationButton = document.createElement('button');
+            explanationButton.className = 'explanation-button';
+            explanationButton.textContent = 'View Explanation';
+            explanationButton.onclick = () => toggleExplanation(questionElement);
+            questionElement.appendChild(explanationButton);
 
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
@@ -304,6 +361,11 @@
 
             // Show explanation after submission
             questionElement.querySelector('.explanation-content').classList.add('open');
+        }
+
+        function toggleExplanation(questionElement) {
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            explanationContent.classList.toggle('open');
         }
 
         function nextQuestion() {
