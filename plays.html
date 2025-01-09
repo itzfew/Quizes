@@ -56,11 +56,20 @@
             line-height: 1.5;
         }
 
+        .option-list {
+            margin-top: 20px;
+        }
+
+        .option-item {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
         .custom-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            margin-top: 15px;
+            margin-top: 20px;
         }
 
         .custom-options div {
@@ -83,11 +92,6 @@
         .custom-options .selected {
             background-color: #4caf50;
             color: white;
-        }
-
-        .option-item {
-            margin-bottom: 10px;
-            font-size: 16px;
         }
 
         .explanation-button,
@@ -178,16 +182,6 @@
         .mathjax-inline {
             font-size: 18px;
         }
-
-        ul.options {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        ul.options li {
-            margin: 8px 0;
-            font-size: 16px;
-        }
     </style>
 </head>
 <body>
@@ -230,7 +224,7 @@
 
             // Set default subject selection
             if (quizData.length > 0) {
-                subjectDropdown.selectedIndex = 0; // Select the first subject by default
+                subjectDropdown.selectedIndex = 1; // Select the first subject by default
                 currentQuestionIndex = 0; // Start from the first question
                 displayCurrentQuestion();
             }
@@ -284,28 +278,21 @@
             });
             questionElement.appendChild(questionContent);
 
-            // Show question options in a list
-            const optionsList = document.createElement('ul');
-            optionsList.className = 'options';
-
-            question.options.forEach((option, index) => {
-                const optionItem = document.createElement('li');
-                const optionLabel = document.createElement('label');
-                optionLabel.innerHTML = option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                }).replace(/\$(.*?)\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-                });
-                optionItem.appendChild(optionLabel);
-                optionsList.appendChild(optionItem);
+            // Create options list (Option A, Option B, etc. with content)
+            const optionList = document.createElement('div');
+            optionList.className = 'option-list';
+            ['A', 'B', 'C', 'D'].forEach(letter => {
+                const optionItem = document.createElement('div');
+                optionItem.className = 'option-item';
+                optionItem.textContent = `${letter}: ${question.options[letter].content}`;
+                optionList.appendChild(optionItem);
             });
+            questionElement.appendChild(optionList);
 
-            questionElement.appendChild(optionsList);
-
-            // Create custom options (A, B, C, D) for the user to select
+            // Create custom options (A, B, C, D) without content
             const customOptions = document.createElement('div');
             customOptions.className = 'custom-options';
-            ['A', 'B', 'C', 'D'].forEach((letter, index) => {
+            ['A', 'B', 'C', 'D'].forEach(letter => {
                 const customOptionItem = document.createElement('div');
                 customOptionItem.className = 'custom-option';
                 customOptionItem.textContent = letter;
@@ -319,7 +306,6 @@
             timerElement.className = 'timer';
             timerElement.id = 'timer';
             questionElement.appendChild(timerElement);
-            startTimer();
 
             const explanationButton = document.createElement('button');
             explanationButton.className = 'explanation-button';
@@ -352,44 +338,56 @@
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        let selectedCustomOption = '';
-        function selectCustomOption(element, letter, question) {
-            const allOptions = document.querySelectorAll('.custom-option');
-            allOptions.forEach(opt => opt.classList.remove('selected'));
+        let selectedCustomOption = null;
 
-            element.classList.add('selected');
-            selectedCustomOption = letter;
+        function selectCustomOption(optionElement, optionLetter, question) {
+            // Clear previous selection
+            const customOptions = document.querySelectorAll('.custom-option');
+            customOptions.forEach(option => option.classList.remove('selected'));
 
-            // Show explanation content and mark the answer
-            const correctAnswer = question.correctAnswer;
-            const submitButton = document.querySelector('.submit-button');
-            if (selectedCustomOption === correctAnswer) {
-                element.classList.add('correct');
-            } else {
-                element.classList.add('incorrect');
-            }
+            // Highlight the selected custom option
+            optionElement.classList.add('selected');
+            selectedCustomOption = optionLetter;
         }
 
         function submitAnswer(questionElement, question, submitButton) {
-            const nextButton = document.querySelector('.next-button');
-            const selectedOption = document.querySelector('.custom-option.selected');
-            
-            if (!selectedOption) {
-                alert('Please select an option.');
+            if (!selectedCustomOption) {
+                alert("Please select an option!");
                 return;
             }
 
-            const correctAnswer = question.correctAnswer;
-            if (selectedCustomOption === correctAnswer) {
+            const correctOptionValue = question.correct_options[0];
+            const feedback = document.createElement('div');
+            feedback.className = 'correct-answer';
+
+            // Show user selection and feedback
+            feedback.innerHTML = `You selected: Option ${selectedCustomOption}: `;
+            
+            // If correct, show green feedback
+            if (selectedCustomOption === correctOptionValue) {
                 correctAnswers++;
+                feedback.classList.add('correct');
+                feedback.innerHTML += " - Correct!";
             } else {
                 incorrectAnswers++;
+                feedback.classList.add('incorrect');
+                feedback.innerHTML += ` - Incorrect! The correct answer is: Option ${correctOptionValue}`;
             }
 
-            questionElement.querySelector('.correct-answer').textContent = `Correct Answer: ${correctAnswer}`;
-            nextButton.style.display = 'block';
-            submitButton.setAttribute('disabled', 'true');
-            submitButton.classList.add('disabled');
+            // Move feedback above explanation
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            questionElement.insertBefore(feedback, explanationContent);
+
+            questionElement.querySelectorAll('.custom-option').forEach(option => option.classList.add('disabled'));
+            submitButton.style.display = 'none';
+            questionElement.querySelector('.next-button').style.display = 'block';
+
+            questionElement.querySelector('.explanation-content').classList.add('open');
+        }
+
+        function toggleExplanation(questionElement) {
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            explanationContent.classList.toggle('open');
         }
 
         function nextQuestion() {
@@ -397,14 +395,11 @@
                 currentQuestionIndex++;
                 displayCurrentQuestion();
             } else {
-                alert(`Quiz completed! Correct: ${correctAnswers}, Incorrect: ${incorrectAnswers}`);
+                alert("You've completed the quiz!");
             }
         }
 
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
-        }
+        startTimer();
     </script>
 </body>
 </html>
