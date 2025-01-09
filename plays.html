@@ -274,22 +274,16 @@
             });
             questionElement.appendChild(questionContent);
 
-            // Create custom options (A, B, C, D)
+            // Create custom options (A, B, C, D) for the user to select
             const customOptions = document.createElement('div');
             customOptions.className = 'custom-options';
-
-            ['A', 'B', 'C', 'D'].forEach((letter, index) => {
+            ['A', 'B', 'C', 'D'].forEach(letter => {
                 const customOptionItem = document.createElement('div');
                 customOptionItem.className = 'custom-option';
-                customOptionItem.textContent = `${letter}. ${question.options[index].content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                }).replace(/\$(.*?)\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-                })}`;
+                customOptionItem.textContent = `${letter}: ${question.options[letter].content}`;
                 customOptionItem.onclick = () => selectCustomOption(customOptionItem, letter, question);
                 customOptions.appendChild(customOptionItem);
             });
-
             questionElement.appendChild(customOptions);
 
             // Show timer
