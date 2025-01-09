@@ -238,10 +238,9 @@
                 subjectDropdown.appendChild(option);
             });
 
-            // Set default subject selection
             if (quizData.length > 0) {
-                subjectDropdown.selectedIndex = 1; // Select the first subject by default
-                currentQuestionIndex = 0; // Start from the first question
+                subjectDropdown.selectedIndex = 1;
+                currentQuestionIndex = 0;
                 displayCurrentQuestion();
             }
 
@@ -287,35 +286,25 @@
 
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            }).replace(/\$(.*?)\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-            });
+            questionContent.innerHTML = formatMath(question.content);
             questionElement.appendChild(questionContent);
-// Create a list to display options with A, B, C, D labels
-const optionsList = document.createElement('ul');
-optionsList.className = 'options';
 
-question.options.forEach((option, index) => {
-    const optionItem = document.createElement('li');
-    const optionLabel = document.createElement('label');
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options';
 
-    // Label options with A, B, C, D
-    const optionLabelText = String.fromCharCode(65 + index);  // A, B, C, D
-    optionLabel.innerHTML = `${optionLabelText}. ${option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-        return `<span class="mathjax-inline">$$${p1}$$</span>`;
-    }).replace(/\$(.*?)\$/g, (match, p1) => {
-        return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-    })}`;
+            question.options.forEach((option, index) => {
+                const optionItem = document.createElement('li');
+                const optionLabel = document.createElement('label');
 
-    optionItem.appendChild(optionLabel);
-    optionsList.appendChild(optionItem);
-});
+                const optionLabelText = String.fromCharCode(65 + index);  
+                optionLabel.innerHTML = `${optionLabelText}. ${formatMath(option.content)}`;
 
-questionElement.appendChild(optionsList);
+                optionItem.appendChild(optionLabel);
+                optionsList.appendChild(optionItem);
+            });
 
-            // Create custom options (A, B, C, D) for the user to select
+            questionElement.appendChild(optionsList);
+
             const customOptions = document.createElement('div');
             customOptions.className = 'custom-options';
             ['A', 'B', 'C', 'D'].forEach((letter, index) => {
@@ -327,7 +316,6 @@ questionElement.appendChild(optionsList);
             });
             questionElement.appendChild(customOptions);
 
-            // Show timer
             const timerElement = document.createElement('div');
             timerElement.className = 'timer';
             timerElement.id = 'timer';
@@ -341,11 +329,7 @@ questionElement.appendChild(optionsList);
 
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation ? question.explanation.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            }).replace(/\$(.*?)\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-            }) : 'No explanation available.'}`;
+            explanationContent.innerHTML = `Explanation: ${formatMath(question.explanation ? question.explanation : 'No explanation available.')}`;
             questionElement.appendChild(explanationContent);
 
             const submitButton = document.createElement('button');
@@ -364,6 +348,14 @@ questionElement.appendChild(optionsList);
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
+        function formatMath(content) {
+            return content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            }).replace(/\$(.*?)\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+            });
+        }
+
         let selectedCustomOption = '';
         function selectCustomOption(element, letter, question) {
             const allOptions = document.querySelectorAll('.custom-option');
@@ -372,7 +364,6 @@ questionElement.appendChild(optionsList);
             element.classList.add('selected');
             selectedCustomOption = letter;
 
-            // Show explanation content and mark the answer
             const correctAnswer = question.correctAnswer;
             const submitButton = document.querySelector('.submit-button');
             if (selectedCustomOption === correctAnswer) {
@@ -382,7 +373,7 @@ questionElement.appendChild(optionsList);
             }
         }
 
-                function submitAnswer(questionElement, question, submitButton) {
+        function submitAnswer(questionElement, question, submitButton) {
             if (!selectedCustomOption) {
                 alert("Please select an option!");
                 return;
@@ -392,11 +383,9 @@ questionElement.appendChild(optionsList);
             const feedback = document.createElement('div');
             feedback.className = 'correct-answer';
 
-            // Show user selection and feedback
             const selectedOption = question.options[selectedCustomOption.charCodeAt(0) - 65];
             feedback.innerHTML = `You selected: Option ${selectedCustomOption}: `;
             
-            // If correct, show green feedback
             if (selectedCustomOption === correctOptionValue) {
                 correctAnswers++;
                 feedback.classList.add('correct');
@@ -407,7 +396,6 @@ questionElement.appendChild(optionsList);
                 feedback.innerHTML += ` - Incorrect! The correct answer is: Option ${correctOptionValue}`;
             }
 
-            // Move feedback above explanation
             const explanationContent = questionElement.querySelector('.explanation-content');
             questionElement.insertBefore(feedback, explanationContent);
 
@@ -416,6 +404,7 @@ questionElement.appendChild(optionsList);
             questionElement.querySelector('.next-button').style.display = 'block';
 
             questionElement.querySelector('.explanation-content').classList.add('open');
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
         function toggleExplanation(questionElement) {
