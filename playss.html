@@ -10,11 +10,17 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #2f2f2f;
+            color: #fff;
             box-sizing: border-box;
         }
 
         #quiz-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #333;
             padding: 20px;
+            border-radius: 8px;
         }
 
         .question-content {
@@ -22,15 +28,16 @@
         }
 
         .custom-options div {
-            background-color: #f1f1f1;
+            background-color: #444;
             padding: 10px;
             margin: 5px 0;
             cursor: pointer;
             border-radius: 5px;
+            transition: background-color 0.3s;
         }
 
         .custom-options div:hover {
-            background-color: #ddd;
+            background-color: #555;
         }
 
         .custom-options .selected {
@@ -45,12 +52,14 @@
         .explanation-button,
         .submit-button,
         .next-button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #4caf50;
+            margin-top: 15px;
+            padding: 12px;
+            background-color: black;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
         }
 
         .next-button {
@@ -58,7 +67,7 @@
         }
 
         .correct-answer {
-            margin-top: 10px;
+            margin-top: 20px;
             font-size: 18px;
             font-weight: bold;
         }
@@ -66,10 +75,13 @@
         .explanation-content {
             margin-top: 20px;
             font-size: 16px;
+            background-color: #444;
+            padding: 10px;
+            border-radius: 5px;
         }
 
         .disabled {
-            background-color: #ccc;
+            background-color: #888;
             cursor: not-allowed;
         }
 
@@ -88,11 +100,36 @@
         .correct {
             background-color: green;
             color: white;
+            padding: 10px;
+            border-radius: 5px;
         }
 
         .incorrect {
             background-color: red;
             color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .question-number {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .question-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .mathjax-inline {
+            font-size: 18px;
+        }
+
+        .disabled {
+            background-color: #888;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -192,14 +229,8 @@
             });
             questionElement.appendChild(customOptions);
 
-            const explanationButton = document.createElement('button');
-            explanationButton.className = 'explanation-button';
-            explanationButton.textContent = 'View Explanation';
-            explanationButton.onclick = () => toggleExplanation(questionElement);
-            questionElement.appendChild(explanationButton);
-
             const explanationContent = document.createElement('div');
-            explanationContent.className = 'explanation-content';
+            explanationContent.className = 'explanation-content hidden';
             explanationContent.innerHTML = `Explanation: ${question.explanation ? question.explanation.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
             }).replace(/\$(.*?)\$/g, (match, p1) => {
@@ -270,6 +301,9 @@
             submitButton.style.display = 'none';
             questionElement.querySelector('.next-button').style.display = 'block';
             questionElement.querySelector('.explanation-button').style.display = 'block';
+
+            // Show explanation after submission
+            questionElement.querySelector('.explanation-content').classList.add('open');
         }
 
         function toggleExplanation(questionElement) {
