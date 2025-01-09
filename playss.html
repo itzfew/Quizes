@@ -10,8 +10,8 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #fff; /* White background */
-            color: #333; /* Dark text for readability */
+            background-color: #fff;
+            color: #333;
             box-sizing: border-box;
         }
 
@@ -44,7 +44,7 @@
         #quiz-container {
             max-width: 800px;
             margin: 50px auto;
-            background-color: #f9f9f9; /* Light gray background */
+            background-color: #f9f9f9;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -56,20 +56,28 @@
             line-height: 1.5;
         }
 
+        .custom-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
         .custom-options div {
             background-color: #fff;
             padding: 12px;
-            margin: 8px 0;
+            margin: 0;
             cursor: pointer;
-            border: 1px solid #000; /* Black border */
+            border: 1px solid #000;
             border-radius: 5px;
             transition: background-color 0.3s;
             font-size: 16px;
             color: black;
+            text-align: center;
         }
 
         .custom-options div:hover {
-            background-color: #f0f0f0; /* Slightly gray background on hover */
+            background-color: #f0f0f0;
         }
 
         .custom-options .selected {
@@ -88,8 +96,8 @@
             margin-top: 15px;
             padding: 12px;
             background-color: black;
-            border:solid white 1px;
-            margin:2px;
+            border: solid white 1px;
+            margin: 2px;
             color: white;
             border: none;
             cursor: pointer;
@@ -158,6 +166,13 @@
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 20px;
+        }
+
+        .timer {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 10px;
         }
 
         .mathjax-inline {
@@ -259,28 +274,6 @@
             });
             questionElement.appendChild(questionContent);
 
-            // Show actual options above custom options
-            const optionsList = document.createElement('div');
-            optionsList.className = 'actual-options';
-
-            question.options.forEach((option, index) => {
-                const optionItem = document.createElement('div');
-                optionItem.className = 'option-item';
-                
-                // Dynamically render MathML, HTML, and LaTeX
-                optionItem.innerHTML = `${String.fromCharCode(65 + index)}. ` + option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                }).replace(/\$(.*?)\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-                }).replace(/<math(.*?)<\/math>/g, (match) => {
-                    return match; // directly render MathML
-                }).replace(/<.*?>/g, (match) => {
-                    return match; // directly render HTML
-                });
-                optionsList.appendChild(optionItem);
-            });
-            questionElement.appendChild(optionsList);
-
             // Create custom options (A, B, C, D) for the user to select
             const customOptions = document.createElement('div');
             customOptions.className = 'custom-options';
@@ -292,6 +285,12 @@
                 customOptions.appendChild(customOptionItem);
             });
             questionElement.appendChild(customOptions);
+
+            // Show timer
+            const timerElement = document.createElement('div');
+            timerElement.className = 'timer';
+            timerElement.id = 'timer';
+            questionElement.appendChild(timerElement);
 
             const explanationButton = document.createElement('button');
             explanationButton.className = 'explanation-button';
@@ -361,14 +360,14 @@
                 feedback.innerHTML += ` - Incorrect! The correct answer is: Option ${correctOptionValue}`;
             }
 
-            questionElement.appendChild(feedback);
+            // Move feedback above explanation
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            questionElement.insertBefore(feedback, explanationContent);
 
-            // Disable further interaction and show next button
             questionElement.querySelectorAll('.custom-option').forEach(option => option.classList.add('disabled'));
             submitButton.style.display = 'none';
             questionElement.querySelector('.next-button').style.display = 'block';
 
-            // Show explanation after submission
             questionElement.querySelector('.explanation-content').classList.add('open');
         }
 
