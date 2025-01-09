@@ -56,11 +56,20 @@
             line-height: 1.5;
         }
 
+        .option-list {
+            margin-top: 20px;
+        }
+
+        .option-item {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
         .custom-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            margin-top: 15px;
+            margin-top: 20px;
         }
 
         .custom-options div {
@@ -83,11 +92,6 @@
         .custom-options .selected {
             background-color: #4caf50;
             color: white;
-        }
-
-        .option-item {
-            margin-bottom: 10px;
-            font-size: 16px;
         }
 
         .explanation-button,
@@ -274,13 +278,24 @@
             });
             questionElement.appendChild(questionContent);
 
-            // Create custom options (A, B, C, D) for the user to select
+            // Create options list (Option A, Option B, etc. with content)
+            const optionList = document.createElement('div');
+            optionList.className = 'option-list';
+            ['A', 'B', 'C', 'D'].forEach(letter => {
+                const optionItem = document.createElement('div');
+                optionItem.className = 'option-item';
+                optionItem.textContent = `${letter}: ${question.options[letter].content}`;
+                optionList.appendChild(optionItem);
+            });
+            questionElement.appendChild(optionList);
+
+            // Create custom options (A, B, C, D) without content
             const customOptions = document.createElement('div');
             customOptions.className = 'custom-options';
             ['A', 'B', 'C', 'D'].forEach(letter => {
                 const customOptionItem = document.createElement('div');
                 customOptionItem.className = 'custom-option';
-                customOptionItem.textContent = `${letter}: ${question.options[letter].content}`;
+                customOptionItem.textContent = letter;
                 customOptionItem.onclick = () => selectCustomOption(customOptionItem, letter, question);
                 customOptions.appendChild(customOptionItem);
             });
@@ -346,7 +361,6 @@
             feedback.className = 'correct-answer';
 
             // Show user selection and feedback
-            const selectedOption = question.options[selectedCustomOption.charCodeAt(0) - 65];
             feedback.innerHTML = `You selected: Option ${selectedCustomOption}: `;
             
             // If correct, show green feedback
