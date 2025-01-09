@@ -369,26 +369,45 @@
             }
         }
 
-        function submitAnswer(questionElement, question, submitButton) {
-            const nextButton = document.querySelector('.next-button');
-            const selectedOption = document.querySelector('.custom-option.selected');
-            
-            if (!selectedOption) {
-                alert('Please select an option.');
+                function submitAnswer(questionElement, question, submitButton) {
+            if (!selectedCustomOption) {
+                alert("Please select an option!");
                 return;
             }
 
-            const correctAnswer = question.correctAnswer;
-            if (selectedCustomOption === correctAnswer) {
+            const correctOptionValue = question.correct_options[0];
+            const feedback = document.createElement('div');
+            feedback.className = 'correct-answer';
+
+            // Show user selection and feedback
+            const selectedOption = question.options[selectedCustomOption.charCodeAt(0) - 65];
+            feedback.innerHTML = `You selected: Option ${selectedCustomOption}: `;
+            
+            // If correct, show green feedback
+            if (selectedCustomOption === correctOptionValue) {
                 correctAnswers++;
+                feedback.classList.add('correct');
+                feedback.innerHTML += " - Correct!";
             } else {
                 incorrectAnswers++;
+                feedback.classList.add('incorrect');
+                feedback.innerHTML += ` - Incorrect! The correct answer is: Option ${correctOptionValue}`;
             }
 
-            questionElement.querySelector('.correct-answer').textContent = `Correct Answer: ${correctAnswer}`;
-            nextButton.style.display = 'block';
-            submitButton.setAttribute('disabled', 'true');
-            submitButton.classList.add('disabled');
+            // Move feedback above explanation
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            questionElement.insertBefore(feedback, explanationContent);
+
+            questionElement.querySelectorAll('.custom-option').forEach(option => option.classList.add('disabled'));
+            submitButton.style.display = 'none';
+            questionElement.querySelector('.next-button').style.display = 'block';
+
+            questionElement.querySelector('.explanation-content').classList.add('open');
+        }
+
+        function toggleExplanation(questionElement) {
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            explanationContent.classList.toggle('open');
         }
 
         function nextQuestion() {
@@ -396,13 +415,8 @@
                 currentQuestionIndex++;
                 displayCurrentQuestion();
             } else {
-                alert(`Quiz completed! Correct: ${correctAnswers}, Incorrect: ${incorrectAnswers}`);
+                alert("You've completed the quiz!");
             }
-        }
-
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
         }
     </script>
 </body>
