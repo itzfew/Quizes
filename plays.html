@@ -44,12 +44,23 @@
             margin: 20px 0;
         }
 
+        .custom-options {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
         .custom-options div {
             background-color: #f1f1f1;
             padding: 10px;
-            margin: 5px 0;
             cursor: pointer;
             border-radius: 5px;
+            width: 60px;
+            text-align: center;
         }
 
         .custom-options div:hover {
@@ -117,6 +128,33 @@
             background-color: red;
             color: white;
         }
+
+        .actual-options {
+            margin-bottom: 40px;
+        }
+
+        .option-item-numbered {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .option-item-numbered span {
+            margin-right: 10px;
+        }
+
+        .timer-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -125,11 +163,18 @@
             <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo">
             <h1 id="quiz-title-header">Quizes</h1>
         </div>
-        <div class="time" id="timer">00:00</div>
     </header>
-    <div class="quiz-title" id="quiz-title"></div>
-    <select id="subject-dropdown"></select>
+    
+    <div class="timer-container" id="timer">00:00</div>
+
     <div id="quiz-container"></div>
+
+    <div class="custom-options">
+        <div class="custom-option" onclick="selectCustomOption(this, 1)">Option 1</div>
+        <div class="custom-option" onclick="selectCustomOption(this, 2)">Option 2</div>
+        <div class="custom-option" onclick="selectCustomOption(this, 3)">Option 3</div>
+        <div class="custom-option" onclick="selectCustomOption(this, 4)">Option 4</div>
+    </div>
 
     <script>
         let currentQuestionIndex = 0;
@@ -139,7 +184,6 @@
         const metaId = urlParams.get('metaId');
 
         if (title) {
-            document.getElementById('quiz-title').textContent = title;
             document.getElementById('quiz-title-header').textContent = title;
         }
 
@@ -149,25 +193,9 @@
             .then(response => response.json())
             .then(data => {
                 quizData = data;
-                populateSubjectDropdown();
                 displayCurrentQuestion();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
-
-        function populateSubjectDropdown() {
-            const subjectDropdown = document.getElementById('subject-dropdown');
-            quizData.forEach((subject, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = subject.title;
-                subjectDropdown.appendChild(option);
-            });
-
-            subjectDropdown.onchange = () => {
-                currentQuestionIndex = 0;
-                displayCurrentQuestion();
-            };
-        }
 
         let totalQuestions = 0;
         let correctAnswers = 0;
@@ -189,8 +217,7 @@
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
+            const subject = quizData[0]; // Assuming one subject, update if needed
             const question = subject.questions[currentQuestionIndex];
 
             totalQuestions = subject.questions.length;
@@ -218,9 +245,11 @@
 
             question.options.forEach((option, index) => {
                 const optionItem = document.createElement('div');
-                optionItem.className = 'option-item';
-                
-                // Dynamically render MathML, HTML, and LaTeX
+                optionItem.className = 'option-item-numbered';
+
+                const optionNumber = document.createElement('span');
+                optionNumber.textContent = `${index + 1}.`;
+
                 optionItem.innerHTML = option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">$$${p1}$$</span>`;
                 }).replace(/\$(.*?)\$/g, (match, p1) => {
@@ -230,36 +259,12 @@
                 }).replace(/<.*?>/g, (match) => {
                     return match; // directly render HTML
                 });
+
+                optionItem.prepend(optionNumber);
                 optionsList.appendChild(optionItem);
             });
+
             questionElement.appendChild(optionsList);
-
-            // Create custom options (1, 2, 3, 4) for the user to select
-            const customOptions = document.createElement('div');
-            customOptions.className = 'custom-options';
-            ['1', '2', '3', '4'].forEach(num => {
-                const customOptionItem = document.createElement('div');
-                customOptionItem.className = 'custom-option';
-                customOptionItem.textContent = `Option ${num}`;
-                customOptionItem.onclick = () => selectCustomOption(customOptionItem, num, question);
-                customOptions.appendChild(customOptionItem);
-            });
-            questionElement.appendChild(customOptions);
-
-            const explanationButton = document.createElement('button');
-            explanationButton.className = 'explanation-button';
-            explanationButton.textContent = 'View Explanation';
-            explanationButton.onclick = () => toggleExplanation(questionElement);
-            questionElement.appendChild(explanationButton);
-
-            const explanationContent = document.createElement('div');
-            explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation ? question.explanation.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            }).replace(/\$(.*?)\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-            }) : 'No explanation available.'}`;
-            questionElement.appendChild(explanationContent);
 
             const submitButton = document.createElement('button');
             submitButton.className = 'submit-button';
@@ -267,19 +272,13 @@
             submitButton.onclick = () => submitAnswer(questionElement, question, submitButton);
             questionElement.appendChild(submitButton);
 
-            const nextButton = document.createElement('button');
-            nextButton.className = 'next-button';
-            nextButton.textContent = 'Next';
-            nextButton.onclick = () => nextQuestion();
-            questionElement.appendChild(nextButton);
-
             quizContainer.appendChild(questionElement);
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
         let selectedCustomOption = null;
 
-        function selectCustomOption(optionElement, optionNumber, question) {
+        function selectCustomOption(optionElement, optionNumber) {
             // Clear previous selection
             const customOptions = document.querySelectorAll('.custom-option');
             customOptions.forEach(option => option.classList.remove('selected'));
@@ -287,9 +286,6 @@
             // Highlight the selected custom option
             optionElement.classList.add('selected');
             selectedCustomOption = optionNumber;
-
-            // Option number corresponds to actual options
-            console.log(`User selected Option ${selectedCustomOption}:`, question.options[selectedCustomOption - 1].content);
         }
 
         function submitAnswer(questionElement, question, submitButton) {
@@ -322,30 +318,9 @@
             // Disable further interaction and show next button
             questionElement.querySelectorAll('.custom-option').forEach(option => option.classList.add('disabled'));
             submitButton.style.display = 'none';
-            questionElement.querySelector('.next-button').style.display = 'block';
-            questionElement.querySelector('.explanation-button').style.display = 'block';
-        }
-
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
-        }
-
-        function nextQuestion() {
-            if (currentQuestionIndex < totalQuestions - 1) {
-                currentQuestionIndex++;
-                displayCurrentQuestion();
-            } else {
-                clearInterval(timerInterval);
-                alert("You've completed the quiz!");
-            }
         }
 
         startTimer();
-
-        window.onbeforeunload = function (event) {
-            return "Are you sure you want to leave? Your progress may be lost.";
-        };
     </script>
 </body>
 </html>
