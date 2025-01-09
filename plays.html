@@ -111,23 +111,14 @@
 
             question.options.forEach((option, index) => {
                 const optionItem = document.createElement('li');
-                const optionLabel = document.createElement('label');
-                const optionInput = document.createElement('input');
-
-                optionInput.type = 'radio';
-                optionInput.name = `question${question.question_id}`;
-                optionInput.value = option.identifier;
-
-                // Display fixed option number (1, 2, 3, 4)
-                optionLabel.textContent = `${index + 1}. `;
-                optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                
+                // Display fixed option number (1, 2, 3, 4) without making it selectable
+                optionItem.textContent = `${index + 1}. ${option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">$$${p1}$$</span>`;
                 }).replace(/\$(.*?)\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-                });
-
-                optionItem.appendChild(optionLabel);
+                })}`;
+                
                 optionsList.appendChild(optionItem);
             });
 
@@ -165,41 +156,21 @@
         }
 
         function submitAnswer(questionElement, question, submitButton) {
-            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
             const feedback = document.createElement('div');
             feedback.className = 'correct-answer';
 
-            const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+            const options = document.querySelectorAll(`.options li`);
             const correctOptionValue = question.correct_options[0];
 
-            if (selectedOption) {
-                const selectedOptionValue = selectedOption.value;
-
-                if (selectedOptionValue === correctOptionValue) {
-                    correctAnswers++;
-                    feedback.innerHTML = "You are correct!";
-                    feedback.style.color = 'green';
-                } else {
-                    incorrectAnswers++;
-                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red';
-                }
-            } else {
-                missedAnswers++;
-                feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
-                feedback.style.color = 'red';
-            }
+            // Simulate feedback without selection
+            feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
+            feedback.style.color = 'red';
 
             questionElement.appendChild(feedback);
 
-            options.forEach(option => {
-                option.disabled = true;
-                const optionItem = option.closest('li');
-                if (option.value === correctOptionValue) {
+            options.forEach((optionItem, index) => {
+                if (index + 1 == correctOptionValue) {
                     optionItem.style.backgroundColor = 'green';
-                    optionItem.style.color = 'white';
-                } else if (option.checked) {
-                    optionItem.style.backgroundColor = 'red';
                     optionItem.style.color = 'white';
                 }
             });
