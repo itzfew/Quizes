@@ -283,6 +283,27 @@
                 return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
             });
             questionElement.appendChild(questionContent);
+// Create a list to display options with A, B, C, D labels
+const optionsList = document.createElement('ul');
+optionsList.className = 'options';
+
+question.options.forEach((option, index) => {
+    const optionItem = document.createElement('li');
+    const optionLabel = document.createElement('label');
+
+    // Label options with A, B, C, D
+    const optionLabelText = String.fromCharCode(65 + index);  // A, B, C, D
+    optionLabel.innerHTML = `${optionLabelText}. ${option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+    }).replace(/\$(.*?)\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+    })}`;
+
+    optionItem.appendChild(optionLabel);
+    optionsList.appendChild(optionItem);
+});
+
+questionElement.appendChild(optionsList);
 
             // Create custom options (A, B, C, D) for the user to select
             const customOptions = document.createElement('div');
@@ -290,7 +311,7 @@
             ['A', 'B', 'C', 'D'].forEach((letter, index) => {
                 const customOptionItem = document.createElement('div');
                 customOptionItem.className = 'custom-option';
-                customOptionItem.textContent = `${letter}: ${question.options[index].content}`; // Prepend A, B, C, D
+                customOptionItem.textContent = letter;
                 customOptionItem.onclick = () => selectCustomOption(customOptionItem, letter, question);
                 customOptions.appendChild(customOptionItem);
             });
@@ -351,7 +372,7 @@
             }
         }
 
-        function submitAnswer(questionElement, question, submitButton) {
+                function submitAnswer(questionElement, question, submitButton) {
             if (!selectedCustomOption) {
                 alert("Please select an option!");
                 return;
