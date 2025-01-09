@@ -230,7 +230,7 @@
 
             // Set default subject selection
             if (quizData.length > 0) {
-                subjectDropdown.selectedIndex = 1; // Select the first subject by default
+                subjectDropdown.selectedIndex = 0; // Select the first subject by default
                 currentQuestionIndex = 0; // Start from the first question
                 displayCurrentQuestion();
             }
@@ -319,6 +319,7 @@
             timerElement.className = 'timer';
             timerElement.id = 'timer';
             questionElement.appendChild(timerElement);
+            startTimer();
 
             const explanationButton = document.createElement('button');
             explanationButton.className = 'explanation-button';
