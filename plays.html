@@ -237,10 +237,10 @@
             // Create custom options (A, B, C, D) for the user to select
             const customOptions = document.createElement('div');
             customOptions.className = 'custom-options';
-            ['A', 'B', 'C', 'D'].forEach((letter, index) => {
+            ['A', 'B', 'C', 'D'].forEach(letter => {
                 const customOptionItem = document.createElement('div');
                 customOptionItem.className = 'custom-option';
-                customOptionItem.textContent = `${letter}. ${question.options[index].content}`;
+                customOptionItem.textContent = letter;
                 customOptionItem.onclick = () => selectCustomOption(customOptionItem, letter, question);
                 customOptions.appendChild(customOptionItem);
             });
@@ -289,12 +289,7 @@
             selectedCustomOption = optionLetter;
 
             // Option letter corresponds to actual options
-            console.log(`User selected Option ${selectedCustomOption}:`, question.options[getOptionIndex(optionLetter)].content);
-        }
-
-        function getOptionIndex(letter) {
-            const options = ['A', 'B', 'C', 'D'];
-            return options.indexOf(letter);
+            console.log(`User selected Option ${selectedCustomOption}:`, question.options[optionLetter.charCodeAt(0) - 65].content);
         }
 
         function submitAnswer(questionElement, question, submitButton) {
@@ -303,23 +298,23 @@
                 return;
             }
 
-            const correctOptionLetter = question.correct_options[0];
+            const correctOptionValue = question.correct_options[0];
             const feedback = document.createElement('div');
             feedback.className = 'correct-answer';
 
             // Show user selection and feedback
-            const selectedOption = question.options[getOptionIndex(selectedCustomOption)];
+            const selectedOption = question.options[selectedCustomOption.charCodeAt(0) - 65];
             feedback.innerHTML = `You selected: Option ${selectedCustomOption}: ${selectedOption.content}`;
             
             // If correct, show green feedback
-            if (selectedCustomOption === correctOptionLetter) {
+            if (selectedCustomOption === correctOptionValue) {
                 correctAnswers++;
                 feedback.classList.add('correct');
                 feedback.innerHTML += " - Correct!";
             } else {
                 incorrectAnswers++;
                 feedback.classList.add('incorrect');
-                feedback.innerHTML += ` - Incorrect! The correct answer is: Option ${correctOptionLetter}`;
+                feedback.innerHTML += ` - Incorrect! The correct answer is: Option ${correctOptionValue}`;
             }
 
             questionElement.appendChild(feedback);
