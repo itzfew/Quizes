@@ -13,6 +13,9 @@
             background-color: #fff; /* White background */
             color: #333; /* Dark text for readability */
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
         }
 
         header {
@@ -42,12 +45,14 @@
         }
 
         #quiz-container {
+            flex-grow: 1;
             max-width: 800px;
             margin: 50px auto;
             background-color: #f9f9f9; /* Light gray background */
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
         }
 
         .question-content {
@@ -56,18 +61,27 @@
             line-height: 1.5;
         }
 
+        .custom-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two options per row */
+            gap: 10px;
+            margin-top: 20px;
+        }
+
         .custom-options div {
-            background-color: #444;
+            background-color: #fff;
             padding: 12px;
             margin: 8px 0;
             cursor: pointer;
+            border: 1px solid #000; /* Black border */
             border-radius: 5px;
             transition: background-color 0.3s;
             font-size: 16px;
+            color: black;
         }
 
         .custom-options div:hover {
-            background-color: #555;
+            background-color: #f0f0f0; /* Slightly gray background on hover */
         }
 
         .custom-options .selected {
@@ -86,12 +100,12 @@
             margin-top: 15px;
             padding: 12px;
             background-color: black;
-            color: white;
             border:solid white 1px;
+            margin:2px;
+            color: white;
+            border: none;
             cursor: pointer;
             border-radius: 5px;
-            margin:2px;
-
             font-size: 16px;
             transition: background-color 0.3s;
         }
@@ -161,6 +175,25 @@
         .mathjax-inline {
             font-size: 18px;
         }
+
+        /* Fixed position for buttons */
+        .bottom-buttons {
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+            left: 0;
+            padding: 10px;
+            background-color: #fff;
+            text-align: center;
+        }
+
+        .bottom-buttons button {
+            margin: 0 10px;
+        }
+
+        .question-container {
+            margin-bottom: 100px; /* Make room for fixed buttons */
+        }
     </style>
 </head>
 <body>
@@ -170,7 +203,12 @@
     <select id="subject-dropdown">
         <option value="" disabled selected>Select a Subject</option>
     </select>
-    <div id="quiz-container"></div>
+    <div id="quiz-container" class="question-container"></div>
+
+    <div class="bottom-buttons">
+        <button class="submit-button" id="submit-button">Submit</button>
+        <button class="next-button" id="next-button">Next</button>
+    </div>
 
     <script>
         let currentQuestionIndex = 0;
@@ -305,18 +343,6 @@
                 return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
             }) : 'No explanation available.'}`;
             questionElement.appendChild(explanationContent);
-
-            const submitButton = document.createElement('button');
-            submitButton.className = 'submit-button';
-            submitButton.textContent = 'Submit';
-            submitButton.onclick = () => submitAnswer(questionElement, question, submitButton);
-            questionElement.appendChild(submitButton);
-
-            const nextButton = document.createElement('button');
-            nextButton.className = 'next-button';
-            nextButton.textContent = 'Next';
-            nextButton.onclick = () => nextQuestion();
-            questionElement.appendChild(nextButton);
 
             quizContainer.appendChild(questionElement);
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
