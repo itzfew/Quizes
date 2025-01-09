@@ -68,7 +68,7 @@
             padding: 12px;
             margin: 0;
             cursor: pointer;
-            border: 1px solid #000; /* Black border */
+            border: 1px solid #000;
             border-radius: 5px;
             transition: background-color 0.3s;
             font-size: 16px;
@@ -166,6 +166,13 @@
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 20px;
+        }
+
+        .timer {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 10px;
         }
 
         .mathjax-inline {
@@ -267,17 +274,32 @@
             });
             questionElement.appendChild(questionContent);
 
-            // Create custom options (A, B, C, D) for the user to select
-            const customOptions = document.createElement('div');
-            customOptions.className = 'custom-options';
-            ['A', 'B', 'C', 'D'].forEach(letter => {
-                const customOptionItem = document.createElement('div');
-                customOptionItem.className = 'custom-option';
-                customOptionItem.textContent = letter;
-                customOptionItem.onclick = () => selectCustomOption(customOptionItem, letter, question);
-                customOptions.appendChild(customOptionItem);
+            // Create options list for the question
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options';
+
+            question.options.forEach(option => {
+                const optionItem = document.createElement('li');
+                const optionLabel = document.createElement('label');
+                const optionInput = document.createElement('input');
+                optionInput.value = option.identifier;
+                optionLabel.appendChild(optionInput);
+                optionLabel.innerHTML += option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                }).replace(/\$(.*?)\$/g, (match, p1) => {
+                    return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+                });
+                optionItem.appendChild(optionLabel);
+                optionsList.appendChild(optionItem);
             });
-            questionElement.appendChild(customOptions);
+
+            questionElement.appendChild(optionsList);
+
+            // Show timer
+            const timerElement = document.createElement('div');
+            timerElement.className = 'timer';
+            timerElement.id = 'timer';
+            questionElement.appendChild(timerElement);
 
             const explanationButton = document.createElement('button');
             explanationButton.className = 'explanation-button';
@@ -347,14 +369,14 @@
                 feedback.innerHTML += ` - Incorrect! The correct answer is: Option ${correctOptionValue}`;
             }
 
-            questionElement.appendChild(feedback);
+            // Move feedback above explanation
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            questionElement.insertBefore(feedback, explanationContent);
 
-            // Disable further interaction and show next button
             questionElement.querySelectorAll('.custom-option').forEach(option => option.classList.add('disabled'));
             submitButton.style.display = 'none';
             questionElement.querySelector('.next-button').style.display = 'block';
 
-            // Show explanation after submission
             questionElement.querySelector('.explanation-content').classList.add('open');
         }
 
