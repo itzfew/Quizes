@@ -283,24 +283,27 @@
                 return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
             });
             questionElement.appendChild(questionContent);
+// Create a list to display options with A, B, C, D labels
+const optionsList = document.createElement('ul');
+optionsList.className = 'options';
 
-            // Show question options in a list
-            const optionsList = document.createElement('ul');
-            optionsList.className = 'options';
+question.options.forEach((option, index) => {
+    const optionItem = document.createElement('li');
+    const optionLabel = document.createElement('label');
 
-            question.options.forEach((option, index) => {
-                const optionItem = document.createElement('li');
-                const optionLabel = document.createElement('label');
-                optionLabel.innerHTML = option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                }).replace(/\$(.*?)\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-                });
-                optionItem.appendChild(optionLabel);
-                optionsList.appendChild(optionItem);
-            });
+    // Label options with A, B, C, D
+    const optionLabelText = String.fromCharCode(65 + index);  // A, B, C, D
+    optionLabel.innerHTML = `${optionLabelText}. ${option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+    }).replace(/\$(.*?)\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+    })}`;
 
-            questionElement.appendChild(optionsList);
+    optionItem.appendChild(optionLabel);
+    optionsList.appendChild(optionItem);
+});
+
+questionElement.appendChild(optionsList);
 
             // Create custom options (A, B, C, D) for the user to select
             const customOptions = document.createElement('div');
