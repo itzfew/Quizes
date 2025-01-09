@@ -298,9 +298,12 @@
 
                 const optionLabelText = String.fromCharCode(65 + index);  
                 optionLabel.innerHTML = `${optionLabelText}. ${formatMath(option.content)}`;
-
+// Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
+                
             });
 
             questionElement.appendChild(optionsList);
@@ -346,6 +349,7 @@
 
             quizContainer.appendChild(questionElement);
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            
         }
 
         function formatMath(content) {
