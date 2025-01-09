@@ -4,56 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
-    <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #fff; /* White background */
+            color: #333; /* Dark text for readability */
             box-sizing: border-box;
         }
 
         header {
             background-color: #f4f4f4;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo img {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .time {
-            font-size: 18px;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 24px;
             font-weight: bold;
         }
 
+        .quiz-title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        select {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 20px 0;
+            font-size: 18px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+        }
+
         #quiz-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #f9f9f9; /* Light gray background */
             padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .question-content {
             margin: 20px 0;
+            font-size: 18px;
+            line-height: 1.5;
         }
 
         .custom-options div {
-            background-color: #f1f1f1;
-            padding: 10px;
-            margin: 5px 0;
+            background-color: #444;
+            padding: 12px;
+            margin: 8px 0;
             cursor: pointer;
             border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 16px;
         }
 
         .custom-options div:hover {
-            background-color: #ddd;
+            background-color: #555;
         }
 
         .custom-options .selected {
@@ -63,17 +77,27 @@
 
         .option-item {
             margin-bottom: 10px;
+            font-size: 16px;
         }
 
         .explanation-button,
         .submit-button,
         .next-button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #4caf50;
+            margin-top: 15px;
+            padding: 12px;
+            background-color: black;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .explanation-button:hover,
+        .submit-button:hover,
+        .next-button:hover {
+            background-color: #333;
         }
 
         .next-button {
@@ -81,7 +105,7 @@
         }
 
         .correct-answer {
-            margin-top: 10px;
+            margin-top: 20px;
             font-size: 18px;
             font-weight: bold;
         }
@@ -89,46 +113,61 @@
         .explanation-content {
             margin-top: 20px;
             font-size: 16px;
+            background-color: #eee;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            font-style: italic;
+            color: #555;
         }
 
-        .disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        .open {
+        .explanation-content.open {
             display: block;
         }
 
-        .hidden {
-            display: none;
-        }
-
-        .mathjax-inline {
-            font-size: 18px;
+        .disabled {
+            background-color: #888;
+            cursor: not-allowed;
         }
 
         .correct {
             background-color: green;
             color: white;
+            padding: 10px;
+            border-radius: 5px;
         }
 
         .incorrect {
             background-color: red;
             color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .question-number {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .question-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .mathjax-inline {
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo">
-            <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo">
-            <h1 id="quiz-title-header">Quizes</h1>
-        </div>
-        <div class="time" id="timer">00:00</div>
+        <div class="quiz-title" id="quiz-title-header"></div>
     </header>
-    <div class="quiz-title" id="quiz-title"></div>
-    <select id="subject-dropdown"></select>
+    <select id="subject-dropdown">
+        <option value="" disabled selected>Select a Subject</option>
+    </select>
     <div id="quiz-container"></div>
 
     <script>
@@ -138,19 +177,16 @@
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
 
-        if (title) {
-            document.getElementById('quiz-title').textContent = title;
-            document.getElementById('quiz-title-header').textContent = title;
-        }
-
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
                 quizData = data;
+                if (title) {
+                    document.getElementById('quiz-title-header').textContent = title;
+                }
                 populateSubjectDropdown();
-                displayCurrentQuestion();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
@@ -162,6 +198,13 @@
                 option.textContent = subject.title;
                 subjectDropdown.appendChild(option);
             });
+
+            // Set default subject selection
+            if (quizData.length > 0) {
+                subjectDropdown.selectedIndex = 1; // Select the first subject by default
+                currentQuestionIndex = 0; // Start from the first question
+                displayCurrentQuestion();
+            }
 
             subjectDropdown.onchange = () => {
                 currentQuestionIndex = 0;
@@ -221,7 +264,7 @@
                 optionItem.className = 'option-item';
                 
                 // Dynamically render MathML, HTML, and LaTeX
-                optionItem.innerHTML = option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                optionItem.innerHTML = `${String.fromCharCode(65 + index)}. ` + option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">$$${p1}$$</span>`;
                 }).replace(/\$(.*?)\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
@@ -287,9 +330,6 @@
             // Highlight the selected custom option
             optionElement.classList.add('selected');
             selectedCustomOption = optionLetter;
-
-            // Option letter corresponds to actual options
-            console.log(`User selected Option ${selectedCustomOption}:`, question.options[optionLetter.charCodeAt(0) - 65].content);
         }
 
         function submitAnswer(questionElement, question, submitButton) {
@@ -323,7 +363,9 @@
             questionElement.querySelectorAll('.custom-option').forEach(option => option.classList.add('disabled'));
             submitButton.style.display = 'none';
             questionElement.querySelector('.next-button').style.display = 'block';
-            questionElement.querySelector('.explanation-button').style.display = 'block';
+
+            // Show explanation after submission
+            questionElement.querySelector('.explanation-content').classList.add('open');
         }
 
         function toggleExplanation(questionElement) {
@@ -336,16 +378,11 @@
                 currentQuestionIndex++;
                 displayCurrentQuestion();
             } else {
-                clearInterval(timerInterval);
                 alert("You've completed the quiz!");
             }
         }
 
         startTimer();
-
-        window.onbeforeunload = function (event) {
-            return "Are you sure you want to leave? Your progress may be lost.";
-        };
     </script>
 </body>
 </html>
