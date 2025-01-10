@@ -100,8 +100,23 @@
             margin-right: 10px;
         }
 
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .correct {
+            background-color: #d4edda;
+            color: green;
+        }
+
+        .incorrect {
+            background-color: #f8d7da;
+            color: red;
+        }
+
         .explanation-content {
-            display: none;
             margin-top: 10px;
             font-style: italic;
             color: #777;
@@ -111,18 +126,17 @@
         }
 
         .submit-button {
-            background-color: #000;
+            background-color: #007bff;
             color: white;
             padding: 10px 20px;
             border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
-            position: fixed;
-            bottom: 0px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            z-index: 1000;
+        }
+
+        .submit-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
 
         .next-button {
@@ -139,34 +153,6 @@
             cursor: not-allowed;
         }
 
-        .forget-button {
-            background-color: #dc3545;
-            color: white;
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .forget-button:hover {
-            background-color: #c82333;
-        }
-
-        .explanation-button {
-            display: none;
-            margin-top: 10px;
-            background-color: white;
-            color: black;
-            border: 2px solid black;
-            cursor: pointer;
-            padding: 8px 16px;
-        }
-
-        .explanation-button:hover {
-            background-color: black;
-            color: white;
-        }
-
         @media (max-width: 600px) {
             body {
                 padding: 0px;
@@ -178,15 +164,6 @@
 
             .options li {
                 padding: 5px;
-            }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 20px;
             }
         }
     </style>
@@ -206,7 +183,6 @@
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
-        let totalQuestions = 0;
         let correctAnswers = 0;
         let incorrectAnswers = 0;
         let missedAnswers = 0;
@@ -274,65 +250,66 @@
 
             questionElement.appendChild(optionsList);
 
-            // Next Button
+            // Submit Button
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit';
+            submitButton.onclick = () => handleAnswer(question, submitButton);
+            questionElement.appendChild(submitButton);
+
+            // Next Button (Initially disabled)
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
             nextButton.textContent = 'Next';
             nextButton.disabled = true; // Initially disabled
-            nextButton.onclick = () => handleAnswer(question, nextButton);
+            nextButton.onclick = () => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < quizData[0].questions.length) {
+                    displayQuestion();
+                } else {
+                    showFinalResults();
+                }
+            };
             questionElement.appendChild(nextButton);
-
-            // Forget Button
-            const forgetButton = document.createElement('button');
-            forgetButton.className = 'forget-button';
-            forgetButton.textContent = 'Forget Question';
-            forgetButton.onclick = () => skipQuestion(nextButton);
-            questionElement.appendChild(forgetButton);
 
             quizContainer.appendChild(questionElement);
         }
 
-        function handleAnswer(question, nextButton) {
+        function handleAnswer(question, submitButton) {
             const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
             const correctOptionValue = question.correct_options[0];
 
-            // Provide feedback
             const feedback = document.createElement('div');
             feedback.className = 'feedback';
+
             if (selectedOption) {
                 if (selectedOption.value === correctOptionValue) {
                     correctAnswers++;
                     feedback.textContent = 'Correct!';
-                    feedback.style.color = 'green';
+                    feedback.classList.add('correct');
                 } else {
                     incorrectAnswers++;
                     feedback.textContent = `Incorrect! The correct answer is Option ${correctOptionValue}`;
-                    feedback.style.color = 'red';
+                    feedback.classList.add('incorrect');
                 }
             } else {
                 missedAnswers++;
                 feedback.textContent = `You missed this question. The correct answer is Option ${correctOptionValue}`;
-                feedback.style.color = 'orange';
+                feedback.classList.add('incorrect');
             }
 
-            nextButton.disabled = false; // Enable Next button
-
-            // Display explanation
+            // Explanation Content
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
             explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-            nextButton.parentElement.appendChild(explanationContent);
-            nextButton.parentElement.appendChild(feedback);
-        }
 
-        function skipQuestion(nextButton) {
-            nextButton.disabled = false; // Enable Next button
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizData[0].questions.length) {
-                displayQuestion();
-            } else {
-                showFinalResults();
-            }
+            // Display feedback and explanation
+            submitButton.disabled = true;
+            submitButton.parentElement.appendChild(feedback);
+            submitButton.parentElement.appendChild(explanationContent);
+
+            // Enable Next Button
+            submitButton.nextElementSibling.disabled = false;
         }
 
         function showFinalResults() {
