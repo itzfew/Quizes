@@ -5,431 +5,347 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            background-color: #fff;
-            color: #333;
-            box-sizing: border-box;
         }
 
+        /* Header Section */
         header {
-            background-color: #f4f4f4;
-            padding: 15px 20px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #ffffff;
+            color: black;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            border: black 1px solid;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
             font-size: 24px;
+            margin: 0;
             font-weight: bold;
+        }
+
+        /* Question and Answer Section */
+        main {
+            margin-top: 80px;
+            padding: 20px;
         }
 
         .quiz-title {
+            font-size: 1.5em;
+            margin: 70px 0;
+            color: #333;
             text-align: center;
-            font-size: 26px;
-            font-weight: bold;
-            margin-bottom: 20px;
+            border: 2px solid black;
         }
 
-        select {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 20px 0;
-            font-size: 18px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-        }
-
-        #quiz-container {
-            max-width: 800px;
-            margin: 50px auto;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .question-content {
-            margin: 20px 0;
-            font-size: 18px;
-            line-height: 1.5;
-        }
-
-        .custom-options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .custom-options div {
-            background-color: #fff;
-            padding: 12px;
-            margin: 0;
-            cursor: pointer;
-            border: 1px solid #000;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            font-size: 16px;
-            color: black;
-            text-align: center;
-        }
-
-        .custom-options div:hover {
-            background-color: #f0f0f0;
-        }
-
-        .custom-options .selected {
-            background-color: #4caf50;
-            color: white;
-        }
-
-        .option-item {
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .explanation-button,
-        .submit-button,
-        .next-button {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            justify-content: space-between;
-            width: 80%;
-            width: 48%;
-            padding: 12px;
-            font-size: 16px;
-            border-radius: 5px;
-            margin-top: 15px;
-            padding: 12px;
-            background-color: black;
-            border: solid white 1px;
-            margin: 2px;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .explanation-button:hover,
-        .submit-button:hover,
-        .next-button:hover {
-            background-color: #333;
-        }
-        .next-button {
-            display: none;
-        }
-
-        .correct-answer {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .explanation-content {
-            margin-top: 20px;
-            font-size: 16px;
-            background-color: #eee;
-            padding: 15px;
-            border-radius: 5px;
-            display: none;
-            font-style: italic;
-            color: #555;
-        }
-
-        .explanation-content.open {
-            display: block;
-        }
-
-        .disabled {
-            background-color: #888;
-            cursor: not-allowed;
-        }
-
-        .correct {
-            background-color: green;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .incorrect {
-            background-color: red;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
+        .question {
+            margin-bottom: 30px;
+            padding: 3px;
+            border-bottom: 1px solid #ccc;
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
         }
 
         .question-number {
-            font-size: 20px;
             font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .question-content {
             margin-bottom: 15px;
+            word-wrap: break-word;
+            white-space: normal;
+            max-width: 100%;
+            overflow-x: auto;
         }
 
-        .question-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
+        .options li {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
         }
 
-        .timer {
-            font-size: 18px;
-            font-weight: bold;
-            text-align: right;
+        .options label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .explanation-content {
+            display: none;
             margin-top: 10px;
+            font-style: italic;
+            color: #777;
+            background-color: #FFF59D;
+            padding: 10px;
+            border-radius: 5px;
         }
 
-        .mathjax-inline {
-            font-size: 18px;
+        .submit-button {
+            background-color: #000;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 1000;
         }
 
-        ul.options {
-            list-style-type: none;
-            padding: 0;
+        .next-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        ul.options li {
-            margin: 8px 0;
-            font-size: 16px;
+        .next-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .forget-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .forget-button:hover {
+            background-color: #c82333;
+        }
+
+        .explanation-button {
+            display: none;
+            margin-top: 10px;
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            cursor: pointer;
+            padding: 8px 16px;
+        }
+
+        .explanation-button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0px;
+            }
+
+            .submit-button {
+                padding: 10px;
+            }
+
+            .options li {
+                padding: 5px;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Header Section -->
     <header>
-        <div class="quiz-title" id="quiz-title-header"></div>
+        <div class="logo">
+            <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40">
+            <h1>QuizApp</h1>
+        </div>
     </header>
-    <select id="subject-dropdown">
-        <option value="" disabled selected>Select a Subject</option>
-    </select>
+
+    <div class="quiz-title" id="quiz-title"></div>
     <div id="quiz-container"></div>
 
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
-        const urlParams = new URLSearchParams(window.location.search);
-        const title = urlParams.get('title');
-        const metaId = urlParams.get('metaId');
-
-        const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
-
-        fetch(jsonUrl)
-            .then(response => response.json())
-            .then(data => {
-                quizData = data;
-                if (title) {
-                    document.getElementById('quiz-title-header').textContent = title;
-                }
-                populateSubjectDropdown();
-            })
-            .catch(error => console.error('Error fetching the JSON data:', error));
-
-        function populateSubjectDropdown() {
-            const subjectDropdown = document.getElementById('subject-dropdown');
-            quizData.forEach((subject, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = subject.title;
-                subjectDropdown.appendChild(option);
-            });
-
-            // Set default subject selection
-            if (quizData.length > 0) {
-                subjectDropdown.selectedIndex = 1; // Select the first subject by default
-                currentQuestionIndex = 0; // Start from the first question
-                displayCurrentQuestion();
-            }
-
-            subjectDropdown.onchange = () => {
-                currentQuestionIndex = 0;
-                displayCurrentQuestion();
-            };
-        }
-
         let totalQuestions = 0;
         let correctAnswers = 0;
         let incorrectAnswers = 0;
         let missedAnswers = 0;
         let startTime = new Date();
-        let timerInterval;
 
-        function startTimer() {
-            timerInterval = setInterval(function () {
-                const elapsedTime = new Date() - startTime;
-                const minutes = Math.floor(elapsedTime / 60000);
-                const seconds = Math.floor((elapsedTime % 60000) / 1000);
-                document.getElementById('timer').textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            }, 1000);
+        const urlParams = new URLSearchParams(window.location.search);
+        const title = urlParams.get('title');
+        const metaId = urlParams.get('metaId');
+
+        if (title) {
+            document.getElementById('quiz-title').textContent = title;
         }
 
-        function displayCurrentQuestion() {
+        const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
+
+        // Fetch the JSON data
+        fetch(jsonUrl)
+            .then(response => response.json())
+            .then(data => {
+                quizData = data;
+                displayQuestion();
+            })
+            .catch(error => console.error('Error fetching the JSON data:', error));
+
+        function displayQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
+            const subject = quizData[0]; // Assuming one subject for simplicity.
             const question = subject.questions[currentQuestionIndex];
-
-            totalQuestions = subject.questions.length;
 
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
 
+            // Question Number
             const questionNumber = document.createElement('div');
             questionNumber.className = 'question-number';
             questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
             questionElement.appendChild(questionNumber);
 
+            // Question Content
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            }).replace(/\$(.*?)\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-            });
+            questionContent.innerHTML = question.content;
             questionElement.appendChild(questionContent);
-// Create a list to display options with A, B, C, D labels
-const optionsList = document.createElement('ul');
-optionsList.className = 'options';
 
-question.options.forEach((option, index) => {
-    const optionItem = document.createElement('li');
-    const optionLabel = document.createElement('label');
+            // Options
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options';
 
-    // Label options with A, B, C, D
-    const optionLabelText = String.fromCharCode(65 + index);  // A, B, C, D
-    optionLabel.innerHTML = `${optionLabelText}. ${option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-        return `<span class="mathjax-inline">$$${p1}$$</span>`;
-    }).replace(/\$(.*?)\$/g, (match, p1) => {
-        return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-    })}`;
+            question.options.forEach(option => {
+                const optionItem = document.createElement('li');
+                const optionLabel = document.createElement('label');
+                const optionInput = document.createElement('input');
 
-    optionItem.appendChild(optionLabel);
-    optionsList.appendChild(optionItem);
-});
+                optionInput.type = 'radio';
+                optionInput.name = `question${question.question_id}`;
+                optionInput.value = option.identifier;
 
-questionElement.appendChild(optionsList);
-
-            // Create custom options (A, B, C, D) for the user to select
-            const customOptions = document.createElement('div');
-            customOptions.className = 'custom-options';
-            ['A', 'B', 'C', 'D'].forEach((letter, index) => {
-                const customOptionItem = document.createElement('div');
-                customOptionItem.className = 'custom-option';
-                customOptionItem.textContent = letter;
-                customOptionItem.onclick = () => selectCustomOption(customOptionItem, letter, question);
-                customOptions.appendChild(customOptionItem);
+                optionLabel.appendChild(optionInput);
+                optionLabel.innerHTML += option.content;
+                optionItem.appendChild(optionLabel);
+                optionsList.appendChild(optionItem);
             });
-            questionElement.appendChild(customOptions);
 
-            // Show timer
-            const timerElement = document.createElement('div');
-            timerElement.className = 'timer';
-            timerElement.id = 'timer';
-            questionElement.appendChild(timerElement);
+            questionElement.appendChild(optionsList);
 
-            const explanationButton = document.createElement('button');
-            explanationButton.className = 'explanation-button';
-            explanationButton.textContent = 'View Explanation';
-            explanationButton.onclick = () => toggleExplanation(questionElement);
-            questionElement.appendChild(explanationButton);
-
-            const explanationContent = document.createElement('div');
-            explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation ? question.explanation.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            }).replace(/\$(.*?)\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-            }) : 'No explanation available.'}`;
-            questionElement.appendChild(explanationContent);
-
-            const submitButton = document.createElement('button');
-            submitButton.className = 'submit-button';
-            submitButton.textContent = 'Submit';
-            submitButton.onclick = () => submitAnswer(questionElement, question, submitButton);
-            questionElement.appendChild(submitButton);
-
+            // Next Button
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
             nextButton.textContent = 'Next';
-            nextButton.onclick = () => nextQuestion();
+            nextButton.disabled = true; // Initially disabled
+            nextButton.onclick = () => handleAnswer(question, nextButton);
             questionElement.appendChild(nextButton);
 
+            // Forget Button
+            const forgetButton = document.createElement('button');
+            forgetButton.className = 'forget-button';
+            forgetButton.textContent = 'Forget Question';
+            forgetButton.onclick = () => skipQuestion(nextButton);
+            questionElement.appendChild(forgetButton);
+
             quizContainer.appendChild(questionElement);
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        let selectedCustomOption = '';
-        function selectCustomOption(element, letter, question) {
-            const allOptions = document.querySelectorAll('.custom-option');
-            allOptions.forEach(opt => opt.classList.remove('selected'));
-
-            element.classList.add('selected');
-            selectedCustomOption = letter;
-
-            // Show explanation content and mark the answer
-            const correctAnswer = question.correctAnswer;
-            const submitButton = document.querySelector('.submit-button');
-            if (selectedCustomOption === correctAnswer) {
-                element.classList.add('correct');
-            } else {
-                element.classList.add('incorrect');
-            }
-        }
-
-                function submitAnswer(questionElement, question, submitButton) {
-            if (!selectedCustomOption) {
-                alert("Please select an option!");
-                return;
-            }
-
+        function handleAnswer(question, nextButton) {
+            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
             const correctOptionValue = question.correct_options[0];
+
+            // Provide feedback
             const feedback = document.createElement('div');
-            feedback.className = 'correct-answer';
-
-            // Show user selection and feedback
-            const selectedOption = question.options[selectedCustomOption.charCodeAt(0) - 65];
-            feedback.innerHTML = `You selected: Option ${selectedCustomOption}: `;
-            
-            // If correct, show green feedback
-            if (selectedCustomOption === correctOptionValue) {
-                correctAnswers++;
-                feedback.classList.add('correct');
-                feedback.innerHTML += " - Correct!";
+            feedback.className = 'feedback';
+            if (selectedOption) {
+                if (selectedOption.value === correctOptionValue) {
+                    correctAnswers++;
+                    feedback.textContent = 'Correct!';
+                    feedback.style.color = 'green';
+                } else {
+                    incorrectAnswers++;
+                    feedback.textContent = `Incorrect! The correct answer is Option ${correctOptionValue}`;
+                    feedback.style.color = 'red';
+                }
             } else {
-                incorrectAnswers++;
-                feedback.classList.add('incorrect');
-                feedback.innerHTML += ` - Incorrect! The correct answer is: Option ${correctOptionValue}`;
+                missedAnswers++;
+                feedback.textContent = `You missed this question. The correct answer is Option ${correctOptionValue}`;
+                feedback.style.color = 'orange';
             }
 
-            // Move feedback above explanation
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            questionElement.insertBefore(feedback, explanationContent);
+            nextButton.disabled = false; // Enable Next button
 
-            questionElement.querySelectorAll('.custom-option').forEach(option => option.classList.add('disabled'));
-            submitButton.style.display = 'none';
-            questionElement.querySelector('.next-button').style.display = 'block';
-
-            questionElement.querySelector('.explanation-content').classList.add('open');
+            // Display explanation
+            const explanationContent = document.createElement('div');
+            explanationContent.className = 'explanation-content';
+            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
+            nextButton.parentElement.appendChild(explanationContent);
+            nextButton.parentElement.appendChild(feedback);
         }
 
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
-        }
-
-        function nextQuestion() {
-            if (currentQuestionIndex < totalQuestions - 1) {
-                currentQuestionIndex++;
-                displayCurrentQuestion();
+        function skipQuestion(nextButton) {
+            nextButton.disabled = false; // Enable Next button
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData[0].questions.length) {
+                displayQuestion();
             } else {
-                alert("You've completed the quiz!");
+                showFinalResults();
             }
+        }
+
+        function showFinalResults() {
+            const timeTaken = Math.round((new Date() - startTime) / 1000);
+            const timeTakenMinutes = (timeTaken / 60).toFixed(2);
+            const scoreCard = document.createElement('div');
+            scoreCard.innerHTML = `
+                <table style="width: 100%; text-align: center; border: 1px solid #ccc;">
+                    <tr><th>Total Attempted</th><th>Correct</th><th>Incorrect</th><th>Missed</th><th>Total Time (Minutes)</th></tr>
+                    <tr><td>${correctAnswers + incorrectAnswers}</td><td>${correctAnswers}</td><td>${incorrectAnswers}</td><td>${missedAnswers}</td><td>${timeTakenMinutes}</td></tr>
+                </table>
+            `;
+            document.getElementById('quiz-container').appendChild(scoreCard);
         }
     </script>
 </body>
