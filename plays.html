@@ -42,6 +42,19 @@
             font-weight: bold;
         }
 
+        /* Subject Dropdown */
+        .dropdown {
+            margin-left: auto;
+        }
+
+        .dropdown select {
+            padding: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
         /* Question and Answer Section */
         main {
             margin-top: 80px;
@@ -175,6 +188,14 @@
             <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40">
             <h1>QuizApp</h1>
         </div>
+
+        <!-- Subject Dropdown -->
+        <div class="dropdown">
+            <select id="subject-dropdown" onchange="loadSubject()">
+                <option value="">Select Subject</option>
+                <!-- Options will be populated dynamically -->
+            </select>
+        </div>
     </header>
 
     <div class="quiz-title" id="quiz-title"></div>
@@ -188,31 +209,51 @@
         let missedAnswers = 0;
         let startTime = new Date();
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const title = urlParams.get('title');
-        const metaId = urlParams.get('metaId');
+        const jsonUrls = {
+            'math': 'https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/math.json',
+            'science': 'https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/science.json',
+            'history': 'https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/history.json',
+            // Add more subjects and their JSON URLs as needed
+        };
 
-        if (title) {
-            document.getElementById('quiz-title').textContent = title;
+        // Populate subject dropdown
+        function populateSubjectDropdown() {
+            const subjectDropdown = document.getElementById('subject-dropdown');
+            Object.keys(jsonUrls).forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = subject.charAt(0).toUpperCase() + subject.slice(1);
+                subjectDropdown.appendChild(option);
+            });
         }
 
-        const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
+        // Load subject data
+        function loadSubject() {
+            const subject = document.getElementById('subject-dropdown').value;
+            if (subject && jsonUrls[subject]) {
+                fetch(jsonUrls[subject])
+                    .then(response => response.json())
+                    .then(data => {
+                        quizData = data;
+                        currentQuestionIndex = 0;
+                        correctAnswers = 0;
+                        incorrectAnswers = 0;
+                        missedAnswers = 0;
+                        startTime = new Date();
+                        displayQuestion();
+                    })
+                    .catch(error => console.error('Error fetching the JSON data:', error));
+            }
+        }
 
-        // Fetch the JSON data
-        fetch(jsonUrl)
-            .then(response => response.json())
-            .then(data => {
-                quizData = data;
-                displayQuestion();
-            })
-            .catch(error => console.error('Error fetching the JSON data:', error));
-
+        // Display the current question
         function displayQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
-            const subject = quizData[0]; // Assuming one subject for simplicity.
-            const question = subject.questions[currentQuestionIndex];
+            if (quizData.length === 0) return;
+
+            const question = quizData[0].questions[currentQuestionIndex];
 
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
@@ -261,7 +302,7 @@
             const nextButton = document.createElement('button');
             nextButton.className = 'next-button';
             nextButton.textContent = 'Next';
-            nextButton.disabled = true; // Initially disabled
+            nextButton.disabled = true;
             nextButton.onclick = () => {
                 currentQuestionIndex++;
                 if (currentQuestionIndex < quizData[0].questions.length) {
@@ -298,17 +339,13 @@
                 feedback.classList.add('incorrect');
             }
 
-            // Explanation Content
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
             explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
 
-            // Display feedback and explanation
             submitButton.disabled = true;
             submitButton.parentElement.appendChild(feedback);
             submitButton.parentElement.appendChild(explanationContent);
-
-            // Enable Next Button
             submitButton.nextElementSibling.disabled = false;
         }
 
@@ -324,6 +361,9 @@
             `;
             document.getElementById('quiz-container').appendChild(scoreCard);
         }
+
+        // Initialize dropdown and start quiz
+        populateSubjectDropdown();
     </script>
 </body>
 </html>
