@@ -20,7 +20,8 @@
         </div>
         <div class="time" id="timer">00:00</div>
     </header>
-  <div class="quiz-title" id="quiz-title"></div>
+
+    <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
 
@@ -148,9 +149,10 @@
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Ensure MathJax renders the math
         }
 
+        // Function to wrap LaTeX math for MathJax rendering
         function renderMathInContent(content) {
             return content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                return `<span class="mathjax-display">$$${p1}$$</span>`;
             }).replace(/\$(.*?)\$/g, (match, p1) => {
                 return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
             });
