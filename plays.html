@@ -208,16 +208,17 @@
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
-        function displayQuestion() {
+        function displayAllQuestions() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
-            const subject = quizData[0]; // Assuming one subject for simplicity.
-            const question = subject.questions[currentQuestionIndex];
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
 
-            const questionElement = document.createElement('div');
-            questionElement.className = 'question';
-
+            subject.questions.forEach((question, index) => {
+                totalQuestions++;
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
             // Question Number
             const questionNumber = document.createElement('div');
             questionNumber.className = 'question-number';
