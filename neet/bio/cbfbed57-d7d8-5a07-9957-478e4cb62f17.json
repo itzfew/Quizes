@@ -1,0 +1,3447 @@
+[
+  {
+    "questions": [
+      {
+        "question_id": "1lhfuj322",
+        "chapter": "biodiversity-and-conservation",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "loss-of-biodiversity",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Among ‘The Evil Quartet’, which one is considered the most important cause driving extinction of species?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Over exploitation for economic gain"
+          },
+          {
+            "identifier": "B",
+            "content": "Alien species invasions"
+          },
+          {
+            "identifier": "C",
+            "content": "Co-extinctions"
+          },
+          {
+            "identifier": "D",
+            "content": "Habitat loss and fragmentation"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>Option D : Habitat loss and fragmentation is considered the most important cause driving extinction of species among &#39;The Evil Quartet&#39;.</p>\n<p>The &#39;Evil Quartet&#39; refers to the four major causes of biodiversity loss: habitat destruction and fragmentation, over-exploitation, pollution, and invasive species. Of these, habitat loss and fragmentation is generally considered the most significant cause, as it directly affects the availability of the resources and space that organisms need to survive. It can be caused by a variety of human activities, including deforestation, urbanization, and agriculture. This loss of habitat leads to smaller, more isolated populations, which are more vulnerable to other threats and have a higher risk of extinction.</p>\n"
+      },
+      {
+        "question_id": "1lhfukjeb",
+        "chapter": "plant-kingdom",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "pteridophytes",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Identify the pair of heterosporous pteridophytes among the following :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Selaginella and Salvinia"
+          },
+          {
+            "identifier": "B",
+            "content": "Psilotum and Salvinia"
+          },
+          {
+            "identifier": "C",
+            "content": "Equisetum and Salvinia"
+          },
+          {
+            "identifier": "D",
+            "content": "Lycopodium and Selaginella"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>Selaginella and Salvinia are heterosporous pteridophytes. They produces two different kind of spores.\nPsilotum, Lycopodium and Equisetum are homosporous pteridophytes.</p>"
+      },
+      {
+        "question_id": "1lhfum8n6",
+        "chapter": "principles-of-inheritance-and-variation",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "linkage-and-recombination",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Frequency of recombination between gene pairs on same chromosome as a measure of the distance \nbetween genes to map their position on chromosome, was used for the first time by</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Sutton and Boveri"
+          },
+          {
+            "identifier": "B",
+            "content": "Alfred Sturtevant"
+          },
+          {
+            "identifier": "C",
+            "content": "Henking"
+          },
+          {
+            "identifier": "D",
+            "content": "Thomas Hunt Morgan"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>Alfred Sturtevant used the frequency of recombination between gene pairs on the same chromosome \nas a measure of the distance between genes and ‘mapped’ their position on the chromosome.</p>\n<p>Sutton and Boveri proposed chromosomal theory of inheritance.</p>\n<p>Henking discovered X-chromosome.</p>\n<p>Thomas Hunt Morgan proved chromosomal theory of inheritance and proposed the concept of linkage.</p>"
+      },
+      {
+        "question_id": "1lhfunnib",
+        "chapter": "sexual-reproduction-in-flowering-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "male-reproductive-parts",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>What is the function of tassels in the corn cob?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "To trap pollen grains"
+          },
+          {
+            "identifier": "B",
+            "content": "To disperse pollen grains"
+          },
+          {
+            "identifier": "C",
+            "content": "To protect seeds"
+          },
+          {
+            "identifier": "D",
+            "content": "To attract insects"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>Tassels in the com cob represents stigma and style which wave in the wind to trap pollen grains.</p>"
+      },
+      {
+        "question_id": "1lhfv4l25",
+        "chapter": "ecosystem",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "productivity-and-decomposition-of-ecosystem",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Identify the correct statements :</p>\n<p>A. Detrivores perform fragmentation.</p>\n<p>B. The humus is further degraded by some microbes during mineralization.</p>\n<p>C. Water soluble inorganic nutrients go down into the soil and get precipitated by a process called \nleaching.</p>\n<p>D. The detritus food chain begins with living organisms.</p>\n<p>E. Earthworms break down detritus into smaller particles by a process called catabolism.</p>\n<p>Choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "B, C, D only"
+          },
+          {
+            "identifier": "B",
+            "content": "C, D, E only"
+          },
+          {
+            "identifier": "C",
+            "content": "D, E, A only"
+          },
+          {
+            "identifier": "D",
+            "content": "A, B, C only"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>Let&#39;s evaluate each statement:</p>\n<p>A. Detrivores perform fragmentation.</p>\n<ul>\n<li>This statement is true. Detrivores, such as earthworms and beetles, break down detritus (dead organic material) into smaller pieces in a process called fragmentation.</li>\n</ul>\n<p>B. The humus is further degraded by some microbes during mineralization.</p>\n<ul>\n<li>This statement is true. Microbes, including bacteria and fungi, break down humus into inorganic nutrients in a process called mineralization.</li>\n</ul>\n<p>C. Water-soluble inorganic nutrients go down into the soil and get precipitated by a process called leaching.</p>\n<ul>\n<li>This statement is true. Leaching refers to the process where nutrients are washed away from the soil into lower layers or into bodies of water.</li>\n</ul>\n<p>D. The detritus food chain begins with living organisms.</p>\n<ul>\n<li>This statement is false. The detritus food chain begins with dead organic material or detritus, not living organisms.</li>\n</ul>\n<p>E. Earthworms break down detritus into smaller particles by a process called catabolism.</p>\n<ul>\n<li>This statement is false. The process by which earthworms break down detritus into smaller particles is called fragmentation, not catabolism. Catabolism refers to the breakdown of complex molecules in living organisms to form simpler ones, along with the release of energy.</li>\n</ul>\n<p>Therefore, the correct answer is :</p>\n<p>Option D : A, B, C only.</p>\n"
+      },
+      {
+        "question_id": "1lhfv6c26",
+        "chapter": "anatomy-of-flowering-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "secondary-growth",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements : One is labelled as Assertion A and the other is labelled as Reason R :</p>\n<p>Assertion A : Late wood has fewer xylary elements with narrow vessels.</p>\n<p>Reason R : Cambium is less active in winters.</p>\n<p>In the light of the above statements, choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both A and R are true but R is NOT the correct explanation of A"
+          },
+          {
+            "identifier": "B",
+            "content": "A is true but R is false"
+          },
+          {
+            "identifier": "C",
+            "content": "A is false but R is true"
+          },
+          {
+            "identifier": "D",
+            "content": "Both A and R are true and R is the correct explanation of A"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>Late wood, formed in the latter part of the growing season, indeed has fewer xylary elements with narrower vessels. This is because the cambium, the layer of cells in plants that gives rise to secondary xylem (wood), is less active in colder temperatures, which are typically associated with the later parts of the growing season, such as autumn and winter.</p>\n<p>So, both Assertion A and Reason R are true. Moreover, Reason R correctly explains why Assertion A is the case: the decreased activity of the cambium in colder temperatures results in the formation of late wood with fewer, narrower vessels.</p>\n<p>Therefore, the correct answer is :</p>\n<p>Option D : Both A and R are true and R is the correct explanation of A.</p>\n"
+      },
+      {
+        "question_id": "1lhfv8uny",
+        "chapter": "cell-cycle-and-cell-division",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "meiosis-signicance-of-meiosis",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>The process of appearance of recombination nodules occurs at which sub stage of prophase I in meiosis?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Pachytene"
+          },
+          {
+            "identifier": "B",
+            "content": "Diplotene"
+          },
+          {
+            "identifier": "C",
+            "content": "Diakinesis"
+          },
+          {
+            "identifier": "D",
+            "content": "Zygotene"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "Recombination nodules appear during the pachytene stage of prophase I in meiosis. These nodules are thought to be involved in crossing over, a process where homologous chromosomes exchange genetic material. This leads to genetic recombination, which is a significant source of genetic variation in sexually reproducing organisms.\n\n<br/><br/>So, the correct answer is :\n\n<br/><br/>Option A : Pachytene."
+      },
+      {
+        "question_id": "1lhfvbo55",
+        "chapter": "cell-cycle-and-cell-division",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "meiosis-signicance-of-meiosis",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which of the following stages of meiosis involves division of centromere?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Metaphase II"
+          },
+          {
+            "identifier": "B",
+            "content": "Anaphase II"
+          },
+          {
+            "identifier": "C",
+            "content": "Telophase"
+          },
+          {
+            "identifier": "D",
+            "content": "Metaphase I"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct answer is Option B : Anaphase II.</p>\n<p>During meiosis, the division of the centromere occurs in Anaphase II. At this stage, the sister chromatids of each chromosome (which are attached at the centromere) are pulled apart and move toward opposite poles of the cell. This is similar to what happens in anaphase of mitosis. In contrast, during Anaphase I of meiosis, homologous chromosomes are separated but the centromeres do not divide, meaning the sister chromatids stay together.</p>\n"
+      },
+      {
+        "question_id": "1lhfve0yg",
+        "chapter": "biotechnology-and-its-applications",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "molecular-technique",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>During the purification process for recombinant DNA technology, addition of chilled ethanol precipitates out</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "DNA"
+          },
+          {
+            "identifier": "B",
+            "content": "Histones"
+          },
+          {
+            "identifier": "C",
+            "content": "Polysaccharides"
+          },
+          {
+            "identifier": "D",
+            "content": "RNA"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>Option (A) is the correct answer as, during isolation of the genetic material, purified DNA ultimately \nprecipitates out after the addition of chilled ethanol.</p>\n<p>Option (B) is not the answer as, proteins can be removed by treatment with proteases.</p>\n<p>Option (D) is not the answer as RNA can be removed by treatment with ribonuclease.</p>"
+      },
+      {
+        "question_id": "1lhfvic9g",
+        "chapter": "morphology-of-flowering-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "description-of-some-important-families",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Family Fabaceae differs from Solanaceae and Liliaceae. With respect to the stamens, pick out the \ncharacteristics specific to family Fabaceae but not found in Solanaceae or Liliaceae.</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Polyadelphous and epipetalous stamens"
+          },
+          {
+            "identifier": "B",
+            "content": "Monoadelphous and Monothecous anthers"
+          },
+          {
+            "identifier": "C",
+            "content": "Epiphyllous and Dithecous anthers"
+          },
+          {
+            "identifier": "D",
+            "content": "Diadelphous and Dithecous anthers"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>Fabaceae $$\\to$$ Diadelphous and dithecous anther.</p>\n<p>Solanaceae $$\\to$$ Polyandrous, epipetalous and dithecous anther.</p>\n<p>Liliaceae $$\\to$$ Polyandrous, epiphyllous and dithecous anther.</p>"
+      },
+      {
+        "question_id": "1lhfvjtt2",
+        "chapter": "sexual-reproduction-in-flowering-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "pollination",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Large, colourful, fragrant flowers with nectar are seen in</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Bird pollinated plants"
+          },
+          {
+            "identifier": "B",
+            "content": "Bat pollinated plants"
+          },
+          {
+            "identifier": "C",
+            "content": "Wind pollinated plants"
+          },
+          {
+            "identifier": "D",
+            "content": "Insect pollinated plants"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "Large, colorful, fragrant flowers with nectar are features that attract biotic pollinators. Insect pollinated plants, also known as entomophilous plants, often have these characteristics to attract insects such as bees, butterflies, and moths, which play a significant role in their pollination process."
+      },
+      {
+        "question_id": "1lhfvle7a",
+        "chapter": "plant-growth-and-development",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "plant-growth-regulators",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Spraying of which of the following phytohormone on juvenile conifers helps hastening the maturity period, \nthat leads early seed production?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Gibberellic Acid"
+          },
+          {
+            "identifier": "B",
+            "content": "Zeatin"
+          },
+          {
+            "identifier": "C",
+            "content": "Abscisic Acid"
+          },
+          {
+            "identifier": "D",
+            "content": "Indole-3-butyric Acid"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "Gibberellic acid (GA) is a plant hormone that stimulates cell elongation, germination, and influences a variety of developmental processes, including maturation and seed production. In the forestry industry, it is often used to hasten the maturity period and stimulate early seed production in juvenile conifers."
+      },
+      {
+        "question_id": "1lhfvojbi",
+        "chapter": "cell-cycle-and-cell-division",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "cell-cycle",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Among eukaryotes, replication of DNA takes place in :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "S phase"
+          },
+          {
+            "identifier": "B",
+            "content": "G<sub>1</sub> phase"
+          },
+          {
+            "identifier": "C",
+            "content": "G<sub>2</sub> phase"
+          },
+          {
+            "identifier": "D",
+            "content": "M phase"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "In eukaryotes, DNA replication takes place during the S phase (Synthesis phase) of the cell cycle. During this phase, the entire genome is replicated, resulting in two copies of each chromosome to ensure that both daughter cells receive a complete set of genetic information during cell division."
+      },
+      {
+        "question_id": "1lhfvt4hh",
+        "chapter": "photosynthesis-in-higher-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "synthesis-of-glucose-molecule",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>How many ATP and NADPH<sub>2</sub> are required for the synthesis of one molecule of Glucose during Calvin cycle?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "18 ATP and 12 NADPH<sub>2</sub>"
+          },
+          {
+            "identifier": "B",
+            "content": "12 ATP and 16 NADPH<sub>2</sub>"
+          },
+          {
+            "identifier": "C",
+            "content": "18 ATP and 16 NADPH<sub>2</sub>"
+          },
+          {
+            "identifier": "D",
+            "content": "12 ATP and 12 NADPH<sub>2</sub>"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>For every CO<sub>2</sub> molecule entering the Calvin cycle, 3 molecules of ATP and 2 of NADPH<sub>2</sub> are required. To make one molecule of glucose, 6 turns of the cycle are required. Thus, ATP and NADPH<sub>2</sub> molecules required for synthesis of one molecule of glucose during Calvin \n cycle will be</p>\n<p><img src=\"https://app-content.cdn.examgoal.net/fly/@width/image/1lhib0twf/68d3bfb8-a6e8-4d9c-a7fe-34e7ad54f2fe/829b5ef0-ef86-11ed-aa3c-79a938cf0bf4/file-1lhib0twg.png?format=png\" data-orsrc=\"https://app-content.cdn.examgoal.net/image/1lhib0twf/68d3bfb8-a6e8-4d9c-a7fe-34e7ad54f2fe/829b5ef0-ef86-11ed-aa3c-79a938cf0bf4/file-1lhib0twg.png\" loading=\"lazy\" style=\"max-width: 100%; height: auto; display: block; margin: 0px auto; max-height: 40vh;\" alt=\"NEET 2023 Biology - Photosynthesis in Higher Plants Question 5 English Explanation\"></p>"
+      },
+      {
+        "question_id": "1lhfvukav",
+        "chapter": "biotechnology-and-its-applications",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "genetically-modified-organisms",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>In gene gun method used to introduce alien DNA into host cells, microparticles of ________ metal are used.</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Zinc"
+          },
+          {
+            "identifier": "B",
+            "content": "Tungsten or gold"
+          },
+          {
+            "identifier": "C",
+            "content": "Silver"
+          },
+          {
+            "identifier": "D",
+            "content": "Copper"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>Option (B) is the correct answer because in gene gun method, microparticles of tungsten or gold are \nused. Gold or tungsten are inert in nature so they do not alter the chemical composition of cells.</p>"
+      },
+      {
+        "question_id": "1lhfvxji5",
+        "chapter": "molecular-basis-of-inheritance",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "experimental-proof-for-genetic-material",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Unequivocal proof that DNA is the genetic material was first proposed by</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Alfred Hershey and Martha Chase"
+          },
+          {
+            "identifier": "B",
+            "content": "Avery, Macleoid and McCarthy"
+          },
+          {
+            "identifier": "C",
+            "content": "Wilkins and Franklin"
+          },
+          {
+            "identifier": "D",
+            "content": "Frederick Griffith"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>The first unequivocal proof that DNA is the genetic material came from the experiments conducted by Alfred Hershey and Martha Chase in 1952. They used bacteriophages (viruses that infect bacteria) and radioactively labeled the protein and DNA of the phage separately in two different sets of experiments. They found that it was the DNA, not the protein, of the phage that was injected into the bacteria and carried the genetic information necessary for the production of new phage particles.</p>\n<p>Avery, Macleoid and McCarty gave the biochemical characterisation of Transforming Principle.</p>\n<p>The transformation experiments by using Pneumococcus was conducted by Frederick Griffith.</p>\n<p>Wilkins and Franklin produced X-ray diffraction data of DNA.</p>\n<p>So, the correct answer is :</p>\n\n<p>Option A : Alfred Hershey and Martha Chase.</p>"
+      },
+      {
+        "question_id": "1lhfvzi4t",
+        "chapter": "ecosystem",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "productivity-and-decomposition-of-ecosystem",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>In the equation GPP $$-$$ R = NPP</p>\n<p>GPP is Gross Primary Productivity</p>\n<p>NPP is Net Primary Productivity</p>\n<p>R here is __________.</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Respiratory quotient"
+          },
+          {
+            "identifier": "B",
+            "content": "Respiratory loss"
+          },
+          {
+            "identifier": "C",
+            "content": "Reproductive allocation"
+          },
+          {
+            "identifier": "D",
+            "content": "Photosynthetically active radiation"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>In the equation GPP - R = NPP,</p>\n<p>GPP stands for Gross Primary Productivity, NPP stands for Net Primary Productivity, and R represents the energy used by plants for their own metabolic processes, which is also known as Respiratory loss.</p>\n"
+      },
+      {
+        "question_id": "1lhfw1lbx",
+        "chapter": "molecular-basis-of-inheritance",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "transcription",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>What is the role of RNA polymerase III in the process of transcription in Eukaryotes?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Transcription of tRNA, 5S rRNA and snRNA"
+          },
+          {
+            "identifier": "B",
+            "content": "Transcription of precursor of mRNA"
+          },
+          {
+            "identifier": "C",
+            "content": "Transcription of only snRNAs"
+          },
+          {
+            "identifier": "D",
+            "content": "Transcription of rRNAs (28S, 18S and 5.8S)"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>In eukaryotes there are three major types of RNA polymerases.</p>\n<p>RNA polymerase I transcribes : 5.8S, 18S, 28S rRNAs</p>\n<p>RNA polymerase II transcribes : hnRNAs (precurssor of mRNA)</p>\n<p>RNA polymerase III transcribes : tRNAs, ScRNA, 5S rRNA and snRNA</p>"
+      },
+      {
+        "question_id": "1lhfw4zkw",
+        "chapter": "sexual-reproduction-in-flowering-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "double-fertilisation",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>In angiosperm, the haploid, diploid and triploid structures of a fertilized embryo sac sequentially are :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Antipodals, synergids, and primary endosperm nucleus"
+          },
+          {
+            "identifier": "B",
+            "content": "Synergids, Zygote and Primary endosperm nucleus"
+          },
+          {
+            "identifier": "C",
+            "content": "Synergids, antipodals and Polar nuclei"
+          },
+          {
+            "identifier": "D",
+            "content": "Synergids, Primary endosperm nucleus and zygote"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>Synergids are the cells of gametophyte and hence these are haploid Zygote is formed by fusion of two \ngametes and thus it is diploid.</p>\n<p>Primary endosperm nucleus is formed by the fusion of diploid secondary nucleus with a male gamete. \nTherefore, it is triploid.</p>"
+      },
+      {
+        "question_id": "1lhfw660m",
+        "chapter": "principles-of-inheritance-and-variation",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "multiple-alleles",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>The phenomenon of pleiotropism refers to</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Presence of two alleles, each of the two genes controlling a single trait"
+          },
+          {
+            "identifier": "B",
+            "content": "A single gene affecting multiple phenotypic expression"
+          },
+          {
+            "identifier": "C",
+            "content": "More than two genes affecting a single character"
+          },
+          {
+            "identifier": "D",
+            "content": "Presence of several alleles of a single gene controlling a single crossover"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>When a single gene affects multiple phenotypic expression, the gene is called pleiotropic gene and the \nphenomenon is called pleiotropism.</p>"
+      },
+      {
+        "question_id": "1lhfw96df",
+        "chapter": "respiration-in-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "glycolysis",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements : One is labelled as Assertion A and the other is labelled as Reason R :</p>\n<p>Assertion A : ATP is used at two steps in glycolysis.</p>\n<p>Reason R : First ATP is used in converting glucose into glucose-6-phosphate and second ATP is used in \nconversion of fructose-6-phosphate into fructose-1, 6-diphosphate.</p>\n<p>In the light of the above statements, choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both A and R are true but R is NOT the correct explanation of A."
+          },
+          {
+            "identifier": "B",
+            "content": "A is true but R is false."
+          },
+          {
+            "identifier": "C",
+            "content": "A is false but R is true."
+          },
+          {
+            "identifier": "D",
+            "content": "Both A and R are true and R is the correct explanation of A."
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "The process of glycolysis involves the breakdown of glucose into two molecules of pyruvate. This metabolic pathway is divided into two parts: the energy investment phase and the energy payoff phase.\n\n<br/><br/>In the energy investment phase, two molecules of ATP are indeed used. The first ATP is used to convert glucose into glucose-6-phosphate, and the second ATP is used to convert fructose-6-phosphate into fructose-1, 6-diphosphate. These steps are necessary to prepare the glucose molecule for the energy payoff phase, where ATP will be generated.\n\n<br/><br/>So, both Assertion A and Reason R are true, and Reason R correctly explains Assertion A.\n\n<br/><br/>Therefore, the answer is :\n\n<br/><br/>Option D : Both A and R are true and R is the correct explanation of A."
+      },
+      {
+        "question_id": "1lhfwasf5",
+        "chapter": "biomolecules",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "polysaccharides",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Cellulose does not form blue colour with Iodine because</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "It is a helical molecule"
+          },
+          {
+            "identifier": "B",
+            "content": "It does not contain complex helices and hence cannot hold iodine molecules"
+          },
+          {
+            "identifier": "C",
+            "content": "It breaks down when iodine reacts with it"
+          },
+          {
+            "identifier": "D",
+            "content": "It is a disaccharide"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>Option (B) is the correct answer because cellulose does not contain complex helices and hence \ncannot hold iodine molecules.</p>\n<p>Option (A), (C) and (D) are not correct as cellulose is a polysaccharide.</p>"
+      },
+      {
+        "question_id": "1lhfwbu8w",
+        "chapter": "plant-growth-and-development",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "plant-growth-regulators",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which hormone promotes internode/petiole elongation in deep water rice?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Kinetin"
+          },
+          {
+            "identifier": "B",
+            "content": "Ethylene"
+          },
+          {
+            "identifier": "C",
+            "content": "2, 4-D"
+          },
+          {
+            "identifier": "D",
+            "content": "GA<sub>3</sub>"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>The hormone that promotes internode/petiole elongation in deep water rice is Ethylene. </p>\n<p>Ethylene is a plant hormone that plays a critical role in growth and development, including responses to environmental stimuli. In the case of deep water rice, when the plants are submerged, the ethylene concentration increases and promotes rapid internodal elongation, which allows the plant to keep its leaves above the water surface.</p>\n<p>So, the correct answer is Option B - Ethylene.</p>\n"
+      },
+      {
+        "question_id": "1lhfwdtkc",
+        "chapter": "molecular-basis-of-inheritance",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "rna",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Expressed Sequence Tags (ESTs) refers to</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "All genes that are expressed as proteins."
+          },
+          {
+            "identifier": "B",
+            "content": "All genes whether expressed or unexpressed."
+          },
+          {
+            "identifier": "C",
+            "content": "Certain important expressed genes."
+          },
+          {
+            "identifier": "D",
+            "content": "All genes that are expressed as RNA."
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "Expressed Sequence Tags (ESTs) are short sub-sequences of a cDNA sequence. They may identify expressed genes, so they are derived from mRNA which is transcribed from expressed genes. They serve as a kind of \"tag\" or marker for identifying the gene from which it was transcribed. Therefore, ESTs represent genes that are expressed as RNA. The other options listed do not accurately describe what ESTs are."
+      },
+      {
+        "question_id": "1lhfwhrod",
+        "chapter": "molecular-basis-of-inheritance",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "dna",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Upon exposure to UV radiation, DNA stained with ethidium bromide will show</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Bright blue colour"
+          },
+          {
+            "identifier": "B",
+            "content": "Bright yellow colour"
+          },
+          {
+            "identifier": "C",
+            "content": "Bright orange colour"
+          },
+          {
+            "identifier": "D",
+            "content": "Bright red colour"
+          }
+        ],
+        "correct_options": [
+          "C"
+        ],
+        "answer": null,
+        "explanation": "<p>Option (C) is the correct answer because in recombinant DNA technology the separated DNA fragments can be visualised only after staining the DNA with a substance known as ethidium bromide followed by \nexposure to U.V. radiation. You can see bright orange coloured bands of DNA in an ethidium bromide \nstained gel exposed to U.V. light.</p>"
+      },
+      {
+        "question_id": "1lhfwiwut",
+        "chapter": "biodiversity-and-conservation",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "international-efforts-for-conserving-biodiversity",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>The historic Convention on Biological Diversity, ‘The Earth Summit’ was held in Rio de Janeiro in the year</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "1992"
+          },
+          {
+            "identifier": "B",
+            "content": "1986"
+          },
+          {
+            "identifier": "C",
+            "content": "2002"
+          },
+          {
+            "identifier": "D",
+            "content": "1985"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "The Earth Summit, formally known as the United Nations Conference on Environment and Development (UNCED), was indeed held in Rio de Janeiro, Brazil, in 1992. This meeting marked a significant step forward in global conservation efforts, leading to the establishment of the Convention on Biological Diversity, among other important agreements."
+      },
+      {
+        "question_id": "1lhfwjy5v",
+        "chapter": "photosynthesis-in-higher-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "photosystems",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>The reaction centre in PS II has an absorption maxima at</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "700 nm"
+          },
+          {
+            "identifier": "B",
+            "content": "660 nm"
+          },
+          {
+            "identifier": "C",
+            "content": "780 nm"
+          },
+          {
+            "identifier": "D",
+            "content": "680 nm"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>In PS-I, the reaction centre chlorophyll a has an absorption peak at 700 nm, while in PS-II, reaction \ncentre has an absorption maxima at 680 nm.</p>"
+      },
+      {
+        "question_id": "1lhfwmslt",
+        "chapter": "plant-kingdom",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "bryophytes",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements : One labelled as Assertion A and the other labelled as Reason R:</p>\n<p>Assertion A : The first stage of gametophyte in the life cycle of moss is protonema stage.</p>\n<p>Reason R : Protonema develops directly from spores produced in capsule.</p>\n<p>In the light of the above statements, choose the most appropriate answer from options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both A and R are correct but R is NOT the correct explanation of A"
+          },
+          {
+            "identifier": "B",
+            "content": "A is correct but R is not correct"
+          },
+          {
+            "identifier": "C",
+            "content": "A is not correct but R is correct"
+          },
+          {
+            "identifier": "D",
+            "content": "Both A and R are correct and R is the correct explanation of A"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "The life cycle of mosses consists of two stages: the gametophyte stage and the sporophyte stage. \n\n<br/><br/>Assertion A states : \"The first stage of the gametophyte in the life cycle of moss is the protonema stage.\" This statement is correct. After a spore germinates, it forms a mass of green, branched, one-cell-thick filaments known as the protonema, which is indeed the first stage of the gametophyte generation in mosses.\n\n<br/><br/>Reason R states : \"Protonema develops directly from spores produced in the capsule.\" This statement is also correct. The spores are produced in a capsule, which is the sporophyte part of the moss life cycle. When these spores are released and germinate, they grow into the protonema.\n\n<br/><br/>Not only are both statements correct, but Reason R provides a correct explanation for Assertion A.\n\n<br/><br/>Therefore, the answer is :\n\n<br/><br/>Option D : Both A and R are correct and R is the correct explanation of A."
+      },
+      {
+        "question_id": "1lhfwo0c4",
+        "chapter": "cell-the-unit-of-life",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>In tissue culture experiments, leaf mesophyll cells are put in a culture medium to form callus. This \nphenomenon may be called as</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Dedifferentiation"
+          },
+          {
+            "identifier": "B",
+            "content": "Development"
+          },
+          {
+            "identifier": "C",
+            "content": "Senescence"
+          },
+          {
+            "identifier": "D",
+            "content": "Differentiation"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>In tissue culture experiments, leaf mesophyll cells are put in a culture medium to form callus. This \nphenomenon may be called as dedifferentiation.</p>\n<p>Dedifferentiation is a phenomenon by which the living differentiated plant cells, that by now have lost \nthe capacity to divide can regain the capacity of division under certain conditions.</p>"
+      },
+      {
+        "question_id": "1lhfwq8zv",
+        "chapter": "anatomy-of-flowering-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "anatomy-of-dicotyledonous-and-monocotyledonous-plants",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements :</p>\n<p>Statement I : Endarch and exarch are the terms often used for describing the position of secondary xylem \nin the plant body.</p>\n<p>Statement II : Exarch condition is the most common feature of the root system.</p>\n<p>In the light of the above statements, choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both Statement I and Statement II are false"
+          },
+          {
+            "identifier": "B",
+            "content": "Statement I is correct but Statement II is false"
+          },
+          {
+            "identifier": "C",
+            "content": "Statement I is incorrect but Statement II is true"
+          },
+          {
+            "identifier": "D",
+            "content": "Both Statement I and Statement II are true"
+          }
+        ],
+        "correct_options": [
+          "C"
+        ],
+        "answer": null,
+        "explanation": "<p>Statement I : Endarch and exarch are the terms often used for describing the position of secondary xylem in the plant body.</p>\n<ul>\n<li>This statement is incorrect. Endarch and exarch are used to describe the developmental sequence of primary xylem, not secondary xylem. In endarch condition, the first formed xylem is towards the centre (protoxylem) and the last formed xylem is towards the periphery (metaxylem), which is typical of stems. In the exarch condition, the first formed xylem is towards the periphery and the last formed xylem is towards the centre, which is typical of roots.</li>\n</ul>\n<p>Statement II : Exarch condition is the most common feature of the root system.</p>\n<ul>\n<li>This statement is true. The exarch condition, where the first-formed xylem is towards the periphery and the last-formed xylem is towards the centre, is indeed the most common feature of the root system.</li>\n</ul>\n<p>So, the correct answer is :</p>\n<p>Option C : Statement I is incorrect but Statement II is true.</p>"
+      },
+      {
+        "question_id": "1lhfx17ix",
+        "chapter": "cell-cycle-and-cell-division",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "cell-cycle",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II:</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">M Phase</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">Proteins are synthesized</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">G$$_2$$ Phase</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">Inactive phase</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Quiescent stage</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">Interval between mitosis and initiation of DNA replication</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">G$$_1$$ Phase</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">Equational division</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-IV, B-II, C-I, D-III"
+          },
+          {
+            "identifier": "B",
+            "content": "A-IV, B-I, C-II, D-III"
+          },
+          {
+            "identifier": "C",
+            "content": "A-II, B-IV, C-I, D-III"
+          },
+          {
+            "identifier": "D",
+            "content": "A-III, B-II, C-IV, D-I"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>M phase or mitosis is the phase where the actual cell division occurs. Mitosis is also called equational \ndivision.</p>\n<p>During G<sub>2</sub> phase DNA synthesis stops but cell synthesis RNA, proteins, etc. for next phase.</p>\n<p>Quiescent stage is inactive phase in which non-dividing cells enters.</p>\n<p>G<sub>1</sub> phase is the interval between mitosis and initiation of DNA replication.</p>\n<p>Therefore, option (B) is correct.</p>"
+      },
+      {
+        "question_id": "1lhfx3u7s",
+        "chapter": "principles-of-inheritance-and-variation",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "chromosomal-disorder",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which of the following statements are correct about Klinefelter’s Syndrome?</p>\n<p>A. This disorder was first described by Langdon Down (1866).</p>\n<p>B. Such an individual has overall masculine development. However, the feminine development is also expressed.</p>\n<p>C. The affected individual is short statured.</p>\n<p>D. Physical, psychomotor and mental development is retarded.</p>\n<p>E. Such individuals are sterile.</p>\n<p>Choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "C and D only"
+          },
+          {
+            "identifier": "B",
+            "content": "B and E only"
+          },
+          {
+            "identifier": "C",
+            "content": "A and E only"
+          },
+          {
+            "identifier": "D",
+            "content": "A and B only"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>Option B :\n<br/><br/>B and E only</p>\n<p>Explanation :</p>\n<p>B. Such an individual has overall masculine development. However, the feminine development is also expressed.\nPeople with Klinefelter syndrome are male (XY), but they often have certain physical characteristics that may be typically associated with female development, such as wider hips, less body hair, and sometimes breast tissue development. </p>\n<p>E. Such individuals are sterile.\nOften, individuals with Klinefelter syndrome produce little to no sperm and are therefore usually infertile. However, there are cases where fertility treatments can help some men with Klinefelter syndrome to father children.</p>\n<p>For the other options :</p>\n<p>A. This disorder was first described by Langdon Down (1866).\nThis is incorrect. Klinefelter&#39;s syndrome was first described by Dr. Harry Klinefelter in the 1940s, not by Langdon Down.</p>\n<p>C. The affected individual is short statured.\nThis is incorrect. In fact, individuals with Klinefelter&#39;s syndrome are often taller than average.</p>\n<p>D. Physical, psychomotor and mental development is retarded.\nThis is also incorrect. While individuals with Klinefelter syndrome may have some learning difficulties or delays, particularly with language and speech, it is not accurate or appropriate to say that their physical, psychomotor, and mental development is &quot;retarded&quot;. They may face some challenges, but with support they can lead healthy, productive lives.</p>"
+      },
+      {
+        "question_id": "1lhfx61q4",
+        "chapter": "organisms-and-populations",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "population-interaction",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements:</p>\n<p>Statement I : Gause’s ‘Competitive Exclusion Principle’ states that two closely related species competing for the same resources cannot co-exist indefinitely and competitively inferior one will be eliminated eventually.</p>\n<p>Statement II : In general, carnivores are more adversely affected by competition than herbivores.</p>\n<p>In the light of the above statements, choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both Statement I and Statement II are false."
+          },
+          {
+            "identifier": "B",
+            "content": "Statement I is correct Statement II is false."
+          },
+          {
+            "identifier": "C",
+            "content": "Statement I is incorrect but Statement II is true."
+          },
+          {
+            "identifier": "D",
+            "content": "Both Statement I and Statement II are true."
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>Gause's 'Competitive Exclusion Principle' states that two closely related species competing for the \nsame resources cannot co-exist indefinitely and the competitively inferior one will be eliminated \neventually. Thus, statement I is correct.</p>\n<p>Statement II is incorrect as in general, herbivores and plants appear to be more adversely affected by \ncompetition than carnivores.</p>"
+      },
+      {
+        "question_id": "1lhfx6tie",
+        "chapter": "cell-the-unit-of-life",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "ribosomes-and-inclusion-bodies",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>How many different proteins does the ribosome consist of?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "60"
+          },
+          {
+            "identifier": "B",
+            "content": "40"
+          },
+          {
+            "identifier": "C",
+            "content": "20"
+          },
+          {
+            "identifier": "D",
+            "content": "80"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>The ribosome consists of structural RNAs and about 80 different proteins.</p>"
+      },
+      {
+        "question_id": "1lhfx7wjq",
+        "chapter": "respiration-in-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "site-of-oxidative-phosphorylation",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which of the following combinations is required for chemiosmosis?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Membrane, proton pump, proton gradient, NADP synthase"
+          },
+          {
+            "identifier": "B",
+            "content": "Proton pump, electron gradient, ATP synthase"
+          },
+          {
+            "identifier": "C",
+            "content": "Proton pump, electron gradient, NADP synthase"
+          },
+          {
+            "identifier": "D",
+            "content": "Membrane, proton pump, proton gradient, ATP synthase"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>Chemiosmosis is a process by which ATP (adenosine triphosphate) is produced in the cell. It relies on a concentration gradient of protons (H+ ions) across a membrane. The proton gradient is created by a proton pump. As protons flow back across the membrane, down their concentration gradient, they pass through a protein complex called ATP synthase, which uses the energy of the proton flow to produce ATP.</p>\n<p>So, the correct answer is :</p>\n<p>Option D : Membrane, proton pump, proton gradient, ATP synthase</p>\n"
+      },
+      {
+        "question_id": "1lhfx97je",
+        "chapter": "ecosystem",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "productivity-and-decomposition-of-ecosystem",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which one of the following statements is NOT correct?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Algal blooms caused by excess of organic matter in water improve water quality and promote fisheries"
+          },
+          {
+            "identifier": "B",
+            "content": "Water hyacinth grows abundantly in eutrophic water bodies and leads to an imbalance in the ecosystem \ndynamics of the water body"
+          },
+          {
+            "identifier": "C",
+            "content": "The amount of some toxic substances of industrial waste water increases in the organisms at \nsuccessive trophic levels"
+          },
+          {
+            "identifier": "D",
+            "content": "The micro-organisms involved in biodegradation of organic matter in a sewage polluted water body \nconsume a lot of oxygen causing the death of aquatic organisms"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>Algal bloom imparts a distinct colour to the water bodies. It causes deterioration of the water quantity \nand fish mortality.</p>"
+      },
+      {
+        "question_id": "1lhfxdn8z",
+        "chapter": "ecosystem",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "structure-and-function-of-ecosystem",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II:</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I<br>(Interaction)</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II<br>(Species A and B)</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">Mutualism</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">+(A), 0(B)</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">Commensalism</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">$$-$$(A), 0(B)</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Amensalism</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">+(A), $$-$$(B)</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">Parasitism</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">+(A), +(B)</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-IV, B-I, C-II, D-III"
+          },
+          {
+            "identifier": "B",
+            "content": "A-IV, B-III, C-I, D-II"
+          },
+          {
+            "identifier": "C",
+            "content": "A-III, B-I, C-IV, D-II"
+          },
+          {
+            "identifier": "D",
+            "content": "A-IV, B-II, C-I, D-III"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>(+, +) Mutualism : In this interaction, both the interacting species are benefitted.</p>\n<p>(+, 0) Commensalism : Only one species is benefitted and the other species remains unharmed.</p>\n<p>($$-$$, 0) Amensalism : Neither species is benefitted. One remains unharmed and the other is harmed.</p>\n<p>(+, $$-$$) Parasitism : One species is benefitted and other is negatively effected.</p>"
+      },
+      {
+        "question_id": "1lhfxvs3d",
+        "chapter": "biotechnology-and-its-applications",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "molecular-technique",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Main steps in the formation of Recombinant DNA are given below. Arrange these steps in a correct \nsequence.</p>\n<p>A. Insertion of recombinant DNA into the host cell</p>\n<p>B. Cutting of DNA at specific location by restriction enzyme</p>\n<p>C. Isolation of desired DNA fragment</p>\n<p>D. Amplification of gene of interest using PCR</p>\n<p>Choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "C, A, B, D"
+          },
+          {
+            "identifier": "B",
+            "content": "C, B, D, A"
+          },
+          {
+            "identifier": "C",
+            "content": "B, D, A, C"
+          },
+          {
+            "identifier": "D",
+            "content": "B, C, D, A"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct answer is option (D) because recombinant DNA technology involves several steps in \nspecific sequence such as isolation of DNA, fragmentation of DNA by restriction endonucleases, \nisolation of desired DNA fragment, ligation of the DNA fragment into a vector, transferring the \nrecombinant DNA into the host, culturing the host cells in a medium at large scale and extraction of the \ndesired product.</p>"
+      },
+      {
+        "question_id": "1lhfy1y0l",
+        "chapter": "respiration-in-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "krebs-cycle",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II:</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">Oxidative decarboxylation</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">Citrate synthase</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">Glycolysis</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">Pyruvate dehydrogenase</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Oxidative phosphorylation</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">Electron transport system</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">Tricarboxylic acid cycle</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">EMP pathway</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A – II, B – IV, C – I, D – III"
+          },
+          {
+            "identifier": "B",
+            "content": "A – III, B – I, C – II, D – IV"
+          },
+          {
+            "identifier": "C",
+            "content": "A – II, B – IV, C – III, D – I"
+          },
+          {
+            "identifier": "D",
+            "content": "A – III, B – IV, C – II, D – I"
+          }
+        ],
+        "correct_options": [
+          "C"
+        ],
+        "answer": null,
+        "explanation": "<p>Pyruvate, which is formed by the glycolytic catabolism of carbohydrates in the cytosol, after it enters \nmitochondrial matrix undergoes oxidative decarboxylation by a complex set of reactions catalyzed by pyruvate dehydrogenase.<p>\n<p>The scheme of glycolysis was given by Gustav Embden, Otto Meyrhof and J. Parnas, and is often \nreferred to as the EMP pathway.</p>\n<p>In electron transport system, the energy of oxidation-reduction is utilized for the production of proton \ngradient required for phosphorylation, thus, this process is also called oxidative phosphorylation.</p>\n<p>The TCA (tricarboxylic acid cycle) starts with the condensation of acetyl group with oxaloacetic acid \n(OAA) and water to yield citric acid. The reaction is catalysed by the enzyme citrate synthase. Thus, \noption (C) is correct.</p>"
+      },
+      {
+        "question_id": "1lhfy44e6",
+        "chapter": "sexual-reproduction-in-flowering-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "pollination",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements : One labelled as Assertion A and the other labelled as Reason R :</p>\n<p>Assertion A : In gymnosperms the pollen grains are released from the microsporangium and carried by air \ncurrents.</p>\n<p>Reason R : Air currents carry the pollen grains to the mouth of the archegonia where the male gametes are \ndischarged and pollen tube is not formed.</p>\n<p>In the light of the above statements, choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both A and R are true but R is NOT the current explanation of A"
+          },
+          {
+            "identifier": "B",
+            "content": "A is true but R is false"
+          },
+          {
+            "identifier": "C",
+            "content": "A is false but R is true"
+          },
+          {
+            "identifier": "D",
+            "content": "Both A and R are true and R is the correct explanation of A"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct answer is Option B : A is true but R is false.</p>\n<p>Assertion A is true. In gymnosperms, the pollen grains are indeed released from the microsporangium and are typically carried by air currents, a method of pollination known as anemophily.</p>\n<p>Reason R is false. Although it&#39;s true that air currents carry the pollen grains, the pollen grains do not directly reach the mouth of the archegonia in gymnosperms. Instead, they land on the ovule, where they germinate and form a pollen tube that delivers the male gametes to the egg. Therefore, a pollen tube is formed in gymnosperms, contrary to what Reason R suggests.</p>"
+      },
+      {
+        "question_id": "1lhfy63is",
+        "chapter": "morphology-of-flowering-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "inflorescence",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements : One is labelled as Assertion A and the other is labelled as Reason R :</p>\n<p>Assertion A : A flower is defined as modified shoot wherein the shoot apical meristem changes to floral \nmeristem.</p>\n<p>Reason R : Internode of the shoot gets condensed to produce different floral appendages laterally at \nsuccessive node instead of leaves.</p>\n<p>In the light of the above statements, choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both A and R are true but R is NOT the correct explanation of A"
+          },
+          {
+            "identifier": "B",
+            "content": "A is true but R is false"
+          },
+          {
+            "identifier": "C",
+            "content": "A is false but R is true"
+          },
+          {
+            "identifier": "D",
+            "content": "Both A and R are true and R is the correct explanation of A"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct answer is :</p>\n<p>Option D : Both A and R are true and R is the correct explanation of A</p>\n<p>Explanation :</p>\n<p>Statement A is true. A flower is indeed a modified shoot wherein the shoot apical meristem changes to a floral meristem.</p>\n<p>Statement R is also true. In the process of flower formation, the internodes of the shoot get condensed, and instead of leaves, different floral appendages (such as sepals, petals, stamens, and carpels) are produced laterally at successive nodes.</p>\n<p>Moreover, Statement R is indeed the correct explanation for Statement A. The transition from the shoot apical meristem to the floral meristem involves the condensation of internodes and the lateral production of floral appendages at nodes, which leads to the formation of a flower.</p>\n"
+      },
+      {
+        "question_id": "1lhfy7bjd",
+        "chapter": "respiration-in-plants",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "krebs-cycle",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Melonate inhibits the growth of pathogenic bacteria by inhibiting the activity of</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Amylase"
+          },
+          {
+            "identifier": "B",
+            "content": "Lipase"
+          },
+          {
+            "identifier": "C",
+            "content": "Dinitrogenase"
+          },
+          {
+            "identifier": "D",
+            "content": "Succinic dehydrogenase"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>Melonate is a known inhibitor of the enzyme succinic dehydrogenase, which is involved in the citric acid cycle (also known as the Krebs cycle or TCA cycle), an essential metabolic pathway in many organisms, including bacteria. </p>\n<p>By inhibiting succinic dehydrogenase, melonate can disrupt the normal metabolism of pathogenic bacteria and inhibit their growth.</p>\n<p>So, the correct answer is :</p>\n<p>Option D : Succinic dehydrogenase</p>"
+      },
+      {
+        "question_id": "1lhfyau1q",
+        "chapter": "biomolecules",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "proteins",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements:</p>\n<p>Statement I: A protein is imagined as a line, the left end represented by first amino acid (C-terminal) and \nthe right end represented by last amino acid (N-terminal).</p>\n<p>Statement II: Adult human haemoglobin, consists of 4 subunits (two subunits of $$\\alpha$$ type and two subunits of $$\\beta$$ type.)</p>\n<p>In the light of the above statements, choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both Statement I and Statement II are false."
+          },
+          {
+            "identifier": "B",
+            "content": "Statement I is true but Statement II is false."
+          },
+          {
+            "identifier": "C",
+            "content": "Statement I is false but Statement II is true."
+          },
+          {
+            "identifier": "D",
+            "content": "Both Statement I and Statement II are true."
+          }
+        ],
+        "correct_options": [
+          "C"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct answer is option (C) as a protein is imagined as a line, the left end represented by the first \namino acid and the right end is represented by the last amino acid. The first amino acid is also called N-terminal amino acid. The last amino acid is called the C-terminal amino acid.</p>"
+      },
+      {
+        "question_id": "1lhfycgoo",
+        "chapter": "animal-kingdom",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Radial symmetry is NOT found in adults of phylum ______.</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Hemichordata"
+          },
+          {
+            "identifier": "B",
+            "content": "Coelenterata"
+          },
+          {
+            "identifier": "C",
+            "content": "Echinodermata"
+          },
+          {
+            "identifier": "D",
+            "content": "Ctenophora"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "Radial symmetry is a type of symmetry where an organism can be divided into similar halves by more than two planes passing through the central axis. This type of symmetry is found in organisms that tend to meet their environment in all directions, such as aquatic animals.\n\n<br/><br/>1. Hemichordata : Adult organisms in this phylum, which includes acorn worms, pterobranchs, and graptolites, exhibit bilateral symmetry. This means they can be divided into two identical halves only along a single plane. Hence, radial symmetry is <b>not</b> found in the adults of this phylum.\n\n<br/><br/>2. Coelenterata (also known as Cnidaria) : This phylum includes jellyfish, sea anemones, and corals. They exhibit radial symmetry. So, radial symmetry is found in this phylum.\n\n<br/><br/>3. Echinodermata : Adult organisms in this phylum, which includes starfish, sea urchins, and sea cucumbers, exhibit radial symmetry. However, it's important to note that their larvae exhibit bilateral symmetry. Therefore, radial symmetry is found in adults of this phylum.\n\n<br/><br/>4. Ctenophora (also known as comb jellies) : These marine animals also exhibit radial symmetry. Thus, radial symmetry is found in this phylum."
+      },
+      {
+        "question_id": "1lhfyf2v3",
+        "chapter": "human-reproduction",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which of the following statements are correct regarding female reproductive cycle?</p>\n<p>A. In non-primate mammals cyclical changes during reproduction are called oestrus cycle.</p>\n<p>B. First menstrual cycle begins at puberty and is called menopause.</p>\n<p>C. Lack of menstruation may be indicative of pregnancy.</p>\n<p>D. Cyclic menstruation extends between menarche and menopause.</p>\n<p>Choose the most appropriate answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A and B only"
+          },
+          {
+            "identifier": "B",
+            "content": "A, B and C only"
+          },
+          {
+            "identifier": "C",
+            "content": "A, C and D only"
+          },
+          {
+            "identifier": "D",
+            "content": "A and D only"
+          }
+        ],
+        "correct_options": [
+          "C"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct statements regarding the female reproductive cycle are :</p>\n<p>A. In non-primate mammals cyclical changes during reproduction are called the oestrus cycle.\n<br/><br/>C. Lack of menstruation may be indicative of pregnancy.\n<br/><br/>D. Cyclic menstruation extends between menarche and menopause.</p>\n<p>Statement B is incorrect because the first menstrual cycle that begins at puberty is called menarche, not menopause. Menopause is the end of the menstrual cycle and fertility in women, typically occurring in middle to old age.</p>\n<p>So, the correct option is :\n<br/><br/>Option C : A, C and D only</p>\n"
+      },
+      {
+        "question_id": "1lhfyh09d",
+        "chapter": "excretory-products-and-their-elimination",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements: one is labelled as Assertion A and the other is labelled as Reason R.</p>\n<p>Assertion A : Nephrons are of two types: Cortical & Juxta medullary, based on their relative position in cortex \nand medulla.</p>\n<p>Reason R : Juxta medullary nephrons have short loop of Henle whereas, cortical nephrons have longer loop \nof Henle.</p> \n<p>In the light of the above statements, choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both A and R are true but R is NOT the correct explanation of A."
+          },
+          {
+            "identifier": "B",
+            "content": "A is true but R is false."
+          },
+          {
+            "identifier": "C",
+            "content": "A is false but R is true."
+          },
+          {
+            "identifier": "D",
+            "content": "Both A and R are true and R is the correct explanation of A."
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct answer is :</p>\n<p>Option B : A is true but R is false.</p>\n<p>Explanation :</p>\n<p>Assertion A is correct. In the kidney, nephrons, the functional units responsible for filtration, reabsorption, and secretion processes, are indeed of two types: cortical and juxta-medullary. These types are classified based on their location within the kidney; cortical nephrons are primarily located in the cortex, while juxta-medullary nephrons are located near the junction between the cortex and medulla.</p>\n<p>However, Reason R is incorrect. The assertion that juxta-medullary nephrons have short loops of Henle, while cortical nephrons have longer loops of Henle is false. In fact, it&#39;s the opposite. Juxta-medullary nephrons have longer loops of Henle which extend deep into the medulla. This allows them to concentrate urine more effectively than cortical nephrons, whose loops of Henle are shorter and do not extend as deep into the medulla.</p>\n"
+      },
+      {
+        "question_id": "1lhfykb43",
+        "chapter": "neural-control-and-coordination",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II with respect to human eye.</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">Fovea</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">Visible coloured portion of eye that regulates diameter of pupil.</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">Iris</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">External layer of eye formed of dense connective tissue.</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Blind spot</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">Point of greatest visual acuity or resolution.</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">Sclera</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">Point where optic nerve leaves the eyeball and photoreceptor cells are absent.</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-IV, B-III, C-II, D-I"
+          },
+          {
+            "identifier": "B",
+            "content": "A-I, B-IV, C-III, D-II"
+          },
+          {
+            "identifier": "C",
+            "content": "A-II, B-I, C-III, D-IV"
+          },
+          {
+            "identifier": "D",
+            "content": "A-III, B-I, C-IV, D-II"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>Option (B) is the correct answer because</p>\n<p>(i) Fovea is the point of greatest visual acuity or resolution.</p>\n<p>(ii) Iris is the visible coloured portion of the eye that regulates diameter of pupil.</p>\n<p>(iii) Blind spot is the point where optic nerve leaves the eye-ball and photoreceptor cells are absent.</p>\n<p>(iv) Sclera is the external layer of eye formed of dense connective tissue.</p>"
+      },
+      {
+        "question_id": "1lhfyovmb",
+        "chapter": "cell-the-unit-of-life",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "eukaryotic-cells-cell-organelles",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which of the following are NOT considered as the part of endomembrane system?</p>\n<p>A. Mitochondria</p>\n<p>B. Endoplasmic reticulum</p>\n<p>C. Chloroplasts</p>\n<p>D. Golgi complex</p>\n<p>E. Peroxisomes</p>\n<p>Choose the most appropriate answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A, C and E only"
+          },
+          {
+            "identifier": "B",
+            "content": "A and D only"
+          },
+          {
+            "identifier": "C",
+            "content": "A, D and E only"
+          },
+          {
+            "identifier": "D",
+            "content": "B and D only"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "The endomembrane system in a cell includes:\n\n<br/><br/>- The nuclear envelope\n<br/><br/>- The endoplasmic reticulum (ER)\n<br/><br/>- The Golgi apparatus (Golgi complex)\n<br/><br/>- Lysosomes\n<br/><br/>- Vesicles\n<br/><br/>- The plasma membrane\n\n<br/><br/>This system is involved in the modification, packaging, and transport of proteins and lipids. \n\n<br/><br/>Mitochondria and chloroplasts are not part of the endomembrane system. They are both organelles with their own separate membranes, and they have their own DNA. They are thought to have originated from a symbiotic relationship with prokaryotic cells, a theory known as endosymbiosis.\n\n<br/><br/>Peroxisomes, although they are membrane-bound organelles involved in many metabolic reactions, are also not considered part of the endomembrane system because they do not communicate with the other endomembrane organelles and are not involved in protein sorting or lipid synthesis like the other components of the endomembrane system.\n\n<br/><br/>Therefore, the answer is :\n\n<br/><br/>Option A : A, C, and E only."
+      },
+      {
+        "question_id": "1lhfyqs4x",
+        "chapter": "principles-of-inheritance-and-variation",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "chromosomal-disorder",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Broad palm with single palm crease is visible in a person suffering from-</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Turner’s syndrome"
+          },
+          {
+            "identifier": "B",
+            "content": "Klinefelter’s syndrome"
+          },
+          {
+            "identifier": "C",
+            "content": "Thalassemia"
+          },
+          {
+            "identifier": "D",
+            "content": "Down’s syndrome"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "A broad palm with a single palmar crease, also known as a \"simian crease,\" is often associated with Down's Syndrome. Down's Syndrome is a genetic disorder caused by the presence of all or part of a third copy of chromosome 21. It is characterized by certain physical features, including a flat facial profile, an upward slant to the eyes, and a single palmar crease. \n\n<br/><br/>So, the correct answer is :\n\n<br/><br/>Option D : Down's syndrome."
+      },
+      {
+        "question_id": "1lhfyti6g",
+        "chapter": "body-fluids-and-its-circulation",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II.</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">P-wave</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">Beginning of systole</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">Q-wave</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">Repolarisation of ventricles</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">QRS complex</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">Depolarisation of atria</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">T-wave</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">Depolarisation of ventricles</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-IV, B-III, C-II, D-I"
+          },
+          {
+            "identifier": "B",
+            "content": "A-II, B-IV, C-I, D-III"
+          },
+          {
+            "identifier": "C",
+            "content": "A-I, B-II, C-III, D-IV"
+          },
+          {
+            "identifier": "D",
+            "content": "A-III, B-I, C-IV, D-II"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "- P-wave: Depolarisation of atria\n<br/><br/>- Q-wave: Beginning of systole \n<br/><br/>- QRS complex: Depolarisation of ventricles\n<br/><br/>- T-wave: Repolarisation of ventricles\n"
+      },
+      {
+        "question_id": "1lhfyusu3",
+        "chapter": "human-health-and-diseases",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "sexually-transmitted-infections-stis",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which one of the following common sexually transmitted diseases is completely curable when detected early and treated properly?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Gonorrhoea"
+          },
+          {
+            "identifier": "B",
+            "content": "Hepatitis-B"
+          },
+          {
+            "identifier": "C",
+            "content": "HIV Infection"
+          },
+          {
+            "identifier": "D",
+            "content": "Genital herpes"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>Gonorrhoea is a sexually transmitted disease caused by the bacterium Neisseria gonorrhoeae. It can be effectively treated with antibiotics, especially when detected early.</p>\n<p>Hepatitis B, HIV Infection, and Genital Herpes are caused by viruses. These viral infections can be managed with antiviral therapy but they are typically not completely curable.</p>\n<p>So, the correct answer is :</p>\n<p>Option A : Gonorrhoea</p>\n"
+      },
+      {
+        "question_id": "1lhfz1cfg",
+        "chapter": "human-reproduction",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements: one is labelled as Assertion A and the other is labelled as Reason R.</p>\n<p>Assertion A: Endometrium is necessary for implantation of blastocyst. </p>\n<p>Reason R: In the absence of fertilization, the corpus luteum degenerates that causes disintegration of \nendometrium.</p>\n<p>In the light of the above statements, choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both A and R are true but R is NOT the correct explanation of A."
+          },
+          {
+            "identifier": "B",
+            "content": "A is true but R is false."
+          },
+          {
+            "identifier": "C",
+            "content": "A is false but R is true."
+          },
+          {
+            "identifier": "D",
+            "content": "Both A and R are true and R is the correct explanation of A."
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "Assertion A : True. The endometrium is the inner lining of the uterus and it is where the blastocyst (a very early stage of an embryo) implants and develops during pregnancy.\n\n<br/><br/>Reason R : True. The corpus luteum is a temporary structure in the ovaries that produces progesterone, a hormone necessary for maintaining the endometrium. If fertilization does not occur, the corpus luteum degenerates, progesterone levels drop, and the endometrium disintegrates and is shed during menstruation.\n\n<br/><br/>However, Reason R is not a direct explanation of Assertion A, they are two separate facts about the endometrium.\n\n<br/><br/>So, the correct answer is :\n\n<br/><br/>Option A : Both A and R are true but R is NOT the correct explanation of A."
+      },
+      {
+        "question_id": "1lhfz2swj",
+        "chapter": "biotechnology-principles-and-processes",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "cloning-vectors",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which of the following is not a cloning vector?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "YAC"
+          },
+          {
+            "identifier": "B",
+            "content": "pBR322"
+          },
+          {
+            "identifier": "C",
+            "content": "Probe"
+          },
+          {
+            "identifier": "D",
+            "content": "BAC"
+          }
+        ],
+        "correct_options": [
+          "C"
+        ],
+        "answer": null,
+        "explanation": "<p>Option (C) is correct answer because a single stranded DNA or RNA tagged with a radioactive molecule \nis called a probe and it helps in the detection of mutated gene.</p>\n<p>Option (A), (B) and (D) are not correct because YAC, BAC, pBR322 are vectors.</p>"
+      },
+      {
+        "question_id": "1lhfz5qs4",
+        "chapter": "excretory-products-and-their-elimination",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II.</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">Taenia</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">Nephridia</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">Paramoecium</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">Contractile vacuole</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Periplaneta</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">Flame cells</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">Pheretima</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">Urecose gland</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-I, B-II, C-IV, D-III"
+          },
+          {
+            "identifier": "B",
+            "content": "A-III, B-II, C-IV, D-I"
+          },
+          {
+            "identifier": "C",
+            "content": "A-II, B-I, C-IV, D-III"
+          },
+          {
+            "identifier": "D",
+            "content": "A-I, B-II, C-III, D-IV"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct answer should be Option B : A-III, B-II, C-IV, D-I.</p>\n<p>Explanation :</p>\n<p>A) Taenia (a genus of tapeworm) has flame cells as its excretory organs.</p>\n<p>B) Paramoecium, a unicellular protist, uses contractile vacuoles to excrete waste and excess water.</p>\n<p>C) Periplaneta (the American cockroach) uses malpighian tubules for excretion, but &quot;Urecose gland&quot; is not a correct match. However, given the available options, it&#39;s the closest match.</p>\n<p>D) Pheretima, a genus of earthworms, uses nephridia as excretory organs.</p>"
+      },
+      {
+        "question_id": "1lhfz76qd",
+        "chapter": "structural-organisation-in-animals",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements:</p>\n<p>Statement I : Ligaments are dense irregular tissue.</p>\n<p>Statement II : Cartilage is dense regular tissue.</p>\n<p>In the light of the above statements, choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both Statement I and Statement II are false"
+          },
+          {
+            "identifier": "B",
+            "content": "Statement I is true but Statement II is false"
+          },
+          {
+            "identifier": "C",
+            "content": "Statement I is false but Statement II is true"
+          },
+          {
+            "identifier": "D",
+            "content": "Both Statement I and Statement II are true"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct answer is Option A : Both Statement I and Statement II are false.</p>\n<p>Explanation : Ligaments are a type of dense regular connective tissue, not irregular. They connect bones to other bones, providing stability and support.</p>\n<p>On the other hand, cartilage is a type of specialized connective tissue that is not classified as dense. It&#39;s composed of cells called chondrocytes which are embedded in a matrix of collagen and elastic fibers. It&#39;s neither dense regular nor dense irregular tissue.</p>\n<p>Therefore, both statements I and II are incorrect.</p>\n"
+      },
+      {
+        "question_id": "1lhfz83r3",
+        "chapter": "cell-the-unit-of-life",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "what-is-cell-cell-theory-an-overview-of-cell",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which of the following functions is carried out by cytoskeleton in a cell?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Protein synthesis"
+          },
+          {
+            "identifier": "B",
+            "content": "Motility"
+          },
+          {
+            "identifier": "C",
+            "content": "Transportation"
+          },
+          {
+            "identifier": "D",
+            "content": "Nuclear division"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>An elaborate network of filamentous proteinaceous structures consisting of microtubules, \nmicrofilaments and intermediate filaments present in cytoplasm is collectively referred to as the \ncytoskeleton. It is involved in many functions such as mechanical support, motility, maintenance of the \nshape of the cell.</p>"
+      },
+      {
+        "question_id": "1lhfzardh",
+        "chapter": "molecular-basis-of-inheritance",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "lac-operon",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II.</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">Gene 'a'</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">$$\\beta$$-galactosidase</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">Gene 'y'</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">Transacetylase</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Gene 'i'</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">Permease</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">Gene 'z'</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">Repressor protein</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-II, B-III, C-IV, D-I"
+          },
+          {
+            "identifier": "B",
+            "content": "A-III, B-IV, C-I, D-II"
+          },
+          {
+            "identifier": "C",
+            "content": "A-III, B-I, C-IV, D-II"
+          },
+          {
+            "identifier": "D",
+            "content": "A-II, B-I, C-IV, D-III"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "The question relates to the lac operon model in E. coli, which is a well-studied example of gene regulation. In this model :\n\n<br/><br/>- Gene 'z' codes for beta-galactosidase (breaks down lactose into glucose and galactose)\n<br/><br/>- Gene 'y' codes for permease (transports lactose into the cell)\n<br/><br/>- Gene 'a' codes for transacetylase (may help in lactose metabolism, but its exact role is unclear)\n<br/><br/>- Gene 'i' codes for the repressor protein (binds to the operator to prevent transcription)\n\n<br/><br/>So, matching the List I (genes) with List II (proteins they code for) :\n\n<br/><br/>- A (Gene 'a') matches with II (Transacetylase)\n<br/><br/>- B (Gene 'y') matches with III (Permease)\n<br/><br/>- C (Gene 'i') matches with IV (Repressor protein)\n<br/><br/>- D (Gene 'z') matches with I (Beta-galactosidase)\n\n<br/><br/>Therefore, the correct option is :\n\n<br/><br/>Option A : A-II, B-III, C-IV, D-I"
+      },
+      {
+        "question_id": "1lhfzhyn9",
+        "chapter": "principles-of-inheritance-and-variation",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "chromosomal-theory-of-inheritance",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which one of the following symbols represents mating between relatives in human pedigree analysis?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "<img src=\"https://app-content.cdn.examgoal.net/fly/@width/image/1lhiavetk/ccb00a8e-0ecb-49d1-8e7d-d7a706dcad81/ebe9a480-ef85-11ed-912a-89ea0af7d14f/file-1lhiavetl.png?format=png\" data-orsrc=\"https://app-content.cdn.examgoal.net/image/1lhiavetk/ccb00a8e-0ecb-49d1-8e7d-d7a706dcad81/ebe9a480-ef85-11ed-912a-89ea0af7d14f/file-1lhiavetl.png\" loading=\"lazy\" style=\"max-width: 100%; height: auto; display: block; margin: 0px auto; max-height: 40vh;\" alt=\"NEET 2023 Biology - Principles of Inheritance and Variation Question 8 English Option 1\">"
+          },
+          {
+            "identifier": "B",
+            "content": "<img src=\"https://app-content.cdn.examgoal.net/fly/@width/image/1lhiavu4a/0f2e6b46-d66f-4804-afbc-d6ef8eb65458/f7bad9a0-ef85-11ed-aa3c-79a938cf0bf4/file-1lhiavu4b.png?format=png\" data-orsrc=\"https://app-content.cdn.examgoal.net/image/1lhiavu4a/0f2e6b46-d66f-4804-afbc-d6ef8eb65458/f7bad9a0-ef85-11ed-aa3c-79a938cf0bf4/file-1lhiavu4b.png\" loading=\"lazy\" style=\"max-width: 100%; height: auto; display: block; margin: 0px auto; max-height: 40vh;\" alt=\"NEET 2023 Biology - Principles of Inheritance and Variation Question 8 English Option 2\">"
+          },
+          {
+            "identifier": "C",
+            "content": "<img src=\"https://app-content.cdn.examgoal.net/fly/@width/image/1lhiawdhn/0e27a70f-db29-48e4-80ea-cd4b1f20adc0/06b191b0-ef86-11ed-aa3c-79a938cf0bf4/file-1lhiawdho.png?format=png\" data-orsrc=\"https://app-content.cdn.examgoal.net/image/1lhiawdhn/0e27a70f-db29-48e4-80ea-cd4b1f20adc0/06b191b0-ef86-11ed-aa3c-79a938cf0bf4/file-1lhiawdho.png\" loading=\"lazy\" style=\"max-width: 100%; height: auto; display: block; margin: 0px auto; max-height: 40vh;\" alt=\"NEET 2023 Biology - Principles of Inheritance and Variation Question 8 English Option 3\">"
+          },
+          {
+            "identifier": "D",
+            "content": "<img src=\"https://app-content.cdn.examgoal.net/fly/@width/image/1lhiawspi/83a175c1-6296-4dd0-af99-43610da4baa7/12730f60-ef86-11ed-aa3c-79a938cf0bf4/file-1lhiawspj.png?format=png\" data-orsrc=\"https://app-content.cdn.examgoal.net/image/1lhiawspi/83a175c1-6296-4dd0-af99-43610da4baa7/12730f60-ef86-11ed-aa3c-79a938cf0bf4/file-1lhiawspj.png\" loading=\"lazy\" style=\"max-width: 100%; height: auto; display: block; margin: 0px auto; max-height: 40vh;\" alt=\"NEET 2023 Biology - Principles of Inheritance and Variation Question 8 English Option 4\">"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>The symbol representing mating between relatives (consanguineous mating) in human pedigree \nanalysis is</p>\n<p><img src=\"https://app-content.cdn.examgoal.net/fly/@width/image/1lhiavetk/ccb00a8e-0ecb-49d1-8e7d-d7a706dcad81/ebe9a480-ef85-11ed-912a-89ea0af7d14f/file-1lhiavetl.png?format=png\" data-orsrc=\"https://app-content.cdn.examgoal.net/image/1lhiavetk/ccb00a8e-0ecb-49d1-8e7d-d7a706dcad81/ebe9a480-ef85-11ed-912a-89ea0af7d14f/file-1lhiavetl.png\" loading=\"lazy\" style=\"max-width: 100%; height: auto; display: block; margin: 0px auto; max-height: 40vh;\" alt=\"NEET 2023 Biology - Principles of Inheritance and Variation Question 8 English Explanation\"></p>"
+      },
+      {
+        "question_id": "1lhfzl1u6",
+        "chapter": "human-health-and-diseases",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "common-diseases-in-humans",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which one of the following techniques does not serve the purpose of early diagnosis of a disease for its \nearly treatment?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Serum and Urine analysis"
+          },
+          {
+            "identifier": "B",
+            "content": "Polymerase Chain Reaction (PCR) technique"
+          },
+          {
+            "identifier": "C",
+            "content": "Enzyme Linked Immuno-Sorbent Assay (ELISA) technique"
+          },
+          {
+            "identifier": "D",
+            "content": "Recombinant DNA Technology"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct answer is option (A) because using conventional methods of diagnosis like serum and urine \nanalysis, etc, do not help in early diagnosis. Recombinant DNA technology, Polymerase Chain \nReaction [PCR] and Enzyme Linked Immuno-Sorbent Assay (ELISA) are some of the techniques that \nserve the purpose of early diagnosis.</p>"
+      },
+      {
+        "question_id": "1lhfzmvo6",
+        "chapter": "biomolecules",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "enzymes",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements :</p>\n<p>Statement I : Low temperature preserves the enzyme in a temporarily inactive state whereas high \ntemperature destroys enzymatic activity because proteins are denatured by heat.</p>\n<p>Statement II : When the inhibitor closely resembles the substrate in its molecular structure and inhibits the \nactivity of the enzyme, it is known as competitive inhibitor. </p>\n<p>In the light of the above statements, choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both Statement I and Statement II are false."
+          },
+          {
+            "identifier": "B",
+            "content": "Statement I is true but Statement II is false."
+          },
+          {
+            "identifier": "C",
+            "content": "Statement I is false but Statement II is true."
+          },
+          {
+            "identifier": "D",
+            "content": "Both Statement I and Statement II are true."
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>Statement I : Low temperature preserves the enzyme in a temporarily inactive state whereas high temperature destroys enzymatic activity because proteins are denatured by heat.</p>\n<ul>\n<li>This statement is true. Low temperatures can slow down enzyme activity but do not typically denature the enzyme, essentially preserving it in an inactive state. High temperatures, on the other hand, can cause the enzyme (which is a protein) to denature, or lose its structure, which leads to a loss of enzymatic activity.</li>\n</ul>\n<p>Statement II : When the inhibitor closely resembles the substrate in its molecular structure and inhibits the activity of the enzyme, it is known as a competitive inhibitor.</p>\n<ul>\n<li>This statement is also true. A competitive inhibitor is a substance that binds to the active site of an enzyme, preventing the substrate from binding and thus inhibiting the enzyme&#39;s activity. Because it competes with the substrate for the same active site, a competitive inhibitor often has a structure that closely resembles that of the substrate.</li>\n</ul>\n<p>So, the correct answer is :</p>\n<p>Option D : Both Statement I and Statement II are true.</p>"
+      },
+      {
+        "question_id": "1lhfzqrgy",
+        "chapter": "locomotion-and-movement",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II.</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I<br>(Type of Joint)</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II<br>(Found between)</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">Cartilaginous Joint</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">Between flat skull bones</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">Ball and Socket Joint</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">Between adjacent vertebrae in vertebral column</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Fibrous Joint</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">Between carpal and metacarpal of thumb</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">Saddle joint</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">Between Humerus and Pectoral girdle</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-II, B-IV, C-I, D-III"
+          },
+          {
+            "identifier": "B",
+            "content": "A-I, B-IV, C-III, D-II"
+          },
+          {
+            "identifier": "C",
+            "content": "A-II, B-IV, C-III, D-I"
+          },
+          {
+            "identifier": "D",
+            "content": "A-III, B-I, C-II, D-IV"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>A) Cartilaginous Joint : These joints are connected by cartilage and allow limited movement. They are found between adjacent vertebrae in the vertebral column.\n<br/><br/>B) Ball and Socket Joint : These joints consist of a ball-like structure fitting into a socket, allowing for a wide range of movement. They are found between the humerus and the pectoral girdle.\n<br/><br/>C) Fibrous Joint : These joints are connected by fibrous connective tissue and allow little or no movement. They are found between flat skull bones.\n<br/><br/>D) Saddle Joint : These joints have two bones with concave and convex surfaces that fit together, allowing movement in two planes. They are found between the carpal and metacarpal of the thumb.</p>\n<p>So, the correct matching is :\n<br/><br/>A-II, B-IV, C-I, D-III</p>\n"
+      },
+      {
+        "question_id": "1lhfzsgah",
+        "chapter": "human-reproduction",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements:</p>\n<p>Statement I: Vas deferens receives a duct from seminal vesicle and opens into urethra as the ejaculatory \nduct.</p>\n<p>Statement Il: The cavity of the cervix is called cervical canal which along with vagina forms birth canal.</p>\n<p>In the light of the above statements, choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both Statement I and Statement II are false."
+          },
+          {
+            "identifier": "B",
+            "content": "Statement I is correct but Statement II is false."
+          },
+          {
+            "identifier": "C",
+            "content": "Statement I is incorrect but Statement II is true."
+          },
+          {
+            "identifier": "D",
+            "content": "Both Statement I and Statement II are true."
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "Statement I is correct because the vas deferens does indeed receive a duct from the seminal vesicle. This combined structure is known as the ejaculatory duct, and it does open into the urethra, which carries semen out of the body during ejaculation.\n\n<br/><br/>Statement II is also correct. The cavity of the cervix is indeed referred to as the cervical canal. The cervix, along with the vagina, does form the birth canal, which is the path through which a baby travels during childbirth."
+      },
+      {
+        "question_id": "1lhfzuni2",
+        "chapter": "human-health-and-diseases",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "sexually-transmitted-infections-stis",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>In which blood corpuscles, the HIV undergoes replication and produces progeny viruses?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "B-lymphocytes"
+          },
+          {
+            "identifier": "B",
+            "content": "Basophils"
+          },
+          {
+            "identifier": "C",
+            "content": "Eosinophils"
+          },
+          {
+            "identifier": "D",
+            "content": "T<sub>H</sub> cells"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "HIV, or the Human Immunodeficiency Virus, primarily infects CD4+ T cells, which are a type of T cell. In the context of the options given, T<sub>H</sub> cells, or T helper cells, are a subset of CD4+ T cells.\n\n<br/><br/>So, the correct answer is :\n\n<br/><br/>Option D : T<sub>H</sub> cells"
+      },
+      {
+        "question_id": "1lhfzz7vu",
+        "chapter": "human-health-and-diseases",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "drug-and-alcohol-abuse",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II.</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">Heroin</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">Effect on cardiovascular system</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">Marijuana</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">Slow down body function</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Cocaine</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">Painkiller</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">Morphine</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">Interfere with transport of dopamine</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-I, B-II, C-III, D-IV"
+          },
+          {
+            "identifier": "B",
+            "content": "A-IV, B-III, C-II, D-I"
+          },
+          {
+            "identifier": "C",
+            "content": "A-III, B-IV, C-I, D-II"
+          },
+          {
+            "identifier": "D",
+            "content": "A-II, B-I, C-IV, D-III"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct answer is option (D) as</p>\n<p>$$\\bullet$$ Heroin belongs to the category of opioids and it is a depressant that slows down body functions.</p>\n<p>$$\\bullet$$ Marijuana is known for its effect on the cardiovascular system of the body.</p>\n<p>$$\\bullet$$ Cocaine interferes with the transport of the neurotransmitter dopamine.</p>\n<p>Morphine is used is a sedative and painkiller.</p>"
+      },
+      {
+        "question_id": "1lhg00rvn",
+        "chapter": "breathing-and-exchange-of-gases",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Vital capacity of lung is ________.</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "IRV + ERV + TV + RV"
+          },
+          {
+            "identifier": "B",
+            "content": "IRV + ERV + TV – RV"
+          },
+          {
+            "identifier": "C",
+            "content": "IRV + ERV + TV"
+          },
+          {
+            "identifier": "D",
+            "content": "IRV + ERV"
+          }
+        ],
+        "correct_options": [
+          "C"
+        ],
+        "answer": null,
+        "explanation": "The vital capacity (VC) of the lung is the maximum amount of air a person can expel from the lungs after a maximum inhalation. It is equal to the sum of inspiratory reserve volume (IRV), tidal volume (TV), and expiratory reserve volume (ERV).\n<br/><br/>nspiratory reserve volume (IRV) is the amount of air that can be inhaled beyond a normal breath.\n<br/><br/>Expiratory reserve volume (ERV) is the amount of air that can be exhaled beyond a normal breath.\n<br/><br/>Tidal volume (TV) is the amount of air that is inhaled and exhaled during a normal breath.\n<br/><br/>Therefore, vital capacity (VC) = IRV + ERV + TV."
+      },
+      {
+        "question_id": "1lhg02cj7",
+        "chapter": "evolution",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Select the correct group/set of Australian Marsupials exhibiting adaptive radiation.</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Numbat, Spotted cuscus, Flying phalanger"
+          },
+          {
+            "identifier": "B",
+            "content": "Mole, Flying squirrel, Tasmanian tiger cat"
+          },
+          {
+            "identifier": "C",
+            "content": "Lemur, Anteater, Wolf"
+          },
+          {
+            "identifier": "D",
+            "content": "Tasmanian wolf, Bobcat, Marsupial mole"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>Option (A) is the correct answer because numbat, spotted cuscus and flying phalanger are Australian \nmarsupials exhibiting adaptive radiation.</p>\n<p>Option (B) is incorrect because mole and flying squirrel are placental mammals.</p>\n<p>Option (C) is incorrect because lemur and wolf are placental mammals.</p>\n<p>Option (D) is incorrect because bobcat is a placental mammal.</p>"
+      },
+      {
+        "question_id": "1lhg06v4o",
+        "chapter": "reproductive-health",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements: one is labelled as Assertion A and other is labelled as Reason R.</p>\n<p>Assertion A : Amniocentesis for sex determination is one of the strategies of Reproductive and Child Health \nCare Programme.</p>\n<p>Reason R : Ban on amniocentesis checks increasing menace of female foeticide.</p>\n<p>In the light of the above statements, choose the correct answer from the options given below.</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both A and R are true and R is NOT the correct explanation of A."
+          },
+          {
+            "identifier": "B",
+            "content": "A is true but R is false."
+          },
+          {
+            "identifier": "C",
+            "content": "A is false but R is true."
+          },
+          {
+            "identifier": "D",
+            "content": "Both A and R are true and R is the correct explanation of A."
+          }
+        ],
+        "correct_options": [
+          "C"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct answer is Option C : A is false but R is true.</p>\n<p>Assertion A is false because amniocentesis for sex determination is not a part of the Reproductive and Child Health Care Programme. In fact, the use of amniocentesis for the purpose of sex determination is illegal in many countries, including India, due to its association with sex-selective abortions and the societal preference for male children.</p>\n<p>Reason R is true because a ban on amniocentesis for sex determination is indeed implemented in an attempt to reduce the incidence of female foeticide. The misuse of this medical procedure for sex-selective abortions has led to a gender imbalance in some societies, thus the need for regulatory measures.</p>\n"
+      },
+      {
+        "question_id": "1lhg087ew",
+        "chapter": "evolution",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements:</p>\n<p>Statement I: RNA mutates at a faster rate.</p>\n<p>Statement II: Viruses having RNA genome and shorter life span mutate and evolve faster.</p>\n<p>In the light of the above statements, choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both Statement I and Statement II are false."
+          },
+          {
+            "identifier": "B",
+            "content": "Statement I is true but Statement II is false."
+          },
+          {
+            "identifier": "C",
+            "content": "Statement I is false but Statement II is true."
+          },
+          {
+            "identifier": "D",
+            "content": "Both Statement I and Statement II are true."
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "Statement I is true because RNA, particularly in RNA viruses, does mutate at a faster rate than DNA. This is largely due to the lack of proofreading mechanisms in RNA replication that are present in DNA replication.\n\n<br/><br/>Statement II is also true. Viruses with an RNA genome, like the influenza virus or HIV, can mutate and evolve faster. The high mutation rate of RNA, combined with the short generation time of viruses, leads to rapid evolution, allowing these viruses to quickly adapt to new environments or hosts."
+      },
+      {
+        "question_id": "1lhg0bqlh",
+        "chapter": "reproductive-health",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II.</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">Vasectomy</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">Oral method</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">Coitus interruptus</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">Barrier method</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Cervical caps</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">Surgical method</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">Saheli</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">Natural method</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-III, B-IV, C-II, D-I"
+          },
+          {
+            "identifier": "B",
+            "content": "A-II, B-III, C-I, D-IV"
+          },
+          {
+            "identifier": "C",
+            "content": "A-IV, B-II, C-I, D-III"
+          },
+          {
+            "identifier": "D",
+            "content": "A-III, B-I, C-IV, D-II"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>A) Vasectomy : A surgical method of male sterilization that involves cutting or sealing the vas deferens to prevent sperm from entering the semen.\n<br/><br/>B) Coitus interruptus : A natural method of contraception that involves withdrawing the penis from the vagina before ejaculation to prevent sperm from entering the vagina.\n<br/><br/>C) Cervical caps : A barrier method of contraception that covers the cervix to prevent sperm from entering the uterus.\n<br/><br/>D) Saheli : An oral method of contraception that involves taking a non-steroidal, non-hormonal birth control pill.</p>\n<p>So, the correct matching is:\nA-III, B-IV, C-II, D-I</p>"
+      },
+      {
+        "question_id": "1lhg2jtzf",
+        "chapter": "molecular-basis-of-inheritance",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "nucleosome-model",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements:</p>\n<p>Statement I: In prokaryotes, the positively charged DNA is held with some negatively charged proteins in a \nregion called nucleoid.</p>\n<p>Statement II: In eukaryotes, the negatively charged DNA is wrapped around the positively charged histone \noctamer to form nucleosome.</p>\n<p>In the light of the above statements, choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both Statement I and Statement II are false."
+          },
+          {
+            "identifier": "B",
+            "content": "Statement I is correct but Statement II is false."
+          },
+          {
+            "identifier": "C",
+            "content": "Statement I is incorrect but Statement II is true."
+          },
+          {
+            "identifier": "D",
+            "content": "Both Statement I and Statement II are true."
+          }
+        ],
+        "correct_options": [
+          "C"
+        ],
+        "answer": null,
+        "explanation": "<p>In prokaryotes, the negatively charged DNA is held with some positively charged proteins in a region \ntermed as nucleoid.</p>\n<p>In eukaryotes, the negatively charged DNA is wrapped around the positively charged histone octamer \nto form a structure called nucleosome.</p>"
+      },
+      {
+        "question_id": "1lhg2myfo",
+        "chapter": "human-health-and-diseases",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "common-diseases-in-humans",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II.</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">Ringworm</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">Haemophilus influenzae</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">Filariasis</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">Trichophyton</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Malaria</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">Wuchereria bancrofti</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">Pneumonia</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">Plasmodium vivax</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below: </p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-II, B-III, C-I, D-IV"
+          },
+          {
+            "identifier": "B",
+            "content": "A-III, B-II, C-I, D-IV"
+          },
+          {
+            "identifier": "C",
+            "content": "A-III, B-II, C-IV, D-I"
+          },
+          {
+            "identifier": "D",
+            "content": "A-II, B-III, C-IV, D-I"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "The diseases listed in List I are caused by the organisms listed in List II :\n\n<br/><br/>- Ringworm is caused by the fungus Trichophyton.\n<br/><br/>- Filariasis is caused by the parasite Wuchereria bancrofti.\n<br/><br/>- Malaria is caused by the protozoan Plasmodium species (including Plasmodium vivax).\n<br/><br/>- Pneumonia can be caused by a variety of organisms, including the bacterium Haemophilus influenzae.\n\n<br/><br/>Therefore, the correct answer is :\n\n<br/><br/>Option D : A-II, B-III, C-IV, D-I"
+      },
+      {
+        "question_id": "1lhg2syff",
+        "chapter": "organisms-and-populations",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "population-interaction",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II.</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I<br>(Interacting species)</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II<br>(Name of interaction)</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">A Leopard and a Lion in a forest/grassland</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">Competition</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">A Cuckoo laying egg in a Crow's nest </td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">Brood parasitism</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Fungi and root of a higher plant in Mycorrhizae</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">Mutualism</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">A cattle egret and a Cattle in a field</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">Commensalism</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below.</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-I, B-II, C-IV, D-III"
+          },
+          {
+            "identifier": "B",
+            "content": "A-III, B-IV, C-I, D-II"
+          },
+          {
+            "identifier": "C",
+            "content": "A-II, B-III, C-I, D-IV"
+          },
+          {
+            "identifier": "D",
+            "content": "A-I, B-II, C-III, D-IV"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "- A leopard and a lion in a forest/grassland (A) : These two species are predators that hunt in the same environment and likely compete for the same prey. This is an example of competition (I).\n\n<br/><br/>- A cuckoo laying an egg in a crow's nest (B) : The cuckoo is known for laying its eggs in the nests of other birds, such as crows. The crow then raises the cuckoo's young, often at the expense of its own offspring. This is a form of brood parasitism (II).\n\n<br/><br/>- Fungi and the root of a higher plant in mycorrhizae (C) : Mycorrhizae are symbiotic relationships between fungi and plant roots, in which the fungi help the plant absorb water and nutrients from the soil, while the plant provides the fungi with carbohydrates. This is an example of mutualism (III).\n\n<br/><br/>- A cattle egret and a cattle in a field (D) : Cattle egrets are often seen near cattle, feeding on the insects that the cattle stir up as they move and graze. The egret benefits from this interaction (by getting easy access to food), while the cattle are unaffected. This is an example of commensalism (IV).\n\n<br/><br/>Given this information, the correct match is :\n\n<br/><br/>Option D :\n<br/><br/>A-I, B-II, C-III, D-IV"
+      },
+      {
+        "question_id": "1lhg2vcez",
+        "chapter": "body-fluids-and-its-circulation",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which of the following statements are correct?</p>\n<p>A. Basophils are most abundant cells of the total WBCs</p>\n<p>B. Basophils secrete histamine, serotonin and heparin</p>\n<p>C. Basophils are involved in inflammatory response</p>\n<p>D. Basophils have kidney shaped nucleus</p>\n<p>E. Basophils are agranulocytes</p>\n<p>Choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "C and E only"
+          },
+          {
+            "identifier": "B",
+            "content": "B and C only"
+          },
+          {
+            "identifier": "C",
+            "content": "A and B only"
+          },
+          {
+            "identifier": "D",
+            "content": "D and E only"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>The correct answer is Option B : B and C only.</p>\n<p>Statement A is incorrect. Basophils are actually the least abundant cells of the total white blood cells (WBCs), not the most abundant.</p>\n<p>Statement B is correct. Basophils do secrete histamine, serotonin, and heparin. Histamine and serotonin are involved in inflammatory response, while heparin is an anticoagulant.</p>\n<p>Statement C is also correct. Basophils are involved in the inflammatory response. They release chemicals such as histamine and serotonin that dilate blood vessels and attract other white blood cells to the site of inflammation.</p>\n<p>Statement D is incorrect. Basophils do not have a kidney-shaped nucleus. That description is more appropriate for monocytes, another type of white blood cell.</p>\n<p>Statement E is incorrect. Basophils are not agranulocytes. They are granulocytes, a category of white blood cells characterized by the presence of granules in their cytoplasm. Agranulocytes, which lack visible cytoplasmic granules, include lymphocytes and monocytes.</p>\n"
+      },
+      {
+        "question_id": "1lhg2zl7d",
+        "chapter": "structural-organisation-in-animals",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II.</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">Mast cells</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">Ciliated epithelium</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">Inner surface of bronchiole</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">Areolar connective tissue</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Blood</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">Cuboidal epithelium</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">Tubular parts of nephron</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">Specialised connective tissue</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options give below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-II, B-III, C-I, D-IV"
+          },
+          {
+            "identifier": "B",
+            "content": "A-II, B-I, C-IV, D-III"
+          },
+          {
+            "identifier": "C",
+            "content": "A-III, B-IV, C-II, D-I"
+          },
+          {
+            "identifier": "D",
+            "content": "A-I, B-II, C-IV, D-III"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "- Mast cells (A) : These are a type of white blood cell that is part of the immune system. They are found in many tissues, but particularly in areas close to the external environment, such as the skin and mucous membranes. They are found in connective tissues like areolar tissue.\n\n<br/><br/>- Inner surface of bronchiole (B) : The bronchioles are small airways in the respiratory tract that lead to the alveoli (tiny air sacs in the lungs). The inner surface of bronchioles is lined with ciliated epithelium. Cilia are small, hair-like structures that help move mucus and trapped particles out of the lungs.\n\n<br/><br/>- Blood (C) : This is a specialized type of connective tissue. It has cells (red and white blood cells, and platelets) suspended in a liquid matrix called plasma.\n\n<br/><br/>- Tubular parts of nephron (D) : Nephrons are the functional units of the kidney, responsible for filtering blood and creating urine. The tubular parts of the nephron are lined with cuboidal epithelium. This type of epithelial tissue has cells that are roughly as tall as they are wide.\n\n<br/><br/>Given this information, the correct match seems to be :\n\n<br/><br/>Option B :\n<br/><br/>A-II, B-I, C-IV, D-III"
+      },
+      {
+        "question_id": "1lhg32a7w",
+        "chapter": "cell-cycle-and-cell-division",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "meiosis-signicance-of-meiosis",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Select the correct statements.</p>\n<p>A. Tetrad formation is seen during Leptotene.</p>\n<p>B. During Anaphase, the centromeres split and chromatids separate.</p>\n<p>C. Terminalization takes place during Pachytene.</p>\n<p>D. Nucleolus, Golgi complex and ER are reformed during Telophase.</p>\n<p>E. Crossing over takes place between sister chromatids of homologous chromosome.</p>\n<p>Choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "B and D only"
+          },
+          {
+            "identifier": "B",
+            "content": "A, C and E only"
+          },
+          {
+            "identifier": "C",
+            "content": "B and E only"
+          },
+          {
+            "identifier": "D",
+            "content": "A and C only"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "1. Tetrad formation is seen during the Zygotene stage : During the Zygotene stage of Prophase I in meiosis, homologous chromosomes pair up, forming tetrads or bivalents.\n\n<br/><br/>2. During Anaphase, the centromeres split and chromatids separate : In Anaphase, the centromeres divide, and the sister chromatids are pulled apart towards opposite poles of the cell.\n\n<br/><br/>3. Terminalization of chiasmata takes place during Diakinesis : Diakinesis is the final stage of Prophase I in meiosis. During this stage, terminalization occurs, which is the process in which chiasmata, the points of crossing over between non-sister chromatids, move toward the ends of the chromosomes.\n\n<br/><br/>4. Nucleolus, Golgi complex, and ER are reformed during Telophase : During Telophase, the nuclear envelope starts to reassemble around the separated chromosomes, and the nucleolus, Golgi complex, and endoplasmic reticulum (ER) are reformed.\n\n<br/><br/>5. Crossing over takes place between non-sister chromatids of homologous chromosomes : This process occurs during the Pachytene stage of Prophase I in meiosis, leading to the exchange of genetic material between the non-sister chromatids, which increases genetic diversity in the resulting gametes."
+      },
+      {
+        "question_id": "1lhg3q2it",
+        "chapter": "structural-organisation-in-animals",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>In cockroach, excretion is brought about by -</p>\n<p>A. Phallic gland</p>\n<p>B. Urecose gland</p>\n<p>C. Nephrocytes</p>\n<p>D. Fat body</p>\n<p>E. Collaterial glands</p>\n<p>Choose the correct answer from the options given below :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A, B and E only"
+          },
+          {
+            "identifier": "B",
+            "content": "B, C and D only"
+          },
+          {
+            "identifier": "C",
+            "content": "B and D only"
+          },
+          {
+            "identifier": "D",
+            "content": "A and E only"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>Option (B) is the answer because,</p>\n<p>In cockroaches, excretion is primarily accomplished by Malpighian tubules, which are not listed in the provided options. However, among the provided options, urecose glands, nephrocytes, and the fat body do participate in excretory processes to some degree.</p>\n<p>Urecose glands are present in male cockroach of some species. They synthesise uric acid. Nephrocytes are large, colourless, ovoid, binucleate cells attached to the dorsal diaphragm in the body cavity. Fat body accumulates, produces and stores uric acid.</p>\n<p>Phallic gland is the structure of male reproductive system of cockroach and it secretes the outer layer \nof spermatophore. Collaterial gland is the structure of female reproductive system of cockroach and it \nsecretes the hard egg-case or ootheca around fertilised eggs.</p>"
+      },
+      {
+        "question_id": "1lhg3s8xd",
+        "chapter": "cell-cycle-and-cell-division",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "cell-cycle",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Given below are two statements:</p>\n<p>Statement I : During G<sub>0</sub> phase of cell cycle, the cell is metabolically inactive.</p>\n<p>Statement II : The centrosome undergoes duplication during S phase of interphase. </p>\n<p>In the light of the above statements, choose the most appropriate answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Both Statement I and Statement II are incorrect."
+          },
+          {
+            "identifier": "B",
+            "content": "Statement I is correct but Statement II is incorrect."
+          },
+          {
+            "identifier": "C",
+            "content": "Statement I is incorrect but Statement II is correct."
+          },
+          {
+            "identifier": "D",
+            "content": "Both Statement I and Statement II are correct."
+          }
+        ],
+        "correct_options": [
+          "C"
+        ],
+        "answer": null,
+        "explanation": "Statement I is incorrect. The G<sub>0</sub> phase is a state in the cell cycle in which cells exist in a quiescent or dormant stage. However, this does not mean that the cell is metabolically inactive. Rather, the cell maintains its normal functions but is not preparing for cell division.\n\n<br/><br/>Statement II is correct. During the S phase (synthesis phase) of interphase, DNA replication occurs, and the centrosome, which plays a key role in cell division, also duplicates. This prepares the cell for the later stages of the cell cycle, where the cell divides into two daughter cells."
+      },
+      {
+        "question_id": "1lhg3twab",
+        "chapter": "animal-kingdom",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Select the correct statements with reference to chordates.</p>\n<p>A. Presence of a mid-dorsal, solid and double nerve cord.</p>\n<p>B. Presence of closed circulatory system.</p>\n<p>C. Presence of paired pharyngeal gill slits.</p>\n<p>D. Presence of dorsal heart</p>\n<p>E. Triploblastic pseudocoelomate animals.</p>\n<p>Choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "B and C only"
+          },
+          {
+            "identifier": "B",
+            "content": "B, D and E only"
+          },
+          {
+            "identifier": "C",
+            "content": "C, D and E only"
+          },
+          {
+            "identifier": "D",
+            "content": "A, C and D only"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "Chordates are defined by having certain specific anatomical features at some point during their development. The correct attributes of chordates are:\n\n<br/><br/>1. Presence of a dorsal, hollow nerve cord (not a mid-dorsal, solid and double nerve cord as mentioned in statement A)\n<br/><br/>2. Presence of a closed circulatory system.\n<br/><br/>3. Presence of paired pharyngeal gill slits.\n<br/><br/>4. Presence of a post-anal tail.\n<br/><br/>5. Presence of a notochord.\n\n<br/><br/>Regarding the other statements :\n\n<br/><br/>- The heart of chordates is ventral, not dorsal (as in statement D).\n<br/><br/>- Chordates are triploblastic and coelomate, not pseudocoelomate (as in statement E).\n\n<br/><br/>So, based on these facts, the correct answer is :\n\n<br/><br/>Option A : B and C only."
+      },
+      {
+        "question_id": "1lhg3xodx",
+        "chapter": "organisms-and-populations",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "age-pyramids",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Match List I with List II.</p>\n<p><style type=\"text/css\">\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}\n.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}\n.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n</style>\n<table class=\"tg\" style=\"undefined;table-layout: fixed; width: 447px\">\n<colgroup>\n<col style=\"width: 49px\">\n<col style=\"width: 154px\">\n<col style=\"width: 54px\">\n<col style=\"width: 190px\">\n</colgroup>\n<thead>\n  <tr>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List I</th>\n    <th class=\"tg-7btt\"></th>\n    <th class=\"tg-7btt\">List II</th>\n  </tr>\n</thead>\n<tbody>\n  <tr>\n    <td class=\"tg-c3ow\">(A)</td>\n    <td class=\"tg-0pky\">Logistic growth</td>\n    <td class=\"tg-c3ow\">(I)</td>\n    <td class=\"tg-0pky\">Unlimited resource availability condition</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(B)</td>\n    <td class=\"tg-0pky\">Exponential growth</td>\n    <td class=\"tg-c3ow\">(II)</td>\n    <td class=\"tg-0pky\">Limited resource availability condition</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(C)</td>\n    <td class=\"tg-0pky\">Expanding age pyramid</td>\n    <td class=\"tg-c3ow\">(III)</td>\n    <td class=\"tg-0pky\">The percent individuals of pre-reproductive age is largest followed by reproductive and post reproductive age groups</td>\n  </tr>\n  <tr>\n    <td class=\"tg-c3ow\">(D)</td>\n    <td class=\"tg-0pky\">Stable age pyramid</td>\n    <td class=\"tg-c3ow\">(IV)</td>\n    <td class=\"tg-0pky\">The percent individuals of pre-reproductive and reproductive age group are same</td>\n  </tr>\n</tbody>\n</table></p>\n<p>Choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "A-II, B-III, C-I, D-IV"
+          },
+          {
+            "identifier": "B",
+            "content": "A-II, B-IV, C-I, D-III"
+          },
+          {
+            "identifier": "C",
+            "content": "A-II, B-IV, C-III, D-I"
+          },
+          {
+            "identifier": "D",
+            "content": "A-II, B-I, C-III, D-IV"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "- Logistic growth (A) is a type of population growth that occurs under conditions of limited resources (II).\n<br/><br/>- Exponential growth (B) is a type of population growth that occurs under conditions of unlimited resources (I).\n<br/><br/>- An expanding age pyramid (C) represents a population where the percentage of individuals in the pre-reproductive age group is the largest, followed by the reproductive and post-reproductive age groups (III).\n<br/><br/>- A stable age pyramid (D) represents a population where the percentage of individuals in the pre-reproductive and reproductive age groups are approximately equal (IV).\n\n<br/><br/>So, the correct match is : \n<br/><br/>A-II, B-I, C-III, D-IV. "
+      },
+      {
+        "question_id": "1lhg40bup",
+        "chapter": "molecular-basis-of-inheritance",
+        "chapterGroup": "botany",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": "genetic-code",
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which one of the following is the sequence on corresponding coding strand, if the sequence on mRNA \nformed is as follows 5’AUCGAUCGAUCGAUCGAUCGAUCG AUCG 3’?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "3’ UAGCUAGCUAGCUAGCUAGCUAGCUAGC 5’"
+          },
+          {
+            "identifier": "B",
+            "content": "5’ ATCGATCGATCGATCGATCGATCGATCG 3’"
+          },
+          {
+            "identifier": "C",
+            "content": "3’ ATCGATCGATCGATCGATCGATCGATCG 5’"
+          },
+          {
+            "identifier": "D",
+            "content": "5’ UAGCUAGCUAGCUAGCUAGCUAGCUAGC 3’"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "The sequence on the mRNA is 5’AUCGAUCGAUCGAUCGAUCGAUCG AUCG 3’. The mRNA is synthesized from the template strand of DNA by complementary base pairing, following these rules: A pairs with U, U pairs with A, C pairs with G, and G pairs with C. The coding strand of DNA has the same sequence as the mRNA, except with T instead of U. \n\n<br><br>To find the sequence on the corresponding coding strand, we can use these rules to convert the mRNA sequence back to DNA :\n\n<br><br>5’ AUCGAUCGAUCGAUCGAUCGAUCG AUCG 3’ (mRNA)\n<br><br>5’ ATCGATCGATCGATCGATCGATCG ATCG 3’ (coding strand DNA)\n\n<p><img src=\"https://app-content.cdn.examgoal.net/fly/@width/image/1lhib7wdu/c2e16cfa-18ef-4bb4-8810-75e96c8d603c/47308920-ef87-11ed-aa3c-79a938cf0bf4/file-1lhib7wdv.png?format=png\" data-orsrc=\"https://app-content.cdn.examgoal.net/image/1lhib7wdu/c2e16cfa-18ef-4bb4-8810-75e96c8d603c/47308920-ef87-11ed-aa3c-79a938cf0bf4/file-1lhib7wdv.png\" loading=\"lazy\" style=\"max-width: 100%; height: auto; display: block; margin: 0px auto; max-height: 40vh;\" alt=\"NEET 2023 Biology - Molecular Basis of Inheritance Question 16 English Explanation\"></p>"
+      },
+      {
+        "question_id": "1lhg41w1e",
+        "chapter": "structural-organisation-in-animals",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which of the following is characteristic feature of cockroach regarding sexual dimorphism?</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Presence of anal styles"
+          },
+          {
+            "identifier": "B",
+            "content": "Presence of sclerites"
+          },
+          {
+            "identifier": "C",
+            "content": "Presence of anal cerci"
+          },
+          {
+            "identifier": "D",
+            "content": "Dark brown body colour and anal cerci"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>Option (A) is the correct answer because anal styles are present in male cockroaches and absent in \nfemale cockroaches.</p>\n<p>Option (B), (C) and (D) are not the correct answers because sclerites, anal cerci and dark brown body \ncolour are common features of both male and female cockroaches.</p>"
+      },
+      {
+        "question_id": "1lhg43z79",
+        "chapter": "locomotion-and-movement",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which of the following statements are correct regarding skeletal muscle?</p>\n<p>A. Muscle bundles are held together by collagenous connective tissue layer called fascicle.</p>\n<p>B. Sarcoplasmic reticulum of muscle fibre is a store house of calcium ions.</p>\n<p>C. Striated appearance of skeletal muscle fibre is due to distribution pattern of actin and myosin proteins.</p>\n<p>D. M line is considered as functional unit of contraction called sarcomere.</p>\n<p>Choose the most appropriate answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "B and C only"
+          },
+          {
+            "identifier": "B",
+            "content": "A, C and D only"
+          },
+          {
+            "identifier": "C",
+            "content": "C and D only"
+          },
+          {
+            "identifier": "D",
+            "content": "A, B and C only"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>Option (A) is the correct answer because statements B and C are only correct statements while A and \nD are incorrect statements.</p>\n<p>Muscle bundles are held together by collagenous connective tissue layer called fascia. Muscle bundles \nare called fascicles. The portion of the myofibril between two successive ‘Z’ lines is considered as \nfunctional unit of contraction called sarcomere.</p>"
+      },
+      {
+        "question_id": "1lhg45fyv",
+        "chapter": "animal-kingdom",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>The unique mammalian characteristics are :</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "hairs, pinna and mammary glands"
+          },
+          {
+            "identifier": "B",
+            "content": "hairs, pinna and indirect development"
+          },
+          {
+            "identifier": "C",
+            "content": "pinna, monocondylic skull and mammary glands"
+          },
+          {
+            "identifier": "D",
+            "content": "hairs, tympanic membrane and mammary glands"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "Unique mammalian characteristics include:\n\n<br/><br/>1. Hair or fur: Mammals are the only animals that have hair. This hair helps to insulate the body to maintain a constant body temperature.\n\n<br/><br/>2. Mammary glands: These are glands that, in females, produce milk for the nourishment of young ones. This is a characteristic feature of all mammals and is, in fact, the feature that gives this group its name.\n\n<br/><br/>3. The presence of pinnae (external ears): Most mammals have pinnae that help to collect and direct sound waves into the ear.\n\n<br/><br/>Option B is incorrect because indirect development is not a unique characteristic of mammals; many animals, including certain insects, amphibians, and fishes, undergo indirect development.\n\n<br/><br/>Option C is incorrect because a monocondylic skull, in which the skull only articulates with the first vertebra via a single condyle, is a characteristic of some reptiles and amphibians, not mammals. Mammals possess a dicondylic skull, with two occipital condyles.\n\n<br/><br/>Option D is incorrect because while mammals do have a tympanic membrane (ear drum), it is not unique to mammals; other vertebrate groups, such as birds and reptiles, also have a tympanic membrane.\n\n<br/><br/>So, the correct answer is :\n\n<br/><br/>Option A : hairs, pinna and mammary glands."
+      },
+      {
+        "question_id": "1lhg48d16",
+        "chapter": "neural-control-and-coordination",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>The parts of human brain that helps in regulation of sexual behaviour, expression of excitement, pleasure, \nrage, fear etc. are:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "Corpora quadrigemina and hippocampus"
+          },
+          {
+            "identifier": "B",
+            "content": "Brain stem and epithalamus"
+          },
+          {
+            "identifier": "C",
+            "content": "Corpus callosum and thalamus"
+          },
+          {
+            "identifier": "D",
+            "content": "Limbic system and hypothalamus"
+          }
+        ],
+        "correct_options": [
+          "D"
+        ],
+        "answer": null,
+        "explanation": "<p>The limbic system, which includes structures such as the amygdala and hippocampus, plays a significant role in regulating emotions, including fear, pleasure, and anger. The hypothalamus, another component of the limbic system, is involved in various functions, including the regulation of sexual behavior and responses to pleasure and excitement. Therefore, option D is correct.</p>\n<p>Option (A), (B) and (C) are not correct because corpora quadrigemina is a part of the midbrain and \nconsists of four round swellings. Corpus callosum is a tract of nerve fibres that connects right and left \ncerebral hemispheres. Thalamus is a major coordinating centre in the forebrain for sensory and motor \nsignalling. Midbrain, pons and medulla oblongata together form the brain stem.</p>"
+      },
+      {
+        "question_id": "1lhg4ab2a",
+        "chapter": "excretory-products-and-their-elimination",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which of the following statements are correct?</p>\n<p>A. An excessive loss of body fluid from the body switches off osmoreceptors.</p>\n<p>B. ADH facilitates water reabsorption to prevent diuresis.</p>\n<p>C. ANF causes vasodilation.</p>\n<p>D. ADH causes increase in blood pressure.</p>\n<p>E. ADH is responsible for decrease in GFR.</p>\n<p>Choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "B, C and D only"
+          },
+          {
+            "identifier": "B",
+            "content": "A, B and E only"
+          },
+          {
+            "identifier": "C",
+            "content": "C, D and E only"
+          },
+          {
+            "identifier": "D",
+            "content": "A and B only"
+          }
+        ],
+        "correct_options": [
+          "A"
+        ],
+        "answer": null,
+        "explanation": "<p>Option (A) is the correct answer because statements B, C and D are true statements. ADH facilitates \nwater reabsorption from DCT of nephron to prevent diuresis, which causes increase in blood pressure. \nANF which is secreted by the heart is a vasodilator.</p>\n<p>Options (B), (C) and (D) are not correct because statements A and E are false. Excessive loss of body \nfluid from the body switches on the osmoreceptors.</p>"
+      },
+      {
+        "question_id": "1lhg4btvd",
+        "chapter": "chemical-coordination-and-integration",
+        "chapterGroup": "zoology",
+        "difficulty": null,
+        "marks": 4,
+        "negMarks": 1,
+        "subject": "biology",
+        "subjectGroup": null,
+        "topic": null,
+        "type": "mcq",
+        "isOutOfSyllabus": false,
+        "isBonus": false,
+        "comprehension": null,
+        "direction": null,
+        "content": "<p>Which of the following are NOT under the control of thyroid hormone?</p>\n<p>A. Maintenance of water and electrolyte balance</p>\n<p>B. Regulation of basal metabolic rate</p>\n<p>C. Normal rhythm of sleep-wake cycle</p>\n<p>D. Development of immune system</p>\n<p>E. Support the process of RBCs formation</p>\n<p>Choose the correct answer from the options given below:</p>",
+        "options": [
+          {
+            "identifier": "A",
+            "content": "B and C only"
+          },
+          {
+            "identifier": "B",
+            "content": "C and D only"
+          },
+          {
+            "identifier": "C",
+            "content": "D and E only"
+          },
+          {
+            "identifier": "D",
+            "content": "A and D only"
+          }
+        ],
+        "correct_options": [
+          "B"
+        ],
+        "answer": null,
+        "explanation": "<p>Option (B) is the correct answer because thyroid hormones play an important role in the regulation of \nbasal metabolic rate, maintenance of water and electrolyte balance and support the process of RBCs \nformation, whereas this hormone is not involved in regulating normal rhythm of sleep-wake cycle and \ndevelopment of immune system.</p>"
+      }
+    ],
+    "title": "Biology"
+  }
+]
