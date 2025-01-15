@@ -3,424 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Game</title>
-    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Dynamic Quiz App</title>
     <style>
+        /* General styles for layout */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        header nav ul {
+            list-style-type: none;
             margin: 0;
             padding: 0;
         }
-        header {
-            display: flex;
-            align-items: center;
-            padding: 15px 30px;
-            background-color: #ffffff;
-            color: black;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 100;
-            border: 1px solid black;
+
+        header nav ul li {
+            display: inline;
+            margin: 0 20px;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .logo h1 {
-            font-size: 24px;
-            margin: 0;
-            font-weight: bold;
-        }
-
-        /* Header Button */
-        .header-buttons {
-            display: flex;
-            align-items: center;
-        }
-
-        .header-buttons a {
-            text-decoration: none;
+        header nav ul li a {
             color: white;
-            margin-left: 20px;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            border-radius: 5px;
-            background-color: #333;
-        }
-
-        .header-buttons a:hover {
-            background-color: #555;
-        }
-
-        .header-buttons i {
-            margin-right: 8px;
-        }
-
-        header + hr {
-            margin-top: 0;
-            border: none;
-            border-top: 2px solid #000;
+            text-decoration: none;
+            font-weight: bold;
         }
 
         main {
-            margin-top: 80px;
             padding: 20px;
         }
 
-        .quiz-title {
-            font-size: 1.5em;
-            margin: 70px 0;
-            color: #333;
-            text-align: center;
-            border: 2px solid black;
-        }
-
-        .question {
-            margin-bottom: 30px;
-            padding: 3px;
-            border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
-        }
-
-        .question-number {
-            font-weight: bold;
-            font-size: 1.2em;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .question-content {
-            margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: normal;
-        }
-
-        .options li {
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-        }
-
-        .options label {
-            cursor: pointer;
+        .slide-container {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
-        .options input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
-            color: green;
-        }
-
-        #subject-dropdown {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 1em;
-        }
-
-        img {
-            max-width: 100px;
-            height: auto;
-        }
-
-        .submit-button {
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            position: fixed;
-            bottom: 0;
-            left: 0;
+        .chapter {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
             width: 100%;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        .explanation-button {
-            display: none;
-            margin-top: 10px;
-            background-color: white;
-            color: black;
-            border: 2px solid black;
             cursor: pointer;
-            padding: 8px 16px;
         }
 
-        .explanation-button:hover {
-            background-color: black;
-            color: white;
+        .chapter h3 {
+            margin-top: 0;
         }
 
-        .explanation-button-container {
-            display: flex;
-            justify-content: center;
-            width: 100%;
+        .question-list {
+            list-style-type: none;
+            padding: 0;
         }
 
-        .explanation-content {
-            display: none;
-            margin-top: 10px;
-            font-style: italic;
-            color: #777;
-        }
-
-        .explanation-content.open {
-            display: block;
-            background-color: #FFF59D;
+        .question-list li {
             padding: 10px;
-            border-radius: 5px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .question-list li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .back-btn {
+            background-color: #333;
+            color: white;
+            padding: 10px;
             margin-top: 10px;
-            font-style: italic;
-            color: #777;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 0px;
-            }
-
-            .submit-button {
-                padding: 10px;
-            }
-
-            .options li {
-                padding: 5px;
-            }
-
-            img {
-                max-width: 80px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 20px;
-            }
-
-            .header-buttons {
-                margin-top: 10px;
-                flex-direction: column;
-            }
-
-            .header-buttons a {
-                margin-left: 0;
-                margin-top: 10px;
-            }
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
+
     <header>
-        <div class="logo">
-            <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40">
-            <h1>Quiz Game</h1>
-        </div>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="loadContent('biology')">Biology</a></li>
+                <li><a href="#" onclick="loadContent('physics')">Physics</a></li>
+                <li><a href="#" onclick="loadContent('chemistry')">Chemistry</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <div class="quiz-title" id="quiz-title"></div>
-    <select id="subject-dropdown"></select>
-    <div id="quiz-container"></div>
+    <main>
+        <div id="content" class="slide-container">
+            <!-- Dynamic Content Will Appear Here -->
+        </div>
+    </main>
 
     <script>
-        let currentQuestionIndex = 0;
-        let quizData = [];
-        const urlParams = new URLSearchParams(window.location.search);
-        const title = urlParams.get('title');
-        const metaId = urlParams.get('metaId');
+        // Sample Data
+        const chaptersUrl = 'https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/3c48616f-298a-5f69-91d2-bcd59444c455.json';
 
-        if (title) {
-            document.getElementById('quiz-title').textContent = title;
+        let currentSubject = 'biology'; // Default to biology
+
+        // Load the dynamic content for the selected subject
+        function loadContent(subject) {
+            currentSubject = subject;
+            fetch(chaptersUrl)
+                .then(response => response.json())
+                .then(data => {
+                    let content = '';
+                    if (subject === 'biology') {
+                        content = generateChapterList(data[0].questions); // Biology content
+                    } else if (subject === 'physics') {
+                        content = generateChapterList(data[1].questions); // Physics content
+                    } else if (subject === 'chemistry') {
+                        content = generateChapterList(data[2].questions); // Chemistry content
+                    }
+                    document.getElementById('content').innerHTML = content;
+                })
+                .catch(error => {
+                    console.error('Error loading data:', error);
+                    document.getElementById('content').innerHTML = '<p>Error loading data. Please try again later.</p>';
+                });
         }
 
-        const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
+        // Generate a list of chapters for a given subject
+        function generateChapterList(questions) {
+            let chapters = {};
 
-        // Fetch the JSON data
-        fetch(jsonUrl)
-            .then(response => response.json())
-            .then(data => {
-                quizData = data;
-                populateSubjectDropdown();
-                displayQuestion();
-            })
-            .catch(error => console.error('Error fetching the JSON data:', error));
-
-        function populateSubjectDropdown() {
-            const subjectDropdown = document.getElementById('subject-dropdown');
-            quizData.forEach((subject, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = subject.title;
-                subjectDropdown.appendChild(option);
+            questions.forEach(question => {
+                if (!chapters[question.chapter]) {
+                    chapters[question.chapter] = [];
+                }
+                chapters[question.chapter].push(question);
             });
 
-            subjectDropdown.onchange = () => {
-                currentQuestionIndex = 0;
-                displayQuestion();
-            };
-        }
-
-        let correctAnswers = 0;
-        let incorrectAnswers = 0;
-        let missedAnswers = 0;
-        let startTime = new Date();
-
-        function displayQuestion() {
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = '';
-
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-            const question = subject.questions[currentQuestionIndex];
-
-            const questionElement = document.createElement('div');
-            questionElement.className = 'question';
-
-            // Question Number
-            const questionNumber = document.createElement('div');
-            questionNumber.className = 'question-number';
-            questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
-            questionElement.appendChild(questionNumber);
-
-            // Question Content
-            const questionContent = document.createElement('div');
-            questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content;
-            questionElement.appendChild(questionContent);
-
-            // Options
-            const optionsList = document.createElement('ul');
-            optionsList.className = 'options';
-
-            question.options.forEach(option => {
-                const optionItem = document.createElement('li');
-                const optionLabel = document.createElement('label');
-                const optionInput = document.createElement('input');
-
-                optionInput.type = 'radio';
-                optionInput.name = `question${question.question_id}`;
-                optionInput.value = option.identifier;
-
-                optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
-                optionItem.appendChild(optionLabel);
-                optionsList.appendChild(optionItem);
-            });
-
-            questionElement.appendChild(optionsList);
-
-            // Explanation button (hidden by default)
-            const explanationButton = document.createElement('button');
-            explanationButton.className = 'explanation-button';
-            explanationButton.textContent = 'Show Explanation';
-            explanationButton.onclick = () => toggleExplanation(questionElement);
-            questionElement.appendChild(explanationButton);
-
-            // Create explanation content (hidden by default)
-            const explanationContent = document.createElement('div');
-            explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-            questionElement.appendChild(explanationContent);
-
-            // Submit button
-            const submitButton = document.createElement('button');
-            submitButton.className = 'submit-button';
-            submitButton.textContent = 'Submit Answer';
-            submitButton.onclick = () => handleAnswer(question, submitButton);
-            questionElement.appendChild(submitButton);
-
-            // Next Button (Initially disabled)
-            const nextButton = document.createElement('button');
-            nextButton.className = 'submit-button';
-            nextButton.textContent = 'Next Question';
-            nextButton.disabled = true;
-            nextButton.onclick = () => {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < subject.questions.length) {
-                    displayQuestion();
-                } else {
-                    showFinalResults();
-                }
-            };
-            questionElement.appendChild(nextButton);
-
-            quizContainer.appendChild(questionElement);
-        }
-
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
-        }
-
-        function handleAnswer(question, submitButton) {
-            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-            const correctOptionValue = question.correct_options[0];
-            const feedback = document.createElement('div');
-            feedback.className = 'feedback';
-
-            if (selectedOption) {
-                if (selectedOption.value === correctOptionValue) {
-                    correctAnswers++;
-                    feedback.textContent = 'Correct!';
-                    feedback.classList.add('correct');
-                } else {
-                    incorrectAnswers++;
-                    feedback.textContent = `Incorrect! The correct answer is: Option ${correctOptionValue}`;
-                    feedback.classList.add('incorrect');
-                }
-            } else {
-                missedAnswers++;
-                feedback.textContent = `You missed the question! The correct answer is: Option ${correctOptionValue}`;
-                feedback.classList.add('incorrect');
+            let chapterHtml = '';
+            for (let chapter in chapters) {
+                chapterHtml += `
+                    <div class="chapter" onclick="loadChapterQuestions('${chapter}')">
+                        <h3>${chapter}</h3>
+                    </div>
+                `;
             }
 
-            submitButton.disabled = true;
-
-            const nextButton = submitButton.parentElement.querySelector('button:nth-of-type(2)');
-            nextButton.disabled = false;
-
-            submitButton.parentElement.appendChild(feedback);
+            return chapterHtml;
         }
 
-        function showFinalResults() {
-            const quizContainer = document.getElementById('quiz-container');
-            const results = document.createElement('div');
-            results.innerHTML = `
-                <h2>Quiz Completed!</h2>
-                <p>Total Correct Answers: ${correctAnswers}</p>
-                <p>Total Incorrect Answers: ${incorrectAnswers}</p>
-                <p>Total Missed Answers: ${missedAnswers}</p>
-            `;
-            quizContainer.appendChild(results);
+        // Generate a list of questions for the selected chapter
+        function loadChapterQuestions(chapter) {
+            fetch(chaptersUrl)
+                .then(response => response.json())
+                .then(data => {
+                    let questions = [];
+                    if (currentSubject === 'biology') {
+                        questions = data[0].questions.filter(q => q.chapter === chapter);
+                    } else if (currentSubject === 'physics') {
+                        questions = data[1].questions.filter(q => q.chapter === chapter);
+                    } else if (currentSubject === 'chemistry') {
+                        questions = data[2].questions.filter(q => q.chapter === chapter);
+                    }
+
+                    let questionHtml = '<ul class="question-list">';
+                    questions.forEach(q => {
+                        questionHtml += `
+                            <li onclick="openQuestionDetails('${q.question_id}')">
+                                ${q.content}
+                            </li>
+                        `;
+                    });
+                    questionHtml += '</ul>';
+
+                    // Add a "Back" button to return to the chapter list
+                    questionHtml += `<button class="back-btn" onclick="loadContent('${currentSubject}')">Back to Chapters</button>`;
+
+                    document.getElementById('content').innerHTML = questionHtml;
+                })
+                .catch(error => {
+                    console.error('Error loading chapter questions:', error);
+                    document.getElementById('content').innerHTML = '<p>Error loading chapter questions. Please try again later.</p>';
+                });
         }
+
+        // Open the full details of a specific question using question_id
+        function openQuestionDetails(questionId) {
+            fetch(chaptersUrl)
+                .then(response => response.json())
+                .then(data => {
+                    let question = {};
+                    // Find the question with the matching ID
+                    if (currentSubject === 'biology') {
+                        question = data[0].questions.find(q => q.question_id === questionId);
+                    } else if (currentSubject === 'physics') {
+                        question = data[1].questions.find(q => q.question_id === questionId);
+                    } else if (currentSubject === 'chemistry') {
+                        question = data[2].questions.find(q => q.question_id === questionId);
+                    }
+
+                    if (question) {
+                        let questionDetailHtml = `
+                            <h3>Question: ${question.content}</h3>
+                            <p><strong>Marks:</strong> ${question.marks}</p>
+                            <ul>
+                                <li><strong>Options:</strong></li>
+                                ${question.options.map(opt => `<li>${opt.content}</li>`).join('')}
+                            </ul>
+                            <p><strong>Explanation:</strong></p>
+                            <div>${question.explanation}</div>
+                        `;
+
+                        // Add a "Back" button to return to the chapter's question list
+                        questionDetailHtml += `<button class="back-btn" onclick="loadChapterQuestions('${question.chapter}')">Back to Questions</button>`;
+
+                        document.getElementById('content').innerHTML = questionDetailHtml;
+                    } else {
+                        document.getElementById('content').innerHTML = '<p>Question not found.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading question details:', error);
+                    document.getElementById('content').innerHTML = '<p>Error loading question details. Please try again later.</p>';
+                });
+        }
+
+        // Load the Biology content by default on page load
+        loadContent('biology');
     </script>
+
 </body>
 </html>
