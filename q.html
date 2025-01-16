@@ -103,25 +103,29 @@
         }
 
         .explanation {
-            display: none;
-            margin-top: 20px;
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px solid #ddd;
-        }
+    display: none;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    word-wrap: break-word;  /* Ensures text wraps to a new line when it overflows */
+    overflow-wrap: break-word;  /* Same as above, ensures long words break and don't overflow */
+}
 
-        .explanation h4 {
-            font-size: 1.4em;
-            color: #333;
-            margin-bottom: 10px;
-        }
+.explanation h4 {
+    font-size: 1.4em;
+    color: #333;
+    margin-bottom: 10px;
+}
 
-        .explanation p {
-            font-size: 1.2em;
-            line-height: 1.5;
-            color: #555;
-        }
+.explanation p {
+    font-size: 1.2em;
+    line-height: 1.5;
+    color: #555;
+    word-wrap: break-word;  /* Ensure paragraphs break properly if necessary */
+}
+
 
         .mathjax-inline {
             display: inline-block;
