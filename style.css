@@ -5,78 +5,25 @@
             margin: 0;
             padding: 0;
         }
-        /* Header Section */
-        header {
-            display: flex;
-            align-items: center;
-            padding: 15px 30px;
-            background-color: #ffffff; /* white background */
-            color: black;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 100;
-            border: black 1px solid; 
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-        }
-
-        .logo img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%; /* Circular logo */
-            margin-right: 10px;
-        }
-
-        .logo h1 {
-            font-size: 24px;
-            margin: 0;
-            font-weight: bold;
-        }
 
         .time {
-            color:red;
-            font-weight:5px;
-            font-size: 18px;
-            margin-left: 20px;
-        }
+    color: red;
+    font-weight: bold;
+    font-size: 18px;
+    margin-left: 20px;
+    border: 2px solid #FF0000; /* Solid border with red color */
+    padding: 10px;
+    border-radius: 5px; /* Rounded corners for a smoother look */
+    text-align: center; /* Center the text horizontally */
+    position: absolute; /* Positioning it relative to the screen */
+    top: 20px; /* Distance from the top of the page */
+    left: 50%; /* Align to the center horizontally */
+    transform: translateX(-50%); /* Ensure it’s perfectly centered */
+    background-color: rgba(255, 0, 0, 0.1); /* Slight red background for contrast */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Adding a shadow for better visibility */
+    font-family: 'Arial', sans-serif; /* Optional: Customize font family */
+}
 
-        .header-buttons {
-            display: flex;
-            align-items: center;
-        }
-
-        .header-buttons a {
-            text-decoration: none;
-            color: white;
-            margin-left: 20px;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            border-radius: 5px;
-            background-color: #333;
-        }
-
-        .header-buttons a:hover {
-            background-color: #555;
-        }
-
-        .header-buttons i {
-            margin-right: 8px;
-        }
-
-        /* Black line below the header */
-        header + hr {
-            margin-top: 0;
-            border: none;
-            border-top: 2px solid #000; /* Solid black line */
-        }
 
         /* Adjust the rest of the page below the header */
         main {
@@ -253,24 +200,6 @@
                 max-width: 80px;
             }
         }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 20px;
-            }
-
-            .header-buttons {
-                margin-top: 10px;
-                flex-direction: column;
-            }
-
-            .header-buttons a {
-                margin-left: 0;
-                margin-top: 10px;
-            }
             /* Additional adjustments for mobile */
 @media (max-width: 600px) {
     .options li {
