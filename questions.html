@@ -7,7 +7,7 @@
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <style>
         /* Add your styles here */
-                body {
+           body {
             font-family: 'Roboto', sans-serif;
             background-color: #f3f4f6;
             margin: 0;
@@ -191,6 +191,7 @@
     let timerInterval;
     let currentQuestionId;
     let subject, chapter;
+    let questionsData = [];
 
     // Timer function
     function startTimer() {
@@ -228,18 +229,17 @@
 
                     // Load questions based on subject
                     if (subject === 'biology') {
-                        question = data[0].questions.find(q => q.question_id === currentQuestionId);
+                        questionsData = data[0].questions; // Store all biology questions
                     } else if (subject === 'chemistry') {
-                        question = data[1].questions.find(q => q.question_id === currentQuestionId);
+                        questionsData = data[1].questions; // Store all chemistry questions
                     } else if (subject === 'physics') {
-                        question = data[2].questions.find(q => q.question_id === currentQuestionId);
+                        questionsData = data[2].questions; // Store all physics questions
                     }
 
-                    if (question) {
+                    if (questionsData.length > 0) {
                         questionFound = true;
-                        renderQuestionDetail(question);
+                        renderQuestionDetail(questionsData.find(q => q.question_id === currentQuestionId)); // Render current question
                         startTimer();
-                        // Set source title in the bottom right corner
                         document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
                         break; // Stop the loop when the question is found
                     }
@@ -265,7 +265,7 @@
                      </li>`
                 ).join('')}
             </ul>
-            <button class="check-btn" onclick="checkAnswer('${question.question_id}')">Check Answer</button>
+            <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
             <div class="explanation" id="explanation">
                 <h4>Explanation:</h4>
                 <p>${renderMath(question.explanation)}</p>
@@ -338,20 +338,18 @@
 
     // Load next question and update URL
     function loadNextQuestion() {
-        const nextQuestionId = getNextQuestionId(currentQuestionId);
-        if (nextQuestionId) {
-            const newUrl = `?id=${subject}/${chapter}/${nextQuestionId}`;
+        const randomQuestion = getRandomQuestion();
+        if (randomQuestion) {
+            const newUrl = `?id=${subject}/${chapter}/${randomQuestion.question_id}`;
             window.history.pushState({ path: newUrl }, '', newUrl); // Update the URL
-            currentQuestionId = nextQuestionId;
+            currentQuestionId = randomQuestion.question_id;
             loadQuestionDetail();  // Fetch the next question
         }
     }
 
-    // Get the next question ID (simple example, you can implement your logic)
-    function getNextQuestionId(currentQuestionId) {
-        const questionIds = ["1", "2", "3", "4", "5"]; // Example question IDs
-        const currentIndex = questionIds.indexOf(currentQuestionId);
-        return questionIds[currentIndex + 1] || null; // Return the next question ID
+    // Get a random question from the list
+    function getRandomQuestion() {
+        return questionsData[Math.floor(Math.random() * questionsData.length)];
     }
 
     // Load the question detail on page load
