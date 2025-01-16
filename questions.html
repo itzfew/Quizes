@@ -6,6 +6,7 @@
     <title>Question Detail</title>
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <style>
+        /* Add your styles here */
                 body {
             font-family: 'Roboto', sans-serif;
             background-color: #f3f4f6;
@@ -176,7 +177,6 @@
 <main>
     <div id="question-detail"></div>
     <div class="timer" id="timer">Time Left: 1:00</div>
-    <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
 </main>
 
 <div class="source" id="source"></div>
@@ -185,21 +185,16 @@
     const metaIds = [
         { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
         { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-        { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
-        { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
-        { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
-        { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
-        { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
-        { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
-        { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" }
+        // Other metaIds...
     ];
 
-    let currentQuestionIndex = 0;
     let timerInterval;
+    let currentQuestionId;
+    let subject, chapter;
 
     // Timer function
     function startTimer() {
-        let timeLeft = 60; // 1 minute timer
+        let timeLeft = 60; // 1-minute timer
         timerInterval = setInterval(function () {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
@@ -216,7 +211,7 @@
     // Load question details from all metaIds
     function loadQuestionDetail() {
         const urlParams = new URLSearchParams(window.location.search);
-        const [subject, chapter, questionId] = urlParams.get('id').split('/');
+        [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
 
         // Fetch questions from all metaIds
         let questionFound = false;
@@ -231,17 +226,18 @@
 
                     let question = {};
 
+                    // Load questions based on subject
                     if (subject === 'biology') {
-                        question = data[0].questions.find(q => q.question_id === questionId);
+                        question = data[0].questions.find(q => q.question_id === currentQuestionId);
                     } else if (subject === 'chemistry') {
-                        question = data[1].questions.find(q => q.question_id === questionId);
+                        question = data[1].questions.find(q => q.question_id === currentQuestionId);
                     } else if (subject === 'physics') {
-                        question = data[2].questions.find(q => q.question_id === questionId);
+                        question = data[2].questions.find(q => q.question_id === currentQuestionId);
                     }
 
                     if (question) {
                         questionFound = true;
-                        renderQuestionDetail(question, subject, chapter);
+                        renderQuestionDetail(question);
                         startTimer();
                         // Set source title in the bottom right corner
                         document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
@@ -259,7 +255,7 @@
     }
 
     // Render question details in the HTML
-    function renderQuestionDetail(question, subject, chapter) {
+    function renderQuestionDetail(question) {
         let questionDetailHTML = `
             <h3>${renderMath(question.content)}</h3>
             <ul class="options">
@@ -274,10 +270,10 @@
                 <h4>Explanation:</h4>
                 <p>${renderMath(question.explanation)}</p>
             </div>
+            <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
         `;
 
         document.getElementById('question-detail').innerHTML = questionDetailHTML;
-        localStorage.setItem('question_' + subject + '_' + chapter, question.question_id); // Store the last question ID
 
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 
@@ -287,9 +283,15 @@
             option.addEventListener('click', function () {
                 options.forEach(opt => opt.classList.remove('selected'));
                 option.classList.add('selected');
-                localStorage.setItem('selected_option', option.dataset.option);
+                saveAnswer(option.dataset.option);  // Save selected answer to localStorage
             });
         });
+
+        // Check for saved answer in localStorage
+        const savedAnswer = localStorage.getItem(`answer-${currentQuestionId}`);
+        if (savedAnswer) {
+            document.querySelector(`#option${savedAnswer}`).classList.add('selected');
+        }
     }
 
     // Render LaTeX using MathJax
@@ -299,15 +301,20 @@
         });
     }
 
+    // Save selected answer to localStorage
+    function saveAnswer(optionId) {
+        localStorage.setItem(`answer-${currentQuestionId}`, optionId);
+    }
+
     // Check and display the correct answer
-    function checkAnswer(questionId) {
+    function checkAnswer() {
         const selectedOption = document.querySelector('.options li.selected');
         if (!selectedOption) {
             alert("Please select an option.");
             return;
         }
 
-        const correctAnswer = getCorrectAnswer(questionId);
+        const correctAnswer = getCorrectAnswer(currentQuestionId);
         const options = document.querySelectorAll('.options li');
 
         options.forEach(option => {
@@ -329,23 +336,22 @@
         return 'A'; // Placeholder for correct answer
     }
 
-    // Load the next question from the same chapter
+    // Load next question and update URL
     function loadNextQuestion() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
-
-        const lastQuestionId = localStorage.getItem('question_' + subject + '_' + chapter);
-        if (lastQuestionId === currentQuestionId) {
-            const nextQuestionId = getNextQuestionId(chapter);
-            window.history.pushState({}, '', `?id=${subject}/${chapter}/${nextQuestionId}`);
-            loadQuestionDetail();
+        const nextQuestionId = getNextQuestionId(currentQuestionId);
+        if (nextQuestionId) {
+            const newUrl = `?id=${subject}/${chapter}/${nextQuestionId}`;
+            window.history.pushState({ path: newUrl }, '', newUrl); // Update the URL
+            currentQuestionId = nextQuestionId;
+            loadQuestionDetail();  // Fetch the next question
         }
     }
 
-    // Get next question ID (example logic)
-    function getNextQuestionId(chapter) {
-        // Implement logic to get the next question ID
-        return 'newQuestionId'; // Placeholder for new question ID
+    // Get the next question ID (simple example, you can implement your logic)
+    function getNextQuestionId(currentQuestionId) {
+        const questionIds = ["1", "2", "3", "4", "5"]; // Example question IDs
+        const currentIndex = questionIds.indexOf(currentQuestionId);
+        return questionIds[currentIndex + 1] || null; // Return the next question ID
     }
 
     // Load the question detail on page load
