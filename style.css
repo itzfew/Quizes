@@ -61,6 +61,10 @@ header {
             text-align: center;
             border: 2px solid black;
         }
+#quiz-title {
+    display: none;
+}
+
 
         .question {
             margin-bottom: 30px;
