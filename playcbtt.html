@@ -168,18 +168,21 @@
     document.getElementById('download-pdf').addEventListener('click', () => {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        
-        const quizContainer = document.getElementById('quiz-container');
-        const quizHtml = quizContainer.innerHTML;
 
-        // Add HTML content to PDF
-        doc.html(quizHtml, {
-            callback: function (doc) {
-                doc.save('quiz.pdf');  // Save the PDF file
-            },
-            x: 10,
-            y: 10,
-            width: 180,
+        // Ensure MathJax finishes rendering before generating PDF
+        MathJax.Hub.Queue(['Typeset', MathJax.Hub], () => {
+            const quizContainer = document.getElementById('quiz-container');
+            const quizHtml = quizContainer.innerHTML;
+
+            // Add HTML content to PDF
+            doc.html(quizHtml, {
+                callback: function (doc) {
+                    doc.save('quiz.pdf');  // Save the PDF file
+                },
+                x: 10,
+                y: 10,
+                width: 180,
+            });
         });
     });
 
