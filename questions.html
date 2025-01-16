@@ -6,7 +6,6 @@
     <title>Question Detail</title>
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <style>
-        /* Add your styles here */
                 body {
             font-family: 'Roboto', sans-serif;
             background-color: #f3f4f6;
@@ -185,7 +184,7 @@
     const metaIds = [
         { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
         { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-        // Other metaIds...
+        
     ];
 
     let timerInterval;
@@ -336,11 +335,10 @@
         return 'A'; // Placeholder for correct answer
     }
 
-    // Load next question and update URL dynamically
+    // Load next question and update URL
     function loadNextQuestion() {
         const randomQuestion = getRandomQuestion();
         if (randomQuestion) {
-            // Update the URL dynamically with the next question ID
             const newUrl = `?id=${subject}/${chapter}/${randomQuestion.question_id}`;
             window.history.pushState({ path: newUrl }, '', newUrl); // Update the URL
             currentQuestionId = randomQuestion.question_id;
