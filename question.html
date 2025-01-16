@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,7 +6,7 @@
     <title>Question Detail</title>
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <style>
-        body {
+                body {
             font-family: 'Roboto', sans-serif;
             background-color: #f3f4f6;
             margin: 0;
@@ -72,21 +72,38 @@
         }
 
         .check-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            cursor: pointer;
-            border-radius: 30px;
-            font-size: 1.2em;
-            margin-top: 20px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            background-color: white; /* White background */
+    color: black; /* Black text */
+    border: 2px solid black; /* Black border */
+    padding: 10px 20px; /* Padding for the button */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 5px; /* Rounded corners */
+    transition: all 0.3s ease; /* Smooth transition on hover */
         }
 
         .check-btn:hover {
-            background-color: #0056b3;
-            transform: translateY(-3px);
+            background-color: black; /* Black background on hover */
+    color: white; /* White text on hover */
         }
+        button {
+    background-color: white; /* White background */
+    color: black; /* Black text */
+    border: 2px solid black; /* Black border */
+    padding: 10px 20px; /* Padding for the button */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 5px; /* Rounded corners */
+    transition: all 0.3s ease; /* Smooth transition on hover */
+}
+
+button:hover {
+    background-color: black; /* Black background on hover */
+    color: white; /* White text on hover */
+}
+
 
         .timer {
          display: none;
@@ -216,13 +233,14 @@
     { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
 ];
 
-
-
     let timerInterval;
+    let currentQuestionId;
+    let subject, chapter;
+    let questionsData = [];
 
     // Timer function
     function startTimer() {
-        let timeLeft = 60; // 1 minute timer
+        let timeLeft = 60; // 1-minute timer
         timerInterval = setInterval(function () {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
@@ -239,7 +257,7 @@
     // Load question details from all metaIds
     function loadQuestionDetail() {
         const urlParams = new URLSearchParams(window.location.search);
-        const [subject, chapter, questionId] = urlParams.get('id').split('/');
+        [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
 
         // Fetch questions from all metaIds
         let questionFound = false;
@@ -254,19 +272,19 @@
 
                     let question = {};
 
+                    // Load questions based on subject
                     if (subject === 'biology') {
-                        question = data[0].questions.find(q => q.question_id === questionId);
+                        questionsData = data[0].questions; // Store all biology questions
                     } else if (subject === 'chemistry') {
-                        question = data[1].questions.find(q => q.question_id === questionId);
+                        questionsData = data[1].questions; // Store all chemistry questions
                     } else if (subject === 'physics') {
-                        question = data[2].questions.find(q => q.question_id === questionId);
+                        questionsData = data[2].questions; // Store all physics questions
                     }
 
-                    if (question) {
+                    if (questionsData.length > 0) {
                         questionFound = true;
-                        renderQuestionDetail(question);
+                        renderQuestionDetail(questionsData.find(q => q.question_id === currentQuestionId)); // Render current question
                         startTimer();
-                        // Set source title in the bottom right corner
                         document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
                         break; // Stop the loop when the question is found
                     }
@@ -292,11 +310,12 @@
                      </li>`
                 ).join('')}
             </ul>
-            <button class="check-btn" onclick="checkAnswer('${question.question_id}')">Check Answer</button>
+            <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
             <div class="explanation" id="explanation">
                 <h4>Explanation:</h4>
                 <p>${renderMath(question.explanation)}</p>
             </div>
+            <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
         `;
 
         document.getElementById('question-detail').innerHTML = questionDetailHTML;
@@ -309,8 +328,15 @@
             option.addEventListener('click', function () {
                 options.forEach(opt => opt.classList.remove('selected'));
                 option.classList.add('selected');
+                saveAnswer(option.dataset.option);  // Save selected answer to localStorage
             });
         });
+
+        // Check for saved answer in localStorage
+        const savedAnswer = localStorage.getItem(`answer-${currentQuestionId}`);
+        if (savedAnswer) {
+            document.querySelector(`#option${savedAnswer}`).classList.add('selected');
+        }
     }
 
     // Render LaTeX using MathJax
@@ -320,15 +346,20 @@
         });
     }
 
+    // Save selected answer to localStorage
+    function saveAnswer(optionId) {
+        localStorage.setItem(`answer-${currentQuestionId}`, optionId);
+    }
+
     // Check and display the correct answer
-    function checkAnswer(questionId) {
+    function checkAnswer() {
         const selectedOption = document.querySelector('.options li.selected');
         if (!selectedOption) {
             alert("Please select an option.");
             return;
         }
 
-        const correctAnswer = getCorrectAnswer(questionId);
+        const correctAnswer = getCorrectAnswer(currentQuestionId);
         const options = document.querySelectorAll('.options li');
 
         options.forEach(option => {
@@ -348,6 +379,22 @@
     function getCorrectAnswer(questionId) {
         // Replace with actual logic to fetch the correct answer
         return 'A'; // Placeholder for correct answer
+    }
+
+    // Load next question and update URL
+    function loadNextQuestion() {
+        const randomQuestion = getRandomQuestion();
+        if (randomQuestion) {
+            const newUrl = `?id=${subject}/${chapter}/${randomQuestion.question_id}`;
+            window.history.pushState({ path: newUrl }, '', newUrl); // Update the URL
+            currentQuestionId = randomQuestion.question_id;
+            loadQuestionDetail();  // Fetch the next question
+        }
+    }
+
+    // Get a random question from the list
+    function getRandomQuestion() {
+        return questionsData[Math.floor(Math.random() * questionsData.length)];
     }
 
     // Load the question detail on page load
