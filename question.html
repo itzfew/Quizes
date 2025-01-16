@@ -102,6 +102,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .explanation {
+            display: none;
             margin-top: 20px;
             background-color: #f9f9f9;
             padding: 15px;
@@ -204,6 +205,7 @@
 ];
 
 
+
     let timerInterval;
 
     // Timer function
@@ -279,6 +281,10 @@
                 ).join('')}
             </ul>
             <button class="check-btn" onclick="checkAnswer('${question.question_id}')">Check Answer</button>
+            <div class="explanation" id="explanation">
+                <h4>Explanation:</h4>
+                <p>${renderMath(question.explanation)}</p>
+            </div>
         `;
 
         document.getElementById('question-detail').innerHTML = questionDetailHTML;
@@ -293,18 +299,6 @@
                 option.classList.add('selected');
             });
         });
-
-        // Render explanation if present
-        if (question.explanation) {
-            const explanationHTML = `
-                <div class="explanation">
-                    <h4>Explanation:</h4>
-                    <p>${renderMath(question.explanation)}</p>
-                </div>
-            `;
-            document.getElementById('question-detail').insertAdjacentHTML('beforeend', explanationHTML);
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Re-render MathJax in the explanation
-        }
     }
 
     // Render LaTeX using MathJax
@@ -334,7 +328,8 @@
             }
         });
 
-        showExplanation(questionId);
+        // Show explanation after checking the answer
+        document.getElementById('explanation').style.display = 'block';
     }
 
     // Get correct answer based on the question ID (example logic)
