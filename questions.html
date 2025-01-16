@@ -7,7 +7,7 @@
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <style>
         /* Add your styles here */
-           body {
+                body {
             font-family: 'Roboto', sans-serif;
             background-color: #f3f4f6;
             margin: 0;
@@ -336,10 +336,11 @@
         return 'A'; // Placeholder for correct answer
     }
 
-    // Load next question and update URL
+    // Load next question and update URL dynamically
     function loadNextQuestion() {
         const randomQuestion = getRandomQuestion();
         if (randomQuestion) {
+            // Update the URL dynamically with the next question ID
             const newUrl = `?id=${subject}/${chapter}/${randomQuestion.question_id}`;
             window.history.pushState({ path: newUrl }, '', newUrl); // Update the URL
             currentQuestionId = randomQuestion.question_id;
