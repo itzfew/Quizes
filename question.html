@@ -88,7 +88,6 @@
     color: white; /* White text on hover */
         }
         button {
-     right:10px;
     background-color: white; /* White background */
     color: black; /* Black text */
     border: 2px solid black; /* Black border */
@@ -109,7 +108,7 @@ button:hover {
         .timer {
             position: fixed;
             bottom: 10px;
-            left: 10px;
+            right: 10px;
             padding: 10px 15px;
             background-color: #f44336;
             color: white;
@@ -180,11 +179,17 @@ button:hover {
             }
 
             .timer {
-                font-size: 1em;
-                top: 10px;
-                right: 10px;
-                padding: 8px 15px;
-            }
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+            padding: 5px 7px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+           
+        }
         }
         /* Back Button Style */
         .back-btn {
