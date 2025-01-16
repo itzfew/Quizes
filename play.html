@@ -8,20 +8,18 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Header Section -->
     <header>
         <div class="logo">
-            <!-- Logo with provided image URL -->
-            <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40"> <!-- Image size 40x40px -->
-            <h1 id="quiz-title-header">Quizes</h1> <!-- Quiz title will be injected here -->
+            <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40">
+            <h1 id="quiz-title-header">Quizes</h1>
         </div>
         <div class="time" id="timer">00:00</div>
     </header>
-  <div class="quiz-title" id="quiz-title"></div>
+    <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
 
@@ -34,7 +32,7 @@
 
         if (title) {
             document.getElementById('quiz-title').textContent = title;
-            document.getElementById('quiz-title-header').textContent = title; // Set title in header
+            document.getElementById('quiz-title-header').textContent = title;
         }
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
@@ -79,6 +77,12 @@
             }, 1000);
         }
 
+        // Render LaTeX using MathJax
+    function renderMath(input) {
+        return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+            return `<span class="mathjax-inline">$$${p1}$$</span>`;
+        });
+    }
         function displayCurrentQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
@@ -99,11 +103,7 @@
 
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            }).replace(/\$(.*?)\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-            });
+            questionContent.innerHTML = renderMath(question.content);
             questionElement.appendChild(questionContent);
 
             const optionsList = document.createElement('ul');
@@ -119,11 +119,7 @@
                 optionInput.value = option.identifier;
 
                 optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                }).replace(/\$(.*?)\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-                });
+                optionLabel.innerHTML += renderMath(option.content);
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
@@ -138,11 +134,7 @@
 
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation ? question.explanation.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            }).replace(/\$(.*?)\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-            }) : 'No explanation available.'}`;
+            explanationContent.innerHTML = `Explanation: ${renderMath(question.explanation || 'No explanation available.')}`;
             questionElement.appendChild(explanationContent);
 
             const submitButton = document.createElement('button');
