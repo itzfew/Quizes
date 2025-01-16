@@ -54,8 +54,9 @@ header {
             padding: 20px;
         }
         .quiz-title {
+                display: none;
             font-size: 1.5em;
-            margin: 70px 0; /* Add a margin on top to give space between header and title */
+            margin: 10px 0; /* Add a margin on top to give space between header and title */
             color: #333;
             text-align: center;
             border: 2px solid black;
