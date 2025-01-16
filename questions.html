@@ -298,27 +298,26 @@ button:hover {
             }
         })();
     }
+// Render question details in the HTML
+function renderQuestionDetail(question) {
+    let questionDetailHTML = `
+        <h3>${renderMath(question.content)}</h3>
+        <ul class="options">
+            ${question.options.map((opt, index) => 
+                `<li data-option="${opt.identifier}" id="option${index}">
+                    ${index + 1}. ${renderMath(opt.content)}
+                 </li>`
+            ).join('')}
+        </ul>
+        <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
+        <div class="explanation" id="explanation">
+            <h4>Explanation:</h4>
+            <p>${renderMath(question.explanation)}</p>
+        </div>
+    `;
 
-    // Render question details in the HTML
-    function renderQuestionDetail(question) {
-        let questionDetailHTML = `
-            <h3>${renderMath(question.content)}</h3>
-            <ul class="options">
-                ${question.options.map((opt, index) => 
-                    `<li data-option="${opt.identifier}" id="option${index}">
-                        ${String.fromCharCode(65 + index)}. ${renderMath(opt.content)}
-                     </li>`
-                ).join('')}
-            </ul>
-            <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
-            <div class="explanation" id="explanation">
-                <h4>Explanation:</h4>
-                <p>${renderMath(question.explanation)}</p>
-            </div>
-            <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
-        `;
-
-        document.getElementById('question-detail').innerHTML = questionDetailHTML;
+    document.getElementById('question-detail').innerHTML = questionDetailHTML;
+}
 
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 
