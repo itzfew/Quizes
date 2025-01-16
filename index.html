@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,77 +15,6 @@
             background-color: #fff; /* White background */
             color: #333; /* Dark text for readability */
             box-sizing: border-box; /* Make sure padding doesn't affect layout */
-        }
-
-        /* Header Section */
-        header {
-            display: flex;
-            align-items: center;
-            padding: 15px 30px;
-            background-color: #ffffff; /* white background */
-            color: black;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 100;
-            border: black 1px solid; 
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%; /* Circular logo */
-            margin-right: 10px;
-        }
-
-        .logo h1 {
-            font-size: 24px;
-            margin: 0;
-            font-weight: bold;
-        }
-
-        .header-buttons {
-            display: flex;
-            align-items: center;
-        }
-
-        .header-buttons a {
-            text-decoration: none;
-            color: white;
-            margin-left: 20px;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            border-radius: 5px;
-            background-color: #333;
-        }
-
-        .header-buttons a:hover {
-            background-color: #555;
-        }
-
-        .header-buttons i {
-            margin-right: 8px;
-        }
-
-        /* Black line below the header */
-        header + hr {
-            margin-top: 0;
-            border: none;
-            border-top: 2px solid #000; /* Solid black line */
-        }
-
-        /* Adjust the rest of the page below the header */
-        main {
-            margin-top: 80px; /* Add margin to avoid content hiding behind the header */
-            padding: 20px;
         }
 
         #exam-list {
@@ -249,6 +178,33 @@
             cursor: pointer;
         }
 
+        /* Center the Chapterwise NEET PYQs button at the top */
+        .center-button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+        }
+
+        .center-button-container button {
+            background-color: #000;
+            color: #fff;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .center-button-container button i {
+            margin-right: 10px;
+        }
+
+        .center-button-container button:hover {
+            background-color: #333;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             header {
@@ -278,27 +234,26 @@
             .btn-link {
                 font-size: 14px;
             }
+
+            .center-button-container {
+                margin-top: 120px;
+            }
         }
     </style>
 </head>
 <body>
-
-<!-- Header Section -->
-<header>
-    <div class="logo">
-        <!-- Logo with provided image URL -->
-        <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40"> <!-- Image size 40x40px -->
-        <h1>Quizes</h1>
+<!-- Centered Button for Chapterwise NEET PYQs -->
+    <div class="center-button-container">
+        <button class="btn-link" onclick="window.location.href='pyq.html'">
+            <i class="fas fa-book"></i> Chapterwise NEET PYQs
+        </button>
     </div>
-</header>
-
-<!-- Solid black line below the header -->
-<hr>
 
 <!-- Main content -->
 <main>
     <ul id="exam-list"></ul>
 
+    
     <!-- Modal -->
     <div id="modal" class="modal">
         <div class="modal-content">
@@ -359,44 +314,36 @@
                     openModal(paper);
                 });
 
-                // Append paper title and button to paperItem
+                // Append paper title and button to the paper item
                 paperItem.appendChild(paperTitle);
                 paperItem.appendChild(button);
                 paperList.appendChild(paperItem);
             });
 
-            // Append the paper list to the exam body
+            // Append paper list to the exam body
             examBody.appendChild(paperList);
-
-            // Append the header and body to the exam item
             examItem.appendChild(examHeader);
             examItem.appendChild(examBody);
-
-            // Add a click event to toggle visibility of exam papers (only when clicking the header)
-            examHeader.addEventListener('click', () => {
-                const isOpen = examBody.style.display === 'block';
-                examBody.style.display = isOpen ? 'none' : 'block';
-                examHeader.querySelector('i').classList.toggle('fa-chevron-up');
-                examHeader.querySelector('i').classList.toggle('fa-chevron-down');
-            });
-
-            // Add the exam item to the list
             examList.appendChild(examItem);
+
+            // Add click event to toggle exam body visibility
+            examHeader.addEventListener('click', () => {
+                examBody.style.display = examBody.style.display === 'block' ? 'none' : 'block';
+                examHeader.querySelector('i').classList.toggle('fa-chevron-down');
+                examHeader.querySelector('i').classList.toggle('fa-chevron-up');
+            });
         });
     }
 
-    // Modal functionality
+    // Modal functions
     const modal = document.getElementById('modal');
-    const closeBtn = document.querySelector('.close');
+    const closeBtn = document.getElementsByClassName('close')[0];
     const playBtn = document.getElementById('playBtn');
     const playCbtBtn = document.getElementById('playCbtBtn');
-    let currentPaper = null;
 
     function openModal(paper) {
-        currentPaper = paper;
-        document.getElementById('modal-title').innerText = paper.title;
+        document.getElementById('modal-title').textContent = paper.title;
 
-        // Set the links for the buttons
         playBtn.onclick = () => {
             window.location.href = `play.html?title=${encodeURIComponent(paper.title)}&metaId=${encodeURIComponent(paper.metaId)}`;
         };
@@ -409,17 +356,16 @@
         modal.style.display = "block";
     }
 
-    // Close the modal
-    closeBtn.onclick = () => {
+    closeBtn.onclick = function() {
         modal.style.display = "none";
-    };
+    }
 
-    // Close the modal if the user clicks anywhere outside the modal
-    window.onclick = (event) => {
+    window.onclick = function(event) {
         if (event.target === modal) {
             modal.style.display = "none";
         }
-    };
+    }
 </script>
+
 </body>
 </html>
