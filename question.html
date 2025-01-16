@@ -20,14 +20,17 @@
         }
 
         .question-detail {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 600px;
-            font-size: 1.2em;
-        }
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    font-size: 1.2em;
+    overflow-y: auto; /* Allows vertical scrolling */
+    overflow-x: hidden; /* Prevents horizontal overflow */
+    max-height: 400px; /* Sets a max height to ensure scroll only occurs when necessary */
+}
 
         .question-detail h3 {
             font-size: 1.6em;
