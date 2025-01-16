@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header></header>
+
         <div class="time" id="timer">00:00</div>
     
     <div class="quiz-title" id="quiz-title"></div>
@@ -27,7 +27,6 @@
 
         if (title) {
             document.getElementById('quiz-title').textContent = title;
-            document.getElementById('quiz-title-header').textContent = title;
         }
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
@@ -72,12 +71,12 @@
             }, 1000);
         }
 
-        // Render LaTeX using MathJax
-    function renderMath(input) {
-        return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-            return `<span class="mathjax-inline">$$${p1}$$</span>`;
-        });
-    }
+        function renderMath(input) {
+            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            });
+        }
+
         function displayCurrentQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
@@ -142,10 +141,11 @@
             nextButton.className = 'next-button';
             nextButton.textContent = 'Next';
             nextButton.onclick = () => nextQuestion();
+            nextButton.disabled = true;  // Disable Next until answer is submitted
             questionElement.appendChild(nextButton);
 
             quizContainer.appendChild(questionElement);
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Ensure MathJax renders the math
+            MathJax.typeset(); // Modern MathJax render
         }
 
         function submitAnswer(questionElement, question, submitButton) {
@@ -189,10 +189,10 @@
             });
 
             submitButton.style.display = 'none';
-            questionElement.querySelector('.next-button').style.display = 'block';
+            questionElement.querySelector('.next-button').disabled = false;  // Enable Next after submitting
             questionElement.querySelector('.explanation-button').style.display = 'block';
 
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Ensure MathJax re-renders the math
+            MathJax.typeset(); // Re-render math
         }
 
         function toggleExplanation(questionElement) {
