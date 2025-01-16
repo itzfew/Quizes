@@ -13,25 +13,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-        header {
-            background-color: #333;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        nav ul li {
-            display: inline;
-            margin: 0 20px;
-        }
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
         main {
             padding: 20px;
         }
@@ -92,14 +73,14 @@
         .timer {
             position: fixed;
             top: 15px;
-            right: 15px;
+            right: 50%;
             font-size: 1.2em;
             color: #333;
             background-color: #fff;
             padding: 10px;
             border-radius: 8px;
             border: 2px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            
         }
         .explanation {
             display: none;
@@ -137,10 +118,6 @@
                 padding: 15px;
                 max-width: 100%;
             }
-            nav ul li {
-                display: block;
-                margin: 10px 0;
-            }
             .options li {
                 font-size: 1em;
                 padding: 10px;
@@ -149,18 +126,6 @@
     </style>
 </head>
 <body>
-
-<header>
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="index.html?subject=biology">Biology</a></li>
-            <li><a href="index.html?subject=physics">Physics</a></li>
-            <li><a href="index.html?subject=chemistry">Chemistry</a></li>
-        </ul>
-    </nav>
-</header>
-
 <main>
     <div id="question-detail"></div>
     <div class="timer" id="timer">Time Left: 1:00</div>
