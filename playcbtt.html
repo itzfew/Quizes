@@ -8,6 +8,7 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script> <!-- html2canvas -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
         /* Basic styles for quiz elements */
@@ -164,24 +165,20 @@
         explanationContent.classList.toggle('open');
     }
 
-    // PDF Generation Logic
+    // PDF Generation Logic with html2canvas
     document.getElementById('download-pdf').addEventListener('click', () => {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
         // Ensure MathJax finishes rendering before generating PDF
         MathJax.Hub.Queue(['Typeset', MathJax.Hub], () => {
-            const quizContainer = document.getElementById('quiz-container');
-            const quizHtml = quizContainer.innerHTML;
+            // Capture the entire quiz content as a canvas
+            html2canvas(document.getElementById('quiz-container')).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
 
-            // Add HTML content to PDF
-            doc.html(quizHtml, {
-                callback: function (doc) {
-                    doc.save('quiz.pdf');  // Save the PDF file
-                },
-                x: 10,
-                y: 10,
-                width: 180,
+                // Add the image to the PDF
+                doc.addImage(imgData, 'PNG', 10, 10, 180, 150);
+                doc.save('quiz.pdf');  // Save the PDF file
             });
         });
     });
