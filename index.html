@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizes</title>
+    <!-- FontAwesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General reset and styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fff; /* White background */
+            color: #333; /* Dark text for readability */
+            box-sizing: border-box; /* Make sure padding doesn't affect layout */
+        }
+
+        /* Header Section */
+        header {
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #ffffff; /* white background */
+            color: black;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            border: black 1px solid; 
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%; /* Circular logo */
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .header-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-buttons a {
+            text-decoration: none;
+            color: white;
+            margin-left: 20px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background-color: #333;
+        }
+
+        .header-buttons a:hover {
+            background-color: #555;
+        }
+
+        .header-buttons i {
+            margin-right: 8px;
+        }
+
+        /* Black line below the header */
+        header + hr {
+            margin-top: 0;
+            border: none;
+            border-top: 2px solid #000; /* Solid black line */
+        }
+
+        /* Adjust the rest of the page below the header */
+        main {
+            margin-top: 80px; /* Add margin to avoid content hiding behind the header */
+            padding: 20px;
+        }
+
+        #exam-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+
+        .exam-item {
+            border: 2px solid #ccc;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        .exam-item:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .exam-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+        }
+
+        .exam-item-header i {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .exam-item-body {
+            padding: 10px 15px;
+            display: none;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .paper-item {
+            border: 1px solid #ccc;
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+        }
+
+        .paper-item:hover {
+            background-color: #f1f1f1;
+        }
+
+        .paper-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .btn-link {
+            background-color: #000000;
+            color: #fff;
+            border: 1px solid #007bff;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-link i {
+            margin-right: 8px;
+        }
+
+        .btn-link:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 25px;
+            border: 1px solid #ccc;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-buttons button {
+            background-color: #000000;
+            color: #fff;
+            border: 1px solid #007bff;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 45%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-buttons button i {
+            margin-right: 8px;
+        }
+
+        .modal-buttons button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Close button */
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+            }
+
+            .header-buttons {
+                margin-top: 10px;
+                flex-direction: column;
+            }
+
+            .header-buttons a {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+            .exam-item-header {
+                font-size: 18px;
+            }
+
+            .paper-title {
+                font-size: 14px;
+            }
+
+            .btn-link {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<header>
+    <div class="logo">
+        <!-- Logo with provided image URL -->
+        <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40"> <!-- Image size 40x40px -->
+        <h1>Quizes</h1>
+    </div>
+</header>
+
+<!-- Solid black line below the header -->
+<hr>
+
+<!-- Main content -->
+<main>
+    <ul id="exam-list"></ul>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header" id="modal-title"></div>
+            <div class="modal-buttons">
+                <button id="playBtn"><i class="fas fa-play"></i> Practice mode</button>
+                <button id="playCbtBtn"><i class="fas fa-chalkboard-teacher"></i> Exam mode</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Fetch the JSON data
+    fetch('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json')
+        .then(response => response.json())
+        .then(data => {
+            displayExams(data);
+        })
+        .catch(error => console.error('Error fetching the JSON data:', error));
+
+    function displayExams(data) {
+        const examList = document.getElementById('exam-list');
+
+        data.forEach(exam => {
+            const examItem = document.createElement('li');
+            examItem.classList.add('exam-item');
+
+            // Create exam header with title and '>'
+            const examHeader = document.createElement('div');
+            examHeader.classList.add('exam-item-header');
+            examHeader.innerHTML = `${exam.title}<i class="fas fa-chevron-down"></i>`; // Adding chevron icon
+
+            // Create exam body for the papers
+            const examBody = document.createElement('div');
+            examBody.classList.add('exam-item-body');
+
+            // Loop through papers and create list items
+            const paperList = document.createElement('ul');
+            exam.papers.forEach(paper => {
+                const paperItem = document.createElement('li');
+                paperItem.classList.add('paper-item');
+                
+                // Create paper title
+                const paperTitle = document.createElement('span');
+                paperTitle.classList.add('paper-title');
+                paperTitle.textContent = `${paper.title} (${paper.year})`;
+
+                // Create button for the modal
+                const button = document.createElement('button');
+                button.classList.add('btn-link');
+                button.innerHTML = `<i class="fas fa-link"></i> Open`;
+
+                // Set click event for the button to open the modal
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();  // Prevent the click from triggering exam list toggle
+                    openModal(paper);
+                });
+
+                // Append paper title and button to paperItem
+                paperItem.appendChild(paperTitle);
+                paperItem.appendChild(button);
+                paperList.appendChild(paperItem);
+            });
+
+            // Append the paper list to the exam body
+            examBody.appendChild(paperList);
+
+            // Append the header and body to the exam item
+            examItem.appendChild(examHeader);
+            examItem.appendChild(examBody);
+
+            // Add a click event to toggle visibility of exam papers (only when clicking the header)
+            examHeader.addEventListener('click', () => {
+                const isOpen = examBody.style.display === 'block';
+                examBody.style.display = isOpen ? 'none' : 'block';
+                examHeader.querySelector('i').classList.toggle('fa-chevron-up');
+                examHeader.querySelector('i').classList.toggle('fa-chevron-down');
+            });
+
+            // Add the exam item to the list
+            examList.appendChild(examItem);
+        });
+    }
+
+    // Modal functionality
+    const modal = document.getElementById('modal');
+    const closeBtn = document.querySelector('.close');
+    const playBtn = document.getElementById('playBtn');
+    const playCbtBtn = document.getElementById('playCbtBtn');
+    let currentPaper = null;
+
+    function openModal(paper) {
+        currentPaper = paper;
+        document.getElementById('modal-title').innerText = paper.title;
+
+        // Set the links for the buttons
+        playBtn.onclick = () => {
+            window.location.href = `play.html?title=${encodeURIComponent(paper.title)}&metaId=${encodeURIComponent(paper.metaId)}`;
+        };
+
+        playCbtBtn.onclick = () => {
+            window.location.href = `playcbt.html?title=${encodeURIComponent(paper.title)}&metaId=${encodeURIComponent(paper.metaId)}`;
+        };
+
+        // Show the modal
+        modal.style.display = "block";
+    }
+
+    // Close the modal
+    closeBtn.onclick = () => {
+        modal.style.display = "none";
+    };
+
+    // Close the modal if the user clicks anywhere outside the modal
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+</script>
+</body>
+</html>
