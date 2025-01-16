@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Game</title>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        main {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .question-detail {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            font-size: 1.2em;
+        }
+
+        .question-detail h3 {
+            font-size: 1.6em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            margin: 20px 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .options li {
+            background-color: #f9f9f9;
+            padding: 15px 20px;
+            margin: 8px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            border: 2px solid #ddd;
+        }
+
+        .options li:hover {
+            background-color: #e6f7ff;
+            transform: translateY(-5px);
+        }
+
+        .options li.selected {
+            background-color: #c1e7fc;
+        }
+
+        .options li.correct {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .options li.incorrect {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .check-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            cursor: pointer;
+            border-radius: 30px;
+            font-size: 1.2em;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .check-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+
+        .timer {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background-color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            border: 2px solid #ddd;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+        }
+
+        .explanation h4 {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .explanation p {
+            font-size: 1.2em;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .mathjax-inline {
+            display: inline-block;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+
+        .source {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 1em;
+            color: #555;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+        }
+
+        /* Mobile and tablet responsiveness */
+        @media screen and (max-width: 768px) {
+            .question-detail {
+                padding: 15px;
+                max-width: 90%;
+            }
+
+            .options li {
+                font-size: 1.1em;
+                padding: 12px;
+            }
+
+            .check-btn {
+                padding: 10px 20px;
+            }
+
+            .timer {
+                font-size: 1em;
+                top: 10px;
+                right: 10px;
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<main>
+    <div id="question-detail"></div>
+    <div class="timer" id="timer">Time Left: 1:00</div>
+</main>
+
+<div class="source" id="source"></div>
+
+<script>
+    const metaIds = [
+        { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+        { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+        { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+        // Add more metaIds here
+    ];
+
+    let timerInterval;
+
+    // Timer function
+    function startTimer() {
+        let timeLeft = 60; // 1 minute timer
+        timerInterval = setInterval(function () {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+            if (timeLeft === 0) {
+                clearInterval(timerInterval);
+                alert("Time's up! Please select an option.");
+                checkAnswer();  // Automatically check the answer when time runs out
+            }
+            timeLeft--;
+        }, 1000);
+    }
+
+    // Load question details from all metaIds
+    function loadQuestionDetail() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const [subject, chapter, questionId] = urlParams.get('id').split('/');
+
+        let questionFound = false;
+
+        (async function fetchQuestion() {
+            for (let i = 0; i < metaIds.length; i++) {
+                const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaIds[i].id}.json`;
+
+                try {
+                    const response = await fetch(chaptersUrl);
+                    const data = await response.json();
+
+                    let question = {};
+
+                    if (subject === 'biology') {
+                        question = data[0].questions.find(q => q.question_id === questionId);
+                    } else if (subject === 'chemistry') {
+                        question = data[1].questions.find(q => q.question_id === questionId);
+                    } else if (subject === 'physics') {
+                        question = data[2].questions.find(q => q.question_id === questionId);
+                    }
+
+                    if (question) {
+                        questionFound = true;
+                        renderQuestionDetail(question);
+                        startTimer();
+                        // Set source title in the bottom right corner
+                        document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
+                        break; // Stop the loop when the question is found
+                    }
+                } catch (error) {
+                    console.error('Error fetching question data:', error);
+                }
+            }
+
+            if (!questionFound) {
+                document.getElementById('question-detail').innerHTML = '<p>Question not found.</p>';
+            }
+        })();
+    }
+
+    // Render question details in the HTML
+    function renderQuestionDetail(question) {
+        let questionDetailHTML = `
+            <h3>${renderMath(question.content)}</h3>
+            <ul class="options">
+                ${question.options.map((opt, index) => 
+                    `<li data-option="${opt.identifier}" id="option${index}">
+                        ${String.fromCharCode(65 + index)}. ${renderMath(opt.content)}
+                     </li>`
+                ).join('')}
+            </ul>
+            <button class="check-btn" onclick="checkAnswer('${question.question_id}')">Check Answer</button>
+            <div class="explanation" id="explanation">
+                <h4>Explanation:</h4>
+                <p>${renderMath(question.explanation)}</p>
+            </div>
+        `;
+
+        document.getElementById('question-detail').innerHTML = questionDetailHTML;
+
+        // Add event listeners to options
+        document.querySelectorAll('.options li').forEach(option => {
+            option.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+    }
+
+    // Render LaTeX with MathJax
+    function renderMath(text) {
+        return `<span class="mathjax-inline">${text}</span>`;
+    }
+
+    // Check the answer when the button is clicked
+    function checkAnswer() {
+        let selectedOption = document.querySelector('.options li.selected');
+        if (!selectedOption) {
+            alert("Please select an option.");
+            return;
+        }
+
+        let correctAnswer = 'A';  // Replace with logic to check actual correct answer
+        let selectedAnswer = selectedOption.getAttribute('data-option');
+
+        if (selectedAnswer === correctAnswer) {
+            selectedOption.classList.add('correct');
+        } else {
+            selectedOption.classList.add('incorrect');
+        }
+
+        // Show explanation
+        document.getElementById('explanation').style.display = 'block';
+    }
+
+    // Initialize the quiz
+    window.onload = loadQuestionDetail;
+</script>
+
+</body>
+</html>
