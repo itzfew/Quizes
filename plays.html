@@ -77,14 +77,12 @@
             }, 1000);
         }
 
-        function renderMath(input) {
-            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            }).replace(/\$(.*?)\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-            });
-        }
-
+        // Render LaTeX using MathJax
+    function renderMath(input) {
+        return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+            return `<span class="mathjax-inline">$$${p1}$$</span>`;
+        });
+    }
         function displayCurrentQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
