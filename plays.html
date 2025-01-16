@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Game</title>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
+    
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="logo">
+            <!-- Logo with provided image URL -->
+            <img src="https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/img/pyq.png" alt="Logo" width="40" height="40"> <!-- Image size 40x40px -->
+            <h1 id="quiz-title-header">Quizes</h1> <!-- Quiz title will be injected here -->
+        </div>
+        <div class="time" id="timer">00:00</div>
+    </header>
+  <div class="quiz-title" id="quiz-title"></div>
+    <select id="subject-dropdown"></select>
+    <div id="quiz-container"></div>
+
+    <script>
+        let currentQuestionIndex = 0;
+        let quizData = [];
+        const urlParams = new URLSearchParams(window.location.search);
+        const title = urlParams.get('title');
+        const metaId = urlParams.get('metaId');
+
+        if (title) {
+            document.getElementById('quiz-title').textContent = title;
+            document.getElementById('quiz-title-header').textContent = title; // Set title in header
+        }
+
+        const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
+
+        fetch(jsonUrl)
+            .then(response => response.json())
+            .then(data => {
+                quizData = data;
+                populateSubjectDropdown();
+                displayCurrentQuestion();
+            })
+            .catch(error => console.error('Error fetching the JSON data:', error));
+
+        function populateSubjectDropdown() {
+            const subjectDropdown = document.getElementById('subject-dropdown');
+            quizData.forEach((subject, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = subject.title;
+                subjectDropdown.appendChild(option);
+            });
+
+            subjectDropdown.onchange = () => {
+                currentQuestionIndex = 0;
+                displayCurrentQuestion();
+            };
+        }
+
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let missedAnswers = 0;
+        let startTime = new Date();
+        let timerInterval;
+
+        function startTimer() {
+            timerInterval = setInterval(function () {
+                const elapsedTime = new Date() - startTime;
+                const minutes = Math.floor(elapsedTime / 60000);
+                const seconds = Math.floor((elapsedTime % 60000) / 1000);
+                document.getElementById('timer').textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function renderMath(input) {
+            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            }).replace(/\$(.*?)\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
+            });
+        }
+
+        function displayCurrentQuestion() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+            const question = subject.questions[currentQuestionIndex];
+
+            totalQuestions = subject.questions.length;
+
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question';
+
+            const questionNumber = document.createElement('div');
+            questionNumber.className = 'question-number';
+            questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
+            questionElement.appendChild(questionNumber);
+
+            const questionContent = document.createElement('div');
+            questionContent.className = 'question-content';
+            questionContent.innerHTML = renderMath(question.content);
+            questionElement.appendChild(questionContent);
+
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options';
+
+            question.options.forEach(option => {
+                const optionItem = document.createElement('li');
+                const optionLabel = document.createElement('label');
+                const optionInput = document.createElement('input');
+
+                optionInput.type = 'radio';
+                optionInput.name = `question${question.question_id}`;
+                optionInput.value = option.identifier;
+
+                optionLabel.appendChild(optionInput);
+                optionLabel.innerHTML += renderMath(option.content);
+                optionItem.appendChild(optionLabel);
+                optionsList.appendChild(optionItem);
+            });
+
+            questionElement.appendChild(optionsList);
+
+            const explanationButton = document.createElement('button');
+            explanationButton.className = 'explanation-button';
+            explanationButton.textContent = 'View Explanation';
+            explanationButton.onclick = () => toggleExplanation(questionElement);
+            questionElement.appendChild(explanationButton);
+
+            const explanationContent = document.createElement('div');
+            explanationContent.className = 'explanation-content';
+            explanationContent.innerHTML = `Explanation: ${question.explanation ? renderMath(question.explanation) : 'No explanation available.'}`;
+            questionElement.appendChild(explanationContent);
+
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit';
+            submitButton.onclick = () => submitAnswer(questionElement, question, submitButton);
+            questionElement.appendChild(submitButton);
+
+            const nextButton = document.createElement('button');
+            nextButton.className = 'next-button';
+            nextButton.textContent = 'Next';
+            nextButton.onclick = () => nextQuestion();
+            questionElement.appendChild(nextButton);
+
+            quizContainer.appendChild(questionElement);
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Ensure MathJax renders the math
+        }
+
+        function submitAnswer(questionElement, question, submitButton) {
+            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+            const feedback = document.createElement('div');
+            feedback.className = 'correct-answer';
+
+            const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+            const correctOptionValue = question.correct_options[0];
+
+            if (selectedOption) {
+                const selectedOptionValue = selectedOption.value;
+
+                if (selectedOptionValue === correctOptionValue) {
+                    correctAnswers++;
+                    feedback.innerHTML = "You are correct!";
+                    feedback.style.color = 'green';
+                } else {
+                    incorrectAnswers++;
+                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
+                    feedback.style.color = 'red';
+                }
+            } else {
+                missedAnswers++;
+                feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
+                feedback.style.color = 'red';
+            }
+
+            questionElement.appendChild(feedback);
+
+            options.forEach(option => {
+                option.disabled = true;
+                const optionItem = option.closest('li');
+                if (option.value === correctOptionValue) {
+                    optionItem.style.backgroundColor = 'green';
+                    optionItem.style.color = 'white';
+                } else if (option.checked) {
+                    optionItem.style.backgroundColor = 'red';
+                    optionItem.style.color = 'white';
+                }
+            });
+
+            submitButton.style.display = 'none';
+            questionElement.querySelector('.next-button').style.display = 'block';
+            questionElement.querySelector('.explanation-button').style.display = 'block';
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Ensure MathJax re-renders the math
+        }
+
+        function toggleExplanation(questionElement) {
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            explanationContent.classList.toggle('open');
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                displayCurrentQuestion();
+            } else {
+                clearInterval(timerInterval); // Stop the timer when quiz ends
+                alert("You've completed the quiz!");
+            }
+        }
+
+        // Start timer when quiz starts
+        startTimer();
+
+        // Prevent page refresh or navigation
+        window.onbeforeunload = function (event) {
+            return "Are you sure you want to leave? Your progress may be lost.";
+        };
+    </script>
+</body>
+</html>
