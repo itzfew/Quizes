@@ -24,7 +24,7 @@
             // Add more metaId data as needed
         ];
 
-        let currentMetaId, currentQuestionIndex, questionsData = [], currentSubjectIndex = 0;
+        let currentMetaId, currentQuestionIndex, questionsData = [];
 
         function loadQuestionDetail() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -49,21 +49,14 @@
                 const data = await response.json();
                 questionsData = data[0].questions; // Assuming questions are in the first array
 
-                // Load all questions from the current subject
-                loadCurrentQuestion();
+                if (questionsData.length > 0 && currentQuestionIndex < questionsData.length) {
+                    renderQuestionDetail(questionsData[currentQuestionIndex]);
+                    startTimer();
+                } else {
+                    document.getElementById('question-detail').innerHTML = '<p>No questions found for this Meta ID or invalid question index.</p>';
+                }
             } catch (error) {
                 console.error('Error fetching question data:', error);
-            }
-        }
-
-        // Load the current question based on index and subject
-        function loadCurrentQuestion() {
-            const currentSubject = questionsData[currentSubjectIndex];
-            if (currentSubject && currentQuestionIndex < currentSubject.questions.length) {
-                renderQuestionDetail(currentSubject.questions[currentQuestionIndex]);
-                startTimer();
-            } else {
-                document.getElementById('question-detail').innerHTML = '<p>No questions found for this Meta ID or invalid question index.</p>';
             }
         }
 
@@ -99,7 +92,7 @@
             });
 
             // Check for saved answer in localStorage
-            const savedAnswer = localStorage.getItem(`answer-${currentMetaId}-${currentSubjectIndex}-${currentQuestionIndex}`);
+            const savedAnswer = localStorage.getItem(`answer-${currentMetaId}-${currentQuestionIndex}`);
             if (savedAnswer) {
                 document.querySelector(`#option${savedAnswer}`).classList.add('selected');
             }
@@ -114,7 +107,7 @@
 
         // Save selected answer to localStorage
         function saveAnswer(optionId) {
-            localStorage.setItem(`answer-${currentMetaId}-${currentSubjectIndex}-${currentQuestionIndex}`, optionId);
+            localStorage.setItem(`answer-${currentMetaId}-${currentQuestionIndex}`, optionId);
         }
 
         // Check and display the correct answer
@@ -125,7 +118,7 @@
                 return;
             }
 
-            const correctAnswer = getCorrectAnswer(currentMetaId, currentSubjectIndex, currentQuestionIndex);
+            const correctAnswer = getCorrectAnswer(currentMetaId, currentQuestionIndex);
             const options = document.querySelectorAll('.options li');
 
             options.forEach(option => {
@@ -142,7 +135,7 @@
         }
 
         // Get correct answer based on the question ID (example logic)
-        function getCorrectAnswer(metaId, subjectIndex, questionIndex) {
+        function getCorrectAnswer(metaId, questionIndex) {
             return 'A'; // Placeholder for correct answer, adjust according to actual data
         }
 
@@ -158,20 +151,24 @@
             // Check the answer before proceeding to the next question
             checkAnswer();
 
-            // Get the next question from the same subject
-            currentQuestionIndex += 1; // Move to the next question
-
-            // Check if we need to move to the next subject
-            if (currentQuestionIndex >= questionsData[currentSubjectIndex].questions.length) {
-                currentQuestionIndex = 0; // Reset question index
-                currentSubjectIndex += 1; // Move to next subject
-                if (currentSubjectIndex >= questionsData.length) {
-                    alert("You have completed all subjects.");
-                    return;
-                }
+            // Get the next question from the same metaId
+            const nextQuestion = getNextQuestion();
+            if (nextQuestion) {
+                const newUrl = `?title=${metaIds.find(meta => meta.id === currentMetaId).title}&metaId=${currentMetaId}&index=${nextQuestion.index}`;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+                currentQuestionIndex = nextQuestion.index - 1; // Update question index
+                loadQuestionDetail();
             }
+        }
 
-            loadCurrentQuestion(); // Load the next question
+        // Get the next question from the same metaId
+        function getNextQuestion() {
+            const currentIndex = currentQuestionIndex;
+            if (currentIndex === -1 || currentIndex === questionsData.length - 1) {
+                return questionsData[0]; // If it's the last question or not found, go to the first question
+            } else {
+                return questionsData[currentIndex + 1];
+            }
         }
 
         // Load the question detail on page load
