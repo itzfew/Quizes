@@ -1,5 +1,4 @@
-
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,26 +17,39 @@
     </main>
 
     <script>
-    const metaIds = [
-        { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
-        { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-        { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
-        // Add more metaId data as needed
-    ];
-
     let currentMetaId, currentQuestionIndex = 0, questionsData = [];
+    let examData = [];
+
+    // Fetch exam data from the JSON file
+    async function fetchExamData() {
+        const examsUrl = 'https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json';
+        try {
+            const response = await fetch(examsUrl);
+            examData = await response.json();
+            loadQuestionDetail();
+        } catch (error) {
+            console.error('Error fetching exam data:', error);
+        }
+    }
 
     function loadQuestionDetail() {
         const urlParams = new URLSearchParams(window.location.search);
-        currentMetaId = urlParams.get('metaId').split('/')[0]; // Extract metaId
-        currentQuestionIndex = parseInt(urlParams.get('index'), 10) - 1; // Extract question index (1-based to 0-based)
+        const examGroup = urlParams.get('examGroup'); // Extract exam group
+        const examTitle = urlParams.get('examTitle'); // Extract exam title
 
-        const metaData = metaIds.find(meta => meta.id === currentMetaId);
-        if (metaData) {
-            document.getElementById('source').textContent = `Source: ${metaData.title}`;
-            fetchQuestions(metaData.id);
+        // Find the correct paper based on the exam group and title
+        const exam = examData.find(exam => exam.title === examGroup);
+        if (exam) {
+            const paper = exam.papers.find(paper => paper.title === examTitle);
+            if (paper) {
+                currentMetaId = paper.metaId;
+                document.getElementById('source').textContent = `Source: ${paper.title} (${paper.year})`;
+                fetchQuestions(currentMetaId);
+            } else {
+                document.getElementById('question-detail').innerHTML = '<p>Invalid exam paper.</p>';
+            }
         } else {
-            document.getElementById('question-detail').innerHTML = '<p>Invalid Meta ID.</p>';
+            document.getElementById('question-detail').innerHTML = '<p>Invalid exam group.</p>';
         }
     }
 
@@ -161,7 +173,7 @@
             currentQuestionIndex = 0; // Reset to first question, or show quiz completion
         }
 
-        const newUrl = `?title=${metaIds.find(meta => meta.id === currentMetaId).title}&metaId=${currentMetaId}&index=${currentQuestionIndex + 1}`;
+        const newUrl = `?title=${examGroup}&examGroup=${examGroup}&examTitle=${examTitle}&metaId=${currentMetaId}&index=${currentQuestionIndex + 1}`;
         window.history.pushState({ path: newUrl }, '', newUrl);
 
         // Load the next question
@@ -169,25 +181,29 @@
     }
 
     // Load the question detail on page load
-    window.onload = loadQuestionDetail;
+    window.onload = fetchExamData;
 
     // Handle back button navigation
     function goBack() {
         const currentUrl = window.location.href;
         const urlParams = new URLSearchParams(window.location.search);
-        const metaId = urlParams.get('metaId');
+        const examGroup = urlParams.get('examGroup');
+        const examTitle = urlParams.get('examTitle');
 
-        if (metaId) {
-            const metaData = metaIds.find(meta => meta.id === metaId);
-            if (metaData) {
-                const newUrl = `subject.html?title=${metaData.title}&metaId=${metaId}`;
-                window.location.href = newUrl;
+        if (examGroup && examTitle) {
+            const exam = examData.find(exam => exam.title === examGroup);
+            if (exam) {
+                const paper = exam.papers.find(paper => paper.title === examTitle);
+                if (paper) {
+                    const newUrl = `subject.html?examGroup=${examGroup}&examTitle=${examTitle}`;
+                    window.location.href = newUrl;
+                }
             }
         } else {
-            console.error('No "metaId" parameter found in the URL.');
+            console.error('No valid parameters found in the URL.');
         }
     }
-</script>
+    </script>
 
 </body>
 </html>
