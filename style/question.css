@@ -13,9 +13,9 @@ body {
     overflow-x: hidden;
 }
 main {
-    top:20px;
     background-color: white;
     overflow-x: auto;
+    margin-top: 20px; /* Adds 20px gap at the top */
 }
 
 .question-detail {
