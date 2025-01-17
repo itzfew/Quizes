@@ -66,27 +66,43 @@ main {
     color: white;
 }
 
+/* .check-btn */
 .check-btn {
     position: fixed;
-    background-color: #17a2b8;
     bottom: 10px;
-    color: black; /* Black text */
+    left: 10%; /* Position the button from the left */
+    background-color: #17a2b8; /* Blue background */
+    color: white; /* White text */
     border: 2px solid black; /* Black border */
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    z-index: 1000;
+    padding: 12px 24px; /* Top and bottom padding, left and right padding */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Bold text */
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: all 0.3s ease; /* Smooth hover effect */
+    z-index: 1000; /* Ensure it's above other elements */
 }
 
 .check-btn:hover {
     background-color: black; /* Black background on hover */
     color: white; /* White text on hover */
 }
+
+.check-btn:active {
+    background-color: #155d63; /* Darker blue when clicked */
+    transform: translateY(0); /* Reset the lift effect */
+}
+
+.check-btn:focus {
+    outline: none; /* Remove outline on focus */
+}
+
+/* #next-btn */
 #next-btn {
-    background-color: #28a745; /* Green background */
+    position: fixed;
+    bottom: 10px;
+    right: 10%; /* Position the button from the right */
+    background-color: #f39c12; /* Orange background */
     color: white; /* White text */
     border: none; /* Remove border */
     padding: 12px 24px; /* Top and bottom padding, left and right padding */
@@ -94,23 +110,25 @@ main {
     font-weight: bold; /* Bold text */
     border-radius: 8px; /* Rounded corners */
     cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover effect */
+    transition: all 0.3s ease; /* Smooth hover effect */
     z-index: 1000; /* Ensure it's above other elements */
 }
 
 #next-btn:hover {
-    background-color: #218838; /* Darker green on hover */
+    background-color: #e67e22; /* Darker orange on hover */
     transform: translateY(-3px); /* Slight lift effect */
 }
 
 #next-btn:active {
-    background-color: #1e7e34; /* Even darker green when clicked */
+    background-color: #d35400; /* Even darker orange when clicked */
     transform: translateY(0); /* Reset the lift effect */
 }
 
 #next-btn:focus {
     outline: none; /* Remove outline on focus */
 }
+
+
 .timer {
     position: fixed;
     bottom: 10px;
