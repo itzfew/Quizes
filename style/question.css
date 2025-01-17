@@ -12,6 +12,17 @@ body {
     width: 100%;
     overflow-x: hidden;
 }
+main {
+    margin: 0;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100vw; /* Full viewport width */
+    max-width: 100%; /* Ensures it doesn't go beyond the screen */
+    overflow-x: auto;
+}
 
 
 .question-detail {
