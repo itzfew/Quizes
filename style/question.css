@@ -66,14 +66,14 @@
         }
 
         .check-btn {
-            background-color: white; /* White background */
+   background-color: #17a2b8;
     color: black; /* Black text */
     border: 2px solid black; /* Black border */
     padding: 10px 20px; /* Padding for the button */
     font-size: 16px; /* Font size */
     font-weight: bold; /* Bold text */
     cursor: pointer; /* Pointer cursor on hover */
-    border-radius: 5px; /* Rounded corners */
+    border-radius: 10px; /* Rounded corners */
     transition: all 0.3s ease; /* Smooth transition on hover */
         }
 
