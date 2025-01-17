@@ -94,11 +94,6 @@ main {
     color: white; /* White text on hover */
 }
 
-.check-btn:active {
-    background-color: #155d63; /* Darker blue when clicked */
-    transform: translateY(0); /* Reset the lift effect */
-}
-
 .check-btn:focus {
     outline: none; /* Remove outline on focus */
 }
@@ -123,11 +118,6 @@ main {
 #next-btn:hover {
     background-color: #e67e22; /* Darker orange on hover */
     transform: translateY(-3px); /* Slight lift effect */
-}
-
-#next-btn:active {
-    background-color: #d35400; /* Even darker orange when clicked */
-    transform: translateY(0); /* Reset the lift effect */
 }
 
 #next-btn:focus {
