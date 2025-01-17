@@ -50,11 +50,13 @@
     { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
     { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
     { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
-];
-    let timerInterval;
-    let currentQuestionId;
-    let subject, chapter;
-    let questionsData = [];
+]
+        
+// Initialize variables
+let timerInterval;
+let currentQuestionId;
+let subject, chapter;
+let questionsData = [];
 
 // Timer function with automatic submit and check
 function startTimer() {
@@ -72,160 +74,167 @@ function startTimer() {
     }, 1000);
 }
 
-    // Load question details from all metaIds
-    function loadQuestionDetail() {
-        const urlParams = new URLSearchParams(window.location.search);
-        [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
+// Load question details from all metaIds
+function loadQuestionDetail() {
+    const urlParams = new URLSearchParams(window.location.search);
+    [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
 
-        let questionFound = false;
+    let questionFound = false;
 
-        (async function fetchQuestion() {
-            for (let i = 0; i < metaIds.length; i++) {
-                const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaIds[i].id}.json`;
+    (async function fetchQuestion() {
+        for (let i = 0; i < metaIds.length; i++) {
+            const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaIds[i].id}.json`;
 
-                try {
-                    const response = await fetch(chaptersUrl);
-                    const data = await response.json();
+            try {
+                const response = await fetch(chaptersUrl);
+                const data = await response.json();
 
-                    let question = {};
+                let question = {};
 
-                    if (subject === 'biology') {
-                        questionsData = data[0].questions;
-                    } else if (subject === 'chemistry') {
-                        questionsData = data[1].questions;
-                    } else if (subject === 'physics') {
-                        questionsData = data[2].questions;
-                    }
-
-                    if (questionsData.length > 0) {
-                        questionFound = true;
-                        renderQuestionDetail(questionsData.find(q => q.question_id === currentQuestionId));
-                        startTimer();
-                        document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
-                        break;
-                    }
-                } catch (error) {
-                    console.error('Error fetching question data:', error);
+                if (subject === 'biology') {
+                    questionsData = data[0].questions.filter(q => q.chapter === chapter && q.subject === subject);
+                } else if (subject === 'chemistry') {
+                    questionsData = data[1].questions.filter(q => q.chapter === chapter && q.subject === subject);
+                } else if (subject === 'physics') {
+                    questionsData = data[2].questions.filter(q => q.chapter === chapter && q.subject === subject);
                 }
+
+                if (questionsData.length > 0) {
+                    questionFound = true;
+                    renderQuestionDetail(questionsData.find(q => q.question_id === currentQuestionId));
+                    startTimer();
+                    document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
+                    break;
+                }
+            } catch (error) {
+                console.error('Error fetching question data:', error);
             }
-
-            if (!questionFound) {
-                document.getElementById('question-detail').innerHTML = '<p>Question not found.</p>';
-            }
-        })();
-    }
-
-    // Render question details in the HTML
-    function renderQuestionDetail(question) {
-        let questionDetailHTML = `
-            <h3>${renderMath(question.content)}</h3>
-            <ul class="options">
-                ${question.options.map((opt, index) => 
-                    `<li data-option="${opt.identifier}" id="option${index}">
-                        ${String.fromCharCode(65 + index)}. ${renderMath(opt.content)}
-                     </li>`
-                ).join('')}
-            </ul>
-            <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
-            <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
-            <div class="explanation" id="explanation">
-                <h4>Explanation:</h4>
-                <p>${renderMath(question.explanation)}</p>
-            </div>
-            
-        `;
-
-        document.getElementById('question-detail').innerHTML = questionDetailHTML;
-
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-
-        // Attach event listeners to options
-        const options = document.querySelectorAll('.options li');
-        options.forEach(option => {
-            option.addEventListener('click', function () {
-                options.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-                saveAnswer(option.dataset.option);
-            });
-        });
-
-        // Check for saved answer in localStorage
-        const savedAnswer = localStorage.getItem(`answer-${currentQuestionId}`);
-        if (savedAnswer) {
-            document.querySelector(`#option${savedAnswer}`).classList.add('selected');
-        }
-    }
-
-    // Render LaTeX using MathJax
-    function renderMath(input) {
-        return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-            return `<span class="mathjax-inline">$$${p1}$$</span>`;
-        });
-    }
-
-    // Save selected answer to localStorage
-    function saveAnswer(optionId) {
-        localStorage.setItem(`answer-${currentQuestionId}`, optionId);
-    }
-
-    // Check and display the correct answer
-    function checkAnswer() {
-        const selectedOption = document.querySelector('.options li.selected');
-        if (!selectedOption) {
-            alert("Please select an option.");
-            return;
         }
 
-        const correctAnswer = getCorrectAnswer(currentQuestionId);
-        const options = document.querySelectorAll('.options li');
+        if (!questionFound) {
+            document.getElementById('question-detail').innerHTML = '<p>Question not found.</p>';
+        }
+    })();
+}
 
-        options.forEach(option => {
-            option.classList.remove('correct', 'incorrect');
-            if (option.dataset.option === correctAnswer) {
-                option.classList.add('correct');
-            } else if (option === selectedOption) {
-                option.classList.add('incorrect');
-            }
+// Render question details in the HTML
+function renderQuestionDetail(question) {
+    let questionDetailHTML = `
+        <h3>${renderMath(question.content)}</h3>
+        <ul class="options">
+            ${question.options.map((opt, index) => 
+                `<li data-option="${opt.identifier}" id="option${index}">
+                    ${String.fromCharCode(65 + index)}. ${renderMath(opt.content)}
+                 </li>`
+            ).join('')}
+        </ul>
+        <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
+        <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
+        <div class="explanation" id="explanation">
+            <h4>Explanation:</h4>
+            <p>${renderMath(question.explanation)}</p>
+        </div>
+    `;
+
+    document.getElementById('question-detail').innerHTML = questionDetailHTML;
+
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+    // Attach event listeners to options
+    const options = document.querySelectorAll('.options li');
+    options.forEach(option => {
+        option.addEventListener('click', function () {
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            saveAnswer(option.dataset.option);
         });
+    });
 
-        // Show explanation after checking the answer
-        document.getElementById('explanation').style.display = 'block';
+    // Check for saved answer in localStorage
+    const savedAnswer = localStorage.getItem(`answer-${currentQuestionId}`);
+    if (savedAnswer) {
+        document.querySelector(`#option${savedAnswer}`).classList.add('selected');
+    }
+}
+
+// Render LaTeX using MathJax
+function renderMath(input) {
+    return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+    });
+}
+
+// Save selected answer to localStorage
+function saveAnswer(optionId) {
+    localStorage.setItem(`answer-${currentQuestionId}`, optionId);
+}
+
+// Check and display the correct answer
+function checkAnswer() {
+    const selectedOption = document.querySelector('.options li.selected');
+    if (!selectedOption) {
+        alert("Please select an option.");
+        return;
     }
 
-    // Get correct answer based on the question ID (example logic)
-    function getCorrectAnswer(questionId) {
-        return 'A'; // Placeholder for correct answer
-    }
+    const correctAnswer = getCorrectAnswer(currentQuestionId);
+    const options = document.querySelectorAll('.options li');
+
+    options.forEach(option => {
+        option.classList.remove('correct', 'incorrect');
+        if (option.dataset.option === correctAnswer) {
+            option.classList.add('correct');
+        } else if (option === selectedOption) {
+            option.classList.add('incorrect');
+        }
+    });
+
+    // Show explanation after checking the answer
+    document.getElementById('explanation').style.display = 'block';
+}
+
+// Get correct answer based on the question ID (example logic)
+function getCorrectAnswer(questionId) {
+    return 'A'; // Placeholder for correct answer
+}
+
 // Load next question and update URL
-    function loadNextQuestion() {
-        const selectedOption = document.querySelector('.options li.selected');
-        
-        // Force check answer if not already selected
-        if (!selectedOption) {
-            alert("You need to select an answer before proceeding.");
-            return;
-        }
-
-        // Check the answer before proceeding to the next question
-        checkAnswer();
-
-        const randomQuestion = getRandomQuestion();
-        if (randomQuestion) {
-            const newUrl = `?id=${subject}/${chapter}/${randomQuestion.question_id}`;
-            window.history.pushState({ path: newUrl }, '', newUrl);
-            currentQuestionId = randomQuestion.question_id;
-            loadQuestionDetail();
-        }
+function loadNextQuestion() {
+    const selectedOption = document.querySelector('.options li.selected');
+    
+    // Force check answer if not already selected
+    if (!selectedOption) {
+        alert("You need to select an answer before proceeding.");
+        return;
     }
 
-    // Get a random question from the list
-    function getRandomQuestion() {
-        return questionsData[Math.floor(Math.random() * questionsData.length)];
-    }
+    // Check the answer before proceeding to the next question
+    checkAnswer();
 
-    // Load the question detail on page load
-    window.onload = loadQuestionDetail;
+    // Get the next question from the same chapter and subject
+    const nextQuestion = getNextQuestion();
+    if (nextQuestion) {
+        const newUrl = `?id=${subject}/${chapter}/${nextQuestion.question_id}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+        currentQuestionId = nextQuestion.question_id;
+        loadQuestionDetail();
+    }
+}
+
+// Get the next question from the same chapter and subject
+function getNextQuestion() {
+    const currentIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
+    if (currentIndex === -1 || currentIndex === questionsData.length - 1) {
+        return questionsData[0]; // If it's the last question or not found, go to the first question
+    } else {
+        return questionsData[currentIndex + 1];
+    }
+}
+
+// Load the question detail on page load
+window.onload = loadQuestionDetail;
 </script>
+
 
 </body>
 </html>
