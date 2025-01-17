@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Detail</title>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="stylesheet" href="style/question.css">
+</head>
+<body>
+    <!-- Back Button to Go to Index Page -->
+    <button class="back-btn" onclick="goBack()">Back</button>
+    <main>
+        <div class="source" id="source"></div>
+        <div id="question-detail"></div>
+        <div class="timer" id="timer">Time: 2:00</div>
+    </main>
+
+    <script>
+        const metaIds = [
+            { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+            { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+            { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+            { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
+            { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
+            // Add all your metaIds here...
+        ];
+
+        // Initialize variables
+        let timerInterval;
+        let currentQuestionId;
+        let currentMetaId;
+        let questionsData = [];
+
+        // Timer function with automatic submit and check
+        function startTimer() {
+            let timeLeft = 120; // 2-minute timer
+            timerInterval = setInterval(function () {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('timer').textContent = `Time: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+                if (timeLeft === 0) {
+                    clearInterval(timerInterval);
+                    alert("Time's up! Your answer will be submitted.");
+                    checkAnswer();  // Automatically check the answer when time runs out
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        // Load all questions by metaId from URL
+        function loadQuestionDetail() {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentMetaId = urlParams.get('metaId'); // Get metaId from URL
+            let questionFound = false;
+
+            // Fetch questions for the specific metaId
+            (async function fetchQuestion() {
+                for (let i = 0; i < metaIds.length; i++) {
+                    if (metaIds[i].id === currentMetaId) {
+                        const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaIds[i].id}.json`;
+
+                        try {
+                            const response = await fetch(chaptersUrl);
+                            const data = await response.json();
+
+                            // Assuming the data contains questions for all subjects
+                            questionsData = [...data[0].questions, ...data[1].questions, ...data[2].questions]; // Merge all subjects
+                            renderQuestionDetail(questionsData[0]); // Show the first question
+                            startTimer();
+                            document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
+                            questionFound = true;
+                            break;
+                        } catch (error) {
+                            console.error('Error fetching question data:', error);
+                        }
+                    }
+                }
+
+                if (!questionFound) {
+                    document.getElementById('question-detail').innerHTML = '<p>Questions not found.</p>';
+                }
+            })();
+        }
+
+        // Render question details in the HTML
+        function renderQuestionDetail(question) {
+            let questionDetailHTML = `
+                <h3>${renderMath(question.content)}</h3>
+                <ul class="options">
+                    ${question.options.map((opt, index) => 
+                        `<li data-option="${opt.identifier}" id="option${index}">
+                            ${String.fromCharCode(65 + index)}. ${renderMath(opt.content)}
+                         </li>`
+                    ).join('')}
+                </ul>
+                <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
+                <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
+                <div class="explanation" id="explanation">
+                    <h4>Explanation:</h4>
+                    <p>${renderMath(question.explanation)}</p>
+                </div>
+            `;
+            document.getElementById('question-detail').innerHTML = questionDetailHTML;
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+            // Attach event listeners to options
+            const options = document.querySelectorAll('.options li');
+            options.forEach(option => {
+                option.addEventListener('click', function () {
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    saveAnswer(option.dataset.option);
+                });
+            });
+
+            // Check for saved answer in localStorage
+            const savedAnswer = localStorage.getItem(`answer-${currentQuestionId}`);
+            if (savedAnswer) {
+                document.querySelector(`#option${savedAnswer}`).classList.add('selected');
+            }
+        }
+
+        // Render LaTeX using MathJax
+        function renderMath(input) {
+            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            });
+        }
+
+        // Save selected answer to localStorage
+        function saveAnswer(optionId) {
+            localStorage.setItem(`answer-${currentQuestionId}`, optionId);
+        }
+
+        // Check and display the correct answer
+        function checkAnswer() {
+            const selectedOption = document.querySelector('.options li.selected');
+            if (!selectedOption) {
+                alert("Please select an option.");
+                return;
+            }
+
+            const correctAnswer = getCorrectAnswer(currentQuestionId);
+            const options = document.querySelectorAll('.options li');
+
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+                if (option.dataset.option === correctAnswer) {
+                    option.classList.add('correct');
+                } else if (option === selectedOption) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            // Show explanation after checking the answer
+            document.getElementById('explanation').style.display = 'block';
+        }
+
+        // Get correct answer based on the question ID (example logic)
+        function getCorrectAnswer(questionId) {
+            return 'A'; // Placeholder for correct answer
+        }
+
+        // Load next question and update URL
+        function loadNextQuestion() {
+            const selectedOption = document.querySelector('.options li.selected');
+
+            // Force check answer if not already selected
+            if (!selectedOption) {
+                alert("You need to select an answer before proceeding.");
+                return;
+            }
+
+            // Check the answer before proceeding to the next question
+            checkAnswer();
+
+            // Get the next question from the same metaId
+            const nextQuestion = getNextQuestion();
+            if (nextQuestion) {
+                const newUrl = `?metaId=${currentMetaId}&questionId=${nextQuestion.question_id}`;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+                currentQuestionId = nextQuestion.question_id;
+                loadQuestionDetail();
+            }
+        }
+
+        // Get the next question from the same metaId
+        function getNextQuestion() {
+            const currentIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
+            if (currentIndex === -1 || currentIndex === questionsData.length - 1) {
+                return questionsData[0]; // If it's the last question or not found, go to the first question
+            } else {
+                return questionsData[currentIndex + 1];
+            }
+        }
+
+        // Load the question detail on page load
+        window.onload = loadQuestionDetail;
+    </script>
+
+    <script>
+        function goBack() {
+            // Get the current URL
+            const currentUrl = window.location.href;
+
+            // Extract the part after '?metaId='
+            const urlParams = new URLSearchParams(window.location.search);
+            const metaId = urlParams.get('metaId'); // e.g., '3c48616f-298a-5f69-91d2-bcd59444c455'
+
+            if (metaId) {
+                // Construct the new URL
+                const newUrl = `subject.html?metaId=${metaId}`;
+
+                // Redirect to the new URL
+                window.location.href = newUrl;
+            } else {
+                console.error('No "metaId" parameter found in the URL.');
+            }
+        }
+    </script>
+
+</body>
+</html>
