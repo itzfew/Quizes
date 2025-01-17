@@ -204,15 +204,41 @@ main {
     border: 1px solid #ddd;
 }
 
-/* Mobile and tablet responsiveness */
+/* Fullscreen and Responsiveness */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
 @media screen and (max-width: 768px) {
     .options li {
         font-size: 1.1em;
         padding: 12px;
     }
 
-    .check-btn {
+    .check-btn, #next-btn {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+
+    .timer, .back-btn {
+        font-size: 14px;
         padding: 10px 20px;
+    }
+}
+
+/* Ensure page loads in full screen */
+@media screen and (min-width: 769px) {
+    html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    main {
+        width: 100%;
+        max-width: 1200px;
     }
 }
 
