@@ -234,6 +234,8 @@ function getNextQuestion() {
 // Load the question detail on page load
 window.onload = loadQuestionDetail;
 </script>
+<button class="back-btn" onclick="goBack()">Back</button>
+
 <script>
 function goBack() {
     // Get the current URL
@@ -250,7 +252,7 @@ function goBack() {
         const chapter = urlParts[1];  // 'biomolecules'
 
         // Construct the new URL
-        const newUrl = `index.html?subject=${subject}&chapter=${chapter}`;
+        const newUrl = `https://quizes.pages.dev/subject.html?subject=${subject}&chapter=${chapter}`;
 
         // Redirect to the new URL
         window.location.href = newUrl;
@@ -259,5 +261,6 @@ function goBack() {
     }
 }
 </script>
+
 </body>
 </html>
