@@ -16,9 +16,8 @@
             overflow-x: auto;
             width: 100%;
         }
-
         .question-detail {
-    margin-bottom: 30px;
+            margin-bottom: 30px;
             padding: 3px;
             border-bottom: 1px solid #ccc;
             overflow-x: auto;
@@ -44,9 +43,6 @@
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 5px;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    white-space: nowrap; /* Prevent the text from wrapping to the next line */
-    word-wrap: normal; /* Prevent text from breaking into new lines */
     max-width: 100%; /* Allow options to take up full width */
         }
 
