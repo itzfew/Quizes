@@ -9,7 +9,7 @@
 </head>
 <body>
     <!-- Back Button to Go to Index Page -->
-    <button class="back-btn" onclick="window.location.href='index.html'">Back</button>
+<button class="back-btn" onclick="goBack()">Back</button>
 <main>
     <div class="source" id="source"></div>
     <div id="question-detail"></div>
@@ -233,8 +233,60 @@ function getNextQuestion() {
 
 // Load the question detail on page load
 window.onload = loadQuestionDetail;
-</script>
+    function goBack() {
+    // Get the current URL
+    const currentUrl = window.location.href;
 
+    // Extract the part after '?id='
+    const urlParams = new URLSearchParams(window.location.search);
+    const questionId = urlParams.get('id');  // e.g., 'biology/biomolecules/1lipxfxx3'
+
+    if (questionId) {
+        // Split the questionId to get subject and chapter
+        const urlParts = questionId.split('/');  // Split by '/'
+        const subject = urlParts[0];  // 'biology'
+        const chapter = urlParts[1];  // 'biomolecules'
+
+        // Construct the new URL
+        const newUrl = `subject.html?subject=${subject}&chapter=${chapter}`;
+
+        // Redirect to the new URL
+        window.location.href = newUrl;
+    } else {
+        console.error('No "id" parameter found in the URL.');
+    }
+}
+    self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request)
+            .then((cachedResponse) => {
+                if (cachedResponse) {
+                    return cachedResponse;
+                }
+                return fetch(event.request).catch(() => {
+                    return new Response('You are offline. Please check your internet connection.', {
+                        status: 503,
+                        statusText: 'Service Unavailable',
+                    });
+                });
+            })
+    );
+});
+
+</script>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch((error) => {
+                    console.log('Service Worker registration failed:', error);
+                });
+        });
+    }
+</script>
 
 </body>
 </html>
