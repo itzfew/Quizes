@@ -198,9 +198,19 @@
     function getCorrectAnswer(questionId) {
         return 'A'; // Placeholder for correct answer
     }
-
-    // Load next question and update URL
+// Load next question and update URL
     function loadNextQuestion() {
+        const selectedOption = document.querySelector('.options li.selected');
+        
+        // Force check answer if not already selected
+        if (!selectedOption) {
+            alert("You need to select an answer before proceeding.");
+            return;
+        }
+
+        // Check the answer before proceeding to the next question
+        checkAnswer();
+
         const randomQuestion = getRandomQuestion();
         if (randomQuestion) {
             const newUrl = `?id=${subject}/${chapter}/${randomQuestion.question_id}`;
