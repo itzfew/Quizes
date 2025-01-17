@@ -67,6 +67,10 @@ main {
 }
 
 .check-btn {
+    position: fixed;
+    bottom: 10px; /* Distance from the bottom of the screen */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust to center the button */
     background-color: #17a2b8;
     color: black; /* Black text */
     border: 2px solid black; /* Black border */
@@ -76,12 +80,14 @@ main {
     cursor: pointer;
     border-radius: 10px;
     transition: all 0.3s ease;
+    z-index: 1000; /* Ensure it stays above other content */
 }
 
 .check-btn:hover {
     background-color: black; /* Black background on hover */
     color: white; /* White text on hover */
 }
+
 
 button {
     background-color: white; /* White background */
