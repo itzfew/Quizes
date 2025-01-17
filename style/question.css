@@ -67,6 +67,7 @@ main {
 }
 
 .check-btn {
+    position: fixed;
     background-color: #17a2b8;
     bottom: 10px;
     color: black; /* Black text */
@@ -86,8 +87,10 @@ main {
 }
 
 button {
+    position: fixed;
     background-color: white; /* White background */
     color: black; /* Black text */
+    bottom: 10px;
     border: 2px solid black; /* Black border */
     padding: 10px 20px;
     font-size: 16px; /* Font size */
@@ -95,6 +98,7 @@ button {
     cursor: pointer; /* Pointer cursor on hover */
     border-radius: 5px; /* Rounded corners */
     transition: all 0.3s ease;
+    z-index: 1000;
 }
 
 button:hover {
