@@ -137,8 +137,8 @@ main {
 /* Timer Button Style */
 .timer {
     position: fixed;
-    top: 10px; /* Position at the top of the screen */
-    right: 10px; /* Position at the right side */
+    top: 1px; /* Position at the top of the screen */
+    right: 1px; /* Position at the right side */
     padding: 10px 15px;
     background-color: #f44336; /* Red background */
     color: white; /* White text */
@@ -150,8 +150,8 @@ main {
 /* Back Button Style */
 .back-btn {
     position: fixed; /* Fixes the button position */
-    top: 10px; /* Position at the top of the screen */
-    left: 10px; /* Position at the left side */
+    top: 1px; /* Position at the top of the screen */
+    left: 1px; /* Position at the left side */
     padding: 10px 15px;
     background-color: #f44336; /* Red background */
     color: white; /* White text */
@@ -193,7 +193,6 @@ main {
 }
 
 .source {
-    position: fixed;
     bottom: 5px;
     left: 5px;
     font-size: 1em;
