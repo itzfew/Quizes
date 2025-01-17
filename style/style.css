@@ -93,9 +93,6 @@ main {
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 5px;
-    overflow-x: auto;
-    white-space: nowrap;
-    word-wrap: normal;
     max-width: 100%;
 }
 
