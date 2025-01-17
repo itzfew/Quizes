@@ -129,11 +129,12 @@
                 ).join('')}
             </ul>
             <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
+            <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
             <div class="explanation" id="explanation">
                 <h4>Explanation:</h4>
                 <p>${renderMath(question.explanation)}</p>
             </div>
-            <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
+            
         `;
 
         document.getElementById('question-detail').innerHTML = questionDetailHTML;
