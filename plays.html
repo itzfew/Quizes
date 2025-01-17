@@ -28,7 +28,7 @@
 
         // Initialize variables
         let timerInterval;
-        let currentQuestionId;
+        let currentQuestionIndex = 0;
         let currentMetaId;
         let questionsData = [];
 
@@ -66,7 +66,7 @@
 
                             // Assuming the data contains questions for all subjects
                             questionsData = [...data[0].questions, ...data[1].questions, ...data[2].questions]; // Merge all subjects
-                            renderQuestionDetail(questionsData[0]); // Show the first question
+                            renderQuestionDetail(questionsData[currentQuestionIndex]); // Show the first question
                             startTimer();
                             document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
                             questionFound = true;
@@ -116,7 +116,7 @@
             });
 
             // Check for saved answer in localStorage
-            const savedAnswer = localStorage.getItem(`answer-${currentQuestionId}`);
+            const savedAnswer = localStorage.getItem(`answer-${question.question_id}`);
             if (savedAnswer) {
                 document.querySelector(`#option${savedAnswer}`).classList.add('selected');
             }
@@ -131,7 +131,7 @@
 
         // Save selected answer to localStorage
         function saveAnswer(optionId) {
-            localStorage.setItem(`answer-${currentQuestionId}`, optionId);
+            localStorage.setItem(`answer-${questionsData[currentQuestionIndex].question_id}`, optionId);
         }
 
         // Check and display the correct answer
@@ -142,7 +142,7 @@
                 return;
             }
 
-            const correctAnswer = getCorrectAnswer(currentQuestionId);
+            const correctAnswer = getCorrectAnswer(questionsData[currentQuestionIndex].question_id);
             const options = document.querySelectorAll('.options li');
 
             options.forEach(option => {
@@ -177,22 +177,11 @@
             checkAnswer();
 
             // Get the next question from the same metaId
-            const nextQuestion = getNextQuestion();
-            if (nextQuestion) {
-                const newUrl = `?metaId=${currentMetaId}&questionId=${nextQuestion.question_id}`;
-                window.history.pushState({ path: newUrl }, '', newUrl);
-                currentQuestionId = nextQuestion.question_id;
-                loadQuestionDetail();
-            }
-        }
-
-        // Get the next question from the same metaId
-        function getNextQuestion() {
-            const currentIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
-            if (currentIndex === -1 || currentIndex === questionsData.length - 1) {
-                return questionsData[0]; // If it's the last question or not found, go to the first question
+            if (currentQuestionIndex < questionsData.length - 1) {
+                currentQuestionIndex++;
+                renderQuestionDetail(questionsData[currentQuestionIndex]);
             } else {
-                return questionsData[currentIndex + 1];
+                alert("You have completed all questions.");
             }
         }
 
