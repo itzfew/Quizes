@@ -85,9 +85,35 @@ main {
     background-color: black; /* Black background on hover */
     color: white; /* White text on hover */
 }
+#next-btn {
+    background-color: #28a745; /* Green background */
+    color: white; /* White text */
+    border: none; /* Remove border */
+    padding: 12px 24px; /* Top and bottom padding, left and right padding */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Bold text */
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover effect */
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+#next-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: translateY(-3px); /* Slight lift effect */
+}
+
+#next-btn:active {
+    background-color: #1e7e34; /* Even darker green when clicked */
+    transform: translateY(0); /* Reset the lift effect */
+}
+
+#next-btn:focus {
+    outline: none; /* Remove outline on focus */
+}
+
 
 button {
-    position: fixed;
     background-color: white; /* White background */
     color: black; /* Black text */
     bottom: 10px;
@@ -98,7 +124,6 @@ button {
     cursor: pointer; /* Pointer cursor on hover */
     border-radius: 5px; /* Rounded corners */
     transition: all 0.3s ease;
-    z-index: 1000;
 }
 
 button:hover {
