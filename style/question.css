@@ -207,12 +207,5 @@ main {
     .check-btn {
         padding: 10px 20px;
     }
-
-    .timer {
-        position: fixed;
-        bottom: 5px;
-        right: 5px;
-        padding: 5px 7px;
-    }
 }
 
