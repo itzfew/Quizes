@@ -1,12 +1,11 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* General Reset for Margin and Padding */
+/* General Reset for Margin and Padding */
 * {
     margin: 0;
     padding: 0;
@@ -16,225 +15,223 @@
 /* Header Section */
 header {
     display: flex;
-    justify-content: space-between; /* Aligns items to both ends */
-    align-items: center; /* Centers vertically */
-    background-color: #2c3e50; /* Dark background */
-    padding: 15px 30px; /* Top/bottom and left/right padding */
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50;
+    padding: 15px 30px;
     color: white;
-    font-family: 'Arial', sans-serif; /* Font style */
+    font-family: 'Arial', sans-serif;
 }
 
 /* Title Style */
 #quiz-title-header {
-    font-size: 2em; /* Font size of the title */
+    font-size: 2em;
     font-weight: bold;
-    color: #ecf0f1; /* Light color for the title */
-    text-transform: uppercase; /* Make title uppercase */
+    color: #ecf0f1;
+    text-transform: uppercase;
 }
 
 /* Timer Style */
 #timer {
-    font-size: 1.5em; /* Font size for the timer */
+    font-size: 1.5em;
     font-weight: bold;
-    background-color: #e74c3c; /* Red background */
+    background-color: #e74c3c;
     padding: 5px 20px;
-    border-radius: 10px; /* Rounded corners */
-    color: white; /* White text */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
-    transition: background-color 0.3s ease; /* Smooth color change transition */
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
 }
 
 #timer:hover {
-    background-color: #c0392b; /* Darker red when hovered */
+    background-color: #c0392b;
 }
 
-        /* Adjust the rest of the page below the header */
-        main {
-            margin-top: 80px; /* Add margin to avoid content hiding behind the header */
-            padding: 20px;
-        }
-        .quiz-title {
-                display: none;
-            font-size: 1.5em;
-            margin: 10px 0; /* Add a margin on top to give space between header and title */
-            color: #333;
-            text-align: center;
-            border: 2px solid black;
-        }
+/* Main Section Adjustments */
+main {
+    margin-top: 80px;
+    padding: 20px;
+}
 
+.quiz-title {
+    display: none;
+    font-size: 1.5em;
+    margin: 10px 0;
+    color: #333;
+    text-align: center;
+    border: 2px solid black;
+}
 
-        .question {
-            margin-bottom: 30px;
-            padding: 3px;
-            border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
-        }
+/* Question Section */
+.question {
+    margin-bottom: 30px;
+    padding: 3px;
+    border-bottom: 1px solid #ccc;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: normal;
+}
 
-        .question-number {
-            font-weight: bold;
-            font-size: 1.2em;
-            color: #333;
-            margin-bottom: 10px;
-        }
+.question-number {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+}
 
-        .question-content {
-            margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: normal;
-            max-width: 100%;
-            overflow-x: auto;
-        }
+.question-content {
+    margin-bottom: 15px;
+    word-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    overflow-x: auto;
+}
 
-        .options li {
+/* Options */
+.options li {
     margin-bottom: 10px;
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 5px;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    white-space: nowrap; /* Prevent the text from wrapping to the next line */
-    word-wrap: normal; /* Prevent text from breaking into new lines */
-    max-width: 100%; /* Allow options to take up full width */
+    overflow-x: auto;
+    white-space: nowrap;
+    word-wrap: normal;
+    max-width: 100%;
 }
 
 .options label {
     display: flex;
     align-items: center;
-    width: 100%; /* Ensure the label takes full width */
-    overflow-x: auto; /* Allow horizontal scroll for label */
-    white-space: nowrap; /* Prevent text from wrapping */
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
 .options input[type="radio"] {
     margin-right: 10px;
 }
 
+/* Question ID and Correct Answer */
+.question-id {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #555;
+}
 
-        .question-id {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #555;
-        }
+.correct-answer {
+    margin-top: 10px;
+    font-weight: bold;
+    color: green;
+}
 
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
-            color: green;
-        }
+/* Subject Dropdown */
+#subject-dropdown {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 1em;
+}
 
-        #subject-dropdown {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 1em;
-        }
+/* Images */
+img {
+    max-width: 100px;
+    height: auto;
+}
 
-        img {
-            max-width: 100px;
-            height: auto;
-        }
+/* Buttons */
+.submit-button, .next-button {
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    border: 1px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+}
 
-        .submit-button, .next-button {
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-            width: 100%;
-        }
+.submit-button {
+    display: block;
+}
 
-        .submit-button {
-            display: block;
-        }
+.next-button {
+    display: none;
+}
 
-        .next-button {
-            display: none;
-        }
+/* Explanation Button */
+.explanation-button {
+    display: none;
+    margin-top: 10px;
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    cursor: pointer;
+    padding: 8px 16px;
+}
 
-        .explanation-button {
-            display: none;
-            margin-top: 10px;
-            background-color: white;
-            color: black;
-            border: 2px solid black;
-            cursor: pointer;
-            padding: 8px 16px;
-        }
+.explanation-button:hover {
+    background-color: black;
+    color: white;
+}
 
-        .explanation-button:hover {
-            background-color: black;
-            color: white;
-        }
-        .explanation-button-container {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
+/* Explanation Content */
+.explanation-button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
 
-        .explanation-content {
-            display: none;
-            margin-top: 10px;
-            font-style: italic;
-            color: #777;
-        }
+.explanation-content {
+    display: none;
+    margin-top: 10px;
+    font-style: italic;
+    color: #777;
+}
 
-        
-        .explanation-content.open {
-            display: block;
-            background-color: #FFF59D; /* Yellow background */
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            font-style: italic;
-            color: #777;
-        }
+.explanation-content.open {
+    display: block;
+    background-color: #FFF59D;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-style: italic;
+    color: #777;
+}
 
-        
-        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
-        .mathjax-inline {
-            white-space: nowrap;
-            display: inline-block;
-            font-size: 1.1em;
-        }
+/* MathJax Inline Equations */
+.mathjax-inline {
+    white-space: nowrap;
+    display: inline-block;
+    font-size: 1.1em;
+}
 
-        .question-content span {
-            display: inline-block;
-        }
+.question-content span {
+    display: inline-block;
+}
 
-        @media (max-width: 600px) {
-            body {
-                padding: 0px;
-            }
-
-            #quiz-container {
-                padding: 3px;
-            }
-
-            .submit-button {
-                padding: 10px;
-            }
-
-            .options li {
-                padding: 5px;
-            }
-
-            img {
-                max-width: 80px;
-            }
-        }
-            /* Additional adjustments for mobile */
+/* Responsive Styles */
 @media (max-width: 600px) {
+    body {
+        padding: 0px;
+    }
+
+    #quiz-container {
+        padding: 3px;
+    }
+
+    .submit-button {
+        padding: 10px;
+    }
+
     .options li {
-        padding: 5px; /* Reduced padding on smaller screens */
+        padding: 5px;
+    }
+
+    img {
+        max-width: 80px;
     }
 
     .options label {
-        font-size: 14px; /* Adjust font size for smaller screens */
+        font-size: 14px;
     }
 }
-            
-        /* Other styles remain unchanged... */
-        /* Quiz container, question styles, options, etc. */
