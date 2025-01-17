@@ -19,6 +19,7 @@ main {
 }
 
 .question-detail {
+    overflow-x: auto;
     margin-bottom: 30px;
     padding: 3px;
     border-bottom: 1px solid #ccc;
@@ -152,8 +153,11 @@ main {
     padding: 15px;
     border-radius: 10px;
     border: 2px solid #ddd;
-    word-wrap: break-word; /* Ensures text wraps to a new line when it overflows */
-    overflow-wrap: break-word; /* Same as above, ensures long words break and don't overflow */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 100%; /* Ensures it takes the full available width */
+    box-sizing: border-box; /* Includes padding and border in the element's total width */
+    white-space: normal; /* Prevents text from overflowing horizontally */
 }
 
 .explanation h4 {
@@ -167,7 +171,9 @@ main {
     line-height: 1.5;
     color: #555;
     word-wrap: break-word;
+    overflow-wrap: break-word;
 }
+
 
 .mathjax-inline {
     display: inline-block;
