@@ -1,70 +1,49 @@
-/* General Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body Styling */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
     line-height: 1.6;
-    padding: 0;
+    padding: 20px;
     margin: 0;
     width: 100%;
-    height: 100%;
     overflow-x: hidden;
-    background-color: #f3f4f6; /* Light background for game feel */
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
-/* Main Container */
 main {
-    margin: 0;
-    padding: 30px;
-    background-color: #ffffff;
-    border-radius: 15px;
-    border: 2px solid #ddd;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 1200px;
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
     overflow-x: auto;
+    width: 100%;
 }
 
-/* Question Detail Styling */
 .question-detail {
+    overflow-x: auto;
     margin-bottom: 30px;
-    padding: 15px;
+    padding: 3px;
     border-bottom: 1px solid #ccc;
-    background-color: #fafafa;
-    border-radius: 8px;
     word-wrap: break-word;
     white-space: normal;
 }
 
 .question-detail h3 {
-    font-size: 1.8em;
+    font-size: 1.6em;
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
-/* Options Styling */
 .options {
-    list-style: none;
-    padding: 0;
     margin: 20px 0;
+    padding: 0;
+    list-style-type: none;
 }
 
 .options li {
-    margin-bottom: 15px;
-    padding: 15px;
-    background-color: #f0f8ff;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    font-size: 1.2em;
-    cursor: pointer;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 100%; /* Allow options to take up full width */
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
@@ -74,7 +53,7 @@ main {
 }
 
 .options li.selected {
-    background-color: #a7d8f7;
+    background-color: #c1e7fc;
 }
 
 .options li.correct {
@@ -87,129 +66,147 @@ main {
     color: white;
 }
 
-/* Button Styling */
-.check-btn, #next-btn, .timer, .back-btn {
-    position: fixed;
-    padding: 15px 30px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 1000;
-}
-
+/* .check-btn */
 .check-btn {
-    background-color: #17a2b8;
-    color: white;
-    left: 10%;
+    position: fixed;
+    bottom: 10px;
+    left: 10%; /* Position the button from the left */
+    background-color: #17a2b8; /* Blue background */
+    color: white; /* White text */
+    border: 2px solid black; /* Black border */
+    padding: 12px 24px; /* Top and bottom padding, left and right padding */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Bold text */
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: all 0.3s ease; /* Smooth hover effect */
+    z-index: 1000; /* Ensure it's above other elements */
 }
 
 .check-btn:hover {
-    background-color: #008c99;
+    background-color: black; /* Black background on hover */
+    color: white; /* White text on hover */
 }
 
 .check-btn:active {
-    background-color: #006f79;
+    background-color: #155d63; /* Darker blue when clicked */
+    transform: translateY(0); /* Reset the lift effect */
 }
 
+.check-btn:focus {
+    outline: none; /* Remove outline on focus */
+}
+
+/* #next-btn */
 #next-btn {
-    background-color: #f39c12;
-    color: white;
-    right: 10%;
+    position: fixed;
+    bottom: 10px;
+    right: 10%; /* Position the button from the right */
+    background-color: #f39c12; /* Orange background */
+    color: white; /* White text */
+    border: none; /* Remove border */
+    padding: 12px 24px; /* Top and bottom padding, left and right padding */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Bold text */
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: all 0.3s ease; /* Smooth hover effect */
+    z-index: 1000; /* Ensure it's above other elements */
 }
 
 #next-btn:hover {
-    background-color: #e67e22;
+    background-color: #e67e22; /* Darker orange on hover */
+    transform: translateY(-3px); /* Slight lift effect */
 }
 
 #next-btn:active {
-    background-color: #d35400;
+    background-color: #d35400; /* Even darker orange when clicked */
+    transform: translateY(0); /* Reset the lift effect */
 }
 
-.timer, .back-btn {
-    background-color: #f44336;
-    color: white;
+#next-btn:focus {
+    outline: none; /* Remove outline on focus */
 }
 
-.timer:hover, .back-btn:hover {
-    background-color: #d32f2f;
+/* Timer Button Style */
+.timer {
+    position: fixed;
+    top: 10px; /* Position at the top of the screen */
+    right: 10px; /* Position at the right side */
+    padding: 10px 15px;
+    background-color: #f44336; /* Red background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
 }
 
-.timer:active, .back-btn:active {
-    background-color: #c62828;
+/* Back Button Style */
+.back-btn {
+    position: fixed; /* Fixes the button position */
+    top: 10px; /* Position at the top of the screen */
+    left: 10px; /* Position at the left side */
+    padding: 10px 15px;
+    background-color: #f44336; /* Red background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
 }
 
-/* Explanation Styling */
+
 .explanation {
     display: none;
+    overflow-x: auto;
     margin-top: 20px;
-    padding: 20px;
-    background-color: #fafafa;
-    border: 2px solid #ddd;
+    background-color: #f9f9f9;
+    padding: 15px;
     border-radius: 10px;
-    font-size: 1.2em;
-    line-height: 1.5;
-    word-wrap: break-word;
+    border: 2px solid #ddd;
+    word-wrap: break-word; /* Ensures text wraps to a new line when it overflows */
+    overflow-wrap: break-word; /* Same as above, ensures long words break and don't overflow */
 }
 
 .explanation h4 {
     font-size: 1.4em;
     color: #333;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .explanation p {
+    font-size: 1.2em;
+    line-height: 1.5;
     color: #555;
+    word-wrap: break-word;
 }
 
-/* Source Button Styling */
+.mathjax-inline {
+    display: inline-block;
+    font-size: 1.2em;
+    color: #007bff;
+}
+
 .source {
     position: fixed;
-    bottom: 10px;
-    left: 10px;
-    padding: 5px 10px;
-    font-size: 1.1em;
-    background-color: rgba(255, 255, 255, 0.7);
+    bottom: 5px;
+    left: 5px;
+    font-size: 1em;
     color: #555;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px 10px;
     border-radius: 20px;
     border: 1px solid #ddd;
 }
 
-/* Fullscreen and Responsiveness */
-html, body {
-    height: 100%;
-    overflow: hidden;
-}
-
+/* Mobile and tablet responsiveness */
 @media screen and (max-width: 768px) {
     .options li {
         font-size: 1.1em;
         padding: 12px;
     }
 
-    .check-btn, #next-btn {
-        padding: 12px 24px;
-        font-size: 14px;
-    }
-
-    .timer, .back-btn {
-        font-size: 14px;
+    .check-btn {
         padding: 10px 20px;
     }
 }
 
-/* Ensure page loads in full screen */
-@media screen and (min-width: 769px) {
-    html, body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-    }
-    main {
-        width: 100%;
-        max-width: 1200px;
-    }
-}
