@@ -1,97 +1,98 @@
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            padding: 20px;
-            margin: 0;
-            width: 100%;
-            overflow-x: hidden;
-        }
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    padding: 20px;
+    margin: 0;
+    width: 100%;
+    overflow-x: hidden;
+}
 
-        main {
-            margin: 20px 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            overflow-x: auto;
-            width: 100%;
-        }
-         .question-detail {
-          overflow-x: auto;
-            margin-bottom: 30px;
-            padding: 3px;
-            border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
-        
-        }
+main {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow-x: auto;
+    width: 100%;
+}
 
-        .question-detail h3 {
-            font-size: 1.6em;
-            color: #333;
-            margin-bottom: 15px;
-        }
+.question-detail {
+    overflow-x: auto;
+    margin-bottom: 30px;
+    padding: 3px;
+    border-bottom: 1px solid #ccc;
+    word-wrap: break-word;
+    white-space: normal;
+}
 
-        .options {
-            margin: 20px 0;
-            padding: 0;
-            list-style-type: none;
-        }
+.question-detail h3 {
+    font-size: 1.6em;
+    color: #333;
+    margin-bottom: 15px;
+}
 
-        .options li {
-            margin-bottom: 10px;
+.options {
+    margin: 20px 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.options li {
+    margin-bottom: 10px;
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 5px;
     max-width: 100%; /* Allow options to take up full width */
-        }
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
 
-        .options li:hover {
-            background-color: #e6f7ff;
-            transform: translateY(-5px);
-        }
+.options li:hover {
+    background-color: #e6f7ff;
+    transform: translateY(-5px);
+}
 
-        .options li.selected {
-            background-color: #c1e7fc;
-        }
+.options li.selected {
+    background-color: #c1e7fc;
+}
 
-        .options li.correct {
-            background-color: #28a745;
-            color: white;
-        }
+.options li.correct {
+    background-color: #28a745;
+    color: white;
+}
 
-        .options li.incorrect {
-            background-color: #dc3545;
-            color: white;
-        }
+.options li.incorrect {
+    background-color: #dc3545;
+    color: white;
+}
 
-        .check-btn {
-   background-color: #17a2b8;
+.check-btn {
+    background-color: #17a2b8;
     color: black; /* Black text */
     border: 2px solid black; /* Black border */
-    padding: 10px 20px; /* Padding for the button */
-    font-size: 16px; /* Font size */
-    font-weight: bold; /* Bold text */
-    cursor: pointer; /* Pointer cursor on hover */
-    border-radius: 10px; /* Rounded corners */
-    transition: all 0.3s ease; /* Smooth transition on hover */
-        }
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
 
-        .check-btn:hover {
-            background-color: black; /* Black background on hover */
+.check-btn:hover {
+    background-color: black; /* Black background on hover */
     color: white; /* White text on hover */
-        }
-        button {
+}
+
+button {
     background-color: white; /* White background */
     color: black; /* Black text */
     border: 2px solid black; /* Black border */
-    padding: 10px 20px; /* Padding for the button */
+    padding: 10px 20px;
     font-size: 16px; /* Font size */
     font-weight: bold; /* Bold text */
     cursor: pointer; /* Pointer cursor on hover */
     border-radius: 5px; /* Rounded corners */
-    transition: all 0.3s ease; /* Smooth transition on hover */
+    transition: all 0.3s ease;
 }
 
 button:hover {
@@ -99,30 +100,27 @@ button:hover {
     color: white; /* White text on hover */
 }
 
+.timer {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 10px 15px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
-        .timer {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            padding: 10px 15px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-           
-        }
-
-        .explanation {
+.explanation {
     display: none;
     margin-top: 20px;
     background-color: #f9f9f9;
     padding: 15px;
     border-radius: 10px;
     border: 2px solid #ddd;
-     overflow-x: auto;
-    word-wrap: break-word;  /* Ensures text wraps to a new line when it overflows */
-    overflow-wrap: break-word;  /* Same as above, ensures long words break and don't overflow */
+    word-wrap: break-word; /* Ensures text wraps to a new line when it overflows */
+    overflow-wrap: break-word; /* Same as above, ensures long words break and don't overflow */
 }
 
 .explanation h4 {
@@ -135,62 +133,55 @@ button:hover {
     font-size: 1.2em;
     line-height: 1.5;
     color: #555;
-    word-wrap: break-word;  /* Ensure paragraphs break properly if necessary */
+    word-wrap: break-word;
 }
 
+.mathjax-inline {
+    display: inline-block;
+    font-size: 1.2em;
+    color: #007bff;
+}
 
-        .mathjax-inline {
-            display: inline-block;
-            font-size: 1.2em;
-            color: #007bff;
-        }
+.source {
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    font-size: 1em;
+    color: #555;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+}
 
-           .source {
-            position: fixed;
-            bottom: 5px;
-            left: 5px;
-            font-size: 1em;
-            color: #555;
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 5px 10px;
-            border-radius: 20px;
-            border: 1px solid #ddd;
-        }
+/* Mobile and tablet responsiveness */
+@media screen and (max-width: 768px) {
+    .options li {
+        font-size: 1.1em;
+        padding: 12px;
+    }
 
-        /* Mobile and tablet responsiveness */
-        @media screen and (max-width: 768px) {
+    .check-btn {
+        padding: 10px 20px;
+    }
 
-            .options li {
-                font-size: 1.1em;
-                padding: 12px;
-            }
+    .timer {
+        position: fixed;
+        bottom: 5px;
+        right: 5px;
+        padding: 5px 7px;
+    }
+}
 
-            .check-btn {
-                padding: 10px 20px;
-            }
-
-            .timer {
-            position: fixed;
-            bottom: 5px;
-            right: 5px;
-            padding: 5px 7px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-           
-        }
-        }
-        /* Back Button Style */
-        .back-btn {
-            position: absolute;
-            top: 2px;
-            right: 3px;
-            padding: 10px 15px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+/* Back Button Style */
+.back-btn {
+    position: absolute;
+    top: 2px;
+    right: 3px;
+    padding: 10px 15px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
