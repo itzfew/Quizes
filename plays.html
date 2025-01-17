@@ -18,10 +18,10 @@
 
     <script>
         const metaIds = [
-            { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
-            { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-            { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
-            // Add more metaId data as needed
+            { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur", subject: "Biology" },
+            { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023", subject: "Physics" },
+            { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2", subject: "Chemistry" },
+            // Add more subjects and their metadata
         ];
 
         let currentMetaId, currentQuestionIndex, questionsData = [];
@@ -33,15 +33,15 @@
 
             const metaData = metaIds.find(meta => meta.id === currentMetaId);
             if (metaData) {
-                document.getElementById('source').textContent = `Source: ${metaData.title}`;
-                fetchQuestions(metaData.id);
+                document.getElementById('source').textContent = `Source: ${metaData.title} - Subject: ${metaData.subject}`;
+                fetchQuestions(metaData.id, metaData.subject);
             } else {
                 document.getElementById('question-detail').innerHTML = '<p>Invalid Meta ID.</p>';
             }
         }
 
         // Fetch questions from a JSON file
-        async function fetchQuestions(metaId) {
+        async function fetchQuestions(metaId, subject) {
             const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
             try {
@@ -50,7 +50,7 @@
                 questionsData = data[0].questions; // Assuming questions are in the first array
 
                 if (questionsData.length > 0 && currentQuestionIndex < questionsData.length) {
-                    renderQuestionDetail(questionsData[currentQuestionIndex]);
+                    renderQuestionDetail(questionsData[currentQuestionIndex], subject);
                     startTimer();
                 } else {
                     document.getElementById('question-detail').innerHTML = '<p>No questions found for this Meta ID or invalid question index.</p>';
@@ -60,7 +60,7 @@
             }
         }
 
-        function renderQuestionDetail(question) {
+        function renderQuestionDetail(question, subject) {
             let questionDetailHTML = `
                 <h3>${renderMath(question.content)}</h3>
                 <ul class="options">
