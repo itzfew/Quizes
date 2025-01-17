@@ -185,7 +185,7 @@ button:hover {
 }
 
 /* Back Button Style */
-.bac-btn {
+.back-btn {
     position: fixed; /* Ensures the button stays at the same position on the screen */
     top: 10px; /* Distance from the top of the screen */
     right: 10px; /* Distance from the right of the screen */
