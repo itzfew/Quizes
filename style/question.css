@@ -12,7 +12,11 @@ body {
     width: 100%;
     overflow-x: hidden;
 }
-
+main {
+    background-color: white;
+    border: 1px solid #ddd;
+    overflow-x: auto;
+}
 
 .question-detail {
     overflow-x: auto;
