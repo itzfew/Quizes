@@ -67,10 +67,6 @@ main {
 }
 
 .check-btn {
-    position: fixed;
-    bottom: 20px; /* Ensure space for other buttons */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Adjust to center the button */
     background-color: #17a2b8;
     color: black; /* Black text */
     border: 2px solid black; /* Black border */
@@ -80,7 +76,6 @@ main {
     cursor: pointer;
     border-radius: 10px;
     transition: all 0.3s ease;
-    z-index: 1000; /* Ensure it stays above other content */
 }
 
 .check-btn:hover {
@@ -88,11 +83,7 @@ main {
     color: white; /* White text on hover */
 }
 
-buton {
-    position: fixed; /* Fixes the button position relative to the viewport */
-    bottom: 70px; /* Prevent overlap with .check-btn */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Adjust to center the button */
+button {
     background-color: white; /* White background */
     color: black; /* Black text */
     border: 2px solid black; /* Black border */
@@ -101,8 +92,7 @@ buton {
     font-weight: bold; /* Bold text */
     cursor: pointer; /* Pointer cursor on hover */
     border-radius: 5px; /* Rounded corners */
-    transition: all 0.3s ease; /* Smooth transition */
-    z-index: 1000; /* Ensures the button appears above other elements */
+    transition: all 0.3s ease;
 }
 
 button:hover {
@@ -112,15 +102,14 @@ button:hover {
 
 .timer {
     position: fixed;
-    bottom: 10px; /* Bottom corner */
-    right: 10px; /* Right corner */
+    bottom: 10px;
+    right: 10px;
     padding: 10px 15px;
     background-color: #f44336;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    z-index: 1000; /* Ensure it stays visible */
 }
 
 .explanation {
@@ -184,15 +173,15 @@ button:hover {
     }
 }
 
-        /* Back Button Style */
-        .back-btn {
-            position: absolute;
-            top: 2px;
-            right: 3px;
-            padding: 10px 15px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+/* Back Button Style */
+.back-btn {
+    position: absolute;
+    top: 2px;
+    right: 3px;
+    padding: 10px 15px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
