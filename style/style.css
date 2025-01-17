@@ -138,7 +138,7 @@ img {
     height: auto;
 }
 
-/* Buttons Fixed at Bottom */
+/* Buttons Fixed at Bottom of the Screen */
 .submit-button, .next-button {
     background-color: #000;
     color: white;
@@ -147,11 +147,11 @@ img {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
-    width: calc(100% - 40px); /* Adjust for padding on sides */
+    width: calc(100% - 40px); /* Adjust for padding */
     position: fixed; /* Fix the position on the screen */
     bottom: 10px; /* Distance from the bottom of the screen */
-    left: 20px; /* Space from the left edge */
-    z-index: 1000; /* Ensure buttons appear above other content */
+    left: 20px; /* Distance from the left side */
+    z-index: 1000; /* Ensure the buttons are above other content */
 }
 
 .submit-button {
@@ -161,6 +161,7 @@ img {
 .next-button {
     display: none;
 }
+
 
 /* Explanation Button */
 .explanation-button {
