@@ -13,8 +13,8 @@ body {
     overflow-x: hidden;
 }
 main {
+    top:20px;
     background-color: white;
-    border: 1px solid #ddd;
     overflow-x: auto;
 }
 
