@@ -139,7 +139,6 @@ main {
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
     cursor: pointer; /* Pointer cursor on hover */
-    z-index: 1000; /* Ensure it's above other elements */
 }
 
 /* Back Button Style */
@@ -153,7 +152,6 @@ main {
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
     cursor: pointer; /* Pointer cursor on hover */
-    z-index: 1000; /* Ensure it's above other elements */
 }
 
 
