@@ -62,7 +62,7 @@ function startTimer() {
     timerInterval = setInterval(function () {
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
-        document.getElementById('timer').textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        document.getElementById('timer').textContent = `Time: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
         if (timeLeft === 0) {
             clearInterval(timerInterval);
             alert("Time's up! Your answer will be submitted.");
