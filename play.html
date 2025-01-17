@@ -154,33 +154,33 @@
         function getCorrectAnswer(metaId, questionIndex) {
             return 'A'; // Placeholder for correct answer, adjust according to actual data
         }
+    // Load next question and update URL
+    function loadNextQuestion() {
+        const selectedOption = document.querySelector('.options li.selected');
 
-        // Load next question and update URL
-        function loadNextQuestion() {
-            const selectedOption = document.querySelector('.options li.selected');
-
-            if (!selectedOption) {
-                alert("You need to select an answer before proceeding.");
-                return;
-            }
-
-            // Check the answer before proceeding to the next question
-            checkAnswer();
-
-            // Increment question index
-            currentQuestionIndex++;
-
-            // If we are at the last question, reset to first question or end the quiz
-            if (currentQuestionIndex >= questionsData.length) {
-                currentQuestionIndex = 0; // Reset to first question, or show quiz completion
-            }
-
-            const newUrl = `?metaId=${currentMetaId}&index=${currentQuestionIndex + 1}`;
-            window.history.pushState({ path: newUrl }, '', newUrl);
-
-            // Load the next question
-            loadQuestionDetail();
+        if (!selectedOption) {
+            alert("You need to select an answer before proceeding.");
+            return;
         }
+
+        // Check the answer before proceeding to the next question
+        checkAnswer();
+
+        // Increment question index
+        currentQuestionIndex++;
+
+        // If we are at the last question, reset to first question or end the quiz
+        if (currentQuestionIndex >= questionsData.length) {
+            currentQuestionIndex = 0; // Reset to first question, or show quiz completion
+        }
+
+        const newUrl = `?title=${examGroup}&examGroup=${examGroup}&examTitle=${examTitle}&metaId=${currentMetaId}&index=${currentQuestionIndex + 1}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+
+        // Load the next question
+        loadQuestionDetail();
+    }
+
 
         // Handle back button navigation
         function goBack() {
