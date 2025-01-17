@@ -1,5 +1,4 @@
-
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,8 +8,15 @@
     <link rel="stylesheet" href="style/question.css">
 </head>
 <body>
+    <!-- Subject Dropdown -->
+    <select id="subject-dropdown" onchange="changeSubject()">
+        <option value="">Select Subject</option>
+        <!-- Subjects will be populated here dynamically -->
+    </select>
+
     <!-- Back Button to Go to Index Page -->
     <button class="back-btn" onclick="goBack()">Back</button>
+
     <main>
         <div class="source" id="source"></div>
         <div id="question-detail"></div>
@@ -26,6 +32,17 @@
     ];
 
     let currentMetaId, currentQuestionIndex = 0, questionsData = [];
+
+    // Populate the subject dropdown dynamically
+    function populateSubjectDropdown() {
+        const dropdown = document.getElementById('subject-dropdown');
+        metaIds.forEach(meta => {
+            const option = document.createElement('option');
+            option.value = meta.id;
+            option.textContent = meta.title;
+            dropdown.appendChild(option);
+        });
+    }
 
     function loadQuestionDetail() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -169,7 +186,10 @@
     }
 
     // Load the question detail on page load
-    window.onload = loadQuestionDetail;
+    window.onload = function() {
+        populateSubjectDropdown(); // Populate dropdown
+        loadQuestionDetail(); // Load question details
+    };
 
     // Handle back button navigation
     function goBack() {
@@ -187,7 +207,19 @@
             console.error('No "metaId" parameter found in the URL.');
         }
     }
-</script>
+
+    // Change the subject based on the dropdown selection
+    function changeSubject() {
+        const dropdown = document.getElementById('subject-dropdown');
+        const selectedMetaId = dropdown.value;
+
+        if (selectedMetaId) {
+            const metaData = metaIds.find(meta => meta.id === selectedMetaId);
+            const newUrl = `?metaId=${selectedMetaId}&index=1`;
+            window.location.href = newUrl;
+        }
+    }
+    </script>
 
 </body>
 </html>
