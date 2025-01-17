@@ -68,7 +68,7 @@ main {
 
 .check-btn {
     position: fixed;
-    bottom: 10px; /* Distance from the bottom of the screen */
+    bottom: 20px; /* Ensure space for other buttons */
     left: 50%; /* Center horizontally */
     transform: translateX(-50%); /* Adjust to center the button */
     background-color: #17a2b8;
@@ -90,7 +90,7 @@ main {
 
 button {
     position: fixed; /* Fixes the button position relative to the viewport */
-    bottom: 10px; /* Distance from the bottom of the screen */
+    bottom: 70px; /* Prevent overlap with .check-btn */
     left: 50%; /* Center horizontally */
     transform: translateX(-50%); /* Adjust to center the button */
     background-color: white; /* White background */
@@ -109,16 +109,18 @@ button:hover {
     background-color: black; /* Black background on hover */
     color: white; /* White text on hover */
 }
+
 .timer {
     position: fixed;
-    bottom: 10px;
-    right: 10px;
+    bottom: 10px; /* Bottom corner */
+    right: 10px; /* Right corner */
     padding: 10px 15px;
     background-color: #f44336;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    z-index: 1000; /* Ensure it stays visible */
 }
 
 .explanation {
@@ -181,11 +183,12 @@ button:hover {
         padding: 5px 7px;
     }
 }
+
 /* Back Button Style */
 .back-btn {
     position: fixed; /* Ensures the button stays at the same position on the screen */
     top: 10px; /* Distance from the top of the screen */
-    left: 10px; /* Distance from the left of the screen */
+    right: 10px; /* Distance from the right of the screen */
     padding: 10px 15px;
     background-color: #f44336; /* Red background */
     color: white; /* White text */
@@ -198,5 +201,3 @@ button:hover {
 .back-btn:hover {
     background-color: #d32f2f; /* Darker red on hover */
 }
-
-
