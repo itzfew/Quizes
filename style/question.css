@@ -195,7 +195,6 @@ button:hover {
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
     cursor: pointer; /* Pointer cursor */
-    z-index: 1000; /* Ensures it appears above other elements */
 }
 
 .back-btn:hover {
