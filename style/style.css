@@ -138,7 +138,7 @@ img {
     height: auto;
 }
 
-/* Buttons */
+/* Buttons Fixed at Bottom */
 .submit-button, .next-button {
     background-color: #000;
     color: white;
@@ -147,7 +147,11 @@ img {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
-    width: 100%;
+    width: calc(100% - 40px); /* Adjust for padding on sides */
+    position: fixed; /* Fix the position on the screen */
+    bottom: 10px; /* Distance from the bottom of the screen */
+    left: 20px; /* Space from the left edge */
+    z-index: 1000; /* Ensure buttons appear above other content */
 }
 
 .submit-button {
