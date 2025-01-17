@@ -16,7 +16,8 @@
             overflow-x: auto;
             width: 100%;
         }
-        .question-detail {
+         .question-detail {
+          overflow-x: auto;
             margin-bottom: 30px;
             padding: 3px;
             border-bottom: 1px solid #ccc;
