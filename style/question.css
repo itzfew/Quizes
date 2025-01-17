@@ -88,8 +88,11 @@ main {
     color: white; /* White text on hover */
 }
 
-
 button {
+    position: fixed; /* Fixes the button position relative to the viewport */
+    bottom: 10px; /* Distance from the bottom of the screen */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust to center the button */
     background-color: white; /* White background */
     color: black; /* Black text */
     border: 2px solid black; /* Black border */
@@ -98,14 +101,14 @@ button {
     font-weight: bold; /* Bold text */
     cursor: pointer; /* Pointer cursor on hover */
     border-radius: 5px; /* Rounded corners */
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; /* Smooth transition */
+    z-index: 1000; /* Ensures the button appears above other elements */
 }
 
 button:hover {
     background-color: black; /* Black background on hover */
     color: white; /* White text on hover */
 }
-
 .timer {
     position: fixed;
     bottom: 10px;
@@ -178,16 +181,22 @@ button:hover {
         padding: 5px 7px;
     }
 }
-
 /* Back Button Style */
 .back-btn {
-    position: absolute;
-    top: 2px;
-    right: 3px;
+    position: fixed; /* Ensures the button stays at the same position on the screen */
+    top: 10px; /* Distance from the top of the screen */
+    left: 10px; /* Distance from the left of the screen */
     padding: 10px 15px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    background-color: #f44336; /* Red background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    z-index: 1000; /* Ensures it appears above other elements */
 }
+
+.back-btn:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
+
+
