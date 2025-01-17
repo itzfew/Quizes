@@ -156,9 +156,8 @@
 
     <div class="source" id="source"></div>
 
-    <script>
-        // JavaScript code is unchanged as provided in your request.
-        const metaIds = [
+<script>
+    const metaIds = [
     { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
     { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
     { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
@@ -192,28 +191,28 @@
     { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
     { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
 ];
-        
-        let timerInterval;
-        let currentQuestionId;
-        let subject, chapter;
-        let questionsData = [];
+    let timerInterval;
+    let currentQuestionId;
+    let subject, chapter;
+    let questionsData = [];
 
-        function startTimer() {
-            let timeLeft = 60;
-            timerInterval = setInterval(function () {
-                const minutes = Math.floor(timeLeft / 60);
-                const seconds = timeLeft % 60;
-                document.getElementById('timer').textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-                if (timeLeft === 0) {
-                    clearInterval(timerInterval);
-                    alert("Time's up! Your answer will be submitted.");
-                    checkAnswer();
-                }
-                timeLeft--;
-            }, 1000);
-        }
+    // Timer function with automatic submit and check
+    function startTimer() {
+        let timeLeft = 60; // 1-minute timer
+        timerInterval = setInterval(function () {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+            if (timeLeft === 0) {
+                clearInterval(timerInterval);
+                alert("Time's up! Your answer will be submitted.");
+                checkAnswer();  // Automatically check the answer when time runs out
+            }
+            timeLeft--;
+        }, 1000);
+    }
 
-            // Load question details from all metaIds
+    // Load question details from all metaIds
     function loadQuestionDetail() {
         const urlParams = new URLSearchParams(window.location.search);
         [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
@@ -289,17 +288,26 @@
             });
         });
 
-        function renderMath(input) {
-            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
+        // Check for saved answer in localStorage
+        const savedAnswer = localStorage.getItem(`answer-${currentQuestionId}`);
+        if (savedAnswer) {
+            document.querySelector(`#option${savedAnswer}`).classList.add('selected');
         }
+    }
 
-        function saveAnswer(optionId) {
-            localStorage.setItem(`answer-${currentQuestionId}`, optionId);
-        }
+    // Render LaTeX using MathJax
+    function renderMath(input) {
+        return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+            return `<span class="mathjax-inline">$$${p1}$$</span>`;
+        });
+    }
 
-            // Check and display the correct answer
+    // Save selected answer to localStorage
+    function saveAnswer(optionId) {
+        localStorage.setItem(`answer-${currentQuestionId}`, optionId);
+    }
+
+    // Check and display the correct answer
     function checkAnswer() {
         const selectedOption = document.querySelector('.options li.selected');
         if (!selectedOption) {
@@ -328,21 +336,25 @@
         return 'A'; // Placeholder for correct answer
     }
 
-        function loadNextQuestion() {
-            const randomQuestion = getRandomQuestion();
-            if (randomQuestion) {
-                const newUrl = `?id=${subject}/${chapter}/${randomQuestion.question_id}`;
-                window.history.pushState({ path: newUrl }, '', newUrl);
-                currentQuestionId = randomQuestion.question_id;
-                loadQuestionDetail();
-            }
+    // Load next question and update URL
+    function loadNextQuestion() {
+        const randomQuestion = getRandomQuestion();
+        if (randomQuestion) {
+            const newUrl = `?id=${subject}/${chapter}/${randomQuestion.question_id}`;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+            currentQuestionId = randomQuestion.question_id;
+            loadQuestionDetail();
         }
+    }
 
-        function getRandomQuestion() {
-            return questionsData[Math.floor(Math.random() * questionsData.length)];
-        }
+    // Get a random question from the list
+    function getRandomQuestion() {
+        return questionsData[Math.floor(Math.random() * questionsData.length)];
+    }
 
-        window.onload = loadQuestionDetail;
-    </script>
+    // Load the question detail on page load
+    window.onload = loadQuestionDetail;
+</script>
+
 </body>
 </html>
