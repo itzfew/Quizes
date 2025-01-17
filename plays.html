@@ -21,15 +21,13 @@
             { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
             { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
             { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
-            { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
-            { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
-            // Add all your metaIds here...
+            // Add more metaId data as needed
         ];
 
         // Initialize variables
         let timerInterval;
-        let currentQuestionIndex = 0;
         let currentMetaId;
+        let currentQuestionIndex;
         let questionsData = [];
 
         // Timer function with automatic submit and check
@@ -48,39 +46,39 @@
             }, 1000);
         }
 
-        // Load all questions by metaId from URL
+        // Load question details from all metaIds
         function loadQuestionDetail() {
             const urlParams = new URLSearchParams(window.location.search);
-            currentMetaId = urlParams.get('metaId'); // Get metaId from URL
-            let questionFound = false;
+            currentMetaId = urlParams.get('metaId').split('/')[0]; // Extract metaId from URL
+            currentQuestionIndex = parseInt(urlParams.get('metaId').split('/')[1], 10) - 1; // Extract question index (1-based to 0-based)
 
-            // Fetch questions for the specific metaId
-            (async function fetchQuestion() {
-                for (let i = 0; i < metaIds.length; i++) {
-                    if (metaIds[i].id === currentMetaId) {
-                        const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaIds[i].id}.json`;
+            const metaData = metaIds.find(meta => meta.id === currentMetaId);
+            if (metaData) {
+                document.getElementById('source').textContent = `Source: ${metaData.title}`;
+                fetchQuestions(metaData.id);
+            } else {
+                document.getElementById('question-detail').innerHTML = '<p>Invalid Meta ID.</p>';
+            }
+        }
 
-                        try {
-                            const response = await fetch(chaptersUrl);
-                            const data = await response.json();
+        // Fetch questions based on metaId
+        async function fetchQuestions(metaId) {
+            const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
-                            // Assuming the data contains questions for all subjects
-                            questionsData = [...data[0].questions, ...data[1].questions, ...data[2].questions]; // Merge all subjects
-                            renderQuestionDetail(questionsData[currentQuestionIndex]); // Show the first question
-                            startTimer();
-                            document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
-                            questionFound = true;
-                            break;
-                        } catch (error) {
-                            console.error('Error fetching question data:', error);
-                        }
-                    }
+            try {
+                const response = await fetch(chaptersUrl);
+                const data = await response.json();
+                questionsData = data[0].questions; // Assuming questions are in the first array, adjust if needed
+
+                if (questionsData.length > 0) {
+                    renderQuestionDetail(questionsData[currentQuestionIndex]);
+                    startTimer();
+                } else {
+                    document.getElementById('question-detail').innerHTML = '<p>No questions found for this Meta ID.</p>';
                 }
-
-                if (!questionFound) {
-                    document.getElementById('question-detail').innerHTML = '<p>Questions not found.</p>';
-                }
-            })();
+            } catch (error) {
+                console.error('Error fetching question data:', error);
+            }
         }
 
         // Render question details in the HTML
@@ -91,7 +89,7 @@
                     ${question.options.map((opt, index) => 
                         `<li data-option="${opt.identifier}" id="option${index}">
                             ${String.fromCharCode(65 + index)}. ${renderMath(opt.content)}
-                         </li>`
+                        </li>`
                     ).join('')}
                 </ul>
                 <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
@@ -116,7 +114,7 @@
             });
 
             // Check for saved answer in localStorage
-            const savedAnswer = localStorage.getItem(`answer-${question.question_id}`);
+            const savedAnswer = localStorage.getItem(`answer-${currentMetaId}-${currentQuestionIndex}`);
             if (savedAnswer) {
                 document.querySelector(`#option${savedAnswer}`).classList.add('selected');
             }
@@ -131,7 +129,7 @@
 
         // Save selected answer to localStorage
         function saveAnswer(optionId) {
-            localStorage.setItem(`answer-${questionsData[currentQuestionIndex].question_id}`, optionId);
+            localStorage.setItem(`answer-${currentMetaId}-${currentQuestionIndex}`, optionId);
         }
 
         // Check and display the correct answer
@@ -142,7 +140,7 @@
                 return;
             }
 
-            const correctAnswer = getCorrectAnswer(questionsData[currentQuestionIndex].question_id);
+            const correctAnswer = getCorrectAnswer(currentMetaId, currentQuestionIndex);
             const options = document.querySelectorAll('.options li');
 
             options.forEach(option => {
@@ -159,8 +157,8 @@
         }
 
         // Get correct answer based on the question ID (example logic)
-        function getCorrectAnswer(questionId) {
-            return 'A'; // Placeholder for correct answer
+        function getCorrectAnswer(metaId, questionIndex) {
+            return 'A'; // Placeholder for correct answer, adjust according to actual data
         }
 
         // Load next question and update URL
@@ -177,11 +175,22 @@
             checkAnswer();
 
             // Get the next question from the same metaId
-            if (currentQuestionIndex < questionsData.length - 1) {
-                currentQuestionIndex++;
-                renderQuestionDetail(questionsData[currentQuestionIndex]);
+            const nextQuestion = getNextQuestion();
+            if (nextQuestion) {
+                const newUrl = `?title=${metaIds.find(meta => meta.id === currentMetaId).title}&metaId=${currentMetaId}/${nextQuestion.question_id}`;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+                currentQuestionIndex = nextQuestion.question_id - 1; // Update question index
+                loadQuestionDetail();
+            }
+        }
+
+        // Get the next question from the same metaId
+        function getNextQuestion() {
+            const currentIndex = currentQuestionIndex;
+            if (currentIndex === -1 || currentIndex === questionsData.length - 1) {
+                return questionsData[0]; // If it's the last question or not found, go to the first question
             } else {
-                alert("You have completed all questions.");
+                return questionsData[currentIndex + 1];
             }
         }
 
@@ -191,19 +200,19 @@
 
     <script>
         function goBack() {
-            // Get the current URL
             const currentUrl = window.location.href;
-
-            // Extract the part after '?metaId='
             const urlParams = new URLSearchParams(window.location.search);
-            const metaId = urlParams.get('metaId'); // e.g., '3c48616f-298a-5f69-91d2-bcd59444c455'
+            const metaId = urlParams.get('metaId'); // e.g., '3c48616f-298a-5f69-91d2-bcd59444c455/1'
 
             if (metaId) {
-                // Construct the new URL
-                const newUrl = `subject.html?metaId=${metaId}`;
+                const [metaIdValue, questionIndex] = metaId.split('/');  // Extract metaId and question number
+                const metaData = metaIds.find(meta => meta.id === metaIdValue);
 
-                // Redirect to the new URL
-                window.location.href = newUrl;
+                if (metaData) {
+                    // Construct the new URL
+                    const newUrl = `subject.html?title=${metaData.title}&metaId=${metaIdValue}`;
+                    window.location.href = newUrl;
+                }
             } else {
                 console.error('No "metaId" parameter found in the URL.');
             }
