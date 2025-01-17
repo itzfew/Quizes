@@ -174,10 +174,9 @@
         }
 
         // Handle back button navigation
-        function goBack() {
-            window.history.back();
-        }
-
+function goBack() {
+    window.location.href = "index.html";
+}
         // Load metaIds JSON on page load
         window.onload = fetchMetaIds;
     </script>
