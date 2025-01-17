@@ -24,33 +24,12 @@
             // Add more metaId data as needed
         ];
 
-        // Initialize variables
-        let timerInterval;
-        let currentMetaId;
-        let currentQuestionIndex;
-        let questionsData = [];
+        let currentMetaId, currentQuestionIndex, questionsData = [];
 
-        // Timer function with automatic submit and check
-        function startTimer() {
-            let timeLeft = 120; // 2-minute timer
-            timerInterval = setInterval(function () {
-                const minutes = Math.floor(timeLeft / 60);
-                const seconds = timeLeft % 60;
-                document.getElementById('timer').textContent = `Time: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-                if (timeLeft === 0) {
-                    clearInterval(timerInterval);
-                    alert("Time's up! Your answer will be submitted.");
-                    checkAnswer();  // Automatically check the answer when time runs out
-                }
-                timeLeft--;
-            }, 1000);
-        }
-
-        // Load question details from all metaIds
         function loadQuestionDetail() {
             const urlParams = new URLSearchParams(window.location.search);
-            currentMetaId = urlParams.get('metaId').split('/')[0]; // Extract metaId from URL
-            currentQuestionIndex = parseInt(urlParams.get('metaId').split('/')[1], 10) - 1; // Extract question index (1-based to 0-based)
+            currentMetaId = urlParams.get('metaId').split('/')[0]; // Extract metaId
+            currentQuestionIndex = parseInt(urlParams.get('index'), 10) - 1; // Extract question index (1-based to 0-based)
 
             const metaData = metaIds.find(meta => meta.id === currentMetaId);
             if (metaData) {
@@ -61,27 +40,26 @@
             }
         }
 
-        // Fetch questions based on metaId
+        // Fetch questions from a JSON file
         async function fetchQuestions(metaId) {
             const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
             try {
                 const response = await fetch(chaptersUrl);
                 const data = await response.json();
-                questionsData = data[0].questions; // Assuming questions are in the first array, adjust if needed
+                questionsData = data[0].questions; // Assuming questions are in the first array
 
-                if (questionsData.length > 0) {
+                if (questionsData.length > 0 && currentQuestionIndex < questionsData.length) {
                     renderQuestionDetail(questionsData[currentQuestionIndex]);
                     startTimer();
                 } else {
-                    document.getElementById('question-detail').innerHTML = '<p>No questions found for this Meta ID.</p>';
+                    document.getElementById('question-detail').innerHTML = '<p>No questions found for this Meta ID or invalid question index.</p>';
                 }
             } catch (error) {
                 console.error('Error fetching question data:', error);
             }
         }
 
-        // Render question details in the HTML
         function renderQuestionDetail(question) {
             let questionDetailHTML = `
                 <h3>${renderMath(question.content)}</h3>
@@ -165,7 +143,6 @@
         function loadNextQuestion() {
             const selectedOption = document.querySelector('.options li.selected');
 
-            // Force check answer if not already selected
             if (!selectedOption) {
                 alert("You need to select an answer before proceeding.");
                 return;
@@ -177,9 +154,9 @@
             // Get the next question from the same metaId
             const nextQuestion = getNextQuestion();
             if (nextQuestion) {
-                const newUrl = `?title=${metaIds.find(meta => meta.id === currentMetaId).title}&metaId=${currentMetaId}/${nextQuestion.question_id}`;
+                const newUrl = `?title=${metaIds.find(meta => meta.id === currentMetaId).title}&metaId=${currentMetaId}&index=${nextQuestion.index}`;
                 window.history.pushState({ path: newUrl }, '', newUrl);
-                currentQuestionIndex = nextQuestion.question_id - 1; // Update question index
+                currentQuestionIndex = nextQuestion.index - 1; // Update question index
                 loadQuestionDetail();
             }
         }
@@ -196,21 +173,17 @@
 
         // Load the question detail on page load
         window.onload = loadQuestionDetail;
-    </script>
 
-    <script>
+        // Handle back button navigation
         function goBack() {
             const currentUrl = window.location.href;
             const urlParams = new URLSearchParams(window.location.search);
-            const metaId = urlParams.get('metaId'); // e.g., '3c48616f-298a-5f69-91d2-bcd59444c455/1'
+            const metaId = urlParams.get('metaId');
 
             if (metaId) {
-                const [metaIdValue, questionIndex] = metaId.split('/');  // Extract metaId and question number
-                const metaData = metaIds.find(meta => meta.id === metaIdValue);
-
+                const metaData = metaIds.find(meta => meta.id === metaId);
                 if (metaData) {
-                    // Construct the new URL
-                    const newUrl = `subject.html?title=${metaData.title}&metaId=${metaIdValue}`;
+                    const newUrl = `subject.html?title=${metaData.title}&metaId=${metaId}`;
                     window.location.href = newUrl;
                 }
             } else {
@@ -218,6 +191,5 @@
             }
         }
     </script>
-
 </body>
 </html>
