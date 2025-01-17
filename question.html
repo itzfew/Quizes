@@ -9,7 +9,7 @@
 </head>
 <body>
     <!-- Back Button to Go to Index Page -->
-    <button class="back-btn" onclick="window.location.href='index.html'">Back</button>
+<button class="back-btn" onclick="goBack()">Back</button>
 <main>
     <div class="source" id="source"></div>
     <div id="question-detail"></div>
@@ -234,7 +234,25 @@ function getNextQuestion() {
 // Load the question detail on page load
 window.onload = loadQuestionDetail;
 </script>
+<script>
+function goBack() {
+    // Get the current URL
+    const currentUrl = window.location.href;
 
+    // Parse the subject and chapter from the URL
+    const urlParts = currentUrl.split('/');  // Split the URL based on slashes
+    
+    // Extract the subject and chapter from the URL
+    const subject = urlParts[3];  // 'biology'
+    const chapter = urlParts[4];  // 'biomolecules'
+
+    // Construct the new URL with the extracted subject and chapter
+    const newUrl = `subject.html?subject=${subject}&chapter=${chapter}`;
+
+    // Redirect to the new URL
+    window.location.href = newUrl;
+}
+</script>
 
 </body>
 </html>
