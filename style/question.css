@@ -119,6 +119,7 @@ button:hover {
     padding: 15px;
     border-radius: 10px;
     border: 2px solid #ddd;
+     overflow-x: auto;
     word-wrap: break-word;  /* Ensures text wraps to a new line when it overflows */
     overflow-wrap: break-word;  /* Same as above, ensures long words break and don't overflow */
 }
