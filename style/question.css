@@ -111,26 +111,6 @@ main {
 #next-btn:focus {
     outline: none; /* Remove outline on focus */
 }
-
-
-button {
-    background-color: white; /* White background */
-    color: black; /* Black text */
-    bottom: 10px;
-    border: 2px solid black; /* Black border */
-    padding: 10px 20px;
-    font-size: 16px; /* Font size */
-    font-weight: bold; /* Bold text */
-    cursor: pointer; /* Pointer cursor on hover */
-    border-radius: 5px; /* Rounded corners */
-    transition: all 0.3s ease;
-}
-
-button:hover {
-    background-color: black; /* Black background on hover */
-    color: white; /* White text on hover */
-}
-
 .timer {
     position: fixed;
     bottom: 10px;
