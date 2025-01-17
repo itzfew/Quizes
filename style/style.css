@@ -1,21 +1,16 @@
 body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            padding: 20px;
-            margin: 0;
-            width: 100%;
-            overflow-x: hidden;
-        }
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
 
-        main {
-            margin: 20px 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            overflow-x: auto;
-            width: 100%;
-        }
+/* General Reset for Margin and Padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 /* Header Section */
 header {
@@ -94,11 +89,12 @@ main {
 
 /* Options */
 .options li {
-    overflow-x: auto;
     margin-bottom: 10px;
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 5px;
+    overflow-x: auto;
+    white-space: nowrap;
     word-wrap: normal;
     max-width: 100%;
 }
