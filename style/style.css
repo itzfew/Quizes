@@ -117,6 +117,20 @@ main {
     margin-right: 10px;
 }
 
+/* MathJax Equation Styling */
+.options li .mathjax {
+    display: inline-block;
+    font-size: 1.2em;
+    color: #007bff;
+    white-space: normal; /* Allow text wrapping around the equation */
+}
+
+/* Ensuring MathJax equations inside options don't affect the text wrapping */
+.options li .mathjax block {
+    white-space: normal; /* Ensure multi-line equations don't cause issues */
+    word-wrap: break-word;
+}
+
 
 /* Question ID and Correct Answer */
 .question-id {
