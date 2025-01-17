@@ -56,21 +56,21 @@
     let subject, chapter;
     let questionsData = [];
 
-    // Timer function with automatic submit and check
-    function startTimer() {
-        let timeLeft = 60; // 1-minute timer
-        timerInterval = setInterval(function () {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            document.getElementById('timer').textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-            if (timeLeft === 0) {
-                clearInterval(timerInterval);
-                alert("Time's up! Your answer will be submitted.");
-                checkAnswer();  // Automatically check the answer when time runs out
-            }
-            timeLeft--;
-        }, 1000);
-    }
+// Timer function with automatic submit and check
+function startTimer() {
+    let timeLeft = 120; // 2-minute timer
+    timerInterval = setInterval(function () {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer').textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        if (timeLeft === 0) {
+            clearInterval(timerInterval);
+            alert("Time's up! Your answer will be submitted.");
+            checkAnswer();  // Automatically check the answer when time runs out
+        }
+        timeLeft--;
+    }, 1000);
+}
 
     // Load question details from all metaIds
     function loadQuestionDetail() {
