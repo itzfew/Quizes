@@ -86,50 +86,30 @@ main {
     max-width: 100%;
     overflow-x: auto;
 }
-/* Options Container */
-.options {
-    max-height: 400px; /* Set a max height for scroll */
-    overflow-y: auto; /* Enable vertical scrolling for the entire container */
-    padding: 0;
-    list-style-type: none;
-}
 
-/* Individual Option */
+/* Options */
 .options li {
     margin-bottom: 10px;
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 5px;
-    width: 100%; /* Ensures each option takes up full width */
-    word-wrap: break-word; /* Break words to avoid overflow */
-    white-space: normal; /* Allow line breaks within long text */
+    overflow-x: auto;
+    white-space: nowrap;
+    word-wrap: normal;
+    max-width: 100%;
 }
 
-/* Label inside each option */
 .options label {
     display: flex;
     align-items: center;
     width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
-/* Radio Button */
 .options input[type="radio"] {
     margin-right: 10px;
-}
-
-/* MathJax Equation Styling */
-.options li .mathjax {
-    display: inline-block;
-    font-size: 1.2em;
-    color: #007bff;
-    white-space: normal; /* Allow text wrapping around the equation */
-}
-
-/* Ensuring MathJax equations inside options don't affect the text wrapping */
-.options li .mathjax block {
-    white-space: normal; /* Ensure multi-line equations don't cause issues */
-    word-wrap: break-word;
-}
+} don't make scroll each option..but make scroll all full.. also break the text word autoamtic ..width ..well
 
 
 /* Question ID and Correct Answer */
