@@ -13,15 +13,6 @@ body {
     overflow-x: hidden;
 }
 
-main {
-    margin: 20px 0;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow-x: auto;
-    width: 100%;
-}
 
 .question-detail {
     overflow-x: auto;
