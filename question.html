@@ -239,20 +239,25 @@ function goBack() {
     // Get the current URL
     const currentUrl = window.location.href;
 
-    // Parse the subject and chapter from the URL
-    const urlParts = currentUrl.split('/');  // Split the URL based on slashes
-    
-    // Extract the subject and chapter from the URL
-    const subject = urlParts[3];  // 'biology'
-    const chapter = urlParts[4];  // 'biomolecules'
+    // Extract the part after '?id='
+    const urlParams = new URLSearchParams(window.location.search);
+    const questionId = urlParams.get('id');  // e.g., 'biology/biomolecules/1lipxfxx3'
 
-    // Construct the new URL with the extracted subject and chapter
-    const newUrl = `subject.html?subject=${subject}&chapter=${chapter}`;
+    if (questionId) {
+        // Split the questionId to get subject and chapter
+        const urlParts = questionId.split('/');  // Split by '/'
+        const subject = urlParts[0];  // 'biology'
+        const chapter = urlParts[1];  // 'biomolecules'
 
-    // Redirect to the new URL
-    window.location.href = newUrl;
+        // Construct the new URL
+        const newUrl = `index.html?subject=${subject}&chapter=${chapter}`;
+
+        // Redirect to the new URL
+        window.location.href = newUrl;
+    } else {
+        console.error('No "id" parameter found in the URL.');
+    }
 }
 </script>
-
 </body>
 </html>
