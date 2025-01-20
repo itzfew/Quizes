@@ -95,7 +95,7 @@
             // Display question content with MathJax inline
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = renderMath(question.content);  // Apply renderMath here
+            questionContent.innerHTML = renderMath(question.content);
             questionElement.appendChild(questionContent);
 
             // Display options
@@ -112,7 +112,7 @@
                 optionInput.value = option.identifier;
 
                 optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += renderMath(option.content);  // Apply renderMath here
+                optionLabel.innerHTML += renderMath(option.content);
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
@@ -159,7 +159,7 @@
             // Explanation Content (always shown immediately below feedback)
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = renderMath(question.explanation || 'No explanation available.');  // Apply renderMath here
+            explanationContent.innerHTML = renderMath(question.explanation || 'No explanation available.');
             questionElement.appendChild(explanationContent);
 
             // Re-render MathJax content
@@ -188,12 +188,12 @@
         function renderMath(input) {
             // Handle inline math (between single $)
             input = input.replace(/\$(.*?)\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                return `<span class="mathjax-inline">${p1}</span>`;
             });
 
             // Handle block math (between double $$)
             input = input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                return `<span class="mathjax-inline">${p1}</span>`;
             });
 
             return input;
