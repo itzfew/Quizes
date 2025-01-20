@@ -112,7 +112,7 @@
                 optionInput.value = option.identifier;
 
                 optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
+                optionLabel.innerHTML += renderMath(option.content);
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
@@ -161,7 +161,8 @@
             explanationContent.className = 'explanation-content';
             explanationContent.innerHTML = renderMath(question.explanation || 'No explanation available.');
             questionElement.appendChild(explanationContent);
-// Re-render MathJax content
+
+            // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             
             // Disable all options after submitting
@@ -183,10 +184,12 @@
             questionElement.appendChild(nextButton);
         }
 
-        // Render Math for inline equations
+        // Render Math for inline and display equations
         function renderMath(input) {
             return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            }).replace(/\$(.*?)\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$${p1}$</span>`;
             });
         }
     </script>
