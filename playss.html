@@ -20,8 +20,6 @@
         .explanation-content { display: none; margin-top: 10px; }
         .correct-answer { font-size: 14px; font-weight: bold; margin-top: 10px; }
         .feedback { font-size: 14px; margin-top: 10px; }
-
-
     </style>
 </head>
 <body>
@@ -149,14 +147,7 @@
 
             questionElement.appendChild(feedback);
 
-            // Explanation Button
-            const explanationButton = document.createElement('button');
-            explanationButton.className = 'explanation-button';
-            explanationButton.textContent = 'Show Explanation';
-            explanationButton.onclick = () => toggleExplanation(questionElement, question);
-            questionElement.appendChild(explanationButton);
-
-            // Explanation Content
+            // Explanation Content (always shown after submitting answer)
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
             explanationContent.innerHTML = question.explanation || 'No explanation available.';
@@ -179,15 +170,6 @@
                 }
             };
             questionElement.appendChild(nextButton);
-        }
-
-        function toggleExplanation(questionElement, question) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            if (explanationContent.style.display === 'none') {
-                explanationContent.style.display = 'block';
-            } else {
-                explanationContent.style.display = 'none';
-            }
         }
     </script>
 </body>
