@@ -97,10 +97,8 @@
             questionContent.className = 'question-content';
             questionContent.innerHTML = renderMath(question.content);
             questionElement.appendChild(questionContent);
-
-            // Re-render MathJax content for this section
+// Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-
             // Display options
             const optionsList = document.createElement('ul');
             optionsList.className = 'options';
@@ -115,7 +113,7 @@
                 optionInput.value = option.identifier;
 
                 optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += renderMath(option.content); // Math rendering for options
+                optionLabel.innerHTML += option.content;
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
@@ -131,7 +129,7 @@
 
             quizContainer.appendChild(questionElement);
 
-            // Re-render MathJax content for options and button
+            // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
@@ -164,8 +162,7 @@
             explanationContent.className = 'explanation-content';
             explanationContent.innerHTML = renderMath(question.explanation || 'No explanation available.');
             questionElement.appendChild(explanationContent);
-
-            // Re-render MathJax content for the explanation
+// Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             
             // Disable all options after submitting
@@ -188,21 +185,21 @@
         }
 
         // Render Math for both inline ($...$) and block equations ($$...$$)
-        function renderMath(input) {
-            // Handle inline math (between single $)
-            input = input.replace(/\$(.*?)\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
+function renderMath(input) {
+    // Handle inline math (between single $)
+    input = input.replace(/\$(.*?)\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+    });
 
-            // Handle block math (between double $$)
-            input = input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
+    // Handle block math (between double $$)
+    input = input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+    });
 
-            return input;
-        }
+    return input;
+}
 
-        // Prevent page refresh or navigation
+                // Prevent page refresh or navigation
         window.onbeforeunload = function (event) {
             return "Are you sure you want to leave? Your progress may be lost.";
         };
