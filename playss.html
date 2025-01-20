@@ -16,9 +16,7 @@
         .options { list-style-type: none; padding: 0; }
         .options li { margin: 5px 0; }
         .submit-button { margin-top: 20px; }
-        .explanation-button { margin-top: 10px; }
-        .explanation-content { display: none; margin-top: 10px; }
-        .correct-answer { font-size: 14px; font-weight: bold; margin-top: 10px; }
+        .explanation-content { margin-top: 10px; font-size: 14px; font-weight: bold; }
         .feedback { font-size: 14px; margin-top: 10px; }
     </style>
 </head>
@@ -129,6 +127,7 @@
             const feedback = document.createElement('div');
             feedback.className = 'feedback';
 
+            // Feedback Message
             if (selectedOption) {
                 const selectedOptionValue = selectedOption.value;
                 const correctOptionValue = question.correct_options[0];
@@ -147,7 +146,7 @@
 
             questionElement.appendChild(feedback);
 
-            // Explanation Content (always shown after submitting answer)
+            // Explanation Content (always shown immediately below feedback)
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
             explanationContent.innerHTML = question.explanation || 'No explanation available.';
