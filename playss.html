@@ -10,6 +10,19 @@
     <link rel="stylesheet" href="style/play.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
+        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
+        }
+
+        /* Ensuring that MathJax inline formulas don't break or overflow */
+        .question-content span {
+            display: inline-block;
+        }
+
+        /* Basic Styling */
         .question { margin-bottom: 20px; }
         .question-number { font-weight: bold; }
         .question-content { margin-top: 10px; }
@@ -83,9 +96,7 @@
             // Display question content with MathJax inline
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
+            questionContent.innerHTML = renderMath(question.content); // Use the renderMath function
             questionElement.appendChild(questionContent);
 
             // Display options
@@ -169,6 +180,13 @@
                 }
             };
             questionElement.appendChild(nextButton);
+        }
+
+        /* Render LaTeX using MathJax */
+        function renderMath(input) {
+            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            });
         }
     </script>
 </body>
