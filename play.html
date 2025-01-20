@@ -189,6 +189,10 @@
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
             });
         }
+                // Prevent page refresh or navigation
+        window.onbeforeunload = function (event) {
+            return "Are you sure you want to leave? Your progress may be lost.";
+        };
     </script>
 
 </body>
