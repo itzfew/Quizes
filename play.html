@@ -97,7 +97,8 @@
             questionContent.className = 'question-content';
             questionContent.innerHTML = renderMath(question.content);
             questionElement.appendChild(questionContent);
-
+// Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             // Display options
             const optionsList = document.createElement('ul');
             optionsList.className = 'options';
