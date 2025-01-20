@@ -183,12 +183,21 @@
             questionElement.appendChild(nextButton);
         }
 
-        // Render Math for inline equations
-        function renderMath(input) {
-            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
-        }
+        // Render Math for both inline ($...$) and block equations ($$...$$)
+function renderMath(input) {
+    // Handle inline math (between single $)
+    input = input.replace(/\$(.*?)\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+    });
+
+    // Handle block math (between double $$)
+    input = input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+    });
+
+    return input;
+}
+
                 // Prevent page refresh or navigation
         window.onbeforeunload = function (event) {
             return "Are you sure you want to leave? Your progress may be lost.";
