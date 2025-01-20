@@ -23,11 +23,13 @@ body {
     text-align: center;
 }
 
-/* Subject Dropdown */
+/* Fixed Subject Dropdown at Top */
 #subject-dropdown {
-    display: block;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 200px;
-    margin: 20px auto;
     padding: 10px;
     font-size: 16px;
     background-color: #fff;
@@ -35,6 +37,7 @@ body {
     border-radius: 5px;
     color: #333;
     cursor: pointer;
+    z-index: 1000; /* Ensure it stays on top */
 }
 
 /* Question Styling */
@@ -134,21 +137,19 @@ input[type="radio"] {
     color: orange;
 }
 
+/* Explanation Styling */
 .explanation-content {
     margin-top: 10px;
     font-size: 14px;
     font-weight: bold;
     color: #555;
+    background-color: yellow; /* Yellow background for better visibility */
     border-top: 1px solid #ddd;
-    padding-top: 10px;
+    padding: 10px;
 }
 
 .explanation-content p {
     line-height: 1.6;
-}
-
-/* Hiding Explanation until answer is submitted */
-.explanation-content {
 }
 
 /* Ensure Question is Visible Above Fixed Buttons */
