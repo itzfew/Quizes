@@ -43,6 +43,8 @@
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
+        const subjectIndex = urlParams.get('subject');  // Get the subject index from the URL
+        const questionIndex = urlParams.get('index');  // Get the question index from the URL
 
         if (title) {
             document.getElementById('quiz-title').textContent = title;
@@ -56,7 +58,7 @@
             .then(data => {
                 quizData = data;
                 populateSubjectDropdown();
-                displayQuestion();
+                displayQuestion(subjectIndex, questionIndex); // Load the specific question
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
@@ -71,25 +73,24 @@
 
             subjectDropdown.onchange = () => {
                 currentQuestionIndex = 0;
-                displayQuestion();
+                displayQuestion(subjectDropdown.value, 0);
             };
         }
 
-        function displayQuestion() {
+        function displayQuestion(subjectIndex, questionIndex) {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
-            const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
+            const question = subject.questions[questionIndex];
 
-            const question = subject.questions[currentQuestionIndex];
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
 
             // Add Question Numbering
             const questionNumber = document.createElement('div');
             questionNumber.className = 'question-number';
-            questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
+            questionNumber.textContent = `Question ${questionIndex + 1}:`;
             questionElement.appendChild(questionNumber);
 
             // Display question content with MathJax inline
