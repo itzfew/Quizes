@@ -143,10 +143,13 @@
 
             options.forEach(option => {
                 option.classList.remove('correct', 'incorrect');
+                // If option is correct
                 if (option.dataset.option === correctAnswer) {
-                    option.classList.add('correct');
-                } else if (option === selectedOption) {
-                    option.classList.add('incorrect');
+                    option.classList.add('correct'); // Green for correct answer
+                } 
+                // If option is selected and incorrect
+                else if (option === selectedOption) {
+                    option.classList.add('incorrect'); // Red for incorrect answer
                 }
             });
 
