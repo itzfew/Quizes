@@ -149,7 +149,6 @@ input[type="radio"] {
 
 /* Hiding Explanation until answer is submitted */
 .explanation-content {
-    display: none;
 }
 
 /* Ensure Question is Visible Above Fixed Buttons */
