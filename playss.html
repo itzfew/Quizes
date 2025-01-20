@@ -9,15 +9,16 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
-        /* Optional styles to enhance the quiz appearance */
         .question { margin-bottom: 20px; }
         .question-number { font-weight: bold; }
-        .options { list-style-type: none; }
+        .question-content { margin-top: 10px; }
+        .options { list-style-type: none; padding: 0; }
         .options li { margin: 5px 0; }
-        .explanation-button, .submit-button { margin-top: 20px; }
-        .explanation-content { display: none; margin-top: 10px; }
-        .explanation-content.open { display: block; }
         .submit-button { margin-top: 20px; }
+        .explanation-button { margin-top: 10px; }
+        .explanation-content { display: none; margin-top: 10px; }
+        .correct-answer { font-size: 14px; font-weight: bold; margin-top: 10px; }
+        .feedback { font-size: 14px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -63,21 +64,14 @@
             };
         }
 
-        let totalQuestions = 0;
-        let correctAnswers = 0;
-        let incorrectAnswers = 0;
-        let missedAnswers = 0;
-        let startTime = new Date();
-
         function displayQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
-            const question = subject.questions[currentQuestionIndex];
 
-            totalQuestions++;  // Increase total questions count
+            const question = subject.questions[currentQuestionIndex];
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
 
@@ -90,7 +84,6 @@
             // Display question content with MathJax inline
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            // Wrap math in the mathjax-inline class
             questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
             });
@@ -117,73 +110,60 @@
 
             questionElement.appendChild(optionsList);
 
-            // Add explanation dropdown button (hidden by default)
-            const explanationButton = document.createElement('button');
-            explanationButton.className = 'explanation-button';
-            explanationButton.textContent = 'Show Explanation';
-            explanationButton.onclick = () => toggleExplanation(questionElement);
-            questionElement.appendChild(explanationButton);
-
-            // Create explanation content (hidden by default)
-            const explanationContent = document.createElement('div');
-            explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-            questionElement.appendChild(explanationContent);
+            // Submit button per question
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit Answer';
+            submitButton.onclick = () => submitAnswer(questionElement, question);
+            questionElement.appendChild(submitButton);
 
             quizContainer.appendChild(questionElement);
-
-            // Add Next/Previous buttons
-            const navigationButtons = document.createElement('div');
-            const previousButton = document.createElement('button');
-            const nextButton = document.createElement('button');
-            previousButton.textContent = 'Previous';
-            nextButton.textContent = 'Next';
-
-            previousButton.onclick = () => navigateQuestion(-1);
-            nextButton.onclick = () => navigateQuestion(1);
-
-            if (currentQuestionIndex === 0) {
-                previousButton.disabled = true;
-            }
-            if (currentQuestionIndex === subject.questions.length - 1) {
-                nextButton.disabled = true;
-            }
-
-            navigationButtons.appendChild(previousButton);
-            navigationButtons.appendChild(nextButton);
-            quizContainer.appendChild(navigationButtons);
 
             // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function navigateQuestion(direction) {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-            
-            // Update the current question index
-            currentQuestionIndex += direction;
+        function submitAnswer(questionElement, question) {
+            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback';
 
-            // Ensure it stays within bounds
-            if (currentQuestionIndex < 0) {
-                currentQuestionIndex = 0;
+            if (selectedOption) {
+                const selectedOptionValue = selectedOption.value;
+                const correctOptionValue = question.correct_options[0];
+
+                if (selectedOptionValue === correctOptionValue) {
+                    feedback.innerHTML = "You are correct!";
+                    feedback.style.color = 'green'; // Correct answer in green
+                } else {
+                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
+                    feedback.style.color = 'red'; // Incorrect answer in red
+                }
+            } else {
+                feedback.innerHTML = 'You did not select an option.';
+                feedback.style.color = 'orange'; // No selection made
             }
-            if (currentQuestionIndex >= subject.questions.length) {
-                currentQuestionIndex = subject.questions.length - 1;
-            }
 
-            displayQuestion();
+            questionElement.appendChild(feedback);
+
+            // Disable all options after submitting
+            const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+            options.forEach(option => option.disabled = true);
+
+            // Add next button after submission
+            const nextButton = document.createElement('button');
+            nextButton.className = 'submit-button';
+            nextButton.textContent = 'Next Question';
+            nextButton.onclick = () => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < quizData[document.getElementById('subject-dropdown').value].questions.length) {
+                    displayQuestion();
+                } else {
+                    alert("You've completed the quiz!");
+                }
+            };
+            questionElement.appendChild(nextButton);
         }
-
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
-        }
-
-        // Prevent page refresh or navigation
-        window.onbeforeunload = function (event) {
-            return "Are you sure you want to leave? Your progress may be lost.";
-        };
     </script>
 </body>
 </html>
