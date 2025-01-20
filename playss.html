@@ -146,6 +146,19 @@
 
             questionElement.appendChild(feedback);
 
+            // Explanation Button
+            const explanationButton = document.createElement('button');
+            explanationButton.className = 'explanation-button';
+            explanationButton.textContent = 'Show Explanation';
+            explanationButton.onclick = () => toggleExplanation(questionElement, question);
+            questionElement.appendChild(explanationButton);
+
+            // Explanation Content
+            const explanationContent = document.createElement('div');
+            explanationContent.className = 'explanation-content';
+            explanationContent.innerHTML = question.explanation || 'No explanation available.';
+            questionElement.appendChild(explanationContent);
+
             // Disable all options after submitting
             const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
             options.forEach(option => option.disabled = true);
@@ -163,6 +176,15 @@
                 }
             };
             questionElement.appendChild(nextButton);
+        }
+
+        function toggleExplanation(questionElement, question) {
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            if (explanationContent.style.display === 'none') {
+                explanationContent.style.display = 'block';
+            } else {
+                explanationContent.style.display = 'none';
+            }
         }
     </script>
 </body>
