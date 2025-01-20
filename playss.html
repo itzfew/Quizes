@@ -138,7 +138,7 @@
                 return;
             }
 
-            const correctAnswer = getCorrectAnswer(currentMetaId, currentQuestionIndex); // Get correct answer from JSON
+            const correctAnswer = getCorrectAnswer(currentMetaId, currentQuestionIndex);
             const options = document.querySelectorAll('.options li');
 
             options.forEach(option => {
@@ -154,10 +154,10 @@
             document.getElementById('explanation').style.display = 'block';
         }
 
-        // Get correct answer based on the question ID (example logic)
+        // Get correct answer based on the question ID (now using correct_options)
         function getCorrectAnswer(metaId, questionIndex) {
             const question = questionsData[questionIndex];
-            return question.correct_options; // This should match the field in your JSON
+            return question.correct_options; // Return correct answer identifier
         }
 
         // Load next question and update URL
