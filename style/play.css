@@ -1,193 +1,151 @@
-/* General Body Styling */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+/* Basic Reset */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-/* Adjust the rest of the page below the header */
-main {
-    margin-top: 80px; /* Add margin to avoid content hiding behind the header */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
     padding: 20px;
 }
 
-/* Quiz Title Styling */
 .quiz-title {
-    font-size: 1.5em;
-    margin: 5px 0;
-    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
     text-align: center;
-    border: 2px solid black;
+}
+
+#subject-dropdown {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    color: #333;
+    cursor: pointer;
+}
+
+#quiz-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 /* Question Styling */
 .question {
     margin-bottom: 30px;
-    padding: 3px;
-    border-bottom: 1px solid #ccc;
-    overflow-x: auto;
-    word-wrap: break-word;
-    white-space: normal;
 }
 
-/* Question Number */
 .question-number {
     font-weight: bold;
-    font-size: 1.2em;
-    color: #333;
-    margin-bottom: 10px;
+    font-size: 18px;
 }
 
-/* Question Content */
 .question-content {
-    margin-bottom: 15px;
-    word-wrap: break-word;
-    white-space: normal;
-    max-width: 100%;
-    overflow-x: auto;
+    margin-top: 10px;
+    font-size: 16px;
+    line-height: 1.5;
 }
 
-/* Options List Styling */
+.mathjax-inline {
+    font-style: italic;
+    color: #2c3e50;
+}
+
+/* Options Styling */
+.options {
+    list-style-type: none;
+    padding: 0;
+}
+
 .options li {
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    overflow-x: auto;
-    word-wrap: break-word;
-    white-space: normal;
+    margin: 5px 0;
+    font-size: 16px;
 }
 
-/* Label for Options */
 .options label {
     cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-/* Radio Buttons Styling */
-.options input[type="radio"] {
-    margin-right: 10px;
-}
-
-/* Question ID */
-.question-id {
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #555;
-}
-
-/* Correct Answer Styling */
-.correct-answer {
-    margin-top: 10px;
-    font-weight: bold;
-    color: green;
-}
-
-/* Subject Dropdown Styling */
-#subject-dropdown {
     display: block;
-    margin: 20px auto;
-    padding: 10px;
-    font-size: 1em;
 }
 
-/* Image Styling */
-img {
-    max-width: 100px;
-    height: auto;
+input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
 }
 
 /* Submit Button Styling */
 .submit-button {
-    background-color: #000;
-    color: white;
+    margin-top: 20px;
     padding: 10px 20px;
-    border: 1px solid white;
-    border-radius: 5px;
-    cursor: pointer;
-    position: fixed;
-    bottom: 0px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    z-index: 1000;
-}
-
-/* Explanation Button Styling */
-.explanation-button {
-    display: none;
-    margin-top: 10px;
-    background-color: white;
-    color: black;
-    border: 2px solid black;
-    cursor: pointer;
-    padding: 8px 16px;
-}
-
-.explanation-button:hover {
-    background-color: black;
+    font-size: 16px;
+    background-color: #3498db;
     color: white;
-}
-
-/* Explanation Button Container */
-.explanation-button-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-/* Explanation Content Styling */
-.explanation-content {
-    display: none;
-    margin-top: 10px;
-    font-style: italic;
-    color: #777;
-}
-
-/* Open Explanation Styling */
-.explanation-content.open {
-    display: block;
-    background-color: #FFF59D; /* Yellow background */
-    padding: 10px;
+    border: none;
     border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #2980b9;
+}
+
+/* Feedback and Explanation Styling */
+.feedback {
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+.feedback.green {
+    color: green;
+}
+
+.feedback.red {
+    color: red;
+}
+
+.feedback.orange {
+    color: orange;
+}
+
+.explanation-content {
     margin-top: 10px;
-    font-style: italic;
-    color: #777;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
 }
 
-/* MathJax Inline Formula Styling */
-.mathjax-inline {
-    white-space: nowrap;
-    display: inline-block;
-    font-size: 1.1em;
+.explanation-content p {
+    line-height: 1.6;
 }
 
-/* Prevent Line Breaks in MathJax */
-.question-content span {
-    display: inline-block;
+/* Next Button Styling */
+.next-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
 }
 
-/* Responsive Design for Small Screens */
-@media (max-width: 600px) {
-    body {
-        padding: 0px;
-    }
-
-    #quiz-container {
-        padding: 3px;
-    }
-
-    .submit-button {
-        padding: 10px;
-    }
-
-    .options li {
-        padding: 5px;
-    }
-
-    img {
-        max-width: 80px;
-    }
+.next-button:hover {
+    background-color: #27ae60;
 }
