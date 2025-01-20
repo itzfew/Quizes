@@ -3,182 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question Detail</title>
-    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    <link rel="stylesheet" href="style/question.css">
+    <title>Interactive Quiz Game</title>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <link rel="stylesheet" href="style/play.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
+    <style>
+        .question { margin-bottom: 20px; }
+        .question-number { font-weight: bold; }
+        .question-content { margin-top: 10px; }
+        .options { list-style-type: none; padding: 0; }
+        .options li { margin: 5px 0; }
+        .submit-button { margin-top: 20px; }
+        .explanation-content { margin-top: 10px; font-size: 14px; font-weight: bold; }
+        .feedback { font-size: 14px; margin-top: 10px; }
+
+        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
+        }
+
+        /* Ensuring that MathJax inline formulas don't break or overflow */
+        .question-content span {
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-    <!-- Back Button to Go to Index Page -->
-    <button class="back-btn" onclick="goBack()">Back</button>
-    <main>
-        <div class="source" id="source"></div>
-        <div id="question-detail"></div>
-        <div class="timer" id="timer">Time: 2:00</div>
-    </main>
+    <div class="quiz-title" id="quiz-title"></div>
+    <select id="subject-dropdown"></select>
+    <div id="quiz-container"></div>
 
     <script>
-        let currentMetaId, currentQuestionIndex = 0, questionsData = [];
-        let metaData = []; // Declare the metaData array
+        let currentQuestionIndex = 0;
+        let quizData = [];
+        const urlParams = new URLSearchParams(window.location.search);
+        const title = urlParams.get('title');
+        const metaId = urlParams.get('metaId');
 
-        // Fetch the meta data from the provided exams.json
-        async function fetchMetaIds() {
-            try {
-                const response = await fetch('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json'); // Adjust path
-                const data = await response.json();
-                metaData = data; // Store the fetched data
-
-                loadQuestionDetail();
-            } catch (error) {
-                console.error('Error fetching metaIds:', error);
-            }
+        if (title) {
+            document.getElementById('quiz-title').textContent = title;
         }
 
-        // Load question details based on the URL parameters
-        function loadQuestionDetail() {
-            const urlParams = new URLSearchParams(window.location.search);
-            currentMetaId = urlParams.get('metaId'); // Extract metaId from URL
-            const index = parseInt(urlParams.get('index'), 10); // Extract index
+        const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
-            // Find the correct paper based on metaId
-            let selectedPaper;
-            metaData.forEach(exam => {
-                const paper = exam.papers.find(paper => paper.metaId === currentMetaId);
-                if (paper) {
-                    selectedPaper = paper;
-                }
+        // Fetch the JSON data
+        fetch(jsonUrl)
+            .then(response => response.json())
+            .then(data => {
+                quizData = data;
+                populateSubjectDropdown();
+                displayQuestion();
+            })
+            .catch(error => console.error('Error fetching the JSON data:', error));
+
+        function populateSubjectDropdown() {
+            const subjectDropdown = document.getElementById('subject-dropdown');
+            quizData.forEach((subject, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = subject.title;
+                subjectDropdown.appendChild(option);
             });
 
-            if (selectedPaper) {
-                document.getElementById('source').textContent = `Source: ${selectedPaper.title}`;
-                fetchQuestions(selectedPaper.metaId, index); // Pass index
-            } else {
-                document.getElementById('question-detail').innerHTML = '<p>Invalid Meta ID.</p>';
-            }
+            subjectDropdown.onchange = () => {
+                currentQuestionIndex = 0;
+                displayQuestion();
+            };
         }
 
-        // Fetch the questions from the specified metaId
-        async function fetchQuestions(metaId, index) {
-            const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
+        function displayQuestion() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
 
-            try {
-                const response = await fetch(chaptersUrl);
-                const data = await response.json();
-                questionsData = data.flatMap(subject => subject.questions); // Flatten the data
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
 
-                // Adjust index to start from 1 (user perspective)
-                currentQuestionIndex = (index && index > 0) ? index - 1 : 0;
+            const question = subject.questions[currentQuestionIndex];
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question';
 
-                if (questionsData.length > 0 && currentQuestionIndex < questionsData.length) {
-                    renderQuestionDetail(questionsData[currentQuestionIndex]);
-                    startTimer();
-                } else {
-                    document.getElementById('question-detail').innerHTML = '<p>No questions found for this Meta ID or invalid question index.</p>';
-                }
-            } catch (error) {
-                console.error('Error fetching question data:', error);
-            }
-        }
+            // Add Question Numbering
+            const questionNumber = document.createElement('div');
+            questionNumber.className = 'question-number';
+            questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
+            questionElement.appendChild(questionNumber);
 
-        // Render question details and options
-        function renderQuestionDetail(question) {
-            let questionDetailHTML = `
-                <h3>${renderMath(question.content)}</h3>
-                <ul class="options">
-                    ${question.options.map((opt, index) => 
-                        `<li data-option="${opt.identifier}" id="option${index}">
-                            ${String.fromCharCode(65 + index)}. ${renderMath(opt.content)}
-                        </li>`
-                    ).join('')}
-                </ul>
-                <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
-                <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
-                <div class="explanation" id="explanation">
-                    <h4>Explanation:</h4>
-                    <p>${renderMath(question.explanation)}</p>
-                </div>
-            `;
-            document.getElementById('question-detail').innerHTML = questionDetailHTML;
+            // Display question content with MathJax inline
+            const questionContent = document.createElement('div');
+            questionContent.className = 'question-content';
+            questionContent.innerHTML = renderMath(question.content);
+            questionElement.appendChild(questionContent);
 
+            // Display options
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options';
+
+            question.options.forEach(option => {
+                const optionItem = document.createElement('li');
+                const optionLabel = document.createElement('label');
+                const optionInput = document.createElement('input');
+
+                optionInput.type = 'radio';
+                optionInput.name = `question${question.question_id}`;
+                optionInput.value = option.identifier;
+
+                optionLabel.appendChild(optionInput);
+                optionLabel.innerHTML += option.content;
+                optionItem.appendChild(optionLabel);
+                optionsList.appendChild(optionItem);
+            });
+
+            questionElement.appendChild(optionsList);
+
+            // Submit button per question
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit Answer';
+            submitButton.onclick = () => submitAnswer(questionElement, question);
+            questionElement.appendChild(submitButton);
+
+            quizContainer.appendChild(questionElement);
+
+            // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-
-            // Attach event listeners to options
-            const options = document.querySelectorAll('.options li');
-            options.forEach(option => {
-                option.addEventListener('click', function () {
-                    options.forEach(opt => opt.classList.remove('selected'));
-                    option.classList.add('selected');
-                    saveAnswer(option.dataset.option);
-                });
-            });
-
-            // Check for saved answer in localStorage
-            const savedAnswer = localStorage.getItem(`answer-${currentMetaId}-${currentQuestionIndex}`);
-            if (savedAnswer) {
-                document.querySelector(`#option${savedAnswer}`).classList.add('selected');
-            }
         }
 
-        // Render LaTeX using MathJax
+        function submitAnswer(questionElement, question) {
+            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback';
+
+            // Feedback Message
+            if (selectedOption) {
+                const selectedOptionValue = selectedOption.value;
+                const correctOptionValue = question.correct_options[0];
+
+                if (selectedOptionValue === correctOptionValue) {
+                    feedback.innerHTML = "You are correct!";
+                    feedback.style.color = 'green'; // Correct answer in green
+                } else {
+                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
+                    feedback.style.color = 'red'; // Incorrect answer in red
+                }
+            } else {
+                feedback.innerHTML = 'You did not select an option.';
+                feedback.style.color = 'orange'; // No selection made
+            }
+
+            questionElement.appendChild(feedback);
+
+            // Explanation Content (always shown immediately below feedback)
+            const explanationContent = document.createElement('div');
+            explanationContent.className = 'explanation-content';
+            explanationContent.innerHTML = renderMath(question.explanation || 'No explanation available.');
+            questionElement.appendChild(explanationContent);
+// Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            
+            // Disable all options after submitting
+            const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+            options.forEach(option => option.disabled = true);
+
+            // Add next button after submission
+            const nextButton = document.createElement('button');
+            nextButton.className = 'submit-button';
+            nextButton.textContent = 'Next Question';
+            nextButton.onclick = () => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < quizData[document.getElementById('subject-dropdown').value].questions.length) {
+                    displayQuestion();
+                } else {
+                    alert("You've completed the quiz!");
+                }
+            };
+            questionElement.appendChild(nextButton);
+        }
+
+        // Render Math for inline equations
         function renderMath(input) {
             return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
             });
         }
-
-        // Save selected answer to localStorage
-        function saveAnswer(optionId) {
-            localStorage.setItem(`answer-${currentMetaId}-${currentQuestionIndex}`, optionId);
-        }
-
-        // Check and display the correct answer
-        function checkAnswer() {
-            const selectedOption = document.querySelector('.options li.selected');
-            if (!selectedOption) {
-                alert("Please select an option.");
-                return;
-            }
-
-            const correctAnswer = getCorrectAnswer(currentMetaId, currentQuestionIndex);
-            const options = document.querySelectorAll('.options li');
-
-            options.forEach(option => {
-                option.classList.remove('correct', 'incorrect');
-                if (option.dataset.option === correctAnswer) {
-                    option.classList.add('correct');
-                } else if (option === selectedOption) {
-                    option.classList.add('incorrect');
-                }
-            });
-
-            // Show explanation after checking the answer
-            document.getElementById('explanation').style.display = 'block';
-        }
-
-        // Get correct answer based on the question ID (example logic)
-        function getCorrectAnswer(metaId, questionIndex) {
-            return 'A'; // Placeholder for correct answer, adjust according to actual data
-        }
-
-        // Load next question and update URL
-        function loadNextQuestion() {
-            currentQuestionIndex++;
-
-            if (currentQuestionIndex >= questionsData.length) {
-                currentQuestionIndex = 0; // Reset to first question, or show quiz completion
-            }
-
-            const newUrl = `?metaId=${currentMetaId}&index=${currentQuestionIndex + 1}`;
-            window.history.pushState({ path: newUrl }, '', newUrl);
-
-            renderQuestionDetail(questionsData[currentQuestionIndex]);
-        }
-
-        // Handle back button navigation
-function goBack() {
-    window.location.href = "index";
-}
-        // Load metaIds JSON on page load
-        window.onload = fetchMetaIds;
     </script>
+
 </body>
 </html>
