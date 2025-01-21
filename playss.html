@@ -8,75 +8,7 @@
     <link rel="stylesheet" href="style/play.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .quiz-title {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin: 20px;
-        }
-        .question {
-            background: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 600px;
-        }
-        .question-number {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .question-content {
-            margin-top: 10px;
-        }
-        .options {
-            list-style-type: none;
-            padding: 0;
-        }
-        .options li {
-            margin: 10px 0;
-        }
-        .submit-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .submit-button:hover {
-            background-color: #0056b3;
-        }
-        .explanation-content {
-            margin-top: 10px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #555;
-        }
-        .feedback {
-            font-size: 14px;
-            margin-top: 10px;
-        }
-        #subject-dropdown {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 16px;
-            max-width: 200px;
-            text-align: center;
-        }
+        /* Styles are the same as shared earlier */
     </style>
 </head>
 <body>
@@ -97,13 +29,16 @@
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
-        // Fetch the JSON data
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
                 quizData = data;
-                populateSubjectDropdown();
-                displayQuestion();
+                if (quizData.length > 0) {
+                    populateSubjectDropdown();
+                    displayQuestion();
+                } else {
+                    alert("No quiz data available!");
+                }
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
@@ -126,29 +61,30 @@
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
-            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subjectIndex = document.getElementById('subject-dropdown').value || 0;
             const subject = quizData[subjectIndex];
+
+            if (!subject || !subject.questions || subject.questions.length === 0) {
+                quizContainer.innerHTML = '<p>No questions available for this subject.</p>';
+                return;
+            }
 
             const question = subject.questions[currentQuestionIndex];
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
 
-            // Add Question Numbering
             const questionNumber = document.createElement('div');
             questionNumber.className = 'question-number';
             questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
             questionElement.appendChild(questionNumber);
 
-            // Display question content with MathJax inline
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
             questionContent.innerHTML = renderMath(question.content);
             questionElement.appendChild(questionContent);
 
-            // Render MathJax content
             MathJax.typesetPromise();
 
-            // Display options
             const optionsList = document.createElement('ul');
             optionsList.className = 'options';
 
@@ -162,14 +98,13 @@
                 optionInput.value = option.identifier;
 
                 optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
+                optionLabel.innerHTML += ` ${option.content}`;
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
 
             questionElement.appendChild(optionsList);
 
-            // Submit button per question
             const submitButton = document.createElement('button');
             submitButton.className = 'submit-button';
             submitButton.textContent = 'Submit Answer';
@@ -177,8 +112,6 @@
             questionElement.appendChild(submitButton);
 
             quizContainer.appendChild(questionElement);
-
-            // Render MathJax content again to ensure proper rendering
             MathJax.typesetPromise();
         }
 
@@ -187,64 +120,53 @@
             const feedback = document.createElement('div');
             feedback.className = 'feedback';
 
-            // Feedback Message
             if (selectedOption) {
                 const selectedOptionValue = selectedOption.value;
                 const correctOptionValue = question.correct_options[0];
 
                 if (selectedOptionValue === correctOptionValue) {
-                    feedback.innerHTML = "You are correct!";
-                    feedback.style.color = 'green'; // Correct answer in green
+                    feedback.innerHTML = "Correct!";
+                    feedback.style.color = 'green';
                 } else {
-                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red'; // Incorrect answer in red
+                    feedback.innerHTML = `Incorrect. The correct answer is: Option ${correctOptionValue}`;
+                    feedback.style.color = 'red';
                 }
             } else {
-                feedback.innerHTML = 'You did not select an option.';
-                feedback.style.color = 'orange'; // No selection made
+                feedback.innerHTML = 'Please select an option.';
+                feedback.style.color = 'orange';
             }
 
             questionElement.appendChild(feedback);
 
-            // Explanation Content (always shown immediately below feedback)
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
             explanationContent.innerHTML = renderMath(question.explanation || 'No explanation available.');
             questionElement.appendChild(explanationContent);
 
-            // Render MathJax content
             MathJax.typesetPromise();
 
-            // Disable all options after submitting
             const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
             options.forEach(option => option.disabled = true);
 
-            // Add next button after submission
             const nextButton = document.createElement('button');
             nextButton.className = 'submit-button';
             nextButton.textContent = 'Next Question';
             nextButton.onclick = () => {
                 currentQuestionIndex++;
-                if (currentQuestionIndex < quizData[document.getElementById('subject-dropdown').value].questions.length) {
+                const subjectIndex = document.getElementById('subject-dropdown').value || 0;
+                if (currentQuestionIndex < quizData[subjectIndex].questions.length) {
                     displayQuestion();
                 } else {
-                    alert("You've completed the quiz!");
+                    alert("Quiz completed!");
                 }
             };
             questionElement.appendChild(nextButton);
         }
 
-        // Render Math for both inline ($...$) and block equations ($$...$$)
         function renderMath(input) {
-            input = input.replace(/\$(.*?)\$/g, (match, p1) => {
-                return `<div class="mathjax-block">\\[${p1}\\]</div>`,
-                return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
-            });
-            input = input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">\\(${p1}\\)</span>`,
-                return `<div class="mathjax-block">\\[${p1}\\]</div>`;
-            });
-            return input;
+            return input
+                .replace(/\$\$(.*?)\$\$/g, (_, p1) => `<div class="mathjax-block">\\[${p1}\\]</div>`)
+                .replace(/\$(.*?)\$/g, (_, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
         }
     </script>
 </body>
