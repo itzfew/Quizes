@@ -237,9 +237,11 @@
         // Render Math for both inline ($...$) and block equations ($$...$$)
         function renderMath(input) {
             input = input.replace(/\$(.*?)\$/g, (match, p1) => {
+                return `<div class="mathjax-block">\\[${p1}\\]</div>`,
                 return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
             });
             input = input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">\\(${p1}\\)</span>`,
                 return `<div class="mathjax-block">\\[${p1}\\]</div>`;
             });
             return input;
