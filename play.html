@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Game</title>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+        
+    </script>
+
+    <link rel="stylesheet" href="style/play.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
+    <style>
+        .question { margin-bottom: 20px; }
+        .question-number { font-weight: bold; }
+        .question-content { margin-top: 10px; }
+        .options { list-style-type: none; padding: 0; }
+        .options li { margin: 5px 0; }
+        .submit-button { margin-top: 20px; }
+        .explanation-content { margin-top: 10px; font-size: 14px; font-weight: bold; }
+        .feedback { font-size: 14px; margin-top: 10px; }
+
+        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
+        }
+
+        /* Ensuring that MathJax inline formulas don't break or overflow */
+        .question-content span {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-title" id="quiz-title"></div>
+    <select id="subject-dropdown"></select>
+    <div id="quiz-container"></div>
+
+    <script>
+        let currentQuestionIndex = 0;
+        let quizData = [];
+        const urlParams = new URLSearchParams(window.location.search);
+        const title = urlParams.get('title');
+        const metaId = urlParams.get('metaId');
+
+        if (title) {
+            document.getElementById('quiz-title').textContent = title;
+        }
+
+        const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
+
+        // Fetch the JSON data
+        fetch(jsonUrl)
+            .then(response => response.json())
+            .then(data => {
+                quizData = data;
+                populateSubjectDropdown();
+                displayQuestion();
+            })
+            .catch(error => console.error('Error fetching the JSON data:', error));
+
+        function populateSubjectDropdown() {
+            const subjectDropdown = document.getElementById('subject-dropdown');
+            quizData.forEach((subject, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = subject.title;
+                subjectDropdown.appendChild(option);
+            });
+
+            subjectDropdown.onchange = () => {
+                currentQuestionIndex = 0;
+                displayQuestion();
+            };
+        }
+
+        function displayQuestion() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+
+            const question = subject.questions[currentQuestionIndex];
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question';
+
+            // Add Question Numbering
+            const questionNumber = document.createElement('div');
+            questionNumber.className = 'question-number';
+            questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
+            questionElement.appendChild(questionNumber);
+
+            // Display question content with MathJax inline
+            const questionContent = document.createElement('div');
+            questionContent.className = 'question-content';
+            questionContent.innerHTML = renderMath(question.content);
+            questionElement.appendChild(questionContent);
+// Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            // Display options
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options';
+
+            question.options.forEach(option => {
+                const optionItem = document.createElement('li');
+                const optionLabel = document.createElement('label');
+                const optionInput = document.createElement('input');
+
+                optionInput.type = 'radio';
+                optionInput.name = `question${question.question_id}`;
+                optionInput.value = option.identifier;
+
+                optionLabel.appendChild(optionInput);
+                optionLabel.innerHTML += option.content;
+                optionItem.appendChild(optionLabel);
+                optionsList.appendChild(optionItem);
+            });
+
+            questionElement.appendChild(optionsList);
+
+            // Submit button per question
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit Answer';
+            submitButton.onclick = () => submitAnswer(questionElement, question);
+            questionElement.appendChild(submitButton);
+
+            quizContainer.appendChild(questionElement);
+
+            // Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        function submitAnswer(questionElement, question) {
+            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback';
+
+            // Feedback Message
+            if (selectedOption) {
+                const selectedOptionValue = selectedOption.value;
+                const correctOptionValue = question.correct_options[0];
+
+                if (selectedOptionValue === correctOptionValue) {
+                    feedback.innerHTML = "You are correct!";
+                    feedback.style.color = 'green'; // Correct answer in green
+                } else {
+                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
+                    feedback.style.color = 'red'; // Incorrect answer in red
+                }
+            } else {
+                feedback.innerHTML = 'You did not select an option.';
+                feedback.style.color = 'orange'; // No selection made
+            }
+
+            questionElement.appendChild(feedback);
+
+            // Explanation Content (always shown immediately below feedback)
+            const explanationContent = document.createElement('div');
+            explanationContent.className = 'explanation-content';
+            explanationContent.innerHTML = renderMath(question.explanation || 'No explanation available.');
+            questionElement.appendChild(explanationContent);
+// Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            
+            // Disable all options after submitting
+            const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+            options.forEach(option => option.disabled = true);
+
+            // Add next button after submission
+            const nextButton = document.createElement('button');
+            nextButton.className = 'submit-button';
+            nextButton.textContent = 'Next Question';
+            nextButton.onclick = () => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < quizData[document.getElementById('subject-dropdown').value].questions.length) {
+                    displayQuestion();
+                } else {
+                    alert("You've completed the quiz!");
+                }
+            };
+            questionElement.appendChild(nextButton);
+        }
+
+        // Render Math for both inline ($...$) and block equations ($$...$$)
+function renderMath(input) {
+    // Handle inline math (between single $)
+    input = input.replace(/\$(.*?)\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+    });
+
+    // Handle block math (between double $$)
+    input = input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+    });
+
+    return input;
+}
+
+                // Prevent page refresh or navigation
+        window.onbeforeunload = function (event) {
+            return "Are you sure you want to leave? Your progress may be lost.";
+        };
+    </script>
+
+</body>
+</html>
