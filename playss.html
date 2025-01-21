@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
-    <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+        
     </script>
+
     <link rel="stylesheet" href="style/play.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
@@ -75,114 +76,120 @@
             };
         }
 
-        function displayQuestion() {
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = '';
+        
+    // Function to display the current question
+    function displayQuestion() {
+        const quizContainer = document.getElementById('quiz-container');
+        quizContainer.innerHTML = '';
 
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
+        const subjectIndex = document.getElementById('subject-dropdown').value;
+        const subject = quizData[subjectIndex];
 
-            const question = subject.questions[currentQuestionIndex];
-            const questionElement = document.createElement('div');
-            questionElement.className = 'question';
+        const question = subject.questions[currentQuestionIndex];
+        const questionElement = document.createElement('div');
+        questionElement.className = 'question';
 
-            // Add Question Numbering
-            const questionNumber = document.createElement('div');
-            questionNumber.className = 'question-number';
-            questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
-            questionElement.appendChild(questionNumber);
+        // Add Question Numbering
+        const questionNumber = document.createElement('div');
+        questionNumber.className = 'question-number';
+        questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
+        questionElement.appendChild(questionNumber);
 
-            // Display question content with MathJax inline
-            const questionContent = document.createElement('div');
-            questionContent.className = 'question-content';
-            questionContent.innerHTML = renderMath(question.content);
-            questionElement.appendChild(questionContent);
-// Re-render MathJax content
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-            // Display options
-            const optionsList = document.createElement('ul');
-            optionsList.className = 'options';
+        // Display question content with MathJax inline
+        const questionContent = document.createElement('div');
+        questionContent.className = 'question-content';
+        questionContent.innerHTML = renderMath(question.content);
+        questionElement.appendChild(questionContent);
 
-            question.options.forEach(option => {
-                const optionItem = document.createElement('li');
-                const optionLabel = document.createElement('label');
-                const optionInput = document.createElement('input');
+        // Re-render MathJax content
+        MathJax.typesetPromise();
 
-                optionInput.type = 'radio';
-                optionInput.name = `question${question.question_id}`;
-                optionInput.value = option.identifier;
+        // Display options
+        const optionsList = document.createElement('ul');
+        optionsList.className = 'options';
 
-                optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
-                optionItem.appendChild(optionLabel);
-                optionsList.appendChild(optionItem);
-            });
+        question.options.forEach(option => {
+            const optionItem = document.createElement('li');
+            const optionLabel = document.createElement('label');
+            const optionInput = document.createElement('input');
 
-            questionElement.appendChild(optionsList);
+            optionInput.type = 'radio';
+            optionInput.name = `question${question.question_id}`;
+            optionInput.value = option.identifier;
 
-            // Submit button per question
-            const submitButton = document.createElement('button');
-            submitButton.className = 'submit-button';
-            submitButton.textContent = 'Submit Answer';
-            submitButton.onclick = () => submitAnswer(questionElement, question);
-            questionElement.appendChild(submitButton);
+            optionLabel.appendChild(optionInput);
+            optionLabel.innerHTML += option.content;
+            optionItem.appendChild(optionLabel);
+            optionsList.appendChild(optionItem);
+        });
 
-            quizContainer.appendChild(questionElement);
+        questionElement.appendChild(optionsList);
 
-            // Re-render MathJax content
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        }
+        // Submit button per question
+        const submitButton = document.createElement('button');
+        submitButton.className = 'submit-button';
+        submitButton.textContent = 'Submit Answer';
+        submitButton.onclick = () => submitAnswer(questionElement, question);
+        questionElement.appendChild(submitButton);
 
-        function submitAnswer(questionElement, question) {
-            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-            const feedback = document.createElement('div');
-            feedback.className = 'feedback';
+        quizContainer.appendChild(questionElement);
 
-            // Feedback Message
-            if (selectedOption) {
-                const selectedOptionValue = selectedOption.value;
-                const correctOptionValue = question.correct_options[0];
+        // Re-render MathJax content again to ensure proper rendering
+        MathJax.typesetPromise();
+    }
 
-                if (selectedOptionValue === correctOptionValue) {
-                    feedback.innerHTML = "You are correct!";
-                    feedback.style.color = 'green'; // Correct answer in green
-                } else {
-                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red'; // Incorrect answer in red
-                }
+    function submitAnswer(questionElement, question) {
+        const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+        const feedback = document.createElement('div');
+        feedback.className = 'feedback';
+
+        // Feedback Message
+        if (selectedOption) {
+            const selectedOptionValue = selectedOption.value;
+            const correctOptionValue = question.correct_options[0];
+
+            if (selectedOptionValue === correctOptionValue) {
+                feedback.innerHTML = "You are correct!";
+                feedback.style.color = 'green'; // Correct answer in green
             } else {
-                feedback.innerHTML = 'You did not select an option.';
-                feedback.style.color = 'orange'; // No selection made
+                feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
+                feedback.style.color = 'red'; // Incorrect answer in red
             }
-
-            questionElement.appendChild(feedback);
-
-            // Explanation Content (always shown immediately below feedback)
-            const explanationContent = document.createElement('div');
-            explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = renderMath(question.explanation || 'No explanation available.');
-            questionElement.appendChild(explanationContent);
-// Re-render MathJax content
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-            
-            // Disable all options after submitting
-            const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
-            options.forEach(option => option.disabled = true);
-
-            // Add next button after submission
-            const nextButton = document.createElement('button');
-            nextButton.className = 'submit-button';
-            nextButton.textContent = 'Next Question';
-            nextButton.onclick = () => {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < quizData[document.getElementById('subject-dropdown').value].questions.length) {
-                    displayQuestion();
-                } else {
-                    alert("You've completed the quiz!");
-                }
-            };
-            questionElement.appendChild(nextButton);
+        } else {
+            feedback.innerHTML = 'You did not select an option.';
+            feedback.style.color = 'orange'; // No selection made
         }
+
+        questionElement.appendChild(feedback);
+
+        // Explanation Content (always shown immediately below feedback)
+        const explanationContent = document.createElement('div');
+        explanationContent.className = 'explanation-content';
+        explanationContent.innerHTML = renderMath(question.explanation || 'No explanation available.');
+        questionElement.appendChild(explanationContent);
+
+        // Re-render MathJax content
+        MathJax.typesetPromise();
+
+        // Disable all options after submitting
+        const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+        options.forEach(option => option.disabled = true);
+
+        // Add next button after submission
+        const nextButton = document.createElement('button');
+        nextButton.className = 'submit-button';
+        nextButton.textContent = 'Next Question';
+        nextButton.onclick = () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData[document.getElementById('subject-dropdown').value].questions.length) {
+                displayQuestion();
+            } else {
+                alert("You've completed the quiz!");
+            }
+        };
+        questionElement.appendChild(nextButton);
+    }
+
 
         // Render Math for both inline ($...$) and block equations ($$...$$)
 function renderMath(input) {
