@@ -53,15 +53,20 @@
             overflow-x: auto;
         }
 
-        .options li {
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
-        }
+        .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns per row */
+    gap: 10px; /* Space between items */
+}
+
+.options li {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: normal;
+}
 
         .options label {
             cursor: pointer;
