@@ -56,10 +56,10 @@
             }
             
             let selectedQuestions = [];
-            let questionsPerSubject = Math.floor(total / 3);
-            allQuestions.forEach(subjectData => {
-                selectedQuestions.push(...subjectData.questions.slice(0, questionsPerSubject));
-            });
+            let partSize = Math.floor(total / 3);
+            for (let i = 0; i < 3; i++) {
+                selectedQuestions.push(...allQuestions[i].questions.slice(0, partSize));
+            }
             
             displayQuestions(selectedQuestions);
         }
