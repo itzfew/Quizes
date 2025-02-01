@@ -128,7 +128,9 @@
 
             // Loop through each subject and pick the questions
             quizData.forEach((subject, index) => {
-                const questionsForThisSubject = subject.questions.slice(0, questionsPerSubject + (remainder > 0 ? 1 : 0)); // Distribute remainder questions
+                // Shuffle the questions randomly before selecting them
+                const shuffledQuestions = shuffleArray(subject.questions);
+                const questionsForThisSubject = shuffledQuestions.slice(0, questionsPerSubject + (remainder > 0 ? 1 : 0)); // Distribute remainder questions
                 remainder--; // Decrease the remainder count after adding one extra question
 
                 // Create question elements for each subject
@@ -177,6 +179,15 @@
             quizContainer.appendChild(submitButton);
 
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        // Helper function to shuffle an array randomly
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+            return array;
         }
 
         document.getElementById('print-button').onclick = function () {
