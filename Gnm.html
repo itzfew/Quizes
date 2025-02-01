@@ -141,15 +141,14 @@
         }
 
         .explanation-content.open {
-    display: block;
-    background-color: #FFF59D; /* Yellow background */
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-    font-style: italic;
-    color: #777;
-}
-
+            display: block;
+            background-color: #FFF59D; /* Yellow background */
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-style: italic;
+            color: #777;
+        }
 
         /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
         .mathjax-inline {
@@ -184,14 +183,47 @@
                 max-width: 80px;
             }
         }
-        
 
+        /* Print Styles */
+        @media print {
+            body {
+                margin: 0;
+                padding: 20px;
+                font-size: 14px;
+            }
+
+            .submit-button {
+                display: none; /* Hide submit button when printing */
+            }
+
+            .explanation-button, .explanation-content {
+                display: none; /* Hide explanation buttons/content when printing */
+            }
+
+            .question-content {
+                word-wrap: break-word;
+                white-space: normal;
+            }
+
+            .question {
+                page-break-inside: avoid;
+                margin-bottom: 20px;
+            }
+
+            .quiz-title {
+                text-align: center;
+                font-size: 1.5em;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
+
+    <!-- Print Button -->
+    <button id="print-button" class="submit-button">Print Quiz</button>
 
     <script>
         let currentQuestionIndex = 0;
@@ -231,12 +263,6 @@
             };
         }
 
-        let totalQuestions = 0;
-        let correctAnswers = 0;
-        let incorrectAnswers = 0;
-        let missedAnswers = 0;
-        let startTime = new Date();
-
         function displayAllQuestions() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
@@ -245,26 +271,21 @@
             const subject = quizData[subjectIndex];
 
             subject.questions.forEach((question, index) => {
-                totalQuestions++;  // Increase total questions count
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question';
 
-                // Add Question Numbering
                 const questionNumber = document.createElement('div');
                 questionNumber.className = 'question-number';
                 questionNumber.textContent = `Question ${index + 1}:`;
                 questionElement.appendChild(questionNumber);
 
-                // Display question content with MathJax inline
                 const questionContent = document.createElement('div');
                 questionContent.className = 'question-content';
-                // Wrap math in the mathjax-inline class
                 questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                     return `<span class="mathjax-inline">$$${p1}$$</span>`;
                 });
                 questionElement.appendChild(questionContent);
 
-                // Display options
                 const optionsList = document.createElement('ul');
                 optionsList.className = 'options';
 
@@ -285,138 +306,22 @@
 
                 questionElement.appendChild(optionsList);
 
-                // Add explanation dropdown button (hidden by default)
-                const explanationButton = document.createElement('button');
-                explanationButton.className = 'explanation-button';
-                explanationButton.textContent = 'Show Explanation';
-                explanationButton.onclick = () => toggleExplanation(questionElement);
-                questionElement.appendChild(explanationButton);
-
-                // Create explanation content (hidden by default)
-                const explanationContent = document.createElement('div');
-                explanationContent.className = 'explanation-content';
-                explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-                questionElement.appendChild(explanationContent);
-
                 quizContainer.appendChild(questionElement);
             });
 
-            // Add Submit button
             const submitButton = document.createElement('button');
             submitButton.className = 'submit-button';
             submitButton.textContent = 'Submit All';
-            submitButton.onclick = showAllExplanations;
             quizContainer.appendChild(submitButton);
 
-            // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
-        }
+        // Print functionality
+        document.getElementById('print-button').onclick = function () {
+            window.print();
+        };
 
-        function showAllExplanations() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-
-            subject.questions.forEach((question, index) => {
-                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-                const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
-                const explanationButton = questionElement.querySelector('.explanation-button');
-
-                // Show the explanation button after submission
-                explanationButton.style.display = 'block';
-
-                // Create feedback and show it after submission
-                const feedback = document.createElement('div');
-                feedback.className = 'correct-answer';
-                const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
-                const correctOptionValue = question.correct_options[0];
-
-                if (selectedOption) {
-                    const selectedOptionValue = selectedOption.value;
-
-                    // Correct or Incorrect Answer Feedback
-                    if (selectedOptionValue === correctOptionValue) {
-                        correctAnswers++;
-                        feedback.innerHTML = "You are correct!";
-                        feedback.style.color = 'green'; // Correct answer in green
-                    } else {
-                        incorrectAnswers++;
-                        feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                        feedback.style.color = 'red'; // Incorrect answer in red
-                    }
-                } else {
-                    missedAnswers++;
-                    feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red'; // No selection made
-                }
-
-                questionElement.appendChild(feedback);
-
-                // Color options based on correctness
-                options.forEach(option => {
-                    const optionItem = option.closest('li');
-                    if (option.value === correctOptionValue) {
-                        optionItem.style.backgroundColor = 'green';
-                        optionItem.style.color = 'white';
-                    } else if (option.checked) {
-                        optionItem.style.backgroundColor = 'red';
-                        optionItem.style.color = 'white';
-                    }
-                    option.disabled = true;
-                });
-            });
-
-            // Calculate the time taken
-            const endTime = new Date(); // Record the time when the quiz is submitted
-            const timeTakenInSeconds = Math.round((endTime - startTime) / 1000); // Time in seconds
-            const timeTakenInMinutes = (timeTakenInSeconds / 60).toFixed(2);
-
-            // Calculate average time per attempt (total time taken / total attempts)
-            const totalAttempts = correctAnswers + incorrectAnswers;
-            const avgTimePerAttempt = totalAttempts > 0 ? (timeTakenInSeconds / totalAttempts).toFixed(2) : 0;
-
-            // Display the scorecard
-            const scoreCard = document.createElement('div');
-            scoreCard.innerHTML = `
-                <table style="width: 100%; text-align: center; border: 1px solid #ccc;">
-                    <tr>
-                        <th>Total Attempted</th>
-                        <th>Correct</th>
-                        <th>Incorrect</th>
-                        <th>Missed</th>
-                        <th>Total Time (Minutes)</th>
-                        <th>Avg. Time per Attempt (Seconds)</th>
-                    </tr>
-                    <tr>
-                        <td>${totalAttempts}</td>
-                        <td>${correctAnswers}</td>
-                        <td>${incorrectAnswers}</td>
-                        <td>${missedAnswers}</td>
-                        <td>${timeTakenInMinutes}</td>
-                        <td>${avgTimePerAttempt}</td>
-                    </tr>
-                </table>
-            `;
-
-            // Insert the scorecard at the top of the quiz container
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
-
-            // Smooth scroll to the scorecard
-            window.scrollTo({
-                top: quizContainer.offsetTop, 
-                behavior: 'smooth'
-            });
-
-            // Re-render MathJax content after the scorecard is displayed
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        }
-
-        // Prevent page refresh or navigation
         window.onbeforeunload = function (event) {
             return "Are you sure you want to leave? Your progress may be lost.";
         };
