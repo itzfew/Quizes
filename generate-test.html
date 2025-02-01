@@ -61,9 +61,14 @@
             <!-- Exam Group options will be populated dynamically -->
         </select>
 
+        <label for="exam">Select Exam</label>
+        <select id="exam">
+            <!-- Exam options will be populated dynamically based on exam group -->
+        </select>
+
         <label for="examTitle">Select Exam Title</label>
         <select id="examTitle">
-            <!-- Exam Title options will be populated dynamically -->
+            <!-- Exam Title options will be populated dynamically based on selected exam -->
         </select>
 
         <label for="totalQuestions">Total Questions</label>
@@ -98,18 +103,50 @@
                 examGroupDropdown.appendChild(option);
             });
 
-            // Event listener to update the exam title dropdown when an exam group is selected
+            // Event listener to update the exam dropdown when an exam group is selected
             examGroupDropdown.addEventListener('change', function() {
                 const selectedGroup = this.value;
-                populateExamTitleDropdown(selectedGroup);
+                populateExamDropdown(selectedGroup);
             });
 
-            // Trigger change event to load the first group titles by default
+            // Trigger change event to load the first group exams by default
             examGroupDropdown.dispatchEvent(new Event('change'));
         }
 
-        // Populate the exam title dropdown based on selected exam group
-        function populateExamTitleDropdown(group) {
+        // Populate the exam dropdown based on selected exam group
+        function populateExamDropdown(group) {
+            const examDropdown = document.getElementById('exam');
+            examDropdown.innerHTML = ''; // Clear existing options
+
+            const selectedExams = examsData.filter(item => item.papers[0].examGroup === group);
+
+            // Create a set to keep track of already added exams to avoid duplicates
+            const uniqueExams = new Set();
+
+            selectedExams.forEach(item => {
+                item.papers.forEach(paper => {
+                    if (!uniqueExams.has(paper.exam)) {
+                        const option = document.createElement('option');
+                        option.value = paper.exam;
+                        option.textContent = paper.exam;
+                        examDropdown.appendChild(option);
+                        uniqueExams.add(paper.exam); // Add to the set to avoid duplicate
+                    }
+                });
+            });
+
+            // Event listener to update the exam title dropdown when an exam is selected
+            examDropdown.addEventListener('change', function() {
+                const selectedExam = this.value;
+                populateExamTitleDropdown(group, selectedExam);
+            });
+
+            // Trigger change event to load the first exam titles by default
+            examDropdown.dispatchEvent(new Event('change'));
+        }
+
+        // Populate the exam title dropdown based on selected exam
+        function populateExamTitleDropdown(group, exam) {
             const examTitleDropdown = document.getElementById('examTitle');
             examTitleDropdown.innerHTML = ''; // Clear existing options
 
@@ -117,10 +154,12 @@
 
             selectedPapers.forEach(item => {
                 item.papers.forEach(paper => {
-                    const option = document.createElement('option');
-                    option.value = paper.metaId;
-                    option.textContent = `${paper.title} (${paper.year})`;
-                    examTitleDropdown.appendChild(option);
+                    if (paper.exam === exam) {
+                        const option = document.createElement('option');
+                        option.value = paper.metaId;
+                        option.textContent = `${paper.title} (${paper.year})`;
+                        examTitleDropdown.appendChild(option);
+                    }
                 });
             });
         }
@@ -128,10 +167,11 @@
         // Event listener for Generate Questions button
         document.getElementById('generateButton').addEventListener('click', function() {
             const examGroup = document.getElementById('examGroup').value;
+            const exam = document.getElementById('exam').value;
             const examTitle = document.getElementById('examTitle').value;
             const totalQuestions = document.getElementById('totalQuestions').value;
 
-            if (!examGroup || !examTitle || !totalQuestions) {
+            if (!examGroup || !exam || !examTitle || !totalQuestions) {
                 alert('Please select all options and enter the total number of questions.');
                 return;
             }
