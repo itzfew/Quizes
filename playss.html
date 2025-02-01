@@ -13,8 +13,9 @@
         main { margin-top: 80px; padding: 20px; }
         .quiz-title { font-size: 1.5em; margin: 5px 0; color: #333; text-align: center; border: 2px solid black; }
         .question { margin-bottom: 30px; padding: 3px; border-bottom: 1px solid #ccc; }
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .options li { border: 1px solid #ccc; padding: 10px; border-radius: 5px; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; list-style-type: none; padding: 0; }
+        .options li { border: 1px solid #ccc; padding: 10px; border-radius: 5px; background-color: white; cursor: pointer; }
+        .options li:hover { background-color: #f0f0f0; }
         .submit-button { background-color: #000; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; text-align: center; position: fixed; bottom: 0; }
         @media print { .submit-button { display: none; } }
     </style>
@@ -77,6 +78,7 @@
                 question.options.forEach(option => {
                     const optionItem = document.createElement('li');
                     optionItem.innerHTML = `<input type="radio" name="q${index}" value="${option.identifier}"> ${option.content}`;
+                    optionItem.onclick = () => optionItem.querySelector('input').checked = true;
                     optionsList.appendChild(optionItem);
                 });
                 
