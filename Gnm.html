@@ -166,6 +166,12 @@
         .question-content span {
             display: inline-block;
         }
+@media print {
+    img {
+        max-width: 100px !important; /* Forces the image to be small */
+        height: auto !important;
+    }
+}
 
         @media (max-width: 600px) {
             body {
