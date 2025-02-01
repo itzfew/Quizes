@@ -4,78 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exam Question Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             padding: 20px;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 10px 0;
+            display: block;
         }
 
         select, input[type="number"], button {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+            max-width: 400px;
+            padding: 12px;
+            margin-bottom: 20px;
             font-size: 1em;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 8px;
+        }
+
+        select:focus, input[type="number"]:focus {
+            border-color: #4CAF50;
+            outline: none;
         }
 
         button {
             background-color: #4CAF50;
             color: white;
+            font-size: 1.2em;
             cursor: pointer;
             border: none;
+            padding: 12px;
+            border-radius: 8px;
         }
 
         button:hover {
             background-color: #45a049;
         }
 
-        label {
-            font-size: 1.1em;
-            font-weight: bold;
+        .icon {
+            margin-right: 10px;
         }
+
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            button {
+                font-size: 1.1em;
+                padding: 10px;
+            }
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Exam Question Generator</h1>
+    <h1>Exam Question Generator</h1>
 
-        <label for="examGroup">Select Exam Group</label>
-        <select id="examGroup">
-            <!-- Exam Group options will be populated dynamically -->
-        </select>
+    <!-- Exam Group Dropdown -->
+    <label for="examGroup"><i class="fa fa-users icon"></i>Select Exam Group</label>
+    <select id="examGroup">
+        <!-- Exam Group options will be populated dynamically -->
+    </select>
 
-        <label for="exam">Select Exam</label>
-        <select id="exam">
-            <!-- Exam options will be populated dynamically based on exam group -->
-        </select>
+    <!-- Exam Dropdown -->
+    <label for="exam"><i class="fa fa-list-alt icon"></i>Select Exam</label>
+    <select id="exam">
+        <!-- Exam options will be populated dynamically based on exam group -->
+    </select>
 
-        <label for="examTitle">Select Exam Title</label>
-        <select id="examTitle">
-            <!-- Exam Title options will be populated dynamically based on selected exam -->
-        </select>
+    <!-- Exam Title Dropdown -->
+    <label for="examTitle"><i class="fa fa-book icon"></i>Select Exam Title</label>
+    <select id="examTitle">
+        <!-- Exam Title options will be populated dynamically based on selected exam -->
+    </select>
 
-        <label for="totalQuestions">Total Questions</label>
-        <input type="number" id="totalQuestions" placeholder="Enter the total number of questions" />
+    <!-- Total Questions Input -->
+    <label for="totalQuestions"><i class="fa fa-question-circle icon"></i>Total Questions</label>
+    <input type="number" id="totalQuestions" placeholder="Enter the total number of questions" />
 
-        <button id="generateButton">Generate Questions</button>
-    </div>
+    <!-- Generate Button -->
+    <button id="generateButton"><i class="fa fa-arrow-right icon"></i>Generate Questions</button>
+
+    <!-- Error Message -->
+    <div id="errorMessage" class="error-message" style="display: none;">Please select all options and enter the total number of questions.</div>
 
     <script>
         // Fetch the metadata from the URL
@@ -172,7 +213,7 @@
             const totalQuestions = document.getElementById('totalQuestions').value;
 
             if (!examGroup || !exam || !examTitle || !totalQuestions) {
-                alert('Please select all options and enter the total number of questions.');
+                document.getElementById('errorMessage').style.display = 'block';
                 return;
             }
 
