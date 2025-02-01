@@ -56,9 +56,15 @@
             }
             
             let selectedQuestions = [];
-            let partSize = Math.floor(total / 3);
-            for (let i = 0; i < 3; i++) {
-                selectedQuestions.push(...allQuestions[i].questions.slice(0, partSize));
+            let firstHalfSize = Math.floor(total / 2);
+            let secondHalfSize = Math.ceil(total / 2);
+            
+            if (allQuestions.length >= 2) {
+                selectedQuestions.push(...allQuestions[0].questions.slice(0, firstHalfSize));
+                selectedQuestions.push(...allQuestions[1].questions.slice(0, secondHalfSize));
+            }
+            if (allQuestions.length >= 3) {
+                selectedQuestions.push(...allQuestions[2].questions.slice(0, secondHalfSize));
             }
             
             displayQuestions(selectedQuestions);
