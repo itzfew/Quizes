@@ -9,88 +9,215 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
-        main { margin-top: 80px; padding: 20px; }
-        .quiz-title { font-size: 1.5em; margin: 5px 0; color: #333; text-align: center; border: 2px solid black; }
-        .question { margin-bottom: 30px; padding: 3px; border-bottom: 1px solid #ccc; }
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; list-style-type: none; padding: 0; }
-        .options li { border: 1px solid #ccc; padding: 10px; border-radius: 5px; background-color: white; cursor: pointer; }
-        .options li:hover { background-color: #f0f0f0; }
-        .submit-button { background-color: #000; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; text-align: center; position: fixed; bottom: 0; }
-        @media print { .submit-button { display: none; } }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        main {
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        .quiz-title {
+            font-size: 1.5em;
+            margin: 5px 0;
+            color: #333;
+            text-align: center;
+            border: 2px solid black;
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding: 3px;
+            border-bottom: 1px solid #ccc;
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .options li {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .submit-button {
+            background-color: #000;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                margin: 0;
+                padding: 20px;
+                font-size: 14px;
+            }
+
+            .submit-button {
+                display: none;
+            }
+
+            .question {
+                page-break-inside: avoid;
+                margin-bottom: 20px;
+            }
+
+            .quiz-title {
+                text-align: center;
+                font-size: 1.5em;
+            }
+        }
+        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
+        }
+
+        /* Ensuring that MathJax inline formulas don't break or overflow */
+        .question-content span {
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
-    <div class="quiz-title" id="quiz-title">Random NEET Quiz</div>
+    <div class="quiz-title" id="quiz-title"></div>
     <div id="quiz-container"></div>
+
     <button id="print-button" class="submit-button">Print Quiz</button>
 
     <script>
         const metaIds = [
-            "3c48616f-298a-5f69-91d2-bcd59444c455", "cbfbed57-d7d8-5a07-9957-478e4cb62f17", "8dd253c6-09a8-5875-b127-a0c00a165a1b", "c7fb1fc7-cb24-58d1-99f5-4ced0111082d"
+            { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+            { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+            { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+            { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
+            { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
+            { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
+            { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
+            { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
+            { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
+            { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
+            { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
+            { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
+            { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
+            { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
+            { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
+            { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
+            { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
+            { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
+            { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
+            { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
+            { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
+            { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
+            { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
+            { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
+            { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
+            { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
+            { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
+            { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
+            { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
+            { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
+            { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
+            { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
         ];
-        const urlParams = new URLSearchParams(window.location.search);
-        const total = parseInt(urlParams.get('total')) || 15; // Default to 15 questions
-        
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
+
+        let allQuestions = [];
+
+        function fetchQuestions() {
+            const promises = metaIds.map(meta => {
+                const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`;
+                return fetch(jsonUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        allQuestions.push({ title: meta.title, questions: data });
+                    })
+                    .catch(error => console.error('Error fetching questions for ' + meta.title + ':', error));
+            });
+
+            Promise.all(promises).then(() => {
+                displayQuestions();
+            });
         }
-        
-        async function fetchRandomQuestions() {
-            let allQuestions = [];
-            let selectedMetaIds = shuffleArray(metaIds).slice(0, 3);
-            
-            for (let metaId of selectedMetaIds) {
-                const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
-                try {
-                    let response = await fetch(jsonUrl);
-                    let data = await response.json();
-                    allQuestions.push({subject: metaId, questions: shuffleArray(data.flatMap(subject => subject.questions))});
-                } catch (error) {
-                    console.error('Error fetching JSON:', error);
-                }
-            }
-            
-            // Fetch 5 questions from each subject (in order)
-            let selectedQuestions = [];
-            selectedQuestions.push(...allQuestions[0].questions.slice(0, 5)); // First 5 questions from the first subject
-            selectedQuestions.push(...allQuestions[1].questions.slice(0, 5)); // Next 5 from the second subject
-            selectedQuestions.push(...allQuestions[2].questions.slice(0, 5)); // Next 5 from the third subject
-            
-            displayQuestions(selectedQuestions);
-        }
-        
-        function displayQuestions(questions) {
+
+        function displayQuestions() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
-            
-            questions.forEach((question, index) => {
-                const questionElement = document.createElement('div');
-                questionElement.className = 'question';
-                questionElement.innerHTML = `<strong>Q${index + 1}:</strong> ${question.content}`;
-                
-                const optionsList = document.createElement('ul');
-                optionsList.className = 'options';
-                question.options.forEach(option => {
-                    const optionItem = document.createElement('li');
-                    optionItem.innerHTML = `<input type="radio" name="q${index}" value="${option.identifier}"> ${option.content}`;
-                    optionItem.onclick = () => optionItem.querySelector('input').checked = true;
-                    optionsList.appendChild(optionItem);
+
+            let questionCount = 0;
+            allQuestions.forEach(subject => {
+                subject.questions.forEach((question, index) => {
+                    const questionElement = document.createElement('div');
+                    questionElement.className = 'question';
+
+                    const questionNumber = document.createElement('div');
+                    questionNumber.className = 'question-number';
+                    questionNumber.textContent = `Question ${questionCount + 1} from ${subject.title}:`;
+                    questionElement.appendChild(questionNumber);
+
+                    const questionContent = document.createElement('div');
+                    questionContent.className = 'question-content';
+                    questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                    });
+                    questionElement.appendChild(questionContent);
+
+                    const optionsList = document.createElement('ul');
+                    optionsList.className = 'options';
+
+                    question.options.forEach(option => {
+                        const optionItem = document.createElement('li');
+                        const optionLabel = document.createElement('label');
+                        const optionInput = document.createElement('input');
+
+                        optionInput.type = 'radio';
+                        optionInput.name = `question${question.question_id}`;
+                        optionInput.value = option.identifier;
+
+                        optionLabel.appendChild(optionInput);
+                        optionLabel.innerHTML += option.content;
+                        optionItem.appendChild(optionLabel);
+                        optionsList.appendChild(optionItem);
+                    });
+
+                    questionElement.appendChild(optionsList);
+                    quizContainer.appendChild(questionElement);
+
+                    questionCount++;
                 });
-                
-                questionElement.appendChild(optionsList);
-                quizContainer.appendChild(questionElement);
             });
-            
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
-        
-        document.getElementById('print-button').onclick = () => window.print();
-        fetchRandomQuestions();
+
+        function printQuiz() {
+            window.print();
+        }
+
+        document.getElementById('print-button').addEventListener('click', printQuiz);
+
+        fetchQuestions();
     </script>
 </body>
 </html>
