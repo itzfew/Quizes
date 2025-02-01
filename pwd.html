@@ -7,7 +7,7 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,7 +68,7 @@
             z-index: 1000;
         }
 
-        /* Styling for Print */
+        /* Print Styles */
         @media print {
             body {
                 margin: 0;
@@ -103,8 +103,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const metaId = urlParams.get('metaid');
         const total = parseInt(urlParams.get('total'), 10);
-        const questionsPerSubject = total || 10; // Default 10 if not specified
-
+        
         if (metaId) {
             document.getElementById('quiz-title').textContent = `Quiz: ${metaId}`;
             const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
@@ -114,63 +113,63 @@
                 .then(response => response.json())
                 .then(data => {
                     quizData = data;
-                    displayAllQuestionsCombined();
+                    displayAllQuestionsDivided();
                 })
                 .catch(error => console.error('Error fetching the JSON data:', error));
         }
 
-        function displayAllQuestionsCombined() {
+        function displayAllQuestionsDivided() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
-            // Combine all questions from all subjects
-            let allQuestions = [];
-            quizData.forEach(subject => {
-                allQuestions = allQuestions.concat(subject.questions);
+            const totalSubjects = quizData.length;
+            const questionsPerSubject = Math.floor(total / totalSubjects); // Minimum questions per subject
+            let remainder = total % totalSubjects; // Extra questions to be distributed
+
+            // Loop through each subject and pick the questions
+            quizData.forEach((subject, index) => {
+                const questionsForThisSubject = subject.questions.slice(0, questionsPerSubject + (remainder > 0 ? 1 : 0)); // Distribute remainder questions
+                remainder--; // Decrease the remainder count after adding one extra question
+
+                // Create question elements for each subject
+                questionsForThisSubject.forEach((question, qIndex) => {
+                    const questionElement = document.createElement('div');
+                    questionElement.className = 'question';
+
+                    const questionNumber = document.createElement('div');
+                    questionNumber.className = 'question-number';
+                    questionNumber.textContent = `Question ${qIndex + 1} from ${subject.title}:`;
+                    questionElement.appendChild(questionNumber);
+
+                    const questionContent = document.createElement('div');
+                    questionContent.className = 'question-content';
+                    questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                    });
+                    questionElement.appendChild(questionContent);
+
+                    const optionsList = document.createElement('ul');
+                    optionsList.className = 'options';
+
+                    question.options.forEach(option => {
+                        const optionItem = document.createElement('li');
+                        const optionLabel = document.createElement('label');
+                        const optionInput = document.createElement('input');
+
+                        optionInput.type = 'radio';
+                        optionInput.name = `question${question.question_id}`;
+                        optionInput.value = option.identifier;
+
+                        optionLabel.appendChild(optionInput);
+                        optionLabel.innerHTML += option.content;
+                        optionItem.appendChild(optionLabel);
+                        optionsList.appendChild(optionItem);
+                    });
+
+                    questionElement.appendChild(optionsList);
+                    quizContainer.appendChild(questionElement);
+                });
             });
-
-            const totalQuestions = allQuestions.length;
-            const questionsToShow = Math.min(totalQuestions, questionsPerSubject);
-
-            // Display combined questions
-            for (let i = 0; i < questionsToShow; i++) {
-                const question = allQuestions[i];
-                const questionElement = document.createElement('div');
-                questionElement.className = 'question';
-
-                const questionNumber = document.createElement('div');
-                questionNumber.className = 'question-number';
-                questionNumber.textContent = `Question ${i + 1}:`;
-                questionElement.appendChild(questionNumber);
-
-                const questionContent = document.createElement('div');
-                questionContent.className = 'question-content';
-                questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                });
-                questionElement.appendChild(questionContent);
-
-                const optionsList = document.createElement('ul');
-                optionsList.className = 'options';
-
-                question.options.forEach(option => {
-                    const optionItem = document.createElement('li');
-                    const optionLabel = document.createElement('label');
-                    const optionInput = document.createElement('input');
-
-                    optionInput.type = 'radio';
-                    optionInput.name = `question${question.question_id}`;
-                    optionInput.value = option.identifier;
-
-                    optionLabel.appendChild(optionInput);
-                    optionLabel.innerHTML += option.content;
-                    optionItem.appendChild(optionLabel);
-                    optionsList.appendChild(optionItem);
-                });
-
-                questionElement.appendChild(optionsList);
-                quizContainer.appendChild(questionElement);
-            }
 
             const submitButton = document.createElement('button');
             submitButton.className = 'submit-button';
