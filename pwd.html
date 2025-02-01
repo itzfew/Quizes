@@ -9,7 +9,6 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome CDN -->
     <style>
-        /* Basic styling as per your code above */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -69,25 +68,37 @@
             z-index: 1000;
         }
 
-        #subject-dropdown {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 1em;
-        }
+        /* Styling for Print */
+        @media print {
+            body {
+                margin: 0;
+                padding: 20px;
+                font-size: 14px;
+            }
 
-        /* Other necessary styles */
+            .submit-button {
+                display: none;
+            }
+
+            .question {
+                page-break-inside: avoid;
+                margin-bottom: 20px;
+            }
+
+            .quiz-title {
+                text-align: center;
+                font-size: 1.5em;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
-    <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
 
     <button id="print-button" class="submit-button">Print Quiz</button>
 
     <script>
-        let currentQuestionIndex = 0;
         let quizData = [];
         const urlParams = new URLSearchParams(window.location.search);
         const metaId = urlParams.get('metaid');
@@ -103,40 +114,27 @@
                 .then(response => response.json())
                 .then(data => {
                     quizData = data;
-                    populateSubjectDropdown();
-                    displayQuestionsBasedOnTotal();
+                    displayAllQuestionsCombined();
                 })
                 .catch(error => console.error('Error fetching the JSON data:', error));
         }
 
-        function populateSubjectDropdown() {
-            const subjectDropdown = document.getElementById('subject-dropdown');
-            quizData.forEach((subject, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = subject.title;
-                subjectDropdown.appendChild(option);
-            });
-
-            subjectDropdown.onchange = () => {
-                currentQuestionIndex = 0;
-                displayQuestionsBasedOnTotal();
-            };
-        }
-
-        function displayQuestionsBasedOnTotal() {
+        function displayAllQuestionsCombined() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
-            
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-            const totalQuestions = subject.questions.length;
 
-            // Split the total questions evenly across subjects
-            const questionsToShow = Math.min(questionsPerSubject, totalQuestions);
+            // Combine all questions from all subjects
+            let allQuestions = [];
+            quizData.forEach(subject => {
+                allQuestions = allQuestions.concat(subject.questions);
+            });
 
+            const totalQuestions = allQuestions.length;
+            const questionsToShow = Math.min(totalQuestions, questionsPerSubject);
+
+            // Display combined questions
             for (let i = 0; i < questionsToShow; i++) {
-                const question = subject.questions[i];
+                const question = allQuestions[i];
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question';
 
