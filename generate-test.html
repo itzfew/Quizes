@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Question Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        select, input[type="number"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        label {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Exam Question Generator</h1>
+
+        <label for="examGroup">Select Exam Group</label>
+        <select id="examGroup">
+            <!-- Exam Group options will be populated dynamically -->
+        </select>
+
+        <label for="examTitle">Select Exam Title</label>
+        <select id="examTitle">
+            <!-- Exam Title options will be populated dynamically -->
+        </select>
+
+        <label for="totalQuestions">Total Questions</label>
+        <input type="number" id="totalQuestions" placeholder="Enter the total number of questions" />
+
+        <button id="generateButton">Generate Questions</button>
+    </div>
+
+    <script>
+        // Fetch the metadata from the URL
+        const examsUrl = 'https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/exams.json';
+        let examsData = [];
+
+        // Fetch exams data
+        fetch(examsUrl)
+            .then(response => response.json())
+            .then(data => {
+                examsData = data;
+                populateExamGroupDropdown();
+            })
+            .catch(error => console.error('Error fetching exams data:', error));
+
+        // Populate the exam group dropdown
+        function populateExamGroupDropdown() {
+            const examGroupDropdown = document.getElementById('examGroup');
+            const uniqueGroups = [...new Set(examsData.map(item => item.papers[0].examGroup))];
+
+            uniqueGroups.forEach(group => {
+                const option = document.createElement('option');
+                option.value = group;
+                option.textContent = group;
+                examGroupDropdown.appendChild(option);
+            });
+
+            // Event listener to update the exam title dropdown when an exam group is selected
+            examGroupDropdown.addEventListener('change', function() {
+                const selectedGroup = this.value;
+                populateExamTitleDropdown(selectedGroup);
+            });
+
+            // Trigger change event to load the first group titles by default
+            examGroupDropdown.dispatchEvent(new Event('change'));
+        }
+
+        // Populate the exam title dropdown based on selected exam group
+        function populateExamTitleDropdown(group) {
+            const examTitleDropdown = document.getElementById('examTitle');
+            examTitleDropdown.innerHTML = ''; // Clear existing options
+
+            const selectedPapers = examsData.filter(item => item.papers[0].examGroup === group);
+
+            selectedPapers.forEach(item => {
+                item.papers.forEach(paper => {
+                    const option = document.createElement('option');
+                    option.value = paper.metaId;
+                    option.textContent = `${paper.title} (${paper.year})`;
+                    examTitleDropdown.appendChild(option);
+                });
+            });
+        }
+
+        // Event listener for Generate Questions button
+        document.getElementById('generateButton').addEventListener('click', function() {
+            const examGroup = document.getElementById('examGroup').value;
+            const examTitle = document.getElementById('examTitle').value;
+            const totalQuestions = document.getElementById('totalQuestions').value;
+
+            if (!examGroup || !examTitle || !totalQuestions) {
+                alert('Please select all options and enter the total number of questions.');
+                return;
+            }
+
+            const newUrl = `index.html?metaid=${examTitle}&total=${totalQuestions}`;
+            window.open(newUrl, '_blank'); // Open the URL in a new tab
+        });
+    </script>
+
+</body>
+</html>
