@@ -9,25 +9,28 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .quiz-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
+        .quiz-title { font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+        #quiz-container { margin-top: 20px; }
+        .question { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 10px; }
         .question-number { font-size: 18px; font-weight: bold; }
-        .question-content { margin: 10px 0; }
-        .options { list-style: none; padding: 0; }
-        .options li { margin: 5px 0; padding: 5px; cursor: pointer; border: 1px solid #ccc; }
-        .explanation-content { display: none; margin-top: 10px; font-style: italic; }
+        .options { list-style-type: none; padding: 0; }
+        .options li { padding: 8px; margin: 5px 0; cursor: pointer; border: 1px solid #ccc; border-radius: 5px; }
+        .explanation-content { display: none; margin-top: 10px; font-size: 14px; color: #555; }
         .explanation-content.open { display: block; }
-        .navigation-buttons, .question-nav { margin-top: 10px; }
-        .question-nav button { margin: 2px; }
-        .correct { background-color: green; color: white; }
-        .incorrect { background-color: red; color: white; }
+        .navigation-buttons { margin-top: 20px; }
+        button { padding: 10px; margin: 5px; cursor: pointer; }
+        .question-nav { margin-top: 20px; }
+        .question-nav button { width: 30px; height: 30px; margin: 2px; font-size: 14px; }
+        .correct { background-color: green !important; color: white !important; }
+        .incorrect { background-color: red !important; color: white !important; }
     </style>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
-    <div id="question-nav" class="question-nav"></div>
     <div id="quiz-container"></div>
+    <div class="question-nav" id="question-nav"></div>
 
     <script>
         let currentQuestionIndex = 0;
@@ -45,9 +48,10 @@
             .then(data => {
                 quizData = data;
                 populateSubjectDropdown();
+                createQuestionNavigation();
                 displayQuestion();
             })
-            .catch(error => console.error('Error fetching JSON:', error));
+            .catch(error => console.error('Error fetching JSON data:', error));
 
         function populateSubjectDropdown() {
             const subjectDropdown = document.getElementById('subject-dropdown');
@@ -60,8 +64,28 @@
 
             subjectDropdown.onchange = () => {
                 currentQuestionIndex = 0;
+                createQuestionNavigation();
                 displayQuestion();
             };
+        }
+
+        function createQuestionNavigation() {
+            const questionNav = document.getElementById('question-nav');
+            questionNav.innerHTML = '';
+
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+
+            subject.questions.forEach((_, index) => {
+                const button = document.createElement('button');
+                button.textContent = index + 1;
+                button.onclick = () => {
+                    currentQuestionIndex = index;
+                    displayQuestion();
+                };
+                updateButtonColor(button, subject.questions[index].question_id);
+                questionNav.appendChild(button);
+            });
         }
 
         function displayQuestion() {
@@ -83,7 +107,7 @@
 
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (_, p1) => {
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
             });
             questionElement.appendChild(questionContent);
@@ -93,22 +117,14 @@
 
             question.options.forEach(option => {
                 const optionItem = document.createElement('li');
-                const optionInput = document.createElement('input');
-
-                optionInput.type = 'radio';
-                optionInput.name = `question${question.question_id}`;
-                optionInput.value = option.identifier;
-                optionInput.onchange = () => saveResponse(question.question_id, option.identifier);
-
-                optionItem.appendChild(optionInput);
-                optionItem.innerHTML += option.content;
+                optionItem.textContent = option.content;
+                optionItem.onclick = () => handleOptionClick(option.identifier, question, optionItem);
                 optionsList.appendChild(optionItem);
             });
 
             questionElement.appendChild(optionsList);
 
             const explanationButton = document.createElement('button');
-            explanationButton.className = 'explanation-button';
             explanationButton.textContent = 'Show Explanation';
             explanationButton.onclick = () => toggleExplanation(questionElement);
             questionElement.appendChild(explanationButton);
@@ -120,16 +136,6 @@
 
             quizContainer.appendChild(questionElement);
 
-            createNavigationButtons();
-            createQuestionNavButtons(subject.questions.length);
-
-            loadSavedResponse(question.question_id);
-
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        }
-
-        function createNavigationButtons() {
-            const quizContainer = document.getElementById('quiz-container');
             const navigationButtons = document.createElement('div');
             navigationButtons.className = 'navigation-buttons';
 
@@ -148,37 +154,11 @@
                 displayQuestion();
             };
 
-            const submitButton = document.createElement('button');
-            submitButton.textContent = 'Submit';
-            submitButton.onclick = () => showAnswerFeedback();
-
             navigationButtons.appendChild(prevButton);
             navigationButtons.appendChild(nextButton);
-            navigationButtons.appendChild(submitButton);
-
             quizContainer.appendChild(navigationButtons);
-        }
 
-        function createQuestionNavButtons(totalQuestions) {
-            const questionNav = document.getElementById('question-nav');
-            questionNav.innerHTML = '';
-
-            for (let i = 0; i < totalQuestions; i++) {
-                const button = document.createElement('button');
-                button.textContent = i + 1;
-                button.classList.add('nav-btn');
-                button.onclick = () => {
-                    currentQuestionIndex = i;
-                    displayQuestion();
-                };
-
-                const savedAnswer = localStorage.getItem(`question${i}`);
-                if (savedAnswer) {
-                    button.classList.add(savedAnswer === quizData[0].questions[i].correct_options[0] ? 'correct' : 'incorrect');
-                }
-
-                questionNav.appendChild(button);
-            }
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
         function toggleExplanation(questionElement) {
@@ -186,17 +166,39 @@
             explanationContent.classList.toggle('open');
         }
 
-        function saveResponse(questionId, selectedOption) {
-            localStorage.setItem(`question${questionId}`, selectedOption);
+        function handleOptionClick(selectedValue, question, optionItem) {
+            const correctValue = question.correct_options[0];
+            const questionId = question.question_id;
+
+            if (selectedValue === correctValue) {
+                optionItem.classList.add('correct');
+                saveResponse(questionId, 'correct');
+            } else {
+                optionItem.classList.add('incorrect');
+                saveResponse(questionId, 'incorrect');
+            }
+
+            updateNavigationColors();
         }
 
-        function loadSavedResponse(questionId) {
-            const savedAnswer = localStorage.getItem(`question${questionId}`);
-            if (savedAnswer) {
-                document.querySelectorAll(`input[name="question${questionId}"]`).forEach(option => {
-                    if (option.value === savedAnswer) option.checked = true;
-                });
-            }
+        function saveResponse(questionId, status) {
+            const responses = JSON.parse(localStorage.getItem('quizResponses')) || {};
+            responses[questionId] = status;
+            localStorage.setItem('quizResponses', JSON.stringify(responses));
+        }
+
+        function updateNavigationColors() {
+            document.querySelectorAll('.question-nav button').forEach((button, index) => {
+                const subjectIndex = document.getElementById('subject-dropdown').value;
+                const questionId = quizData[subjectIndex].questions[index].question_id;
+                updateButtonColor(button, questionId);
+            });
+        }
+
+        function updateButtonColor(button, questionId) {
+            const responses = JSON.parse(localStorage.getItem('quizResponses')) || {};
+            if (responses[questionId] === 'correct') button.classList.add('correct');
+            if (responses[questionId] === 'incorrect') button.classList.add('incorrect');
         }
     </script>
 </body>
