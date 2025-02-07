@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Quiz Game</title>
     <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style/play.css">
     <style>
@@ -199,8 +199,8 @@
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
             questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
+    return `<div class="mathjax-block">$$${p1}$$</div>`;
+});
             questionElement.appendChild(questionContent);
 
             const optionsList = document.createElement('ul');
@@ -274,9 +274,10 @@
         }
 
         function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
-        }
+    const explanationContent = questionElement.querySelector('.explanation-content');
+    explanationContent.classList.toggle('open');
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Re-render MathJax
+}
 
         function showAnswerFeedback(question, questionElement) {
             const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
