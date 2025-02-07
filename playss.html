@@ -287,6 +287,26 @@ function populateSlideMenuNavigation() {
     });
 }
 
+                questionNavigation.appendChild(button);
+            });
+        }
+
+        function updateQuestionNavigation() {
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+            const question = subject.questions[currentQuestionIndex];
+
+            const buttons = document.querySelectorAll('#question-navigation button');
+            buttons.forEach((button, index) => {
+                if (index === currentQuestionIndex) {
+                    const savedResponse = localStorage.getItem(`question${question.question_id}`);
+                    if (savedResponse) {
+                        button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
+                        button.style.color = 'white';
+                    }
+                }
+            });
+        }
 // Call populateSlideMenuNavigation() after fetching the JSON data
 fetch(jsonUrl)
     .then(response => response.json())
