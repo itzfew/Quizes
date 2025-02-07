@@ -9,22 +9,28 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .question-nav { margin-bottom: 15px; }
-        .question-nav button { margin: 3px; padding: 5px; }
-        .correct { background-color: green; color: white; }
-        .incorrect { background-color: red; color: white; }
+        body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+        .quiz-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        .navigation { margin: 10px 0; }
+        .navigation button { margin: 2px; padding: 5px 10px; cursor: pointer; }
+        .question-container { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+        .options { list-style-type: none; padding: 0; }
+        .options li { margin: 5px 0; }
+        .explanation-content { display: none; margin-top: 10px; }
+        .explanation-content.open { display: block; }
+        .correct-answer { margin-top: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
-    <div class="question-nav" id="question-nav"></div>
+    <div class="navigation" id="question-navigation"></div>
     <div id="quiz-container"></div>
 
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
+        let userResponses = JSON.parse(localStorage.getItem('quizResponses')) || {};
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
@@ -62,57 +68,69 @@
         function displayQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
+            
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
             const question = subject.questions[currentQuestionIndex];
 
-            const questionElement = document.createElement('div');
-            questionElement.className = 'question';
-            questionElement.innerHTML = `<strong>Question ${currentQuestionIndex + 1}:</strong> ${question.content}`;
-            
-            const optionsList = document.createElement('ul');
-            question.options.forEach(option => {
-                const optionItem = document.createElement('li');
-                const optionInput = document.createElement('input');
-                optionInput.type = 'radio';
-                optionInput.name = `question${question.question_id}`;
-                optionInput.value = option.identifier;
-                optionInput.onclick = () => saveAnswer(question, option.identifier);
-                optionItem.appendChild(optionInput);
-                optionItem.innerHTML += option.content;
-                optionsList.appendChild(optionItem);
-            });
-            questionElement.appendChild(optionsList);
-
-            quizContainer.appendChild(questionElement);
-            updateQuestionNav();
-        }
-
-        function saveAnswer(question, selectedOption) {
-            localStorage.setItem(`question${question.question_id}`, selectedOption);
-            updateQuestionNav();
-        }
-
-        function updateQuestionNav() {
-            const questionNav = document.getElementById('question-nav');
-            questionNav.innerHTML = '';
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-
+            document.getElementById('question-navigation').innerHTML = '';
             subject.questions.forEach((_, index) => {
-                const button = document.createElement('button');
-                button.textContent = index + 1;
-                button.onclick = () => {
+                const btn = document.createElement('button');
+                btn.textContent = index + 1;
+                btn.onclick = () => {
                     currentQuestionIndex = index;
                     displayQuestion();
                 };
-
-                const savedAnswer = localStorage.getItem(`question${subject.questions[index].question_id}`);
-                if (savedAnswer) {
-                    button.classList.add(savedAnswer === subject.questions[index].correct_options[0] ? 'correct' : 'incorrect');
+                if (userResponses[`${subjectIndex}-${index}`] !== undefined) {
+                    btn.style.backgroundColor = userResponses[`${subjectIndex}-${index}`] ? 'green' : 'red';
+                    btn.style.color = 'white';
                 }
-                questionNav.appendChild(button);
+                document.getElementById('question-navigation').appendChild(btn);
             });
+
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question-container';
+            questionElement.innerHTML = `
+                <div class="question-number">Question ${currentQuestionIndex + 1}:</div>
+                <div class="question-content">${question.content.replace(/\$\$(.*?)\$\$/g, `<span class="mathjax-inline">$$$1$$</span>`)}</div>
+                <ul class="options">${question.options.map(option => `
+                    <li>
+                        <label>
+                            <input type="radio" name="question${question.question_id}" value="${option.identifier}">
+                            ${option.content}
+                        </label>
+                    </li>
+                `).join('')}</ul>
+                <button class="explanation-button" onclick="toggleExplanation(this)">Show Explanation</button>
+                <div class="explanation-content">Explanation: ${question.explanation || 'No explanation available.'}</div>
+                <div class="correct-answer"></div>
+            `;
+            quizContainer.appendChild(questionElement);
+
+            const submitButton = document.createElement('button');
+            submitButton.textContent = 'Submit';
+            submitButton.onclick = () => showAnswerFeedback(question, questionElement, subjectIndex);
+            quizContainer.appendChild(submitButton);
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        function showAnswerFeedback(question, questionElement, subjectIndex) {
+            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+            const feedback = questionElement.querySelector('.correct-answer');
+            const correctOptionValue = question.correct_options[0];
+            const questionKey = `${subjectIndex}-${currentQuestionIndex}`;
+
+            if (selectedOption) {
+                userResponses[questionKey] = selectedOption.value === correctOptionValue;
+                localStorage.setItem('quizResponses', JSON.stringify(userResponses));
+                feedback.textContent = selectedOption.value === correctOptionValue ? "You are correct!" : `Wrong answer! Correct: Option ${correctOptionValue}`;
+                feedback.style.color = selectedOption.value === correctOptionValue ? 'green' : 'red';
+            } else {
+                feedback.textContent = `No option selected. Correct: Option ${correctOptionValue}`;
+                feedback.style.color = 'red';
+            }
+            displayQuestion();
         }
     </script>
 </body>
