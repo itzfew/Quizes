@@ -8,13 +8,136 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <Link rel="stylesheet" href="style/play.css">    
+    <link rel="stylesheet" href="style/play.css">
+    <style>
+        /* Style for the grid icon */
+        .menu-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+        }
 
+        /* Style for the slide menu */
+        .slide-menu {
+            position: fixed;
+            top: 0;
+            right: -300px; /* Hide the menu off-screen initially */
+            width: 300px;
+            height: 100%;
+            background-color: #f9f9f9;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 999;
+        }
+
+        .slide-menu.open {
+            right: 0; /* Show the menu when it has the 'open' class */
+        }
+
+        .slide-menu-content {
+            padding: 20px;
+        }
+
+        /* Style for the question navigation buttons inside the slide menu */
+        #slide-menu-navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        #slide-menu-navigation button {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        #slide-menu-navigation button:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Additional styles for the quiz container */
+        .quiz-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        #subject-dropdown {
+            margin-bottom: 20px;
+            padding: 5px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .options li {
+            margin-bottom: 10px;
+        }
+
+        .explanation-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .explanation-content {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .explanation-content.open {
+            display: block;
+        }
+
+        .navigation-buttons {
+            margin-top: 20px;
+        }
+
+        .navigation-buttons button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
+    <!-- Add the grid icon and slide menu container -->
+    <div class="menu-icon" id="menu-icon">
+        <i class="fas fa-th"></i>
+    </div>
+    <div class="slide-menu" id="slide-menu">
+        <div class="slide-menu-content">
+            <div id="slide-menu-navigation"></div>
+        </div>
+    </div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
+    <div id="question-navigation"></div>
 
     <script>
         let currentQuestionIndex = 0;
@@ -36,6 +159,7 @@
                 quizData = data;
                 populateSubjectDropdown();
                 displayQuestion();
+                populateSlideMenuNavigation(); // Populate the slide menu navigation
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
@@ -51,6 +175,7 @@
             subjectDropdown.onchange = () => {
                 currentQuestionIndex = 0;
                 displayQuestion();
+                populateSlideMenuNavigation(); // Update slide menu navigation
             };
         }
 
@@ -89,6 +214,12 @@
                 optionInput.type = 'radio';
                 optionInput.name = `question${question.question_id}`;
                 optionInput.value = option.identifier;
+
+                // Load saved response from localStorage
+                const savedResponse = localStorage.getItem(`question${question.question_id}`);
+                if (savedResponse === option.identifier) {
+                    optionInput.checked = true;
+                }
 
                 optionLabel.appendChild(optionInput);
                 optionLabel.innerHTML += option.content;
@@ -157,6 +288,9 @@
             if (selectedOption) {
                 const selectedOptionValue = selectedOption.value;
 
+                // Save response to localStorage
+                localStorage.setItem(`question${question.question_id}`, selectedOptionValue);
+
                 if (selectedOptionValue === correctOptionValue) {
                     feedback.innerHTML = "You are correct!";
                     feedback.style.color = 'green';
@@ -181,6 +315,108 @@
                     optionItem.style.color = 'white';
                 }
                 option.disabled = true;
+            });
+
+            // Update question navigation buttons
+    
+            updateSlideMenuNavigation();
+        }
+
+        function populateQuestionNavigation() {
+            const questionNavigation = document.getElementById('question-navigation');
+            questionNavigation.innerHTML = '';
+
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+
+            subject.questions.forEach((question, index) => {
+                const button = document.createElement('button');
+                button.textContent = index + 1;
+                button.onclick = () => {
+                    currentQuestionIndex = index;
+                    displayQuestion();
+                };
+
+                // Color indication for attempted questions
+                const savedResponse = localStorage.getItem(`question${question.question_id}`);
+                if (savedResponse) {
+                    button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
+                    button.style.color = 'white';
+                }
+
+                questionNavigation.appendChild(button);
+            });
+        }
+
+        function updateQuestionNavigation() {
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+            const question = subject.questions[currentQuestionIndex];
+
+            const buttons = document.querySelectorAll('#question-navigation button');
+            buttons.forEach((button, index) => {
+                if (index === currentQuestionIndex) {
+                    const savedResponse = localStorage.getItem(`question${question.question_id}`);
+                    if (savedResponse) {
+                        button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
+                        button.style.color = 'white';
+                    }
+                }
+            });
+        }
+
+        // Add event listener for the grid icon
+        document.getElementById('menu-icon').addEventListener('click', toggleSlideMenu);
+
+        // Function to toggle the slide menu
+        function toggleSlideMenu() {
+            const slideMenu = document.getElementById('slide-menu');
+            slideMenu.classList.toggle('open');
+        }
+
+        // Function to populate the slide menu with question navigation buttons
+        function populateSlideMenuNavigation() {
+            const slideMenuNavigation = document.getElementById('slide-menu-navigation');
+            slideMenuNavigation.innerHTML = '';
+
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+
+            subject.questions.forEach((question, index) => {
+                const button = document.createElement('button');
+                button.textContent = index + 1;
+                button.onclick = () => {
+                    currentQuestionIndex = index;
+                    displayQuestion();
+                    toggleSlideMenu(); // Close the slide menu after selecting a question
+                };
+
+                // Color indication for attempted questions
+                const savedResponse = localStorage.getItem(`question${question.question_id}`);
+                if (savedResponse) {
+                    button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
+                    button.style.color = 'white';
+                }
+
+                slideMenuNavigation.appendChild(button);
+            });
+        }
+
+        // Function to update the slide menu navigation buttons
+        function updateSlideMenuNavigation() {
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+            const question = subject.questions[currentQuestionIndex];
+
+            const buttons = document.querySelectorAll('#slide-menu-navigation button');
+            buttons.forEach((button, index) => {
+                if (index === currentQuestionIndex) {
+                    const savedResponse = localStorage.getItem(`question${question.question_id}`);
+                    if (savedResponse) {
+                        button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
+                        button.style.color = 'white';
+                    }
+                }
             });
         }
     </script>
