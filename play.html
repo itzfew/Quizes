@@ -198,9 +198,7 @@
 
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
+            questionContent.innerHTML = renderMathJax(question.content);
             questionElement.appendChild(questionContent);
 
             const optionsList = document.createElement('ul');
@@ -222,7 +220,7 @@
                 }
 
                 optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
+                optionLabel.innerHTML += renderMathJax(option.content);
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
@@ -237,8 +235,9 @@
 
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-            questionElement.appendChild(explanationContent);
+            explanationContent.innerHTML = `Explanation: ${renderMathJax(question.explanation || 'No explanation available.')}`;
+
+              questionElement.appendChild(explanationContent);
 
             quizContainer.appendChild(questionElement);
 
@@ -272,7 +271,11 @@
 
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
-
+function renderMathJax(content) {
+    return content
+        .replace(/\$\$(.*?)\$\$/g, (match, p1) => `<span class="mathjax-block">\\[${p1}\\]</span>`)
+        .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
+}
         function toggleExplanation(questionElement) {
             const explanationContent = questionElement.querySelector('.explanation-content');
             explanationContent.classList.toggle('open');
