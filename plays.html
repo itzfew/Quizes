@@ -8,9 +8,7 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="style/play.css">
     <style>
-        /* Style for the grid icon */
         .menu-icon {
             position: fixed;
             top: 20px;
@@ -19,12 +17,10 @@
             cursor: pointer;
             z-index: 1000;
         }
-
-        /* Style for the slide menu */
         .slide-menu {
             position: fixed;
             top: 0;
-            right: -300px; /* Hide the menu off-screen initially */
+            right: -300px;
             width: 300px;
             height: 100%;
             background-color: #f9f9f9;
@@ -32,22 +28,17 @@
             transition: right 0.3s ease;
             z-index: 999;
         }
-
         .slide-menu.open {
-            right: 0; /* Show the menu when it has the 'open' class */
+            right: 0;
         }
-
         .slide-menu-content {
             padding: 20px;
         }
-
-        /* Style for the question navigation buttons inside the slide menu */
         #slide-menu-navigation {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
         }
-
         #slide-menu-navigation button {
             width: 40px;
             height: 40px;
@@ -55,78 +46,13 @@
             background-color: #fff;
             cursor: pointer;
         }
-
         #slide-menu-navigation button:hover {
             background-color: #f0f0f0;
-        }
-
-        /* Additional styles for the quiz container */
-        .quiz-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        #subject-dropdown {
-            margin-bottom: 20px;
-            padding: 5px;
-        }
-
-        .question {
-            margin-bottom: 20px;
-        }
-
-        .question-number {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .options {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .options li {
-            margin-bottom: 10px;
-        }
-
-        .explanation-button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .explanation-content {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-            display: none;
-        }
-
-        .explanation-content.open {
-            display: block;
-        }
-
-        .navigation-buttons {
-            margin-top: 20px;
-        }
-
-        .navigation-buttons button {
-            margin-right: 10px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
-    <!-- Add the grid icon and slide menu container -->
     <div class="menu-icon" id="menu-icon">
         <i class="fas fa-th"></i>
     </div>
@@ -137,8 +63,6 @@
     </div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
-    <div id="question-navigation"></div>
-
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
@@ -152,15 +76,13 @@
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
-        // Fetch the JSON data
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
                 quizData = data;
                 populateSubjectDropdown();
                 displayQuestion();
-                populateQuestionNavigation();
-                populateSlideMenuNavigation(); // Populate the slide menu navigation
+                populateSlideMenuNavigation();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
@@ -172,188 +94,37 @@
                 option.textContent = subject.title;
                 subjectDropdown.appendChild(option);
             });
-
             subjectDropdown.onchange = () => {
                 currentQuestionIndex = 0;
                 displayQuestion();
-                populateQuestionNavigation();
-                populateSlideMenuNavigation(); // Update slide menu navigation
+                populateSlideMenuNavigation();
             };
         }
 
         function displayQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
-
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
-
             const question = subject.questions[currentQuestionIndex];
 
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
-
-            const questionNumber = document.createElement('div');
-            questionNumber.className = 'question-number';
-            questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
-            questionElement.appendChild(questionNumber);
-
-            const questionContent = document.createElement('div');
-            questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
-            questionElement.appendChild(questionContent);
-
-            const optionsList = document.createElement('ul');
-            optionsList.className = 'options';
-
-            question.options.forEach(option => {
-                const optionItem = document.createElement('li');
-                const optionLabel = document.createElement('label');
-                const optionInput = document.createElement('input');
-
-                optionInput.type = 'radio';
-                optionInput.name = `question${question.question_id}`;
-                optionInput.value = option.identifier;
-
-                // Load saved response from localStorage
-                const savedResponse = localStorage.getItem(`question${question.question_id}`);
-                if (savedResponse === option.identifier) {
-                    optionInput.checked = true;
-                }
-
-                optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
-                optionItem.appendChild(optionLabel);
-                optionsList.appendChild(optionItem);
-            });
-
-            questionElement.appendChild(optionsList);
-
-            const explanationButton = document.createElement('button');
-            explanationButton.className = 'explanation-button';
-            explanationButton.textContent = 'Show Explanation';
-            explanationButton.onclick = () => toggleExplanation(questionElement);
-            questionElement.appendChild(explanationButton);
-
-            const explanationContent = document.createElement('div');
-            explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-            questionElement.appendChild(explanationContent);
-
+            questionElement.innerHTML = `<div class='question-number'>Question ${currentQuestionIndex + 1}:</div>
+                                         <div class='question-content'>${question.content}</div>`;
             quizContainer.appendChild(questionElement);
-
-            const navigationButtons = document.createElement('div');
-            navigationButtons.className = 'navigation-buttons';
-
-            const prevButton = document.createElement('button');
-            prevButton.textContent = 'Previous';
-            prevButton.disabled = currentQuestionIndex === 0;
-            prevButton.onclick = () => {
-                currentQuestionIndex--;
-                displayQuestion();
-            };
-
-            const nextButton = document.createElement('button');
-            nextButton.textContent = 'Next';
-            nextButton.onclick = () => {
-                currentQuestionIndex++;
-                displayQuestion();
-            };
-
-            const submitButton = document.createElement('button');
-            submitButton.textContent = 'Submit';
-            submitButton.onclick = () => showAnswerFeedback(question, questionElement);
-
-            navigationButtons.appendChild(prevButton);
-            navigationButtons.appendChild(nextButton);
-            navigationButtons.appendChild(submitButton);
-
-            quizContainer.appendChild(navigationButtons);
 
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
-        }
-
-        function showAnswerFeedback(question, questionElement) {
-            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-            const feedback = document.createElement('div');
-            feedback.className = 'correct-answer';
-            const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
-            const correctOptionValue = question.correct_options[0];
-
-            if (selectedOption) {
-                const selectedOptionValue = selectedOption.value;
-
-                // Save response to localStorage
-                localStorage.setItem(`question${question.question_id}`, selectedOptionValue);
-
-                if (selectedOptionValue === correctOptionValue) {
-                    feedback.innerHTML = "You are correct!";
-                    feedback.style.color = 'green';
-                } else {
-                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red';
-                }
-            } else {
-                feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
-                feedback.style.color = 'red';
-            }
-
-            questionElement.appendChild(feedback);
-
-            options.forEach(option => {
-                const optionItem = option.closest('li');
-                if (option.value === correctOptionValue) {
-                    optionItem.style.backgroundColor = 'green';
-                    optionItem.style.color = 'white';
-                } else if (option.checked) {
-                    optionItem.style.backgroundColor = 'red';
-                    optionItem.style.color = 'white';
-                }
-                option.disabled = true;
-            });
-
-            // Update question navigation buttons
-        
-            updateSlideMenuNavigation();
-        }
-        function updateQuestionNavigation() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-            const question = subject.questions[currentQuestionIndex];
-
-            const buttons = document.querySelectorAll('#question-navigation button');
-            buttons.forEach((button, index) => {
-                if (index === currentQuestionIndex) {
-                    const savedResponse = localStorage.getItem(`question${question.question_id}`);
-                    if (savedResponse) {
-                        button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
-                        button.style.color = 'white';
-                    }
-                }
-            });
-        }
-
-        // Add event listener for the grid icon
         document.getElementById('menu-icon').addEventListener('click', toggleSlideMenu);
-
-        // Function to toggle the slide menu
         function toggleSlideMenu() {
-            const slideMenu = document.getElementById('slide-menu');
-            slideMenu.classList.toggle('open');
+            document.getElementById('slide-menu').classList.toggle('open');
         }
 
-        // Function to populate the slide menu with question navigation buttons
         function populateSlideMenuNavigation() {
             const slideMenuNavigation = document.getElementById('slide-menu-navigation');
             slideMenuNavigation.innerHTML = '';
-
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
 
@@ -363,35 +134,9 @@
                 button.onclick = () => {
                     currentQuestionIndex = index;
                     displayQuestion();
-                    toggleSlideMenu(); // Close the slide menu after selecting a question
+                    toggleSlideMenu();
                 };
-
-                // Color indication for attempted questions
-                const savedResponse = localStorage.getItem(`question${question.question_id}`);
-                if (savedResponse) {
-                    button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
-                    button.style.color = 'white';
-                }
-
                 slideMenuNavigation.appendChild(button);
-            });
-        }
-
-        // Function to update the slide menu navigation buttons
-        function updateSlideMenuNavigation() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-            const question = subject.questions[currentQuestionIndex];
-
-            const buttons = document.querySelectorAll('#slide-menu-navigation button');
-            buttons.forEach((button, index) => {
-                if (index === currentQuestionIndex) {
-                    const savedResponse = localStorage.getItem(`question${question.question_id}`);
-                    if (savedResponse) {
-                        button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
-                        button.style.color = 'white';
-                    }
-                }
             });
         }
     </script>
