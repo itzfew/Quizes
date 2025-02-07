@@ -9,35 +9,34 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+        body { font-family: Arial, sans-serif; margin: 20px; }
         .quiz-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
-        .navigation { margin: 10px 0; }
-        .navigation button { margin: 2px; padding: 5px 10px; cursor: pointer; }
-        .question-container { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
-        .options { list-style-type: none; padding: 0; }
-        .options li { margin: 5px 0; }
-        .explanation-content { display: none; margin-top: 10px; }
+        .question-number { font-size: 18px; font-weight: bold; }
+        .question-content { margin: 10px 0; }
+        .options { list-style: none; padding: 0; }
+        .options li { margin: 5px 0; padding: 5px; cursor: pointer; border: 1px solid #ccc; }
+        .explanation-content { display: none; margin-top: 10px; font-style: italic; }
         .explanation-content.open { display: block; }
-        .correct-answer { margin-top: 10px; font-weight: bold; }
+        .navigation-buttons, .question-nav { margin-top: 10px; }
+        .question-nav button { margin: 2px; }
+        .correct { background-color: green; color: white; }
+        .incorrect { background-color: red; color: white; }
     </style>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
-    <div class="navigation" id="question-navigation"></div>
+    <div id="question-nav" class="question-nav"></div>
     <div id="quiz-container"></div>
 
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
-        let userResponses = JSON.parse(localStorage.getItem('quizResponses')) || {};
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
 
-        if (title) {
-            document.getElementById('quiz-title').textContent = title;
-        }
+        if (title) document.getElementById('quiz-title').textContent = title;
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
@@ -48,7 +47,7 @@
                 populateSubjectDropdown();
                 displayQuestion();
             })
-            .catch(error => console.error('Error fetching the JSON data:', error));
+            .catch(error => console.error('Error fetching JSON:', error));
 
         function populateSubjectDropdown() {
             const subjectDropdown = document.getElementById('subject-dropdown');
@@ -68,69 +67,136 @@
         function displayQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
-            
+
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
+
             const question = subject.questions[currentQuestionIndex];
 
-            document.getElementById('question-navigation').innerHTML = '';
-            subject.questions.forEach((_, index) => {
-                const btn = document.createElement('button');
-                btn.textContent = index + 1;
-                btn.onclick = () => {
-                    currentQuestionIndex = index;
-                    displayQuestion();
-                };
-                if (userResponses[`${subjectIndex}-${index}`] !== undefined) {
-                    btn.style.backgroundColor = userResponses[`${subjectIndex}-${index}`] ? 'green' : 'red';
-                    btn.style.color = 'white';
-                }
-                document.getElementById('question-navigation').appendChild(btn);
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question';
+
+            const questionNumber = document.createElement('div');
+            questionNumber.className = 'question-number';
+            questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
+            questionElement.appendChild(questionNumber);
+
+            const questionContent = document.createElement('div');
+            questionContent.className = 'question-content';
+            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            });
+            questionElement.appendChild(questionContent);
+
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options';
+
+            question.options.forEach(option => {
+                const optionItem = document.createElement('li');
+                const optionInput = document.createElement('input');
+
+                optionInput.type = 'radio';
+                optionInput.name = `question${question.question_id}`;
+                optionInput.value = option.identifier;
+                optionInput.onchange = () => saveResponse(question.question_id, option.identifier);
+
+                optionItem.appendChild(optionInput);
+                optionItem.innerHTML += option.content;
+                optionsList.appendChild(optionItem);
             });
 
-            const questionElement = document.createElement('div');
-            questionElement.className = 'question-container';
-            questionElement.innerHTML = `
-                <div class="question-number">Question ${currentQuestionIndex + 1}:</div>
-                <div class="question-content">${question.content.replace(/\$\$(.*?)\$\$/g, `<span class="mathjax-inline">$$$1$$</span>`)}</div>
-                <ul class="options">${question.options.map(option => `
-                    <li>
-                        <label>
-                            <input type="radio" name="question${question.question_id}" value="${option.identifier}">
-                            ${option.content}
-                        </label>
-                    </li>
-                `).join('')}</ul>
-                <button class="explanation-button" onclick="toggleExplanation(this)">Show Explanation</button>
-                <div class="explanation-content">Explanation: ${question.explanation || 'No explanation available.'}</div>
-                <div class="correct-answer"></div>
-            `;
+            questionElement.appendChild(optionsList);
+
+            const explanationButton = document.createElement('button');
+            explanationButton.className = 'explanation-button';
+            explanationButton.textContent = 'Show Explanation';
+            explanationButton.onclick = () => toggleExplanation(questionElement);
+            questionElement.appendChild(explanationButton);
+
+            const explanationContent = document.createElement('div');
+            explanationContent.className = 'explanation-content';
+            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
+            questionElement.appendChild(explanationContent);
+
             quizContainer.appendChild(questionElement);
 
-            const submitButton = document.createElement('button');
-            submitButton.textContent = 'Submit';
-            submitButton.onclick = () => showAnswerFeedback(question, questionElement, subjectIndex);
-            quizContainer.appendChild(submitButton);
+            createNavigationButtons();
+            createQuestionNavButtons(subject.questions.length);
+
+            loadSavedResponse(question.question_id);
 
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function showAnswerFeedback(question, questionElement, subjectIndex) {
-            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-            const feedback = questionElement.querySelector('.correct-answer');
-            const correctOptionValue = question.correct_options[0];
-            const questionKey = `${subjectIndex}-${currentQuestionIndex}`;
+        function createNavigationButtons() {
+            const quizContainer = document.getElementById('quiz-container');
+            const navigationButtons = document.createElement('div');
+            navigationButtons.className = 'navigation-buttons';
 
-            if (selectedOption) {
-                userResponses[questionKey] = selectedOption.value === correctOptionValue;
-                localStorage.setItem('quizResponses', JSON.stringify(userResponses));
-                feedback.textContent = selectedOption.value === correctOptionValue ? "You are correct!" : `Wrong answer! Correct: Option ${correctOptionValue}`;
-                feedback.style.color = selectedOption.value === correctOptionValue ? 'green' : 'red';
-            } else {
-                feedback.textContent = `No option selected. Correct: Option ${correctOptionValue}`;
-                feedback.style.color = 'red';
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Previous';
+            prevButton.disabled = currentQuestionIndex === 0;
+            prevButton.onclick = () => {
+                currentQuestionIndex--;
+                displayQuestion();
+            };
+
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next';
+            nextButton.onclick = () => {
+                currentQuestionIndex++;
+                displayQuestion();
+            };
+
+            const submitButton = document.createElement('button');
+            submitButton.textContent = 'Submit';
+            submitButton.onclick = () => showAnswerFeedback();
+
+            navigationButtons.appendChild(prevButton);
+            navigationButtons.appendChild(nextButton);
+            navigationButtons.appendChild(submitButton);
+
+            quizContainer.appendChild(navigationButtons);
+        }
+
+        function createQuestionNavButtons(totalQuestions) {
+            const questionNav = document.getElementById('question-nav');
+            questionNav.innerHTML = '';
+
+            for (let i = 0; i < totalQuestions; i++) {
+                const button = document.createElement('button');
+                button.textContent = i + 1;
+                button.classList.add('nav-btn');
+                button.onclick = () => {
+                    currentQuestionIndex = i;
+                    displayQuestion();
+                };
+
+                const savedAnswer = localStorage.getItem(`question${i}`);
+                if (savedAnswer) {
+                    button.classList.add(savedAnswer === quizData[0].questions[i].correct_options[0] ? 'correct' : 'incorrect');
+                }
+
+                questionNav.appendChild(button);
             }
-            displayQuestion();
+        }
+
+        function toggleExplanation(questionElement) {
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            explanationContent.classList.toggle('open');
+        }
+
+        function saveResponse(questionId, selectedOption) {
+            localStorage.setItem(`question${questionId}`, selectedOption);
+        }
+
+        function loadSavedResponse(questionId) {
+            const savedAnswer = localStorage.getItem(`question${questionId}`);
+            if (savedAnswer) {
+                document.querySelectorAll(`input[name="question${questionId}"]`).forEach(option => {
+                    if (option.value === savedAnswer) option.checked = true;
+                });
+            }
         }
     </script>
 </body>
