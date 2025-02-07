@@ -200,12 +200,11 @@
             questionContent.className = 'question-content';
             questionContent.innerHTML = question.content
     .replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-        return `<span class="mathjax-block">$$${p1}$$</span>`;
+        return `<span class="mathjax-block">\\[${p1}\\]</span>`;
     })
     .replace(/\$(.*?)\$/g, (match, p1) => {
-        return `<span class="mathjax-inline">\$${p1}\$</span>`;
+        return `<span class="mathjax-inline">\\(${p1}\\)</span>`;
     });
-
             questionElement.appendChild(questionContent);
 
             const optionsList = document.createElement('ul');
