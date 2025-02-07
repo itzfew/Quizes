@@ -140,7 +140,8 @@
 
             quizContainer.appendChild(navigationButtons);
 
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, questionContent]);
+
         }
 
         function toggleExplanation(questionElement) {
