@@ -8,55 +8,87 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="style/play.css">
     <style>
-        .menu-toggle {
+        .menu-icon {
             position: fixed;
-            top: 10px;
-            right: 10px;
+            top: 20px;
+            right: 20px;
             font-size: 24px;
             cursor: pointer;
             z-index: 1000;
         }
-
         .slide-menu {
             position: fixed;
             top: 0;
-            right: -250px;
-            width: 250px;
+            right: -300px;
+            width: 300px;
             height: 100%;
-            background: #333;
-            color: white;
-            padding: 20px;
-            transition: right 0.3s;
-            overflow-y: auto;
+            background-color: #f9f9f9;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 999;
         }
-
         .slide-menu.open {
             right: 0;
         }
-
-        .slide-menu button {
-            display: block;
-            width: 100%;
-            margin-bottom: 5px;
-            padding: 10px;
-            text-align: center;
-            background: #555;
-            color: white;
-            border: none;
+        .slide-menu-content {
+            padding: 20px;
+        }
+        #slide-menu-navigation button {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
             cursor: pointer;
+        }
+        #slide-menu-navigation button:hover {
+            background-color: #f0f0f0;
+        }
+        .quiz-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        #subject-dropdown {
+            margin-bottom: 20px;
+            padding: 5px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question-number {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .explanation-content {
+            display: none;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .explanation-content.open {
+            display: block;
+        }
+        .correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <i class="fa fa-th menu-toggle"></i>
-    <div class="slide-menu" id="slide-menu"></div>
     <div class="quiz-title" id="quiz-title"></div>
+    <div class="menu-icon" id="menu-icon">
+        <i class="fas fa-th"></i>
+    </div>
+    <div class="slide-menu" id="slide-menu">
+        <div class="slide-menu-content">
+            <div id="slide-menu-navigation"></div>
+        </div>
+    </div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
-    <div id="question-navigation"></div>
-
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
@@ -76,30 +108,9 @@
                 quizData = data;
                 populateSubjectDropdown();
                 displayQuestion();
-                populateQuestionNavigation();
+                populateSlideMenuNavigation();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
-
-        document.querySelector('.menu-toggle').addEventListener('click', () => {
-            document.getElementById('slide-menu').classList.toggle('open');
-        });
-
-        function populateSlideMenu() {
-            const slideMenu = document.getElementById('slide-menu');
-            slideMenu.innerHTML = '<h3>Questions</h3>';
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-
-            subject.questions.forEach((question, index) => {
-                const button = document.createElement('button');
-                button.textContent = `Q${index + 1}`;
-                button.onclick = () => {
-                    currentQuestionIndex = index;
-                    displayQuestion();
-                };
-                slideMenu.appendChild(button);
-            });
-        }
 
         function populateSubjectDropdown() {
             const subjectDropdown = document.getElementById('subject-dropdown');
@@ -113,32 +124,47 @@
             subjectDropdown.onchange = () => {
                 currentQuestionIndex = 0;
                 displayQuestion();
-                populateQuestionNavigation();
+                populateSlideMenuNavigation();
             };
         }
 
         function displayQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
-
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
             const question = subject.questions[currentQuestionIndex];
 
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
-
-            const questionContent = document.createElement('div');
-            questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content;
-            questionElement.appendChild(questionContent);
+            questionElement.innerHTML = `<div class='question-number'>Question ${currentQuestionIndex + 1}:</div>
+                <div class='question-content'>${question.content}</div>`;
 
             quizContainer.appendChild(questionElement);
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function populateQuestionNavigation() {
-            populateSlideMenu();
+        function populateSlideMenuNavigation() {
+            const slideMenuNavigation = document.getElementById('slide-menu-navigation');
+            slideMenuNavigation.innerHTML = '';
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+
+            subject.questions.forEach((_, index) => {
+                const button = document.createElement('button');
+                button.textContent = index + 1;
+                button.onclick = () => {
+                    currentQuestionIndex = index;
+                    displayQuestion();
+                    toggleSlideMenu();
+                };
+                slideMenuNavigation.appendChild(button);
+            });
+        }
+
+        document.getElementById('menu-icon').addEventListener('click', toggleSlideMenu);
+        function toggleSlideMenu() {
+            document.getElementById('slide-menu').classList.toggle('open');
         }
     </script>
 </body>
