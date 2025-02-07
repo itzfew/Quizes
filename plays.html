@@ -180,100 +180,100 @@
         }
 
         function displayQuestion() {
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = '';
+    const quizContainer = document.getElementById('quiz-container');
+    quizContainer.innerHTML = '';
 
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
+    const subjectIndex = document.getElementById('subject-dropdown').value;
+    const subject = quizData[subjectIndex];
 
-            const question = subject.questions[currentQuestionIndex];
+    const question = subject.questions[currentQuestionIndex];
 
-            const questionElement = document.createElement('div');
-            questionElement.className = 'question';
+    const questionElement = document.createElement('div');
+    questionElement.className = 'question';
 
-            const questionNumber = document.createElement('div');
-            questionNumber.className = 'question-number';
-            questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
-            questionElement.appendChild(questionNumber);
+    const questionNumber = document.createElement('div');
+    questionNumber.className = 'question-number';
+    questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
+    questionElement.appendChild(questionNumber);
 
-            const questionContent = document.createElement('div');
-            questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-    return `<div class="mathjax-block">$$${p1}$$</div>`;
-});
-            questionElement.appendChild(questionContent);
+    const questionContent = document.createElement('div');
+    questionContent.className = 'question-content';
+    questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+        return `<div class="mathjax-block">$$${p1}$$</div>`;
+    });
+    questionElement.appendChild(questionContent);
 
-            const optionsList = document.createElement('ul');
-            optionsList.className = 'options';
+    const optionsList = document.createElement('ul');
+    optionsList.className = 'options';
 
-            question.options.forEach(option => {
-                const optionItem = document.createElement('li');
-                const optionLabel = document.createElement('label');
-                const optionInput = document.createElement('input');
+    question.options.forEach(option => {
+        const optionItem = document.createElement('li');
+        const optionLabel = document.createElement('label');
+        const optionInput = document.createElement('input');
 
-                optionInput.type = 'radio';
-                optionInput.name = `question${question.question_id}`;
-                optionInput.value = option.identifier;
+        optionInput.type = 'radio';
+        optionInput.name = `question${question.question_id}`;
+        optionInput.value = option.identifier;
 
-                // Load saved response from localStorage
-                const savedResponse = localStorage.getItem(`question${question.question_id}`);
-                if (savedResponse === option.identifier) {
-                    optionInput.checked = true;
-                }
-
-                optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
-                optionItem.appendChild(optionLabel);
-                optionsList.appendChild(optionItem);
-            });
-
-            questionElement.appendChild(optionsList);
-
-            const explanationButton = document.createElement('button');
-            explanationButton.className = 'explanation-button';
-            explanationButton.textContent = 'Show Explanation';
-            explanationButton.onclick = () => toggleExplanation(questionElement);
-            questionElement.appendChild(explanationButton);
-
-            const explanationContent = document.createElement('div');
-            explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-            questionElement.appendChild(explanationContent);
-
-            quizContainer.appendChild(questionElement);
-
-            const navigationButtons = document.createElement('div');
-            navigationButtons.className = 'navigation-buttons';
-
-            const prevButton = document.createElement('button');
-            prevButton.textContent = 'Previous';
-            prevButton.disabled = currentQuestionIndex === 0;
-            prevButton.onclick = () => {
-                currentQuestionIndex--;
-                displayQuestion();
-            };
-
-            const nextButton = document.createElement('button');
-            nextButton.textContent = 'Next';
-            nextButton.onclick = () => {
-                currentQuestionIndex++;
-                displayQuestion();
-            };
-
-            const submitButton = document.createElement('button');
-            submitButton.textContent = 'Submit';
-            submitButton.onclick = () => showAnswerFeedback(question, questionElement);
-
-            navigationButtons.appendChild(prevButton);
-            navigationButtons.appendChild(nextButton);
-            navigationButtons.appendChild(submitButton);
-
-            quizContainer.appendChild(navigationButtons);
-
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        // Load saved response from localStorage
+        const savedResponse = localStorage.getItem(`question${question.question_id}`);
+        if (savedResponse === option.identifier) {
+            optionInput.checked = true;
         }
 
-        function toggleExplanation(questionElement) {
+        optionLabel.appendChild(optionInput);
+        optionLabel.innerHTML += option.content;
+        optionItem.appendChild(optionLabel);
+        optionsList.appendChild(optionItem);
+    });
+
+    questionElement.appendChild(optionsList);
+
+    const explanationButton = document.createElement('button');
+    explanationButton.className = 'explanation-button';
+    explanationButton.textContent = 'Show Explanation';
+    explanationButton.onclick = () => toggleExplanation(questionElement);
+    questionElement.appendChild(explanationButton);
+
+    const explanationContent = document.createElement('div');
+    explanationContent.className = 'explanation-content';
+    explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
+    questionElement.appendChild(explanationContent);
+
+    quizContainer.appendChild(questionElement);
+
+    const navigationButtons = document.createElement('div');
+    navigationButtons.className = 'navigation-buttons';
+
+    const prevButton = document.createElement('button');
+    prevButton.textContent = 'Previous';
+    prevButton.disabled = currentQuestionIndex === 0;
+    prevButton.onclick = () => {
+        currentQuestionIndex--;
+        displayQuestion();
+    };
+
+    const nextButton = document.createElement('button');
+    nextButton.textContent = 'Next';
+    nextButton.onclick = () => {
+        currentQuestionIndex++;
+        displayQuestion();
+    };
+
+    const submitButton = document.createElement('button');
+    submitButton.textContent = 'Submit';
+    submitButton.onclick = () => showAnswerFeedback(question, questionElement);
+
+    navigationButtons.appendChild(prevButton);
+    navigationButtons.appendChild(nextButton);
+    navigationButtons.appendChild(submitButton);
+
+    quizContainer.appendChild(navigationButtons);
+
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Re-render MathJax
+}
+
+function toggleExplanation(questionElement) {
     const explanationContent = questionElement.querySelector('.explanation-content');
     explanationContent.classList.toggle('open');
     MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Re-render MathJax
