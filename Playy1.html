@@ -69,13 +69,16 @@
             const questionNumber = document.createElement('div');
             questionNumber.className = 'question-number';
             questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
+            
             questionElement.appendChild(questionNumber);
 
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content
-    .replace(/\$\$(.*?)\$\$/g, '<div class="mathjax-block">\\[$1\\]</div>') // Block math
-    .replace(/\$(.*?)\$/g, '<span class="mathjax-inline">\\($1\\)</span>'); // Inline math
+            function formatMathJax(text) {
+    return text
+        .replace(/\$\$(.*?)\$\$/g, '<div class="mathjax-block">\\[$1\\]</div>') // Block math
+        .replace(/\$(.*?)\$/g, '<span class="mathjax-inline">\\($1\\)</span>'); // Inline math
+}
 
             questionElement.appendChild(questionContent);
 
@@ -92,7 +95,8 @@
                 optionInput.value = option.identifier;
 
                 optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
+                optionLabel.innerHTML += formatMathJax(option.content);
+
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
@@ -107,7 +111,8 @@
 
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
+            explanationContent.innerHTML = `Explanation: ${formatMathJax(question.explanation || 'No explanation available.')}`;
+
             questionElement.appendChild(explanationContent);
 
             quizContainer.appendChild(questionElement);
@@ -140,7 +145,7 @@
 
             quizContainer.appendChild(navigationButtons);
 
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub, questionContent]);
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, quizContainer]);
 
         }
 
