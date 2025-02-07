@@ -104,18 +104,142 @@
         function displayQuestion() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
+
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
+
             const question = subject.questions[currentQuestionIndex];
 
             const questionElement = document.createElement('div');
             questionElement.className = 'question';
-            questionElement.innerHTML = `<div class='question-number'>Question ${currentQuestionIndex + 1}:</div>
-                                         <div class='question-content'>${question.content}</div>`;
+
+            const questionNumber = document.createElement('div');
+            questionNumber.className = 'question-number';
+            questionNumber.textContent = `Question ${currentQuestionIndex + 1}:`;
+            questionElement.appendChild(questionNumber);
+
+            const questionContent = document.createElement('div');
+            questionContent.className = 'question-content';
+            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            });
+            questionElement.appendChild(questionContent);
+
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options';
+
+            question.options.forEach(option => {
+                const optionItem = document.createElement('li');
+                const optionLabel = document.createElement('label');
+                const optionInput = document.createElement('input');
+
+                optionInput.type = 'radio';
+                optionInput.name = `question${question.question_id}`;
+                optionInput.value = option.identifier;
+
+                // Load saved response from localStorage
+                const savedResponse = localStorage.getItem(`question${question.question_id}`);
+                if (savedResponse === option.identifier) {
+                    optionInput.checked = true;
+                }
+
+                optionLabel.appendChild(optionInput);
+                optionLabel.innerHTML += option.content;
+                optionItem.appendChild(optionLabel);
+                optionsList.appendChild(optionItem);
+            });
+
+            questionElement.appendChild(optionsList);
+
+            const explanationButton = document.createElement('button');
+            explanationButton.className = 'explanation-button';
+            explanationButton.textContent = 'Show Explanation';
+            explanationButton.onclick = () => toggleExplanation(questionElement);
+            questionElement.appendChild(explanationButton);
+
+            const explanationContent = document.createElement('div');
+            explanationContent.className = 'explanation-content';
+            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
+            questionElement.appendChild(explanationContent);
+
             quizContainer.appendChild(questionElement);
+
+            const navigationButtons = document.createElement('div');
+            navigationButtons.className = 'navigation-buttons';
+
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Previous';
+            prevButton.disabled = currentQuestionIndex === 0;
+            prevButton.onclick = () => {
+                currentQuestionIndex--;
+                displayQuestion();
+            };
+
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next';
+            nextButton.onclick = () => {
+                currentQuestionIndex++;
+                displayQuestion();
+            };
+
+            const submitButton = document.createElement('button');
+            submitButton.textContent = 'Submit';
+            submitButton.onclick = () => showAnswerFeedback(question, questionElement);
+
+            navigationButtons.appendChild(prevButton);
+            navigationButtons.appendChild(nextButton);
+            navigationButtons.appendChild(submitButton);
+
+            quizContainer.appendChild(navigationButtons);
 
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
+
+        function toggleExplanation(questionElement) {
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            explanationContent.classList.toggle('open');
+        }
+
+        function showAnswerFeedback(question, questionElement) {
+            const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+            const feedback = document.createElement('div');
+            feedback.className = 'correct-answer';
+            const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+            const correctOptionValue = question.correct_options[0];
+
+            if (selectedOption) {
+                const selectedOptionValue = selectedOption.value;
+
+                // Save response to localStorage
+                localStorage.setItem(`question${question.question_id}`, selectedOptionValue);
+
+                if (selectedOptionValue === correctOptionValue) {
+                    feedback.innerHTML = "You are correct!";
+                    feedback.style.color = 'green';
+                } else {
+                    feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
+                    feedback.style.color = 'red';
+                }
+            } else {
+                feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
+                feedback.style.color = 'red';
+            }
+
+            questionElement.appendChild(feedback);
+
+            options.forEach(option => {
+                const optionItem = option.closest('li');
+                if (option.value === correctOptionValue) {
+                    optionItem.style.backgroundColor = 'green';
+                    optionItem.style.color = 'white';
+                } else if (option.checked) {
+                    optionItem.style.backgroundColor = 'red';
+                    optionItem.style.color = 'white';
+                }
+                option.disabled = true;
+            });
+
+            
 
         document.getElementById('menu-icon').addEventListener('click', toggleSlideMenu);
         function toggleSlideMenu() {
