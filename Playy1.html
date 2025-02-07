@@ -79,7 +79,6 @@
         .replace(/\$\$(.*?)\$\$/g, '<div class="mathjax-block">\\[$1\\]</div>') // Block math
         .replace(/\$(.*?)\$/g, '<span class="mathjax-inline">\\($1\\)</span>'); // Inline math
 }
-
             questionElement.appendChild(questionContent);
 
             const optionsList = document.createElement('ul');
@@ -96,7 +95,6 @@
 
                 optionLabel.appendChild(optionInput);
                 optionLabel.innerHTML += formatMathJax(option.content);
-
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
