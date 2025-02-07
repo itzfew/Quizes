@@ -319,11 +319,36 @@
                 option.disabled = true;
             });
 
+            // Update question navigation buttons
         
             updateSlideMenuNavigation();
         }
 
-    
+        function populateQuestionNavigation() {
+            const questionNavigation = document.getElementById('question-navigation');
+            questionNavigation.innerHTML = '';
+
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+
+            subject.questions.forEach((question, index) => {
+                const button = document.createElement('button');
+                button.textContent = index + 1;
+                button.onclick = () => {
+                    currentQuestionIndex = index;
+                    displayQuestion();
+                };
+
+                // Color indication for attempted questions
+                const savedResponse = localStorage.getItem(`question${question.question_id}`);
+                if (savedResponse) {
+                    button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
+                    button.style.color = 'white';
+                }
+
+                questionNavigation.appendChild(button);
+            });
+        }
 
         function updateQuestionNavigation() {
             const subjectIndex = document.getElementById('subject-dropdown').value;
