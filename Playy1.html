@@ -73,9 +73,10 @@
 
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
+            questionContent.innerHTML = question.content
+    .replace(/\$\$(.*?)\$\$/g, '<div class="mathjax-block">\\[$1\\]</div>') // Block math
+    .replace(/\$(.*?)\$/g, '<span class="mathjax-inline">\\($1\\)</span>'); // Inline math
+
             questionElement.appendChild(questionContent);
 
             const optionsList = document.createElement('ul');
