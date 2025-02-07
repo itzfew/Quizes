@@ -26,7 +26,11 @@
     <select id="subject-dropdown"></select>
     <div class="navigation" id="question-navigation"></div>
     <div id="quiz-container"></div>
-
+    <div class="navigation">
+        <button id="prev-btn">Previous</button>
+        <button id="next-btn">Next</button>
+    </div>
+    
     <script>
         let currentQuestionIndex = 0;
         let quizData = [];
@@ -111,6 +115,20 @@
             submitButton.textContent = 'Submit';
             submitButton.onclick = () => showAnswerFeedback(question, questionElement, subjectIndex);
             quizContainer.appendChild(submitButton);
+
+            document.getElementById('prev-btn').onclick = () => {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    displayQuestion();
+                }
+            };
+
+            document.getElementById('next-btn').onclick = () => {
+                if (currentQuestionIndex < subject.questions.length - 1) {
+                    currentQuestionIndex++;
+                    displayQuestion();
+                }
+            };
 
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
