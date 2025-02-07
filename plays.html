@@ -126,6 +126,7 @@
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
+    <!-- Add the grid icon and slide menu container -->
     <div class="menu-icon" id="menu-icon">
         <i class="fas fa-th"></i>
     </div>
@@ -136,6 +137,7 @@
     </div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
+    <div id="question-navigation"></div>
 
     <script>
         let currentQuestionIndex = 0;
@@ -317,32 +319,82 @@
                 option.disabled = true;
             });
 
-            
+        
+            updateSlideMenuNavigation();
         }
 
     
+
+        function updateQuestionNavigation() {
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+            const question = subject.questions[currentQuestionIndex];
+
+            const buttons = document.querySelectorAll('#question-navigation button');
+            buttons.forEach((button, index) => {
+                if (index === currentQuestionIndex) {
+                    const savedResponse = localStorage.getItem(`question${question.question_id}`);
+                    if (savedResponse) {
+                        button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
+                        button.style.color = 'white';
+                    }
+                }
+            });
+        }
+
+        // Add event listener for the grid icon
+        document.getElementById('menu-icon').addEventListener('click', toggleSlideMenu);
+
+        // Function to toggle the slide menu
+        function toggleSlideMenu() {
+            const slideMenu = document.getElementById('slide-menu');
+            slideMenu.classList.toggle('open');
+        }
+
         // Function to populate the slide menu with question navigation buttons
-function populateSlideMenuNavigation() {
+        function populateSlideMenuNavigation() {
             const slideMenuNavigation = document.getElementById('slide-menu-navigation');
             slideMenuNavigation.innerHTML = '';
+
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
 
-            subject.questions.forEach((_, index) => {
+            subject.questions.forEach((question, index) => {
                 const button = document.createElement('button');
                 button.textContent = index + 1;
                 button.onclick = () => {
                     currentQuestionIndex = index;
                     displayQuestion();
-                    toggleSlideMenu();
+                    toggleSlideMenu(); // Close the slide menu after selecting a question
                 };
+
+                // Color indication for attempted questions
+                const savedResponse = localStorage.getItem(`question${question.question_id}`);
+                if (savedResponse) {
+                    button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
+                    button.style.color = 'white';
+                }
+
                 slideMenuNavigation.appendChild(button);
             });
         }
 
-        document.getElementById('menu-icon').addEventListener('click', toggleSlideMenu);
-        function toggleSlideMenu() {
-            document.getElementById('slide-menu').classList.toggle('open');
+        // Function to update the slide menu navigation buttons
+        function updateSlideMenuNavigation() {
+            const subjectIndex = document.getElementById('subject-dropdown').value;
+            const subject = quizData[subjectIndex];
+            const question = subject.questions[currentQuestionIndex];
+
+            const buttons = document.querySelectorAll('#slide-menu-navigation button');
+            buttons.forEach((button, index) => {
+                if (index === currentQuestionIndex) {
+                    const savedResponse = localStorage.getItem(`question${question.question_id}`);
+                    if (savedResponse) {
+                        button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
+                        button.style.color = 'white';
+                    }
+                }
+            });
         }
     </script>
 </body>
