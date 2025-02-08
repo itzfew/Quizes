@@ -7,15 +7,59 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style/play.css">
-    
+    <style>body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+.options {
+    list-style-type: none;
+    padding: 0;
+}
+
+.options li {
+    margin: 5px 0;
+}
+
+.explanation-content {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-left: 4px solid #ccc;
+}
+
+.explanation-content.open {
+    display: block;
+}
+
+.navigation-buttons {
+    margin-top: 20px;
+}
+
+#generate-pdf {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#generate-pdf:hover {
+    background-color: #0056b3;
+}</style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
-    <!-- Add the grid icon and slide menu container -->
     <div class="menu-icon" id="menu-icon">
         <i class="fas fa-th"></i>
     </div>
@@ -26,59 +70,10 @@
     </div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
-    <button id="generate-pdf">Generate PDF</button>
     <div id="question-navigation"></div>
+    <button id="generate-pdf">Generate PDF</button>
 
     <script>
-        document.getElementById('generate-pdf').addEventListener('click', generatePDF);
-
-function generatePDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    const subjectIndex = document.getElementById('subject-dropdown').value;
-    const subject = quizData[subjectIndex];
-    const questions = subject.questions.sort(() => Math.random() - 0.5); // Randomize questions
-
-    let yOffset = 20;
-    const pageHeight = doc.internal.pageSize.height;
-    const margin = 10;
-
-    questions.forEach((question, index) => {
-        const questionText = `Question ${index + 1}: ${question.content}`;
-        const optionsText = question.options.map(opt => `${opt.identifier}. ${opt.content}`).join('\n');
-
-        const fullQuestionText = `${questionText}\n${optionsText}`;
-
-        doc.setFontSize(12);
-        const splitText = doc.splitTextToSize(fullQuestionText, 180);
-        const textHeight = doc.getTextDimensions(splitText).h;
-
-        if (yOffset + textHeight > pageHeight - margin) {
-            doc.addPage();
-            yOffset = 20;
-        }
-
-        doc.text(splitText, margin, yOffset);
-        yOffset += textHeight + 10;
-    });
-
-    // Add answer key on the last page
-    doc.addPage();
-    yOffset = 20;
-    doc.setFontSize(14);
-    doc.text('Answer Key', margin, yOffset);
-    yOffset += 10;
-
-    questions.forEach((question, index) => {
-        const answerText = `Question ${index + 1}: ${question.correct_options[0]}`;
-        doc.setFontSize(12);
-        doc.text(answerText, margin, yOffset);
-        yOffset += 10;
-    });
-
-    doc.save('quiz.pdf');
-} 
         let currentQuestionIndex = 0;
         let quizData = [];
         const urlParams = new URLSearchParams(window.location.search);
@@ -98,11 +93,10 @@ function generatePDF() {
                 quizData = data;
                 populateSubjectDropdown();
                 displayQuestion();
-                populateSlideMenuNavigation(); // Populate the slide menu navigation
+                populateSlideMenuNavigation();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
-        
         function populateSubjectDropdown() {
             const subjectDropdown = document.getElementById('subject-dropdown');
             quizData.forEach((subject, index) => {
@@ -115,7 +109,7 @@ function generatePDF() {
             subjectDropdown.onchange = () => {
                 currentQuestionIndex = 0;
                 displayQuestion();
-                populateSlideMenuNavigation(); // Update slide menu navigation
+                populateSlideMenuNavigation();
             };
         }
 
@@ -125,7 +119,6 @@ function generatePDF() {
 
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
-
             const question = subject.questions[currentQuestionIndex];
 
             const questionElement = document.createElement('div');
@@ -153,7 +146,6 @@ function generatePDF() {
                 optionInput.name = `question${question.question_id}`;
                 optionInput.value = option.identifier;
 
-                // Load saved response from localStorage
                 const savedResponse = localStorage.getItem(`question${question.question_id}`);
                 if (savedResponse === option.identifier) {
                     optionInput.checked = true;
@@ -176,8 +168,7 @@ function generatePDF() {
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
             explanationContent.innerHTML = `Explanation: ${renderMathJax(question.explanation || 'No explanation available.')}`;
-
-              questionElement.appendChild(explanationContent);
+            questionElement.appendChild(explanationContent);
 
             quizContainer.appendChild(questionElement);
 
@@ -211,11 +202,13 @@ function generatePDF() {
 
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
-function renderMathJax(content) {
-    return content
-        .replace(/\$\$(.*?)\$\$/g, (match, p1) => `<span class="mathjax-block">\\[${p1}\\]</span>`)
-        .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
-}
+
+        function renderMathJax(content) {
+            return content
+                .replace(/\$\$(.*?)\$\$/g, (match, p1) => `<span class="mathjax-block">\\[${p1}\\]</span>`)
+                .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
+        }
+
         function toggleExplanation(questionElement) {
             const explanationContent = questionElement.querySelector('.explanation-content');
             explanationContent.classList.toggle('open');
@@ -230,8 +223,6 @@ function renderMathJax(content) {
 
             if (selectedOption) {
                 const selectedOptionValue = selectedOption.value;
-
-                // Save response to localStorage
                 localStorage.setItem(`question${question.question_id}`, selectedOptionValue);
 
                 if (selectedOptionValue === correctOptionValue) {
@@ -260,64 +251,9 @@ function renderMathJax(content) {
                 option.disabled = true;
             });
 
-            // Update question navigation buttons
-    
             updateSlideMenuNavigation();
         }
 
-        function populateQuestionNavigation() {
-            const questionNavigation = document.getElementById('question-navigation');
-            questionNavigation.innerHTML = '';
-
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-
-            subject.questions.forEach((question, index) => {
-                const button = document.createElement('button');
-                button.textContent = index + 1;
-                button.onclick = () => {
-                    currentQuestionIndex = index;
-                    displayQuestion();
-                };
-
-                // Color indication for attempted questions
-                const savedResponse = localStorage.getItem(`question${question.question_id}`);
-                if (savedResponse) {
-                    button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
-                    button.style.color = 'white';
-                }
-
-                questionNavigation.appendChild(button);
-            });
-        }
-
-        function updateQuestionNavigation() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-            const question = subject.questions[currentQuestionIndex];
-
-            const buttons = document.querySelectorAll('#question-navigation button');
-            buttons.forEach((button, index) => {
-                if (index === currentQuestionIndex) {
-                    const savedResponse = localStorage.getItem(`question${question.question_id}`);
-                    if (savedResponse) {
-                        button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
-                        button.style.color = 'white';
-                    }
-                }
-            });
-        }
-
-        // Add event listener for the grid icon
-        document.getElementById('menu-icon').addEventListener('click', toggleSlideMenu);
-
-        // Function to toggle the slide menu
-        function toggleSlideMenu() {
-            const slideMenu = document.getElementById('slide-menu');
-            slideMenu.classList.toggle('open');
-        }
-
-        // Function to populate the slide menu with question navigation buttons
         function populateSlideMenuNavigation() {
             const slideMenuNavigation = document.getElementById('slide-menu-navigation');
             slideMenuNavigation.innerHTML = '';
@@ -331,10 +267,9 @@ function renderMathJax(content) {
                 button.onclick = () => {
                     currentQuestionIndex = index;
                     displayQuestion();
-                    toggleSlideMenu(); // Close the slide menu after selecting a question
+                    toggleSlideMenu();
                 };
 
-                // Color indication for attempted questions
                 const savedResponse = localStorage.getItem(`question${question.question_id}`);
                 if (savedResponse) {
                     button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
@@ -345,22 +280,60 @@ function renderMathJax(content) {
             });
         }
 
-        // Function to update the slide menu navigation buttons
-        function updateSlideMenuNavigation() {
+        function toggleSlideMenu() {
+            const slideMenu = document.getElementById('slide-menu');
+            slideMenu.classList.toggle('open');
+        }
+
+        // PDF Generation
+        document.getElementById('generate-pdf').addEventListener('click', generatePDF);
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
             const subjectIndex = document.getElementById('subject-dropdown').value;
             const subject = quizData[subjectIndex];
-            const question = subject.questions[currentQuestionIndex];
+            const questions = subject.questions.sort(() => Math.random() - 0.5); // Randomize questions
 
-            const buttons = document.querySelectorAll('#slide-menu-navigation button');
-            buttons.forEach((button, index) => {
-                if (index === currentQuestionIndex) {
-                    const savedResponse = localStorage.getItem(`question${question.question_id}`);
-                    if (savedResponse) {
-                        button.style.backgroundColor = savedResponse === question.correct_options[0] ? 'green' : 'red';
-                        button.style.color = 'white';
-                    }
+            let yOffset = 20;
+            const pageHeight = doc.internal.pageSize.height;
+            const margin = 10;
+
+            // Add questions to PDF
+            questions.forEach((question, index) => {
+                const questionText = `Question ${index + 1}: ${question.content}`;
+                const optionsText = question.options.map(opt => `${opt.identifier}. ${opt.content}`).join('\n');
+                const fullQuestionText = `${questionText}\n${optionsText}`;
+
+                doc.setFontSize(12);
+                const splitText = doc.splitTextToSize(fullQuestionText, 180);
+                const textHeight = doc.getTextDimensions(splitText).h;
+
+                if (yOffset + textHeight > pageHeight - margin) {
+                    doc.addPage();
+                    yOffset = 20;
                 }
+
+                doc.text(splitText, margin, yOffset);
+                yOffset += textHeight + 10;
             });
+
+            // Add answer key on the last page
+            doc.addPage();
+            yOffset = 20;
+            doc.setFontSize(14);
+            doc.text('Answer Key', margin, yOffset);
+            yOffset += 10;
+
+            questions.forEach((question, index) => {
+                const answerText = `Question ${index + 1}: ${question.correct_options[0]}`;
+                doc.setFontSize(12);
+                doc.text(answerText, margin, yOffset);
+                yOffset += 10;
+            });
+
+            doc.save('quiz.pdf');
         }
     </script>
 </body>
