@@ -99,26 +99,6 @@ function generatePDF() {
             }
             doc.save("quiz.pdf"); // Save the PDF after all questions are added
         }
-
-        addAllQuestions();
-    });
-}
-function calculateQuestionHeight(doc, question, index) {
-    // Use the font sizes and line heights to calculate the height of the question
-    const titleHeight = doc.getTextDimensions(`Question ${index + 1}:`).h + 10; // H3 height
-    const contentHeight = doc.getTextDimensions(question.content).h + 10; // Content height
-    const optionsHeight = question.options.length * 10 + 20; // Estimate for options
-    const answerHeight = doc.getTextDimensions(`Answer: ${question.correct_options[0]}`).h + 10; // Answer height
-
-    return titleHeight + contentHeight + optionsHeight + answerHeight + 20; // Total height
-}
-
-function renderMathJax(content) {
-    // Replace this method according to your MathJax rendering logic
-    return content; // Assume it returns the rendered content
-}
-
-
         let currentQuestionIndex = 0;
         let quizData = [];
         const urlParams = new URLSearchParams(window.location.search);
