@@ -30,65 +30,28 @@
     <div id="question-navigation"></div>
 
     <script>
-        document.getElementById('generate-pdf').addEventListener('click', generatePDF);
+ document.getElementById('generate-pdf').addEventListener('click', generatePDF);
 
-async function generatePDF() {
+function generatePDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const margin = 10;
-    let yOffset = 20;
-    const pageHeight = doc.internal.pageSize.height;
-    
-    const subjectIndex = document.getElementById('subject-dropdown').value;
-    const subject = quizData[subjectIndex];
-    const questions = subject.questions.sort(() => Math.random() - 0.5);
-    
-    doc.setFont('helvetica');
-    doc.setFontSize(16);
-    doc.text(subject.title, margin, yOffset);
-    yOffset += 10;
-    
-    for (const [index, question] of questions.entries()) {
-        if (yOffset > pageHeight - 20) {
-            doc.addPage();
-            yOffset = 20;
-        }
+    const doc = new jsPDF("p", "mm", "a4");
 
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
-        doc.text(`Q${index + 1}: ${question.content}`, margin, yOffset);
-        yOffset += 10;
-        
-        doc.setFont(undefined, 'normal');
-        for (const option of question.options) {
-            if (yOffset > pageHeight - 20) {
-                doc.addPage();
-                yOffset = 20;
-            }
-            doc.text(`${option.identifier}. ${option.content}`, margin + 5, yOffset);
-            yOffset += 8;
-        }
-        
-        yOffset += 5;
-    }
-    
-    doc.addPage();
-    yOffset = 20;
-    doc.setFontSize(14);
-    doc.text('Answer Key', margin, yOffset);
-    yOffset += 10;
+    // Ensure MathJax is fully rendered before capturing
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub], function () {
+        const quizContainer = document.getElementById("quiz-container");
 
-    for (const [index, question] of questions.entries()) {
-        if (yOffset > pageHeight - 20) {
-            doc.addPage();
-            yOffset = 20;
-        }
-        doc.setFontSize(12);
-        doc.text(`Q${index + 1}: Correct Answer: ${question.correct_options[0]}`, margin, yOffset);
-        yOffset += 8;
-    }
-    
-    doc.save(`${subject.title.replace(/\s+/g, '_')}_quiz.pdf`);
+        html2canvas(quizContainer, {
+            scale: 2, // Higher scale for better quality
+            useCORS: true // Ensures external CSS & images are captured
+        }).then(canvas => {
+            const imgData = canvas.toDataURL("image/png");
+            const imgWidth = 190; // Adjusted for A4 width
+            const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+
+            doc.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+            doc.save("quiz.pdf");
+        });
+    });
 }
 
         let currentQuestionIndex = 0;
