@@ -36,21 +36,19 @@ function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF("p", "mm", "a4");
 
-    // Ensure MathJax, LaTeX, and MathML are fully rendered before capturing
     MathJax.Hub.Queue(["Typeset", MathJax.Hub], function () {
         const quizContainer = document.createElement('div');
-        quizContainer.style.width = "800px"; // Set fixed width for better rendering
-        quizContainer.style.padding = "20px"; // Ensure proper spacing
-        quizContainer.style.backgroundColor = "#ffffff"; // Ensure clean background
-        document.body.appendChild(quizContainer); // Temporarily add to body
+        quizContainer.style.width = "800px"; // Fixed width for proper rendering
+        quizContainer.style.padding = "20px"; // Add some padding for layout
+        document.body.appendChild(quizContainer); // Temporarily add it to body
 
-        // Iterate over questions
+        // Iterate over all questions and add them to a container
         const subjectIndex = document.getElementById('subject-dropdown').value;
         const subject = quizData[subjectIndex];
 
         subject.questions.forEach((question, index) => {
             const questionElement = document.createElement('div');
-            questionElement.style.pageBreakInside = "avoid"; // Prevents splitting questions across pages
+            questionElement.style.pageBreakInside = 'avoid'; // Prevent breaking on this question
             questionElement.innerHTML = `
                 <h3>Question ${index + 1}:</h3>
                 <p>${renderMathJax(question.content)}</p>
@@ -63,42 +61,56 @@ function generatePDF() {
             quizContainer.appendChild(questionElement);
         });
 
-        // Convert to PDF with html2canvas
+        // Use html2canvas to capture all questions properly
         html2canvas(quizContainer, {
-            scale: 3, // High quality
+            scale: 2, // Adjust scale for better quality
             useCORS: true,
             allowTaint: true
         }).then(canvas => {
-            const imgWidth = 190; // A4 width
+            const imgData = canvas.toDataURL("image/png");
+            const imgWidth = 190; // A4 width with margins
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
             let yPos = 10;
             let pageHeight = doc.internal.pageSize.height - 20;
 
-            if (imgHeight > pageHeight) {
-                let totalPages = Math.ceil(imgHeight / pageHeight);
-                for (let i = 0; i < totalPages; i++) {
-                    let cropCanvas = document.createElement("canvas");
-                    let ctx = cropCanvas.getContext("2d");
+            let currentHeight = 0;
+            const maxHeight = (pageHeight - 20); // leave space for margins
 
-                    cropCanvas.width = canvas.width;
-                    cropCanvas.height = Math.min(pageHeight * (canvas.width / imgWidth), canvas.height);
-                    ctx.drawImage(canvas, 0, -(i * pageHeight * (canvas.width / imgWidth)));
-
-                    let croppedImgData = cropCanvas.toDataURL("image/png");
-                    doc.addImage(croppedImgData, "PNG", 10, 10, imgWidth, cropCanvas.height * (imgWidth / canvas.width));
-
-                    if (i < totalPages - 1) {
-                        doc.addPage();
-                    }
+            subject.questions.forEach((question, index) => {
+                const questionHeight = calculateQuestionHeight(doc, question, index); // Custom height method
+                if (currentHeight + questionHeight > maxHeight) {
+                    doc.addPage(); // Add new page if needed
+                    currentHeight = 0; // Reset height for new page
                 }
-            } else {
-                doc.addImage(canvas.toDataURL("image/png"), "PNG", 10, 10, imgWidth, imgHeight);
-            }
+
+                // Render question on the PDF
+                doc.addImage(imgData, "PNG", 10, yPos, imgWidth, imgHeight);
+                yPos += questionHeight; // Move y-position down
+                currentHeight += questionHeight; // Track height for next question
+            });
 
             doc.save("quiz.pdf");
-            document.body.removeChild(quizContainer); // Clean up
+
+            // Remove the temporary quiz container
+            document.body.removeChild(quizContainer);
         });
     });
+}
+
+function calculateQuestionHeight(doc, question, index) {
+    // Use the font sizes and line heights to calculate the height of the question
+    const titleHeight = doc.getTextDimensions(`Question ${index + 1}:`).h + 10; // H3 height
+    const contentHeight = doc.getTextDimensions(question.content).h + 10; // Content height
+    const optionsHeight = question.options.length * 10 + 20; // Estimate for options
+    const answerHeight = doc.getTextDimensions(`Answer: ${question.correct_options[0]}`).h + 10; // Answer height
+
+    return titleHeight + contentHeight + optionsHeight + answerHeight + 20; // Total height
+}
+
+function renderMathJax(content) {
+    // Replace this method according to your MathJax rendering logic
+    return content; // Assume it returns the rendered content
 }
 
 
