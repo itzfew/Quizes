@@ -36,71 +36,73 @@ function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF("p", "mm", "a4");
 
-    // Get selected subject
-    const subjectIndex = document.getElementById('subject-dropdown').value;
-    const subject = quizData[subjectIndex];
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub], function () {
+        const subjectIndex = document.getElementById('subject-dropdown').value;
+        const subject = quizData[subjectIndex];
 
-    let yPos = 10; // Starting Y position for content
-    const pageHeight = doc.internal.pageSize.height - 20;
-    const pageWidth = doc.internal.pageSize.width - 20;
+        let yPos = 10; // Starting Y position for content
+        const pageHeight = doc.internal.pageSize.height - 20; // Page height with margins
+        const pageWidth = doc.internal.pageSize.width - 20; // Page width with margins
 
-    // Function to add a question to the PDF
-    async function addQuestionToPDF(question, index) {
-        return new Promise((resolve) => {
-            const questionElement = document.createElement('div');
-            questionElement.style.width = `${pageWidth}mm`;
-            questionElement.style.padding = "10px";
-            questionElement.innerHTML = `
-                <h3>Question ${index + 1}:</h3>
-                <p>${question.content}</p>
-                <ul>
-                    ${question.options.map(opt => `<li>${opt.identifier}. ${opt.content}</li>`).join('')}
-                </ul>
-                <strong>Answer:</strong> ${question.correct_options[0]}
-                <hr>
-            `;
+        // Function to add a question to the PDF
+        function addQuestionToPDF(question, index) {
+            return new Promise((resolve) => {
+                const questionElement = document.createElement('div');
+                questionElement.style.width = `${pageWidth}mm`;
+                questionElement.style.padding = "0"; // Remove padding for the element
+                questionElement.style.margin = "0"; // Remove margin for the element
+                questionElement.innerHTML = `
+                    <h3 style="margin: 5px 0;">Question ${index + 1}:</h3> <!-- Control margin -->
+                    <p style="margin: 0;">${renderMathJax(question.content)}</p>
+                    <ul style="padding-left: 20px; margin: 0;"> <!-- Optional styles -->
+                        ${question.options.map(opt => `<li style="margin: 0;">${opt.identifier}. ${renderMathJax(opt.content)}</li>`).join('')}
+                    </ul>
+                    <strong style="margin-top: 10px;">Answer:</strong> ${question.correct_options[0]}
+                    <hr style="margin: 10px 0;"/>
+                `;
 
-            document.body.appendChild(questionElement);
+                document.body.appendChild(questionElement);
 
-            // Ensure MathJax renders before capturing
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub, questionElement], function () {
-                setTimeout(() => {  // Ensure rendering is complete before capturing
-                    html2canvas(questionElement, {
-                        scale: 3,
-                        useCORS: true,
-                        allowTaint: true
-                    }).then(canvas => {
-                        const imgData = canvas.toDataURL("image/png");
-                        const imgWidth = pageWidth;
-                        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                // Capture the question as an image
+                html2canvas(questionElement, {
+                    scale: 3, // Higher scale for better quality
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: null // Set background to transparent if needed
+                }).then(canvas => {
+                    const imgData = canvas.toDataURL("image/png");
+                    const imgWidth = pageWidth;
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-                        if (yPos + imgHeight > pageHeight) {
-                            doc.addPage();
-                            yPos = 10;
-                        }
+                    // Check if the question fits on the current page
+                    if (yPos + imgHeight > pageHeight) {
+                        doc.addPage(); // Add a new page if it doesn't fit
+                        yPos = 10; // Reset Y position for the new page
+                    }
 
-                        doc.addImage(imgData, "PNG", 10, yPos, imgWidth, imgHeight);
-                        yPos += imgHeight + 10;
+                    // Add the question image to the PDF
+                    doc.addImage(imgData, "PNG", 10, yPos, imgWidth, imgHeight);
+                    yPos += imgHeight + 10; // Update Y position for the next question
 
-                        document.body.removeChild(questionElement);
-                        resolve();
-                    });
-                }, 500); // Short delay to ensure proper rendering
+                    // Remove the temporary question element
+                    document.body.removeChild(questionElement);
+
+                    resolve();
+                });
             });
-        });
-    }
-
-    // Function to process all questions sequentially
-    async function addAllQuestions() {
-        for (let i = 0; i < subject.questions.length; i++) {
-            await addQuestionToPDF(subject.questions[i], i);
         }
-        doc.save("quiz.pdf");
-    }
 
-    addAllQuestions();
-}
+        // Add all questions to the PDF sequentially
+        async function addAllQuestions() {
+            for (let i = 0; i < subject.questions.length; i++) {
+                await addQuestionToPDF(subject.questions[i], i);
+            }
+            doc.save("quiz.pdf"); // Save the PDF after all questions are added
+        }
 
+        addAllQuestions();
+    });
+} 
        let currentQuestionIndex = 0;
         let quizData = [];
         const urlParams = new URLSearchParams(window.location.search);
