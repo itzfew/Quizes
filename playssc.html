@@ -7,122 +7,11 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style/play.css">
-    <style>
-        /* Style for the grid icon */
-        .menu-icon {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 1000;
-        }
-
-        /* Style for the slide menu */
-        .slide-menu {
-            position: fixed;
-            top: 0;
-            right: -300px; /* Hide the menu off-screen initially */
-            width: 300px;
-            height: 100%;
-            background-color: #f9f9f9;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-            transition: right 0.3s ease;
-            z-index: 999;
-        }
-
-        .slide-menu.open {
-            right: 0; /* Show the menu when it has the 'open' class */
-        }
-
-        .slide-menu-content {
-            padding: 20px;
-        }
-
-        /* Style for the question navigation buttons inside the slide menu */
-        #slide-menu-navigation {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        #slide-menu-navigation button {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            cursor: pointer;
-        }
-
-        #slide-menu-navigation button:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* Additional styles for the quiz container */
-        .quiz-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        #subject-dropdown {
-            margin-bottom: 20px;
-            padding: 5px;
-        }
-
-        .question {
-            margin-bottom: 20px;
-        }
-
-        .question-number {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .options {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .options li {
-            margin-bottom: 10px;
-        }
-
-        .explanation-button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .explanation-content {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-            display: none;
-        }
-
-        .explanation-content.open {
-            display: block;
-        }
-
-        .navigation-buttons {
-            margin-top: 20px;
-        }
-
-        .navigation-buttons button {
-            margin-right: 10px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-    </style>
+    
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
@@ -137,9 +26,59 @@
     </div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container"></div>
+    <button id="generate-pdf">Generate PDF</button>
     <div id="question-navigation"></div>
 
     <script>
+        document.getElementById('generate-pdf').addEventListener('click', generatePDF);
+
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const subjectIndex = document.getElementById('subject-dropdown').value;
+    const subject = quizData[subjectIndex];
+    const questions = subject.questions.sort(() => Math.random() - 0.5); // Randomize questions
+
+    let yOffset = 20;
+    const pageHeight = doc.internal.pageSize.height;
+    const margin = 10;
+
+    questions.forEach((question, index) => {
+        const questionText = `Question ${index + 1}: ${question.content}`;
+        const optionsText = question.options.map(opt => `${opt.identifier}. ${opt.content}`).join('\n');
+
+        const fullQuestionText = `${questionText}\n${optionsText}`;
+
+        doc.setFontSize(12);
+        const splitText = doc.splitTextToSize(fullQuestionText, 180);
+        const textHeight = doc.getTextDimensions(splitText).h;
+
+        if (yOffset + textHeight > pageHeight - margin) {
+            doc.addPage();
+            yOffset = 20;
+        }
+
+        doc.text(splitText, margin, yOffset);
+        yOffset += textHeight + 10;
+    });
+
+    // Add answer key on the last page
+    doc.addPage();
+    yOffset = 20;
+    doc.setFontSize(14);
+    doc.text('Answer Key', margin, yOffset);
+    yOffset += 10;
+
+    questions.forEach((question, index) => {
+        const answerText = `Question ${index + 1}: ${question.correct_options[0]}`;
+        doc.setFontSize(12);
+        doc.text(answerText, margin, yOffset);
+        yOffset += 10;
+    });
+
+    doc.save('quiz.pdf');
+} 
         let currentQuestionIndex = 0;
         let quizData = [];
         const urlParams = new URLSearchParams(window.location.search);
@@ -159,11 +98,11 @@
                 quizData = data;
                 populateSubjectDropdown();
                 displayQuestion();
-                populateQuestionNavigation();
                 populateSlideMenuNavigation(); // Populate the slide menu navigation
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
+        
         function populateSubjectDropdown() {
             const subjectDropdown = document.getElementById('subject-dropdown');
             quizData.forEach((subject, index) => {
@@ -176,7 +115,6 @@
             subjectDropdown.onchange = () => {
                 currentQuestionIndex = 0;
                 displayQuestion();
-                populateQuestionNavigation();
                 populateSlideMenuNavigation(); // Update slide menu navigation
             };
         }
@@ -200,9 +138,7 @@
 
             const questionContent = document.createElement('div');
             questionContent.className = 'question-content';
-            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
+            questionContent.innerHTML = renderMathJax(question.content);
             questionElement.appendChild(questionContent);
 
             const optionsList = document.createElement('ul');
@@ -224,7 +160,7 @@
                 }
 
                 optionLabel.appendChild(optionInput);
-                optionLabel.innerHTML += option.content;
+                optionLabel.innerHTML += renderMathJax(option.content);
                 optionItem.appendChild(optionLabel);
                 optionsList.appendChild(optionItem);
             });
@@ -239,8 +175,9 @@
 
             const explanationContent = document.createElement('div');
             explanationContent.className = 'explanation-content';
-            explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-            questionElement.appendChild(explanationContent);
+            explanationContent.innerHTML = `Explanation: ${renderMathJax(question.explanation || 'No explanation available.')}`;
+
+              questionElement.appendChild(explanationContent);
 
             quizContainer.appendChild(questionElement);
 
@@ -274,7 +211,11 @@
 
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
-
+function renderMathJax(content) {
+    return content
+        .replace(/\$\$(.*?)\$\$/g, (match, p1) => `<span class="mathjax-block">\\[${p1}\\]</span>`)
+        .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
+}
         function toggleExplanation(questionElement) {
             const explanationContent = questionElement.querySelector('.explanation-content');
             explanationContent.classList.toggle('open');
@@ -320,7 +261,7 @@
             });
 
             // Update question navigation buttons
-            updateQuestionNavigation();
+    
             updateSlideMenuNavigation();
         }
 
