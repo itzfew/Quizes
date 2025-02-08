@@ -36,58 +36,69 @@ function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF("p", "mm", "a4");
 
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub], function () {
-        const quizContainer = document.createElement('div');
-        quizContainer.style.width = "800px";
-        quizContainer.style.padding = "20px";
-        quizContainer.style.backgroundColor = "#ffffff";
-        quizContainer.style.visibility = "hidden"; // Hide from UI
-        document.body.appendChild(quizContainer);
+    // Get selected subject
+    const subjectIndex = document.getElementById('subject-dropdown').value;
+    const subject = quizData[subjectIndex];
 
-        const subjectIndex = document.getElementById('subject-dropdown').value;
-        const subject = quizData[subjectIndex];
+    let yPos = 10; // Starting Y position for content
+    const pageHeight = doc.internal.pageSize.height - 20;
+    const pageWidth = doc.internal.pageSize.width - 20;
 
-        let currentPageHeight = 10; // Start Y position on first page
-        const pageHeightLimit = doc.internal.pageSize.height - 20;
-
-        subject.questions.forEach((question, index) => {
+    // Function to add a question to the PDF
+    async function addQuestionToPDF(question, index) {
+        return new Promise((resolve) => {
             const questionElement = document.createElement('div');
-            questionElement.style.pageBreakInside = "avoid"; // Prevent question splitting
+            questionElement.style.width = `${pageWidth}mm`;
+            questionElement.style.padding = "10px";
             questionElement.innerHTML = `
                 <h3>Question ${index + 1}:</h3>
-                <p>${renderMathJax(question.content)}</p>
+                <p>${question.content}</p>
                 <ul>
-                    ${question.options.map(opt => `<li>${opt.identifier}. ${renderMathJax(opt.content)}</li>`).join('')}
+                    ${question.options.map(opt => `<li>${opt.identifier}. ${opt.content}</li>`).join('')}
                 </ul>
                 <strong>Answer:</strong> ${question.correct_options[0]}
                 <hr>
             `;
-            quizContainer.appendChild(questionElement);
+
+            document.body.appendChild(questionElement);
+
+            // Ensure MathJax renders before capturing
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, questionElement], function () {
+                setTimeout(() => {  // Ensure rendering is complete before capturing
+                    html2canvas(questionElement, {
+                        scale: 3,
+                        useCORS: true,
+                        allowTaint: true
+                    }).then(canvas => {
+                        const imgData = canvas.toDataURL("image/png");
+                        const imgWidth = pageWidth;
+                        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                        if (yPos + imgHeight > pageHeight) {
+                            doc.addPage();
+                            yPos = 10;
+                        }
+
+                        doc.addImage(imgData, "PNG", 10, yPos, imgWidth, imgHeight);
+                        yPos += imgHeight + 10;
+
+                        document.body.removeChild(questionElement);
+                        resolve();
+                    });
+                }, 500); // Short delay to ensure proper rendering
+            });
         });
+    }
 
-        html2canvas(quizContainer, {
-            scale: 3,
-            useCORS: true,
-            allowTaint: true
-        }).then(canvas => {
-            const imgWidth = 190;
-            let imgHeight = (canvas.height * imgWidth) / canvas.width;
+    // Function to process all questions sequentially
+    async function addAllQuestions() {
+        for (let i = 0; i < subject.questions.length; i++) {
+            await addQuestionToPDF(subject.questions[i], i);
+        }
+        doc.save("quiz.pdf");
+    }
 
-            let yPos = 10;
-            let pageHeight = doc.internal.pageSize.height - 20;
-
-            while (imgHeight > pageHeight) {
-                doc.addImage(canvas.toDataURL("image/png"), "PNG", 10, yPos, imgWidth, pageHeight);
-                doc.addPage();
-                imgHeight -= pageHeight;
-                yPos = 10;
-            }
-            doc.addImage(canvas.toDataURL("image/png"), "PNG", 10, yPos, imgWidth, imgHeight);
-
-            doc.save("quiz.pdf");
-            document.body.removeChild(quizContainer);
-        });
-    });
+    addAllQuestions();
 }
 
        let currentQuestionIndex = 0;
