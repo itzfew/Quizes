@@ -1,4 +1,3 @@
-
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -6,15 +5,14 @@ body {
     padding: 0;
 }
 
-/* Adjust the rest of the page below the header */
 main {
-    margin-top: 80px; /* Add margin to avoid content hiding behind the header */
+    margin-top: 80px;
     padding: 20px;
 }
 
 .quiz-title {
     font-size: 1.5em;
-    margin: 5px 0; /* Add a margin on top to give space between header and title */
+    margin: 5px 0;
     color: #333;
     text-align: center;
     border: 2px solid black;
@@ -38,26 +36,25 @@ main {
 
 .question-content {
     margin-bottom: 15px;
-    word-wrap: break-word;
-    white-space: normal;
     max-width: 100%;
     overflow-x: auto;
-}
-/* Ensure all images within questions and explanations have a maximum width */
-.question-content img, .explanation-content img {
-    max-width: 70%;  /* Limit the image width to 70% of the container */
-    height: auto;    /* Maintain aspect ratio */
-    display: block;  /* Make the image block-level to center it */
-    margin: 0 auto;  /* Center the image horizontally */
-    max-height: 40vh; /* Limit the height of the image to 40% of the viewport height */
-    vertical-align: baseline; /* Align image with text */
+    word-wrap: break-word;
+    white-space: normal;
 }
 
-/* Optional: If you want to apply a lightbox or hover effect */
+.question-content img, .explanation-content img {
+    max-width: 70%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    max-height: 40vh;
+    vertical-align: baseline;
+}
+
 .question-content img:hover, .explanation-content img:hover {
     cursor: pointer;
-    opacity: 0.8; /* Slightly fade image when hovered */
-    transition: opacity 0.3s ease; /* Smooth hover transition */
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
 }
 
 .options li {
@@ -78,12 +75,6 @@ main {
 
 .options input[type="radio"] {
     margin-right: 10px;
-}
-
-.question-id {
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #555;
 }
 
 .correct-answer {
@@ -113,13 +104,6 @@ main {
 
 .explanation-button:hover {
     background-color: #f1f1f1;
-    color: #000;
-}
-
-.explanation-button-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
 }
 
 .explanation-content {
@@ -130,12 +114,9 @@ main {
 }
 
 .explanation-content.open {
-    background-color: #FFF59D; /* Yellow background */
+    background-color: #FFF59D;
     padding: 10px;
     border-radius: 5px;
-    margin-top: 10px;
-    font-style: italic;
-    color: #777;
     display: block;
 }
 
@@ -149,18 +130,10 @@ main {
     display: inline-block;
 }
 
-/* Prevent the explanation button and content from being hidden */
-.question .explanation-button,
-.question .explanation-content {
-    visibility: visible;
-    position: relative;
-}
-
 .navigation-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
-    margin-bottom: 30px;
+    margin: 20px 0;
     padding: 10px;
 }
 
@@ -170,13 +143,10 @@ main {
     border-radius: 5px;
     cursor: pointer;
     border: 1px solid #ccc;
-    background-color: #007bff;
-    color: white;
     transition: background-color 0.3s, transform 0.3s;
 }
 
 .navigation-buttons button:hover {
-    background-color: #0056b3;
     transform: scale(1.05);
 }
 
@@ -185,154 +155,80 @@ main {
     cursor: not-allowed;
 }
 
-.navigation-buttons button:focus {
-    outline: none;
-}
-
 .navigation-buttons button:first-child {
-    background-color: #dc3545; /* Red for Previous */
+    background-color: #dc3545;
 }
 
 .navigation-buttons button:last-child {
-    background-color: #28a745; /* Green for Submit */
+    background-color: #28a745;
 }
 
 .navigation-buttons button:first-child:hover {
-    background-color: #c82333; /* Darker Red for Previous */
+    background-color: #c82333;
 }
 
 .navigation-buttons button:last-child:hover {
-    background-color: #218838; /* Darker Green for Submit */
+    background-color: #218838;
 }
-
 
 @media (max-width: 600px) {
     body {
         padding: 0px;
     }
-
     #quiz-container {
         padding: 3px;
     }
-
     .submit-button {
         padding: 10px;
     }
-
     .options li {
         padding: 5px;
     }
-
 }
-        /* Style for the grid icon */
-        .menu-icon {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 1000;
-        }
 
-        /* Style for the slide menu */
-        .slide-menu {
-            position: fixed;
-            top: 0;
-            right: -300px; /* Hide the menu off-screen initially */
-            width: 300px;
-            height: 100%;
-            background-color: #f9f9f9;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-            transition: right 0.3s ease;
-            z-index: 999;
-        }
+.menu-icon {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1000;
+}
 
-        .slide-menu.open {
-            right: 0; /* Show the menu when it has the 'open' class */
-        }
+.slide-menu {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100%;
+    background-color: #f9f9f9;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    z-index: 999;
+}
 
-        .slide-menu-content {
-            padding: 20px;
-        }
+.slide-menu.open {
+    right: 0;
+}
 
-        /* Style for the question navigation buttons inside the slide menu */
-        #slide-menu-navigation {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+.slide-menu-content {
+    padding: 20px;
+}
 
-        #slide-menu-navigation button {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            cursor: pointer;
-        }
+#slide-menu-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
 
-        #slide-menu-navigation button:hover {
-            background-color: #f0f0f0;
-        }
+#slide-menu-navigation button {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+}
 
-        /* Additional styles for the quiz container */
-        .quiz-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        #subject-dropdown {
-            margin-bottom: 20px;
-            padding: 5px;
-        }
-
-        .question {
-            margin-bottom: 20px;
-        }
-
-        .question-number {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .options {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .options li {
-            margin-bottom: 10px;
-        }
-
-        .explanation-button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .explanation-content {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-            display: none;
-        }
-
-        .explanation-content.open {
-            display: block;
-        }
-
-        .navigation-buttons {
-            margin-top: 20px;
-        }
-
-        .navigation-buttons button {
-            margin-right: 10px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
-        }
+#slide-menu-navigation button:hover {
+    background-color: #f0f0f0;
+}
