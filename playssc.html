@@ -35,35 +35,72 @@
 function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF("p", "mm", "a4");
-    let yPos = 10; // Y position tracking
 
+    // Ensure MathJax, LaTeX, and MathML are fully rendered before capturing
     MathJax.Hub.Queue(["Typeset", MathJax.Hub], function () {
+        const quizContainer = document.createElement('div');
+        quizContainer.style.width = "800px"; // Set fixed width for better rendering
+        quizContainer.style.padding = "20px"; // Ensure proper spacing
+        quizContainer.style.backgroundColor = "#ffffff"; // Ensure clean background
+        document.body.appendChild(quizContainer); // Temporarily add to body
+
+        // Iterate over questions
         const subjectIndex = document.getElementById('subject-dropdown').value;
         const subject = quizData[subjectIndex];
 
         subject.questions.forEach((question, index) => {
-            let questionText = `Question ${index + 1}: ${question.content}`;
-            let optionsText = question.options.map(opt => `${opt.identifier}. ${opt.content}`).join("\n");
-            let answerText = `Answer: ${question.correct_options[0]}`;
-            let fullQuestionText = `${questionText}\n${optionsText}\n${answerText}\n\n`;
-
-            let splitText = doc.splitTextToSize(fullQuestionText, 180);
-            let requiredHeight = splitText.length * 7; // Approximate line height
-
-            let pageHeight = doc.internal.pageSize.height - 20; // A4 height with margin
-
-            if (yPos + requiredHeight > pageHeight) {
-                doc.addPage(); // Start new page
-                yPos = 10; // Reset Y position
-            }
-
-            doc.text(splitText, 10, yPos);
-            yPos += requiredHeight + 5; // Move down for next question
+            const questionElement = document.createElement('div');
+            questionElement.style.pageBreakInside = "avoid"; // Prevents splitting questions across pages
+            questionElement.innerHTML = `
+                <h3>Question ${index + 1}:</h3>
+                <p>${renderMathJax(question.content)}</p>
+                <ul>
+                    ${question.options.map(opt => `<li>${opt.identifier}. ${renderMathJax(opt.content)}</li>`).join('')}
+                </ul>
+                <strong>Answer:</strong> ${question.correct_options[0]}
+                <hr>
+            `;
+            quizContainer.appendChild(questionElement);
         });
 
-        doc.save("quiz.pdf");
+        // Convert to PDF with html2canvas
+        html2canvas(quizContainer, {
+            scale: 3, // High quality
+            useCORS: true,
+            allowTaint: true
+        }).then(canvas => {
+            const imgWidth = 190; // A4 width
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let yPos = 10;
+            let pageHeight = doc.internal.pageSize.height - 20;
+
+            if (imgHeight > pageHeight) {
+                let totalPages = Math.ceil(imgHeight / pageHeight);
+                for (let i = 0; i < totalPages; i++) {
+                    let cropCanvas = document.createElement("canvas");
+                    let ctx = cropCanvas.getContext("2d");
+
+                    cropCanvas.width = canvas.width;
+                    cropCanvas.height = Math.min(pageHeight * (canvas.width / imgWidth), canvas.height);
+                    ctx.drawImage(canvas, 0, -(i * pageHeight * (canvas.width / imgWidth)));
+
+                    let croppedImgData = cropCanvas.toDataURL("image/png");
+                    doc.addImage(croppedImgData, "PNG", 10, 10, imgWidth, cropCanvas.height * (imgWidth / canvas.width));
+
+                    if (i < totalPages - 1) {
+                        doc.addPage();
+                    }
+                }
+            } else {
+                doc.addImage(canvas.toDataURL("image/png"), "PNG", 10, 10, imgWidth, imgHeight);
+            }
+
+            doc.save("quiz.pdf");
+            document.body.removeChild(quizContainer); // Clean up
+        });
     });
 }
+
 
         let currentQuestionIndex = 0;
         let quizData = [];
