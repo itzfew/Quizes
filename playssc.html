@@ -38,19 +38,41 @@ function generatePDF() {
 
     // Ensure MathJax, LaTeX, and MathML are fully rendered before capturing
     MathJax.Hub.Queue(["Typeset", MathJax.Hub], function () {
-        const quizContainer = document.getElementById("quiz-container");
+        const quizContainer = document.createElement('div');
+        quizContainer.style.width = "800px"; // Set a fixed width for proper rendering
+        quizContainer.style.padding = "20px"; // Add some padding for layout
+        document.body.appendChild(quizContainer); // Temporarily add it to body
 
+        // Iterate over all questions and add them to a container
+        const subjectIndex = document.getElementById('subject-dropdown').value;
+        const subject = quizData[subjectIndex];
+
+        subject.questions.forEach((question, index) => {
+            const questionElement = document.createElement('div');
+            questionElement.innerHTML = `
+                <h3>Question ${index + 1}:</h3>
+                <p>${renderMathJax(question.content)}</p>
+                <ul>
+                    ${question.options.map(opt => `<li>${opt.identifier}. ${renderMathJax(opt.content)}</li>`).join('')}
+                </ul>
+                <strong>Answer:</strong> ${question.correct_options[0]}
+                <hr>
+            `;
+            quizContainer.appendChild(questionElement);
+        });
+
+        // Use html2canvas to capture all questions properly
         html2canvas(quizContainer, {
             scale: 3, // Higher scale for better quality
-            useCORS: true, // Ensures external CSS & images are captured
+            useCORS: true,
             allowTaint: true
         }).then(canvas => {
             const imgData = canvas.toDataURL("image/png");
             const imgWidth = 190; // A4 width with margins
-            const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-            let yPos = 10; // Initial Y position
-            let pageHeight = doc.internal.pageSize.height - 20; // Adjust for margins
+            let yPos = 10;
+            let pageHeight = doc.internal.pageSize.height - 20;
 
             if (imgHeight > pageHeight) {
                 let pages = Math.ceil(imgHeight / pageHeight);
@@ -75,6 +97,9 @@ function generatePDF() {
             }
 
             doc.save("quiz.pdf");
+
+            // Remove the temporary quiz container
+            document.body.removeChild(quizContainer);
         });
     });
 }
