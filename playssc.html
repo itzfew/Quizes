@@ -30,7 +30,7 @@
     <div id="question-navigation"></div>
 
     <script>
- document.getElementById('generate-pdf').addEventListener('click', generatePDF);
+document.getElementById('generate-pdf').addEventListener('click', generatePDF);
 
 function generatePDF() {
     const { jsPDF } = window.jspdf;
@@ -99,7 +99,12 @@ function generatePDF() {
             }
             doc.save("quiz.pdf"); // Save the PDF after all questions are added
         }
-        let currentQuestionIndex = 0;
+
+        addAllQuestions();
+    });
+}
+
+       let currentQuestionIndex = 0;
         let quizData = [];
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
