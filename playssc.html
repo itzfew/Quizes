@@ -36,23 +36,49 @@ function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF("p", "mm", "a4");
 
-    // Ensure MathJax is fully rendered before capturing
+    // Ensure MathJax, LaTeX, and MathML are fully rendered before capturing
     MathJax.Hub.Queue(["Typeset", MathJax.Hub], function () {
         const quizContainer = document.getElementById("quiz-container");
 
         html2canvas(quizContainer, {
-            scale: 2, // Higher scale for better quality
-            useCORS: true // Ensures external CSS & images are captured
+            scale: 3, // Higher scale for better quality
+            useCORS: true, // Ensures external CSS & images are captured
+            allowTaint: true
         }).then(canvas => {
             const imgData = canvas.toDataURL("image/png");
-            const imgWidth = 190; // Adjusted for A4 width
+            const imgWidth = 190; // A4 width with margins
             const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
 
-            doc.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+            let yPos = 10; // Initial Y position
+            let pageHeight = doc.internal.pageSize.height - 20; // Adjust for margins
+
+            if (imgHeight > pageHeight) {
+                let pages = Math.ceil(imgHeight / pageHeight);
+                for (let i = 0; i < pages; i++) {
+                    let cropCanvas = document.createElement("canvas");
+                    let ctx = cropCanvas.getContext("2d");
+
+                    cropCanvas.width = canvas.width;
+                    cropCanvas.height = Math.min(pageHeight * (canvas.width / imgWidth), canvas.height);
+
+                    ctx.drawImage(canvas, 0, -(i * pageHeight * (canvas.width / imgWidth)));
+
+                    let croppedImgData = cropCanvas.toDataURL("image/png");
+                    doc.addImage(croppedImgData, "PNG", 10, 10, imgWidth, cropCanvas.height * (imgWidth / canvas.width));
+
+                    if (i < pages - 1) {
+                        doc.addPage();
+                    }
+                }
+            } else {
+                doc.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+            }
+
             doc.save("quiz.pdf");
         });
     });
 }
+
 
         let currentQuestionIndex = 0;
         let quizData = [];
