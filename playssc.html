@@ -45,12 +45,12 @@ function generatePDF() {
     let xPos = margin;
     let yPos = margin;
 
-    // Function to add a question
     async function addQuestionToPDF(question, index) {
         return new Promise((resolve) => {
             const questionElement = document.createElement('div');
             questionElement.style.width = `${colWidth}mm`;
             questionElement.style.padding = "5px";
+            questionElement.style.fontSize = "12px"; // Ensure text is readable but compact
             questionElement.innerHTML = `
                 <h4>Q${index + 1}:</h4>
                 <p>${question.content}</p>
@@ -63,7 +63,6 @@ function generatePDF() {
 
             document.body.appendChild(questionElement);
 
-            // Ensure MathJax renders before capturing
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, questionElement], function () {
                 setTimeout(() => {
                     html2canvas(questionElement, {
@@ -74,9 +73,10 @@ function generatePDF() {
                         const imgData = canvas.toDataURL("image/png");
                         const imgHeight = (canvas.height * colWidth) / canvas.width;
 
+                        // Ensure page is fully utilized before adding a new page
                         if (yPos + imgHeight > pageHeight) {
                             if (xPos === margin) {
-                                xPos = margin + colWidth + margin; // Move to right column
+                                xPos = margin + colWidth + margin; // Move to the second column
                                 yPos = margin;
                             } else {
                                 doc.addPage();
@@ -86,7 +86,7 @@ function generatePDF() {
                         }
 
                         doc.addImage(imgData, "PNG", xPos, yPos, colWidth, imgHeight);
-                        yPos += imgHeight + 5;
+                        yPos += imgHeight + 5; // Adjust spacing
 
                         document.body.removeChild(questionElement);
                         resolve();
@@ -96,7 +96,6 @@ function generatePDF() {
         });
     }
 
-    // Process all questions in two-column format
     async function addAllQuestions() {
         for (let i = 0; i < subject.questions.length; i++) {
             await addQuestionToPDF(subject.questions[i], i);
@@ -106,7 +105,7 @@ function generatePDF() {
 
     addAllQuestions();
 }
-
+ 
        let currentQuestionIndex = 0;
         let quizData = [];
         const urlParams = new URLSearchParams(window.location.search);
