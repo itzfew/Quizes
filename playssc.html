@@ -15,6 +15,8 @@
         .quiz-title { font-size: 24px; font-weight: bold; text-align: center; margin: 20px 0; }
         .question-container { display: flex; flex-wrap: wrap; justify-content: space-between; }
         .question { width: 48%; margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; }
+        .explanation-content { display: none; }
+        .explanation-content.open { display: block; }
         .pdf-button { display: block; margin: 20px auto; padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
     </style>
 </head>
@@ -81,24 +83,48 @@
                 const optionsList = document.createElement('ul');
                 question.options.forEach(option => {
                     const optionItem = document.createElement('li');
-                    optionItem.innerHTML = option.content;
+                    optionItem.textContent = option.content;
                     optionsList.appendChild(optionItem);
                 });
                 questionElement.appendChild(optionsList);
                 quizContainer.appendChild(questionElement);
             });
+
+            // Ensure MathJax is processed before rendering PDF
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function generatePDF() {
-            const element = document.body;
-            html2canvas(element, { scale: 2 }).then(canvas => {
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.style.backgroundColor = 'white'; // Ensure white background for better readability
+
+            await MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Wait for MathJax rendering
+
+            // Split the quiz container into pages using html2canvas
+            const pages = Math.ceil(quizContainer.scrollHeight / 1000);
+            let yOffset = 10;
+
+            for (let i = 0; i < pages; i++) {
+                const canvas = await html2canvas(quizContainer, { scale: 2 });
                 const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgWidth = 210;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                pdf.save('quiz_questions.pdf');
-            });
+
+                if (i > 0) {
+                    doc.addPage();
+                }
+
+                doc.addImage(imgData, 'PNG', 10, yOffset, 190, 280);
+                yOffset += 280;
+
+                if (yOffset > 280) {
+                    doc.addPage();
+                    yOffset = 10;
+                }
+            }
+
+            doc.save('quiz_questions.pdf');
         }
     </script>
 </body>
