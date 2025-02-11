@@ -9,15 +9,72 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .question {
+        /* Add grid styling */
+        #question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 10px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
             margin: 20px 0;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
         }
+
+        .grid-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            background: #ffd700;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .grid-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .grid-btn.answered {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .grid-btn.current {
+            box-shadow: 0 0 0 3px #2196F3;
+        }
+
+        .grid-btn.missed {
+            background: #ff9800;
+            color: white;
+        }
+
+        .question {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            scroll-margin-top: 100px;
+        }
+
+        .subject-title {
+            color: #2c3e50;
+            padding-bottom: 10px;
+            margin: 40px 0 20px;
+            border-bottom: 3px solid #3498db;
+            font-size: 1.8em;
+        }
+
+        /* Keep existing styles from previous version */
         .options {
             list-style: none;
             padding: 0;
@@ -43,53 +100,22 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .navigation-grid {
-            position: fixed;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 5px;
-            background: white;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-        .nav-item {
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #eee;
-            cursor: pointer;
-            border-radius: 5px;
+        .correct-answer {
+            margin-top: 10px;
             font-weight: bold;
-        }
-        .answered {
-            background-color: green;
-            color: white;
-        }
-        .unanswered {
-            background-color: yellow;
-            color: black;
         }
     </style>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
     <div id="quiz-container"></div>
-    <div class="navigation-grid" id="navigation-grid"></div>
 
     <script>
         let quizData = [];
-        let userAnswers = {};
-        
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
+        let questionStates = {};
 
         if (title) {
             document.getElementById('quiz-title').textContent = title;
@@ -101,77 +127,165 @@
             .then(response => response.json())
             .then(data => {
                 quizData = data;
+                initializeQuestionStates();
                 displayAllQuestions();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
+        function initializeQuestionStates() {
+            let qIndex = 0;
+            quizData.forEach(subject => {
+                subject.questions.forEach(() => {
+                    questionStates[qIndex] = { answered: false, correct: false };
+                    qIndex++;
+                });
+            });
+        }
+
         function displayAllQuestions() {
             const quizContainer = document.getElementById('quiz-container');
-            const navGrid = document.getElementById('navigation-grid');
             quizContainer.innerHTML = '';
-            navGrid.innerHTML = '';
+
+            // Create question grid
+            const gridContainer = document.createElement('div');
+            gridContainer.id = 'question-grid';
             
-            let questionCounter = 0;
+            let globalIndex = 0;
             quizData.forEach(subject => {
+                subject.questions.forEach((_, index) => {
+                    const gridBtn = document.createElement('button');
+                    gridBtn.className = 'grid-btn';
+                    gridBtn.textContent = globalIndex + 1;
+                    gridBtn.dataset.qindex = globalIndex;
+                    gridBtn.onclick = () => scrollToQuestion(globalIndex);
+                    gridContainer.appendChild(gridBtn);
+                    globalIndex++;
+                });
+            });
+            quizContainer.appendChild(gridContainer);
+
+            // Add questions
+            globalIndex = 0;
+            quizData.forEach(subject => {
+                const subjectTitle = document.createElement('h2');
+                subjectTitle.className = 'subject-title';
+                subjectTitle.textContent = subject.title;
+                quizContainer.appendChild(subjectTitle);
+
                 subject.questions.forEach((question, index) => {
-                    questionCounter++;
-                    const questionId = `question${questionCounter}`;
-                    
                     const questionElement = document.createElement('div');
                     questionElement.className = 'question';
-                    questionElement.id = questionId;
-                    
+                    questionElement.dataset.qindex = globalIndex;
+
+                    // Question content
                     const questionContent = document.createElement('div');
-                    questionContent.innerHTML = question.content;
+                    questionContent.innerHTML = `Q${globalIndex + 1}: ${question.content}`;
                     questionElement.appendChild(questionContent);
-                    
+
+                    // Options
                     const optionsList = document.createElement('ul');
                     optionsList.className = 'options';
                     
                     question.options.forEach(option => {
                         const optionItem = document.createElement('li');
+                        const optionLabel = document.createElement('label');
                         const optionInput = document.createElement('input');
-                        optionInput.type = 'radio';
-                        optionInput.name = questionId;
-                        optionInput.value = option.identifier;
-                        optionInput.onchange = () => updateNavGrid(questionId);
                         
-                        optionItem.appendChild(optionInput);
-                        optionItem.innerHTML += option.content;
+                        optionInput.type = 'radio';
+                        optionInput.name = `question${question.question_id}`;
+                        optionInput.value = option.identifier;
+                        optionInput.addEventListener('change', () => updateQuestionState(globalIndex));
+
+                        optionLabel.appendChild(optionInput);
+                        optionLabel.innerHTML += option.content;
+                        optionItem.appendChild(optionLabel);
                         optionsList.appendChild(optionItem);
                     });
-                    
+
                     questionElement.appendChild(optionsList);
+
+                    // Explanation
+                    const explanationButton = document.createElement('button');
+                    explanationButton.className = 'explanation-button';
+                    explanationButton.textContent = 'Show Explanation';
+                    explanationButton.onclick = () => toggleExplanation(questionElement);
+                    questionElement.appendChild(explanationButton);
+
+                    const explanationContent = document.createElement('div');
+                    explanationContent.className = 'explanation-content';
+                    explanationContent.innerHTML = question.explanation || 'No explanation available.';
+                    questionElement.appendChild(explanationContent);
+
                     quizContainer.appendChild(questionElement);
-                    
-                    const navItem = document.createElement('div');
-                    navItem.className = 'nav-item';
-                    navItem.textContent = questionCounter;
-                    navItem.onclick = () => scrollToQuestion(questionId);
-                    navGrid.appendChild(navItem);
+                    globalIndex++;
                 });
             });
+
+            // Submit button
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit All';
+            submitButton.onclick = showAllExplanations;
+            quizContainer.appendChild(submitButton);
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function updateNavGrid(questionId) {
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach((navItem, index) => {
-                const questionElement = document.getElementById(`question${index + 1}`);
-                const selectedOption = questionElement.querySelector('input[type="radio"]:checked');
-                
-                if (selectedOption) {
-                    navItem.classList.remove('unanswered');
-                    navItem.classList.add('answered');
-                } else {
-                    navItem.classList.remove('answered');
-                    navItem.classList.add('unanswered');
-                }
+        function updateQuestionState(qIndex) {
+            const gridBtn = document.querySelector(`#question-grid [data-qindex="${qIndex}"]`);
+            gridBtn.classList.add('answered');
+            questionStates[qIndex].answered = true;
+        }
+
+        function scrollToQuestion(qIndex) {
+            const questionElement = document.querySelector(`.question[data-qindex="${qIndex}"]`);
+            document.querySelectorAll('.grid-btn').forEach(btn => btn.classList.remove('current'));
+            document.querySelector(`#question-grid [data-qindex="${qIndex}"]`).classList.add('current');
+            questionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function toggleExplanation(questionElement) {
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            explanationContent.classList.toggle('open');
+        }
+
+        function showAllExplanations() {
+            let correctCount = 0;
+            let globalIndex = 0;
+
+            quizData.forEach(subject => {
+                subject.questions.forEach(question => {
+                    const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+                    const gridBtn = document.querySelector(`#question-grid [data-qindex="${globalIndex}"]`);
+                    
+                    if (selectedOption) {
+                        const isCorrect = selectedOption.value === question.correct_options[0];
+                        gridBtn.classList.remove('answered');
+                        gridBtn.classList.add(isCorrect ? 'answered' : 'missed');
+                        if (isCorrect) correctCount++;
+                    } else {
+                        gridBtn.classList.add('missed');
+                    }
+
+                    globalIndex++;
+                });
             });
+
+            // Add scorecard
+            const scoreCard = document.createElement('div');
+            scoreCard.innerHTML = `
+                <div style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                    <h3>Quiz Results</h3>
+                    <p>Total Questions: ${globalIndex}</p>
+                    <p>Correct Answers: ${correctCount} (${((correctCount/globalIndex)*100).toFixed(1)}%)</p>
+                </div>
+            `;
+            document.getElementById('quiz-container').prepend(scoreCard);
         }
 
-        function scrollToQuestion(questionId) {
-            document.getElementById(questionId).scrollIntoView({ behavior: 'smooth' });
-        }
+        window.onbeforeunload = function (event) {
+            return "Are you sure you want to leave? Your progress may be lost.";
+        };
     </script>
 </body>
 </html>
