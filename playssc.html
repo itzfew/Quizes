@@ -268,39 +268,28 @@
             });
         }
 
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-            let yOffset = 10;
-            let column = 10;
-            let switchColumn = false;
+ function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
+    const quizContainer = document.getElementById('quiz-container');
 
-            subject.questions.forEach((question, index) => {
-                if (yOffset > 270) {
-                    doc.addPage();
-                    yOffset = 10;
-                    switchColumn = false;
-                }
-                if (switchColumn) {
-                    column = 110;
-                } else {
-                    column = 10;
-                }
-                switchColumn = !switchColumn;
+    // Ensure MathJax has finished rendering
+    await MathJax.typesetPromise();
 
-                doc.text(`Q${index + 1}: ${question.content}`, column, yOffset);
-                yOffset += 10;
-                question.options.forEach(option => {
-                    doc.text(`- ${option.content}`, column + 5, yOffset);
-                    yOffset += 7;
-                });
-            });
+    // Convert HTML content to canvas
+    html2canvas(quizContainer, { scale: 2 }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
 
-            doc.save('quiz_questions.pdf');
-        }
+        // Add image to PDF
+        doc.addImage(imgData, 'PNG', 10, 10, 190, 250); // Fit within A4
+
+        // Save the PDF
+        doc.save('quiz_questions.pdf');
+    });
+}
+
+        
     </script>
 </body>
 </html>
