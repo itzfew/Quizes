@@ -10,8 +10,35 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            z-index: 1000;
+        }
+        .nav-bar a {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .quiz-container {
+            margin-top: 50px;
             padding: 20px;
+        }
+        .subject-title {
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
         }
         .question {
             margin: 20px 0;
@@ -26,16 +53,6 @@
         .options li {
             margin: 10px 0;
         }
-        .explanation-content {
-            display: none;
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-        }
-        .explanation-content.open {
-            display: block;
-        }
         .submit-button {
             padding: 10px 20px;
             background-color: #007bff;
@@ -44,52 +61,20 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .subject-title {
-            font-size: 1.5em;
-            margin: 30px 0 15px 0;
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 5px;
-        }
-        .question-nav {
-            position: fixed;
-            top: 50px;
-            right: 20px;
-            background: white;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            max-width: 150px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
-            gap: 5px;
-        }
-        .question-nav button {
-            width: 30px;
-            height: 30px;
-            border: none;
-            background: #f0f0f0;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            text-align: center;
-            border-radius: 3px;
-        }
-        .answered { background: #28a745; color: white; }
-        .unanswered { background: #ffc107; }
     </style>
 </head>
 <body>
-    <div id="quiz-title"></div>
-    <div id="quiz-container"></div>
-    <div id="question-nav" class="question-nav"></div>
+
+    <div class="nav-bar" id="nav-bar"></div>
+
+    <div class="quiz-container" id="quiz-container"></div>
 
     <script>
         let quizData = [];
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
-        if (title) document.getElementById('quiz-title').textContent = title;
+
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
         fetch(jsonUrl)
@@ -98,68 +83,67 @@
                 quizData = data;
                 displayAllQuestions();
             })
-            .catch(error => console.error('Error fetching JSON:', error));
+            .catch(error => console.error('Error fetching JSON data:', error));
 
         function displayAllQuestions() {
             const quizContainer = document.getElementById('quiz-container');
-            const questionNav = document.getElementById('question-nav');
+            const navBar = document.getElementById('nav-bar');
+
             quizContainer.innerHTML = '';
-            questionNav.innerHTML = '';
-            let questionCount = 0;
+            navBar.innerHTML = '';
 
             quizData.forEach(subject => {
+                // Add subject link in the navigation bar
+                const navLink = document.createElement('a');
+                navLink.textContent = subject.title;
+                navLink.href = `#${subject.title.replace(/\s+/g, '-')}`;
+                navBar.appendChild(navLink);
+
+                // Add subject title
                 const subjectTitle = document.createElement('h2');
                 subjectTitle.className = 'subject-title';
+                subjectTitle.id = subject.title.replace(/\s+/g, '-');
                 subjectTitle.textContent = subject.title;
                 quizContainer.appendChild(subjectTitle);
-                
+
                 subject.questions.forEach((question, index) => {
-                    questionCount++;
                     const questionElement = document.createElement('div');
                     questionElement.className = 'question';
-                    questionElement.id = `question-${questionCount}`;
-                    
+
+                    const questionNumber = document.createElement('div');
+                    questionNumber.textContent = `Question ${index + 1}:`;
+                    questionElement.appendChild(questionNumber);
+
                     const questionContent = document.createElement('div');
-                    questionContent.innerHTML = `Question ${questionCount}: ${question.content}`;
+                    questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                    });
                     questionElement.appendChild(questionContent);
-                    
+
                     const optionsList = document.createElement('ul');
                     optionsList.className = 'options';
+
                     question.options.forEach(option => {
                         const optionItem = document.createElement('li');
                         const optionLabel = document.createElement('label');
                         const optionInput = document.createElement('input');
+
                         optionInput.type = 'radio';
-                        optionInput.name = `question${questionCount}`;
+                        optionInput.name = `question${question.question_id}`;
                         optionInput.value = option.identifier;
-                        optionInput.onchange = updateNavigation;
+
                         optionLabel.appendChild(optionInput);
                         optionLabel.innerHTML += option.content;
                         optionItem.appendChild(optionLabel);
                         optionsList.appendChild(optionItem);
                     });
+
                     questionElement.appendChild(optionsList);
                     quizContainer.appendChild(questionElement);
-
-                    const navButton = document.createElement('button');
-                    navButton.textContent = questionCount;
-                    navButton.id = `nav-${questionCount}`;
-                    navButton.onclick = () => document.getElementById(`question-${questionCount}`).scrollIntoView({ behavior: 'smooth' });
-                    questionNav.appendChild(navButton);
                 });
             });
-        }
 
-        function updateNavigation() {
-            for (let i = 1; i <= document.querySelectorAll('.question').length; i++) {
-                const selected = document.querySelector(`input[name="question${i}"]:checked`);
-                const navButton = document.getElementById(`nav-${i}`);
-                if (selected) {
-                    navButton.className = 'answered';
-                } else {
-                    navButton.className = 'unanswered';
-                }
-            }
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub"]);
         }
     </script>
 </body>
