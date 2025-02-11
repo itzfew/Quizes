@@ -3,40 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Quiz with Math & PDF Export</title>
-    
-    <!-- MathJax for LaTeX & MathML -->
+    <title>Interactive Quiz Game with PDF Export</title>
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-
-    <!-- PDF & Image Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-    <!-- FontAwesome (Optional) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-        .quiz-container { width: 80%; margin: auto; text-align: left; }
-        .question { padding: 10px; border-bottom: 1px solid #ccc; }
-        .pdf-button { margin: 20px auto; padding: 10px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        body { font-family: Arial, sans-serif; }
+        .quiz-title { font-size: 24px; font-weight: bold; text-align: center; margin: 20px; }
+        .quiz-container { width: 80%; margin: auto; }
+        .pdf-button { display: block; margin: 20px auto; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        .question { margin: 10px 0; }
     </style>
 </head>
 <body>
-    <h2 id="quiz-title">Quiz Title</h2>
+    <div class="quiz-title" id="quiz-title"></div>
     <button class="pdf-button" onclick="generatePDF()">Generate PDF</button>
     <div id="quiz-container"></div>
 
     <script>
         let quizData = [];
         const urlParams = new URLSearchParams(window.location.search);
-        const title = urlParams.get('title') || "Quiz Title";
+        const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
 
-        document.getElementById('quiz-title').textContent = title;
-
+        if (title) document.getElementById('quiz-title').textContent = title;
+        
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
         fetch(jsonUrl)
@@ -45,48 +39,52 @@
                 quizData = data;
                 displayQuestions();
             })
-            .catch(error => console.error('Error fetching JSON:', error));
+            .catch(error => console.error('Error fetching the JSON data:', error));
 
         function displayQuestions() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
-            let questionNumber = 1;
-
             quizData.forEach(subject => {
-                subject.questions.forEach((question) => {
+                subject.questions.forEach((question, index) => {
                     const questionDiv = document.createElement('div');
                     questionDiv.className = 'question';
-                    questionDiv.innerHTML = `<strong>Q${questionNumber}:</strong> ${question.content}`;
+                    questionDiv.innerHTML = `<strong>Q${index + 1}:</strong> ${renderMathJax(question.content)}`;
                     quizContainer.appendChild(questionDiv);
-                    questionNumber++;
                 });
             });
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, quizContainer]);
+        }
 
-            // Ensure MathJax processes all equations before PDF is generated
-            MathJax.typesetPromise();
+        function renderMathJax(content) {
+            return content
+                .replace(/\$\$(.*?)\$\$/g, (match, p1) => `<span class="mathjax-block">\\[${p1}\\]</span>`) 
+                .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
         }
 
         function generatePDF() {
-            MathJax.typesetPromise().then(() => {
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+            const quizContainer = document.getElementById('quiz-container');
+            
+            html2canvas(quizContainer).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210; 
+                const pageHeight = 297;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
 
-                const content = document.getElementById('quiz-container');
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
 
-                html2canvas(content, {
-                    scale: 2,  // High resolution
-                    useCORS: true,
-                }).then(canvas => {
-                    const imgData = canvas.toDataURL('image/png');
-                    const imgWidth = 210; // A4 width in mm
-                    const pageHeight = 297; // A4 height in mm
-                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
 
-                    let y = 10;
-                    pdf.addImage(imgData, 'PNG', 10, y, imgWidth - 20, imgHeight);
-
-                    pdf.save(`${title}.pdf`);
-                });
+                pdf.save('Quiz_Questions.pdf');
             });
         }
     </script>
