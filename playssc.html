@@ -8,38 +8,6 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .nav-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: #007bff;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            z-index: 1000;
-        }
-        .nav-bar a {
-            color: white;
-            margin: 0 10px;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .quiz-container {
-            margin-top: 50px;
-            padding: 20px;
-        }
-        .subject-title {
-            font-size: 1.5em;
-            margin: 30px 0 15px 0;
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 5px;
-        }
         .question {
             margin: 20px 0;
             padding: 15px;
@@ -53,6 +21,16 @@
         .options li {
             margin: 10px 0;
         }
+        .explanation-content {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .explanation-content.open {
+            display: block;
+        }
         .submit-button {
             padding: 10px 20px;
             background-color: #007bff;
@@ -61,13 +39,42 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        .correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .subject-title {
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        .top-navigation {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .top-navigation a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .top-navigation a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-
-    <div class="nav-bar" id="nav-bar"></div>
-
-    <div class="quiz-container" id="quiz-container"></div>
+    <div class="top-navigation" id="top-navigation"></div>
+    <div class="quiz-title" id="quiz-title"></div>
+    <div id="quiz-container"></div>
 
     <script>
         let quizData = [];
@@ -75,51 +82,70 @@
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
 
+        if (title) {
+            document.getElementById('quiz-title').textContent = title;
+        }
+
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
+        // Fetch the JSON data
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
                 quizData = data;
                 displayAllQuestions();
+                createTopNavigation();
             })
-            .catch(error => console.error('Error fetching JSON data:', error));
+            .catch(error => console.error('Error fetching the JSON data:', error));
+
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let missedAnswers = 0;
+        let startTime = new Date();
+
+        function createTopNavigation() {
+            const topNav = document.getElementById('top-navigation');
+            quizData.forEach(subject => {
+                const link = document.createElement('a');
+                link.href = `#${subject.title.replace(/\s+/g, '-').toLowerCase()}`;
+                link.textContent = subject.title;
+                topNav.appendChild(link);
+            });
+        }
 
         function displayAllQuestions() {
             const quizContainer = document.getElementById('quiz-container');
-            const navBar = document.getElementById('nav-bar');
-
             quizContainer.innerHTML = '';
-            navBar.innerHTML = '';
 
             quizData.forEach(subject => {
-                // Add subject link in the navigation bar
-                const navLink = document.createElement('a');
-                navLink.textContent = subject.title;
-                navLink.href = `#${subject.title.replace(/\s+/g, '-')}`;
-                navBar.appendChild(navLink);
-
-                // Add subject title
+                // Add subject title with an ID for navigation
                 const subjectTitle = document.createElement('h2');
                 subjectTitle.className = 'subject-title';
-                subjectTitle.id = subject.title.replace(/\s+/g, '-');
+                subjectTitle.id = subject.title.replace(/\s+/g, '-').toLowerCase();
                 subjectTitle.textContent = subject.title;
                 quizContainer.appendChild(subjectTitle);
 
                 subject.questions.forEach((question, index) => {
+                    totalQuestions++;
                     const questionElement = document.createElement('div');
                     questionElement.className = 'question';
 
+                    // Question numbering
                     const questionNumber = document.createElement('div');
+                    questionNumber.className = 'question-number';
                     questionNumber.textContent = `Question ${index + 1}:`;
                     questionElement.appendChild(questionNumber);
 
+                    // Question content
                     const questionContent = document.createElement('div');
+                    questionContent.className = 'question-content';
                     questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                         return `<span class="mathjax-inline">$$${p1}$$</span>`;
                     });
                     questionElement.appendChild(questionContent);
 
+                    // Options
                     const optionsList = document.createElement('ul');
                     optionsList.className = 'options';
 
@@ -139,12 +165,119 @@
                     });
 
                     questionElement.appendChild(optionsList);
+
+                    // Explanation
+                    const explanationButton = document.createElement('button');
+                    explanationButton.className = 'explanation-button';
+                    explanationButton.textContent = 'Show Explanation';
+                    explanationButton.onclick = () => toggleExplanation(questionElement);
+                    questionElement.appendChild(explanationButton);
+
+                    const explanationContent = document.createElement('div');
+                    explanationContent.className = 'explanation-content';
+                    explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
+                    questionElement.appendChild(explanationContent);
+
                     quizContainer.appendChild(questionElement);
                 });
             });
 
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub"]);
+            // Submit button
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit All';
+            submitButton.onclick = showAllExplanations;
+            quizContainer.appendChild(submitButton);
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
+
+        function toggleExplanation(questionElement) {
+            const explanationContent = questionElement.querySelector('.explanation-content');
+            explanationContent.classList.toggle('open');
+        }
+
+        function showAllExplanations() {
+            quizData.forEach(subject => {
+                subject.questions.forEach(question => {
+                    const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+                    const questionElement = document.querySelector(`input[name="question${question.question_id}"]`).closest('.question');
+                    const explanationButton = questionElement.querySelector('.explanation-button');
+
+                    explanationButton.style.display = 'block';
+
+                    const feedback = document.createElement('div');
+                    feedback.className = 'correct-answer';
+                    const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+                    const correctOptionValue = question.correct_options[0];
+
+                    if (selectedOption) {
+                        const selectedOptionValue = selectedOption.value;
+
+                        if (selectedOptionValue === correctOptionValue) {
+                            correctAnswers++;
+                            feedback.innerHTML = "✓ Correct!";
+                            feedback.style.color = 'green';
+                        } else {
+                            incorrectAnswers++;
+                            feedback.innerHTML = `✗ Incorrect. Correct answer: Option ${correctOptionValue}`;
+                            feedback.style.color = 'red';
+                        }
+                    } else {
+                        missedAnswers++;
+                        feedback.innerHTML = `⚠️ Unanswered. Correct answer: Option ${correctOptionValue}`;
+                        feedback.style.color = 'orange';
+                    }
+
+                    questionElement.appendChild(feedback);
+
+                    options.forEach(option => {
+                        const optionItem = option.closest('li');
+                        if (option.value === correctOptionValue) {
+                            optionItem.style.backgroundColor = '#d4edda';
+                            optionItem.style.border = '1px solid #c3e6cb';
+                        } else if (option.checked) {
+                            optionItem.style.backgroundColor = '#f8d7da';
+                            optionItem.style.border = '1px solid #f5c6cb';
+                        }
+                        option.disabled = true;
+                    });
+                });
+            });
+
+            const endTime = new Date();
+            const timeTakenInSeconds = Math.round((endTime - startTime) / 1000);
+            const timeTakenInMinutes = (timeTakenInSeconds / 60).toFixed(2);
+            const totalAttempts = correctAnswers + incorrectAnswers;
+            const avgTimePerAttempt = totalAttempts > 0 ? (timeTakenInSeconds / totalAttempts).toFixed(2) : 0;
+
+            const scoreCard = document.createElement('div');
+            scoreCard.innerHTML = `
+                <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                    <h3>Quiz Summary</h3>
+                    <p>Total Questions: ${totalQuestions}</p>
+                    <p>Correct Answers: ${correctAnswers} (${((correctAnswers/totalQuestions)*100).toFixed(1)}%)</p>
+                    <p>Incorrect Answers: ${incorrectAnswers}</p>
+                    <p>Unanswered: ${missedAnswers}</p>
+                    <p>Time Taken: ${timeTakenInMinutes} minutes</p>
+                    <p>Average Time per Question: ${avgTimePerAttempt}s</p>
+                </div>
+            `;
+
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
+
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        window.onbeforeunload = function (event) {
+            return "Are you sure you want to leave? Your progress may be lost.";
+        };
     </script>
 </body>
 </html>
