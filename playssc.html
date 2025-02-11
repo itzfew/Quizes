@@ -7,74 +7,18 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Add grid styling */
-        #question-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-            gap: 10px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
             padding: 20px;
-            background: #f5f5f5;
-            border-radius: 10px;
-            margin: 20px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(5px);
         }
-
-        .grid-btn {
-            width: 40px;
-            height: 40px;
-            border: none;
-            border-radius: 8px;
-            background: #ffd700;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .grid-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .grid-btn.answered {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .grid-btn.current {
-            box-shadow: 0 0 0 3px #2196F3;
-        }
-
-        .grid-btn.missed {
-            background: #ff9800;
-            color: white;
-        }
-
         .question {
-            margin: 30px 0;
-            padding: 20px;
+            margin: 20px 0;
+            padding: 15px;
             border: 1px solid #ddd;
-            border-radius: 10px;
-            background: white;
-            scroll-margin-top: 100px;
+            border-radius: 5px;
         }
-
-        .subject-title {
-            color: #2c3e50;
-            padding-bottom: 10px;
-            margin: 40px 0 20px;
-            border-bottom: 3px solid #3498db;
-            font-size: 1.8em;
-        }
-
-        /* Keep existing styles from previous version */
         .options {
             list-style: none;
             padding: 0;
@@ -100,192 +44,123 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
+        .subject-title {
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
         }
+        .question-nav {
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-width: 150px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+            gap: 5px;
+        }
+        .question-nav button {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: #f0f0f0;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 3px;
+        }
+        .answered { background: #28a745; color: white; }
+        .unanswered { background: #ffc107; }
     </style>
 </head>
 <body>
-    <div class="quiz-title" id="quiz-title"></div>
+    <div id="quiz-title"></div>
     <div id="quiz-container"></div>
+    <div id="question-nav" class="question-nav"></div>
 
     <script>
         let quizData = [];
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
-        let questionStates = {};
-
-        if (title) {
-            document.getElementById('quiz-title').textContent = title;
-        }
-
+        if (title) document.getElementById('quiz-title').textContent = title;
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
                 quizData = data;
-                initializeQuestionStates();
                 displayAllQuestions();
             })
-            .catch(error => console.error('Error fetching the JSON data:', error));
-
-        function initializeQuestionStates() {
-            let qIndex = 0;
-            quizData.forEach(subject => {
-                subject.questions.forEach(() => {
-                    questionStates[qIndex] = { answered: false, correct: false };
-                    qIndex++;
-                });
-            });
-        }
+            .catch(error => console.error('Error fetching JSON:', error));
 
         function displayAllQuestions() {
             const quizContainer = document.getElementById('quiz-container');
+            const questionNav = document.getElementById('question-nav');
             quizContainer.innerHTML = '';
+            questionNav.innerHTML = '';
+            let questionCount = 0;
 
-            // Create question grid
-            const gridContainer = document.createElement('div');
-            gridContainer.id = 'question-grid';
-            
-            let globalIndex = 0;
-            quizData.forEach(subject => {
-                subject.questions.forEach((_, index) => {
-                    const gridBtn = document.createElement('button');
-                    gridBtn.className = 'grid-btn';
-                    gridBtn.textContent = globalIndex + 1;
-                    gridBtn.dataset.qindex = globalIndex;
-                    gridBtn.onclick = () => scrollToQuestion(globalIndex);
-                    gridContainer.appendChild(gridBtn);
-                    globalIndex++;
-                });
-            });
-            quizContainer.appendChild(gridContainer);
-
-            // Add questions
-            globalIndex = 0;
             quizData.forEach(subject => {
                 const subjectTitle = document.createElement('h2');
                 subjectTitle.className = 'subject-title';
                 subjectTitle.textContent = subject.title;
                 quizContainer.appendChild(subjectTitle);
-
+                
                 subject.questions.forEach((question, index) => {
+                    questionCount++;
                     const questionElement = document.createElement('div');
                     questionElement.className = 'question';
-                    questionElement.dataset.qindex = globalIndex;
-
-                    // Question content
+                    questionElement.id = `question-${questionCount}`;
+                    
                     const questionContent = document.createElement('div');
-                    questionContent.innerHTML = `Q${globalIndex + 1}: ${question.content}`;
+                    questionContent.innerHTML = `Question ${questionCount}: ${question.content}`;
                     questionElement.appendChild(questionContent);
-
-                    // Options
+                    
                     const optionsList = document.createElement('ul');
                     optionsList.className = 'options';
-                    
                     question.options.forEach(option => {
                         const optionItem = document.createElement('li');
                         const optionLabel = document.createElement('label');
                         const optionInput = document.createElement('input');
-                        
                         optionInput.type = 'radio';
-                        optionInput.name = `question${question.question_id}`;
+                        optionInput.name = `question${questionCount}`;
                         optionInput.value = option.identifier;
-                        optionInput.addEventListener('change', () => updateQuestionState(globalIndex));
-
+                        optionInput.onchange = updateNavigation;
                         optionLabel.appendChild(optionInput);
                         optionLabel.innerHTML += option.content;
                         optionItem.appendChild(optionLabel);
                         optionsList.appendChild(optionItem);
                     });
-
                     questionElement.appendChild(optionsList);
-
-                    // Explanation
-                    const explanationButton = document.createElement('button');
-                    explanationButton.className = 'explanation-button';
-                    explanationButton.textContent = 'Show Explanation';
-                    explanationButton.onclick = () => toggleExplanation(questionElement);
-                    questionElement.appendChild(explanationButton);
-
-                    const explanationContent = document.createElement('div');
-                    explanationContent.className = 'explanation-content';
-                    explanationContent.innerHTML = question.explanation || 'No explanation available.';
-                    questionElement.appendChild(explanationContent);
-
                     quizContainer.appendChild(questionElement);
-                    globalIndex++;
+
+                    const navButton = document.createElement('button');
+                    navButton.textContent = questionCount;
+                    navButton.id = `nav-${questionCount}`;
+                    navButton.onclick = () => document.getElementById(`question-${questionCount}`).scrollIntoView({ behavior: 'smooth' });
+                    questionNav.appendChild(navButton);
                 });
             });
-
-            // Submit button
-            const submitButton = document.createElement('button');
-            submitButton.className = 'submit-button';
-            submitButton.textContent = 'Submit All';
-            submitButton.onclick = showAllExplanations;
-            quizContainer.appendChild(submitButton);
-
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function updateQuestionState(qIndex) {
-            const gridBtn = document.querySelector(`#question-grid [data-qindex="${qIndex}"]`);
-            gridBtn.classList.add('answered');
-            questionStates[qIndex].answered = true;
+        function updateNavigation() {
+            for (let i = 1; i <= document.querySelectorAll('.question').length; i++) {
+                const selected = document.querySelector(`input[name="question${i}"]:checked`);
+                const navButton = document.getElementById(`nav-${i}`);
+                if (selected) {
+                    navButton.className = 'answered';
+                } else {
+                    navButton.className = 'unanswered';
+                }
+            }
         }
-
-        function scrollToQuestion(qIndex) {
-            const questionElement = document.querySelector(`.question[data-qindex="${qIndex}"]`);
-            document.querySelectorAll('.grid-btn').forEach(btn => btn.classList.remove('current'));
-            document.querySelector(`#question-grid [data-qindex="${qIndex}"]`).classList.add('current');
-            questionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
-        }
-
-        function showAllExplanations() {
-            let correctCount = 0;
-            let globalIndex = 0;
-
-            quizData.forEach(subject => {
-                subject.questions.forEach(question => {
-                    const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-                    const gridBtn = document.querySelector(`#question-grid [data-qindex="${globalIndex}"]`);
-                    
-                    if (selectedOption) {
-                        const isCorrect = selectedOption.value === question.correct_options[0];
-                        gridBtn.classList.remove('answered');
-                        gridBtn.classList.add(isCorrect ? 'answered' : 'missed');
-                        if (isCorrect) correctCount++;
-                    } else {
-                        gridBtn.classList.add('missed');
-                    }
-
-                    globalIndex++;
-                });
-            });
-
-            // Add scorecard
-            const scoreCard = document.createElement('div');
-            scoreCard.innerHTML = `
-                <div style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 10px;">
-                    <h3>Quiz Results</h3>
-                    <p>Total Questions: ${globalIndex}</p>
-                    <p>Correct Answers: ${correctCount} (${((correctCount/globalIndex)*100).toFixed(1)}%)</p>
-                </div>
-            `;
-            document.getElementById('quiz-container').prepend(scoreCard);
-        }
-
-        window.onbeforeunload = function (event) {
-            return "Are you sure you want to leave? Your progress may be lost.";
-        };
     </script>
 </body>
 </html>
