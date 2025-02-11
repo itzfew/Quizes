@@ -16,22 +16,18 @@
         .question-container { display: flex; flex-wrap: wrap; justify-content: space-between; }
         .question { width: 48%; margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; }
         .pdf-button { display: block; margin: 20px auto; padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
-        .progress-container { width: 50%; margin: 20px auto; text-align: center; display: none; }
-        .progress-bar { width: 100%; background: #ccc; height: 10px; border-radius: 5px; position: relative; }
-        .progress-bar div { width: 0%; height: 100%; background: #007bff; border-radius: 5px; transition: width 0.3s; }
+        .progress-bar-container { width: 100%; background-color: #f3f3f3; border-radius: 5px; margin: 10px 0; }
+        .progress-bar { width: 0%; height: 20px; background-color: #4caf50; text-align: center; line-height: 20px; color: white; border-radius: 5px; }
     </style>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
     <select id="subject-dropdown"></select>
     <div id="quiz-container" class="question-container"></div>
-    <button class="pdf-button" onclick="generatePDF()">Download PDF</button>
-
-    <!-- Progress Bar -->
-    <div class="progress-container">
-        <p>Generating PDF: <span id="progress-text">0%</span></p>
-        <div class="progress-bar"><div id="progress-fill"></div></div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar">0%</div>
     </div>
+    <button class="pdf-button" onclick="generatePDF()">Download PDF</button>
 
     <script>
         let quizData = [];
@@ -90,61 +86,38 @@
                 const optionsList = document.createElement('ul');
                 question.options.forEach(option => {
                     const optionItem = document.createElement('li');
-                    optionItem.textContent = option.content;
+                    optionItem.innerHTML = option.content;
                     optionsList.appendChild(optionItem);
                 });
                 questionElement.appendChild(optionsList);
                 quizContainer.appendChild(questionElement);
             });
-
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        async function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.style.backgroundColor = 'white';
+        function generatePDF() {
+            const element = document.body;
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = '10%';
+            progressBar.textContent = '10%';
 
-            document.querySelector(".progress-container").style.display = "block";
-            updateProgress(10);
+            html2canvas(element, { scale: 2 }).then(canvas => {
+                progressBar.style.width = '50%';
+                progressBar.textContent = '50%';
 
-            await MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Wait for MathJax
-            updateProgress(30);
-
-            const pages = Math.ceil(quizContainer.scrollHeight / 1000);
-            let yOffset = 10;
-            updateProgress(50);
-
-            for (let i = 0; i < pages; i++) {
-                updateProgress(50 + (i * 30 / pages));  // Update progress dynamically
-
-                const canvas = await html2canvas(quizContainer, { scale: 2 });
                 const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 210;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
 
-                if (i > 0) {
-                    doc.addPage();
-                }
+                progressBar.style.width = '80%';
+                progressBar.textContent = '80%';
 
-                doc.addImage(imgData, 'PNG', 10, yOffset, 190, 280);
-                yOffset += 280;
-
-                if (yOffset > 280) {
-                    doc.addPage();
-                    yOffset = 10;
-                }
-            }
-
-            updateProgress(100);
-            setTimeout(() => {
-                document.querySelector(".progress-container").style.display = "none";
-                doc.save('quiz_questions.pdf');
-            }, 500);
-        }
-
-        function updateProgress(value) {
-            document.getElementById("progress-fill").style.width = value + "%";
-            document.getElementById("progress-text").textContent = value + "%";
+                pdf.save('quiz_questions.pdf');
+                progressBar.style.width = '100%';
+                progressBar.textContent = '100%';
+                setTimeout(() => { progressBar.style.width = '0%'; progressBar.textContent = '0%'; }, 2000);
+            });
         }
     </script>
 </body>
