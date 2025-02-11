@@ -7,181 +7,42 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-                body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
+        .question {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .options {
+            list-style: none;
             padding: 0;
         }
-
-        /* Adjust the rest of the page below the header */
-        main {
-            margin-top: 80px; /* Add margin to avoid content hiding behind the header */
-            padding: 20px;
-        }
-        .quiz-title {
-            font-size: 1.5em;
-            margin: 5px 0; /* Add a margin on top to give space between header and title */
-            color: #333;
-            text-align: center;
-            border: 2px solid black;
-        }
-
-        .question {
-            margin-bottom: 30px;
-            padding: 3px;
-            border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
-        }
-
-        .question-number {
-            font-weight: bold;
-            font-size: 1.2em;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .question-content {
-            margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: normal;
-            max-width: 100%;
-            overflow-x: auto;
-        }
-
         .options li {
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
+            margin: 10px 0;
         }
-
-        .options label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .options input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        .question-id {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #555;
-        }
-
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
-            color: green;
-        }
-
-        #subject-dropdown {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 1em;
-        }
-
-        img {
-            max-width: 100px;
-            height: auto;
-        }
-
-        .submit-button {
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            position: fixed;
-            bottom: 0px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        .explanation-button {
-            display: none;
-            margin-top: 10px;
-            background-color: white;
-            color: black;
-            border: 2px solid black;
-            cursor: pointer;
-            padding: 8px 16px;
-        }
-
-        .explanation-button:hover {
-            background-color: black;
-            color: white;
-        }
-
-        .explanation-button-container {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-
         .explanation-content {
             display: none;
             margin-top: 10px;
-            font-style: italic;
-            color: #777;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
         }
-
         .explanation-content.open {
-    display: block;
-    background-color: #FFF59D; /* Yellow background */
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-    font-style: italic;
-    color: #777;
-}
-
-
-        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
-        .mathjax-inline {
-            white-space: nowrap;
-            display: inline-block;
-            font-size: 1.1em;
+            display: block;
         }
-
-        /* Ensuring that MathJax inline formulas don't break or overflow */
-        .question-content span {
-            display: inline-block;
+        .submit-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 0px;
-            }
-
-            #quiz-container {
-                padding: 3px;
-            }
-
-            .submit-button {
-                padding: 10px;
-            }
-
-            .options li {
-                padding: 5px;
-            }
-
-            img {
-                max-width: 80px;
-            }
+        .correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
         }
         .subject-title {
             font-size: 1.5em;
@@ -190,9 +51,86 @@
             border-bottom: 2px solid #3498db;
             padding-bottom: 5px;
         }
+        .top-navigation {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .top-navigation a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .top-navigation a:hover {
+            text-decoration: underline;
+        }
+        .slide-menu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 250px;
+            height: 100%;
+            background: #f8f9fa;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+            z-index: 1001;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .slide-menu.open {
+            left: 0;
+        }
+        .slide-menu h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        .question-grid a {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .question-grid a:hover {
+            background: #0056b3;
+        }
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1002;
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
+    <div class="menu-toggle" onclick="toggleSlideMenu()">
+        <i class="fas fa-th"></i>
+    </div>
+    <div class="slide-menu" id="slide-menu">
+        <h3>Question Navigation</h3>
+        <div id="question-grid-container"></div>
+    </div>
+    <div class="top-navigation" id="top-navigation"></div>
     <div class="quiz-title" id="quiz-title"></div>
     <div id="quiz-container"></div>
 
@@ -214,6 +152,8 @@
             .then(data => {
                 quizData = data;
                 displayAllQuestions();
+                createTopNavigation();
+                createQuestionGrid();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
@@ -223,14 +163,51 @@
         let missedAnswers = 0;
         let startTime = new Date();
 
+        function createTopNavigation() {
+            const topNav = document.getElementById('top-navigation');
+            quizData.forEach(subject => {
+                const link = document.createElement('a');
+                link.href = `#${subject.title.replace(/\s+/g, '-').toLowerCase()}`;
+                link.textContent = subject.title;
+                topNav.appendChild(link);
+            });
+        }
+
+        function createQuestionGrid() {
+            const gridContainer = document.getElementById('question-grid-container');
+            quizData.forEach(subject => {
+                const subjectTitle = document.createElement('h4');
+                subjectTitle.textContent = subject.title;
+                gridContainer.appendChild(subjectTitle);
+
+                const questionGrid = document.createElement('div');
+                questionGrid.className = 'question-grid';
+
+                subject.questions.forEach((question, index) => {
+                    const questionLink = document.createElement('a');
+                    questionLink.href = `#question-${question.question_id}`;
+                    questionLink.textContent = index + 1;
+                    questionGrid.appendChild(questionLink);
+                });
+
+                gridContainer.appendChild(questionGrid);
+            });
+        }
+
+        function toggleSlideMenu() {
+            const slideMenu = document.getElementById('slide-menu');
+            slideMenu.classList.toggle('open');
+        }
+
         function displayAllQuestions() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
             quizData.forEach(subject => {
-                // Add subject title
+                // Add subject title with an ID for navigation
                 const subjectTitle = document.createElement('h2');
                 subjectTitle.className = 'subject-title';
+                subjectTitle.id = subject.title.replace(/\s+/g, '-').toLowerCase();
                 subjectTitle.textContent = subject.title;
                 quizContainer.appendChild(subjectTitle);
 
@@ -238,6 +215,7 @@
                     totalQuestions++;
                     const questionElement = document.createElement('div');
                     questionElement.className = 'question';
+                    questionElement.id = `question-${question.question_id}`;
 
                     // Question numbering
                     const questionNumber = document.createElement('div');
