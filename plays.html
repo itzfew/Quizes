@@ -104,8 +104,17 @@
             border-radius: 5px;
             text-decoration: none;
         }
+        .question-grid a.answered {
+            background: #28a745; /* Green for correct answers */
+        }
+        .question-grid a.incorrect {
+            background: #dc3545; /* Red for incorrect answers */
+        }
+        .question-grid a.unanswered {
+            background: #ffc107; /* Yellow for unanswered questions */
+        }
         .question-grid a:hover {
-            background: #0056b3;
+            opacity: 0.8;
         }
         .menu-toggle {
             position: fixed;
@@ -187,6 +196,7 @@
                     const questionLink = document.createElement('a');
                     questionLink.href = `#question-${question.question_id}`;
                     questionLink.textContent = index + 1;
+                    questionLink.id = `nav-${question.question_id}`; // Unique ID for navigation link
                     questionGrid.appendChild(questionLink);
                 });
 
@@ -243,6 +253,7 @@
                         optionInput.type = 'radio';
                         optionInput.name = `question${question.question_id}`;
                         optionInput.value = option.identifier;
+                        optionInput.onchange = () => updateNavigationGrid(question.question_id, option.identifier, question.correct_options[0]);
 
                         optionLabel.appendChild(optionInput);
                         optionLabel.innerHTML += option.content;
@@ -276,6 +287,17 @@
             quizContainer.appendChild(submitButton);
 
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        function updateNavigationGrid(questionId, selectedOption, correctOption) {
+            const navLink = document.getElementById(`nav-${questionId}`);
+            if (selectedOption === correctOption) {
+                navLink.classList.add('answered'); // Green for correct answers
+                navLink.classList.remove('incorrect', 'unanswered');
+            } else {
+                navLink.classList.add('incorrect'); // Red for incorrect answers
+                navLink.classList.remove('answered', 'unanswered');
+            }
         }
 
         function toggleExplanation(questionElement) {
