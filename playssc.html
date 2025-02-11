@@ -15,9 +15,10 @@
         .quiz-title { font-size: 24px; font-weight: bold; text-align: center; margin: 20px 0; }
         .question-container { display: flex; flex-wrap: wrap; justify-content: space-between; }
         .question { width: 48%; margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; }
-        .explanation-content { display: none; }
-        .explanation-content.open { display: block; }
         .pdf-button { display: block; margin: 20px auto; padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .progress-container { width: 50%; margin: 20px auto; text-align: center; display: none; }
+        .progress-bar { width: 100%; background: #ccc; height: 10px; border-radius: 5px; position: relative; }
+        .progress-bar div { width: 0%; height: 100%; background: #007bff; border-radius: 5px; transition: width 0.3s; }
     </style>
 </head>
 <body>
@@ -25,6 +26,12 @@
     <select id="subject-dropdown"></select>
     <div id="quiz-container" class="question-container"></div>
     <button class="pdf-button" onclick="generatePDF()">Download PDF</button>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <p>Generating PDF: <span id="progress-text">0%</span></p>
+        <div class="progress-bar"><div id="progress-fill"></div></div>
+    </div>
 
     <script>
         let quizData = [];
@@ -90,24 +97,28 @@
                 quizContainer.appendChild(questionElement);
             });
 
-            // Ensure MathJax is processed before rendering PDF
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
         async function generatePDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-
             const quizContainer = document.getElementById('quiz-container');
-            quizContainer.style.backgroundColor = 'white'; // Ensure white background for better readability
+            quizContainer.style.backgroundColor = 'white';
 
-            await MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Wait for MathJax rendering
+            document.querySelector(".progress-container").style.display = "block";
+            updateProgress(10);
 
-            // Split the quiz container into pages using html2canvas
+            await MathJax.Hub.Queue(["Typeset", MathJax.Hub]); // Wait for MathJax
+            updateProgress(30);
+
             const pages = Math.ceil(quizContainer.scrollHeight / 1000);
             let yOffset = 10;
+            updateProgress(50);
 
             for (let i = 0; i < pages; i++) {
+                updateProgress(50 + (i * 30 / pages));  // Update progress dynamically
+
                 const canvas = await html2canvas(quizContainer, { scale: 2 });
                 const imgData = canvas.toDataURL('image/png');
 
@@ -124,7 +135,16 @@
                 }
             }
 
-            doc.save('quiz_questions.pdf');
+            updateProgress(100);
+            setTimeout(() => {
+                document.querySelector(".progress-container").style.display = "none";
+                doc.save('quiz_questions.pdf');
+            }, 500);
+        }
+
+        function updateProgress(value) {
+            document.getElementById("progress-fill").style.width = value + "%";
+            document.getElementById("progress-text").textContent = value + "%";
         }
     </script>
 </body>
