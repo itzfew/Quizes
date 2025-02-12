@@ -8,7 +8,6 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
     <style>
-        
                 body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -311,6 +310,87 @@
             const explanationContent = questionElement.querySelector('.explanation-content');
             explanationContent.classList.toggle('open');
         }
+        function showAllExplanations() {
+            quizData.forEach(subject => {
+                subject.questions.forEach(question => {
+                    const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
+                    const questionElement = document.querySelector(`input[name="question${question.question_id}"]`).closest('.question');
+                    const explanationButton = questionElement.querySelector('.explanation-button');
+
+                    explanationButton.style.display = 'block';
+
+                    const feedback = document.createElement('div');
+                    feedback.className = 'correct-answer';
+                    const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
+                    const correctOptionValue = question.correct_options[0];
+
+                    if (selectedOption) {
+                        const selectedOptionValue = selectedOption.value;
+
+                        if (selectedOptionValue === correctOptionValue) {
+                            correctAnswers++;
+                            feedback.innerHTML = "✓ Correct!";
+                            feedback.style.color = 'green';
+                        } else {
+                            incorrectAnswers++;
+                            feedback.innerHTML = `✗ Incorrect. Correct answer: Option ${correctOptionValue}`;
+                            feedback.style.color = 'red';
+                        }
+                    } else {
+                        missedAnswers++;
+                        feedback.innerHTML = `⚠️ Unanswered. Correct answer: Option ${correctOptionValue}`;
+                        feedback.style.color = 'orange';
+                    }
+
+                    questionElement.appendChild(feedback);
+
+                    options.forEach(option => {
+                        const optionItem = option.closest('li');
+                        if (option.value === correctOptionValue) {
+                            optionItem.style.backgroundColor = '#d4edda';
+                            optionItem.style.border = '1px solid #c3e6cb';
+                        } else if (option.checked) {
+                            optionItem.style.backgroundColor = '#f8d7da';
+                            optionItem.style.border = '1px solid #f5c6cb';
+                        }
+                        option.disabled = true;
+                    });
+                });
+            });
+
+            const endTime = new Date();
+            const timeTakenInSeconds = Math.round((endTime - startTime) / 1000);
+            const timeTakenInMinutes = (timeTakenInSeconds / 60).toFixed(2);
+            const totalAttempts = correctAnswers + incorrectAnswers;
+            const avgTimePerAttempt = totalAttempts > 0 ? (timeTakenInSeconds / totalAttempts).toFixed(2) : 0;
+
+            const scoreCard = document.createElement('div');
+            scoreCard.innerHTML = `
+                <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                    <h3>Quiz Summary</h3>
+                    <p>Total Questions: ${totalQuestions}</p>
+                    <p>Correct Answers: ${correctAnswers} (${((correctAnswers/totalQuestions)*100).toFixed(1)}%)</p>
+                    <p>Incorrect Answers: ${incorrectAnswers}</p>
+                    <p>Unanswered: ${missedAnswers}</p>
+                    <p>Time Taken: ${timeTakenInMinutes} minutes</p>
+                    <p>Average Time per Question: ${avgTimePerAttempt}s</p>
+                </div>
+            `;
+
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
+
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        window.onbeforeunload = function (event) {
+            return "Are you sure you want to leave? Your progress may be lost.";
+        };
     </script>
 </body>
 </html>
