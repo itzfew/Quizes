@@ -303,6 +303,13 @@
                 });
             });
 
+            // Submit button
+            const submitButton = document.createElement('button');
+            submitButton.className = 'submit-button';
+            submitButton.textContent = 'Submit All';
+            submitButton.onclick = showAllExplanations;
+            quizContainer.appendChild(submitButton);
+
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
