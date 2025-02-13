@@ -160,32 +160,8 @@
         }
 function renderMathJax(content) {
     return content
-        // Convert block-level LaTeX expressions $$...$$
-        .replace(/\$\$(.*?)\$\$/gs, (match, p1) => `<span class="mathjax-block">\[${p1}\]</span>`) 
-        
-        // Convert inline LaTeX expressions $...$
-        .replace(/(?<!\\)\$(.*?)(?<!\\)\$/g, (match, p1) => `<span class="mathjax-inline">\(${p1}\)</span>`)
-        
-        // Handle escaped dollar signs (\$) properly by restoring them
-        .replace(/\\\$/g, "$")
-        
-        // Support for equation environments (\begin{equation} ... \end{equation})
-        .replace(/\\begin{equation}(.*?)\\end{equation}/gs, (match, p1) => `<span class="mathjax-block">\[${p1}\]</span>`)
-        
-        // Support for align environments (\begin{align} ... \end{align})
-        .replace(/\\begin{align}(.*?)\\end{align}/gs, (match, p1) => `<span class="mathjax-block">\[\begin{align}${p1}\end{align}\]</span>`)
-        
-        // Support for chemistry LaTeX (e.g., \ce{H2O})
-        .replace(/\\ce{(.*?)}/g, (match, p1) => `<span class="mathjax-chemistry">\(\ce{${p1}}\)</span>`)
-        
-        // Support for physics vector notation (e.g., \vec{F})
-        .replace(/\\vec{(.*?)}/g, (match, p1) => `<span class="mathjax-physics">\(\vec{${p1}}\)</span>`)
-        
-        // Support for SI units (e.g., \si{m/s})
-        .replace(/\\si{(.*?)}/g, (match, p1) => `<span class="mathjax-units">\(\si{${p1}}\)</span>`)
-        
-        // Handle cases where users might mix inline/block expressions incorrectly
-        .replace(/\(\[|\]\)/g, "");
+        .replace(/\$\$(.*?)\$\$/g, (match, p1) => `<span class="mathjax-block">\\[${p1}\\]</span>`)
+        .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
 }
         function toggleExplanation(questionElement) {
             const explanationContent = questionElement.querySelector('.explanation-content');
