@@ -160,9 +160,8 @@
         }
 function renderMathJax(content) {
     return content
-        .replace(/\$\$(.*?)\$\$/gs, (match, p1) => `<span class="mathjax-block">\[${p1}\]</span>`) // Block equations
-        .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\(${p1}\)</span>`) // Inline equations
-        .replace(/\\text{([^}]*)}/g, (match, p1) => `\mathrm{${p1}}`); // Ensure proper rendering of \text{} in LaTeX
+        .replace(/\$\$(.*?)\$\$/g, (match, p1) => `<span class="mathjax-block">\\[${p1}\\]</span>`)
+        .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
 }
         function toggleExplanation(questionElement) {
             const explanationContent = questionElement.querySelector('.explanation-content');
