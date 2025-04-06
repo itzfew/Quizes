@@ -38,6 +38,12 @@
       background-color: #004d40;
     }
 
+        /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
+        }
     #quiz {
       max-width: 800px;
       margin: 0 auto;
