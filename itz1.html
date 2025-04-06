@@ -2,30 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEET PYQ Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEET PYQ Practice</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    body { font-family: sans-serif; margin: 0; padding: 0; background: #f0f8ff; }
-    h1, h2 { text-align: center; }
-    #question-box { padding: 1em; }
-    .option { padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; background: #fff; }
-    .option:hover { background: #e0f7fa; }
-    .selected { border: 2px solid #00796b; background: #b2dfdb; }
-    .correct { background: #a5d6a7 !important; border-color: green; }
-    .incorrect { background: #ef9a9a !important; border-color: red; }
-    #navigation { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin: 1em; }
-    #navigation button { width: 35px; height: 35px; border-radius: 50%; border: none; font-weight: bold; cursor: pointer; }
-    .visited { background: #b0bec5; }
-    .nav-correct { background: green !important; color: #fff; }
-    .nav-incorrect { background: red !important; color: #fff; }
+    body { font-family: sans-serif; margin: 0; padding-bottom: 70px; }
     .hidden { display: none; }
-    #result { text-align: center; margin-top: 20px; font-size: 20px; font-weight: bold; }
-    #source { text-align: center; font-weight: bold; margin-bottom: 10px; }
+    #navigation button { margin: 2px; }
+    .option { cursor: pointer; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin: 5px 0; }
+    .option.selected { background-color: #e0f7fa; }
+    .option.correct { background-color: #c8e6c9; }
+    .option.incorrect { background-color: #ffcdd2; }
+    .nav-correct { background-color: green; color: white; }
+    .nav-incorrect { background-color: red; color: white; }
+    .nav-missed { background-color: yellow; }
+    .collapsible { margin-top: 10px; }
+    .collapse-header { cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #eee; padding: 5px; border-radius: 5px; }
+    .collapse-content { display: none; padding: 10px; background: #f9f9f9; }
+    .controls {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+      text-align: center;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+    .controls button {
+      padding: 0.5rem 1.2rem;
+      margin: 0 8px;
+      font-size: 1rem;
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .controls button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .controls button:hover:enabled {
+      background-color: #0d47a1;
+    }
   </style>
 </head>
 <body>
-  <h1>NEET PYQ Practice</h1>
+  <h1>NEET PYQ Practice Game</h1>
+
   <div id="setup">
     <h2>Enter number of questions:</h2>
     <input type="number" id="numQuestions" min="3" step="1" />
@@ -36,10 +65,11 @@
     <div id="navigation"></div>
     <div id="source"></div>
     <div id="question-box"></div>
-    <div style="text-align: center; margin-top: 10px;">
+    <div class="controls">
       <button onclick="prevQuestion()">Back</button>
       <button onclick="checkAnswer()">Check Answer</button>
       <button onclick="nextQuestion()">Next</button>
+      <button onclick="generatePDF()"><i class="fas fa-file-pdf"></i> PDF</button>
     </div>
     <div id="result"></div>
   </div>
@@ -53,7 +83,7 @@
       { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" }
     ];
 
-    let allQuestions = [], quizQuestions = [], currentIndex = 0, answerCache = {}, score = 0;
+    let allQuestions = [], quizQuestions = [], currentIndex = 0, answerCache = {};
 
     async function startQuiz() {
       const count = parseInt(document.getElementById('numQuestions').value);
@@ -66,14 +96,14 @@
         const url = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`;
         const res = await fetch(url);
         const data = await res.json();
-        allQuestions.push(...data.flatMap((group, idx) =>
+        allQuestions.push(...data.flatMap(group =>
           group.questions.map(q => ({ ...q, source: meta.title }))
         ));
       }
 
       const perSubject = Math.floor(count / 3);
       const remainder = count % 3;
-      const subjectDist = [perSubject + (remainder >= 1 ? 1 : 0), perSubject + (remainder >= 2 ? 1 : 0), perSubject];
+      const subjectDist = [perSubject + (remainder >= 1), perSubject + (remainder >= 2), perSubject];
 
       for (let i = 0; i < 3; i++) {
         const subjectQs = allQuestions.filter(q => q.subject === subjects[i]);
@@ -89,7 +119,7 @@
     function generateNav() {
       const nav = document.getElementById('navigation');
       nav.innerHTML = '';
-      quizQuestions.forEach((q, i) => {
+      quizQuestions.forEach((_, i) => {
         const btn = document.createElement('button');
         btn.textContent = i + 1;
         btn.onclick = () => loadQuestion(i);
@@ -99,18 +129,18 @@
     }
 
     function loadQuestion(index) {
+      document.querySelector(".controls button:nth-child(2)").disabled = false;
+
       currentIndex = index;
       const q = quizQuestions[index];
       document.getElementById('source').textContent = `Subject: ${q.subject.toUpperCase()} | Source: ${q.source}`;
-      const box = document.getElementById('question-box');
 
       let html = `<h3>${renderMath(q.content)}</h3><ul>`;
       q.options.forEach((opt, i) => {
-        html += `<li class="option" data-id="${opt.identifier}" onclick="selectOption('${opt.identifier}')">${String.fromCharCode(65+i)}. ${renderMath(opt.content)}</li>`;
+        html += `<li class="option" data-id="${opt.identifier}" onclick="selectOption('${opt.identifier}')">${String.fromCharCode(65 + i)}. ${renderMath(opt.content)}</li>`;
       });
       html += '</ul>';
-      box.innerHTML = html;
-
+      document.getElementById('question-box').innerHTML = html;
       MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 
       const saved = localStorage.getItem(`q-${q.question_id}`);
@@ -118,70 +148,86 @@
     }
 
     function selectOption(id) {
-      const opts = document.querySelectorAll('.option');
-      opts.forEach(o => o.classList.remove('selected'));
-      const el = [...opts].find(o => o.dataset.id === id);
+      const options = document.querySelectorAll('.option');
+      options.forEach(o => o.classList.remove('selected'));
+      const el = [...options].find(o => o.dataset.id === id);
       if (el) el.classList.add('selected');
       localStorage.setItem(`q-${quizQuestions[currentIndex].question_id}`, id);
     }
 
     function checkAnswer() {
-  const q = quizQuestions[currentIndex];
-  const selected = document.querySelector('.option.selected');
-  const correctIds = q.correct_options;
-  const navBtn = document.getElementById(`nav-${currentIndex}`);
-  const opts = document.querySelectorAll('.option');
+      const q = quizQuestions[currentIndex];
+      const selected = document.querySelector('.option.selected');
+      const correctIds = q.correct_options;
+      const navBtn = document.getElementById(`nav-${currentIndex}`);
+      const opts = document.querySelectorAll('.option');
+      let status;
 
-  let status;
+      opts.forEach(opt => {
+        const id = opt.dataset.id;
+        if (correctIds.includes(id)) opt.classList.add('correct');
+        if (selected && id === selected.dataset.id) {
+          if (correctIds.includes(id)) {
+            opt.classList.add('correct');
+            status = 'correct';
+          } else {
+            opt.classList.add('incorrect');
+            status = 'incorrect';
+          }
+        }
+      });
 
-  opts.forEach(opt => {
-    const id = opt.dataset.id;
+      if (!selected) {
+        status = 'missed';
+        opts.forEach(opt => {
+          if (correctIds.includes(opt.dataset.id)) opt.classList.add('correct');
+        });
+      }
 
-    if (correctIds.includes(id)) {
-      opt.classList.add('correct');
+      navBtn.classList.add('visited');
+      navBtn.classList.remove('nav-correct', 'nav-incorrect', 'nav-missed');
+      if (status === 'correct') {
+        navBtn.classList.add('nav-correct');
+        answerCache[q.question_id] = 4;
+      } else if (status === 'incorrect') {
+        navBtn.classList.add('nav-incorrect');
+        answerCache[q.question_id] = -1;
+      } else {
+        navBtn.classList.add('nav-missed');
+        answerCache[q.question_id] = 0;
+      }
+
+      const explanation = q.explanation || 'No explanation available.';
+      const explanationHTML = `
+        <div class="collapsible">
+          <div class="collapse-header" onclick="toggleCollapse(this)">
+            <span>Show Explanation</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="collapse-content">${explanation}</div>
+        </div>`;
+      document.getElementById('question-box').insertAdjacentHTML('beforeend', explanationHTML);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+      calculateScore();
+      document.querySelector(".controls button:nth-child(2)").disabled = true;
     }
 
-    if (selected && id === selected.dataset.id) {
-      if (correctIds.includes(id)) {
-        opt.classList.add('correct');
-        status = 'correct';
+    function toggleCollapse(header) {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('i');
+      if (content.style.display === 'block') {
+        content.style.display = 'none';
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+        header.querySelector('span').textContent = 'Show Explanation';
       } else {
-        opt.classList.add('incorrect');
-        status = 'incorrect';
+        content.style.display = 'block';
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+        header.querySelector('span').textContent = 'Hide Explanation';
       }
     }
-  });
-
-  if (!selected) {
-    status = 'missed';
-    opts.forEach(opt => {
-      if (correctIds.includes(opt.dataset.id)) opt.classList.add('correct');
-    });
-  }
-
-  // Update navigation button styling
-  navBtn.classList.add('visited');
-  if (status === 'correct') {
-    navBtn.classList.add('nav-correct');
-    answerCache[q.question_id] = 4;
-  } else if (status === 'incorrect') {
-    navBtn.classList.add('nav-incorrect');
-    answerCache[q.question_id] = -1;
-  } else if (status === 'missed') {
-    navBtn.style.backgroundColor = 'gold';
-    navBtn.style.color = '#000';
-    answerCache[q.question_id] = 0;
-  }
-
-  // Show explanation below question
-  const box = document.getElementById('question-box');
-  const explanation = q.explanation || 'No explanation available.';
-  const explanationHTML = `<div style="margin-top: 20px; padding: 10px; background: #f9fbe7; border: 1px solid #cddc39;"><b>Explanation:</b><br>${explanation}</div>`;
-  box.insertAdjacentHTML('beforeend', explanationHTML);
-MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-  // Update score
-  calculateScore();
-}
 
     function nextQuestion() {
       if (currentIndex < quizQuestions.length - 1) loadQuestion(currentIndex + 1);
@@ -193,8 +239,7 @@ MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
     }
 
     function calculateScore() {
-      const qIds = quizQuestions.map(q => q.question_id);
-      const total = qIds.reduce((sum, id) => sum + (answerCache[id] || 0), 0);
+      const total = quizQuestions.reduce((sum, q) => sum + (answerCache[q.question_id] || 0), 0);
       document.getElementById('result').textContent = `Score: ${total}`;
     }
 
@@ -205,6 +250,44 @@ MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 
     function renderMath(str) {
       return str.replace(/\$\$(.*?)\$\$/g, (_, eq) => `<span class="mathjax">$$${eq}$$</span>`);
+    }
+
+    async function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      let x = 10, y = 10, col = 0;
+
+      quizQuestions.forEach((q, index) => {
+        let text = `${index + 1}. ${q.content.replace(/<[^>]+>/g, '')}`;
+        q.options.forEach((opt, i) => {
+          text += `\n  ${String.fromCharCode(65 + i)}. ${opt.content.replace(/<[^>]+>/g, '')}`;
+        });
+        if (y > 260) {
+          if (col === 0) {
+            col = 1;
+            x = 110; y = 10;
+          } else {
+            col = 0;
+            x = 10; y = 10;
+            doc.addPage();
+          }
+        }
+        doc.text(text, x, y);
+        y += 40;
+      });
+
+      y += 10;
+      doc.addPage();
+      doc.text("Answer Key:", 10, 10);
+      quizQuestions.forEach((q, index) => {
+        const correct = q.correct_options.map(id => {
+          const optIndex = q.options.findIndex(o => o.identifier === id);
+          return String.fromCharCode(65 + optIndex);
+        }).join(', ');
+        doc.text(`${index + 1}. ${correct}`, 10, 20 + index * 10);
+      });
+
+      doc.save("neet-pyq.pdf");
     }
   </script>
 </body>
