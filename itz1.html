@@ -1,220 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>NEET PYQ Quiz</title>
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(120deg, #e0f7fa, #fce4ec);
-      margin: 0;
-      padding: 30px;
-      color: #333;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
-    }
-
-    input[type="number"] {
-      padding: 12px;
-      font-size: 16px;
-      width: 100px;
-      border-radius: 10px;
-      border: 1px solid #999;
-      margin-bottom: 10px;
-    }
-
-    button {
-      padding: 12px 25px;
-      font-size: 16px;
-      background: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      margin: 10px;
-    }
-
-    .question-area {
-      margin-top: 30px;
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .subject-header {
-      font-size: 22px;
-      margin-bottom: 10px;
-      color: #00796b;
-    }
-
-    .question-text {
-      font-size: 20px;
-      margin: 20px 0;
-    }
-
-    .meta {
-      font-size: 14px;
-      color: #777;
-    }
-
-    .options li {
-      list-style: none;
-      background: #eee;
-      padding: 10px;
-      margin: 5px auto;
-      border-radius: 8px;
-      max-width: 80%;
-      cursor: pointer;
-    }
-
-    .options li.selected { background: #bbdefb; }
-    .options li.correct { background-color: #c8e6c9; }
-    .options li.incorrect { background-color: #ffcdd2; }
-
-    .explanation {
-      margin-top: 15px;
-      background: #e1f5fe;
-      padding: 10px;
-      border-left: 4px solid #2196f3;
-      display: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEET Quiz Game</title>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        #quiz-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+        #question-list {
+            margin-bottom: 20px;
+        }
+        #question-list button {
+            margin-right: 5px;
+            padding: 5px 10px;
+        }
+        .question {
+            display: none;
+        }
+        .question.active {
+            display: block;
+        }
+        .options li {
+            list-style: none;
+            margin: 5px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .options li.selected {
+            background-color: #d0e8ff;
+        }
+        .options li.correct {
+            background-color: #d4edda;
+        }
+        .options li.incorrect {
+            background-color: #f8d7da;
+        }
+        #score {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
 </head>
 <body>
-  <h1>NEET PYQ Game</h1>
-  <p>Enter total questions:</p>
-  <input type="number" id="total-questions" min="3" max="90">
-  <button onclick="startQuiz()">Start Quiz</button>
+    <div id="quiz-container">
+        <div id="question-list"></div>
+        <div id="question-container"></div>
+        <div id="score"></div>
+    </div>
 
-  <div id="quiz" class="question-area"></div>
+    <script>
+        const subjects = ['Biology', 'Chemistry', 'Physics'];
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalQuestions = 0;
 
-  <script>
-    const metaIds = [
-      { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
-      { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-      { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
-      { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" }
-    ];
-
-    let allQuestions = { biology: [], chemistry: [], physics: [] };
-    let fullSequence = [], currentIndex = 0, score = 0;
-
-    async function fetchQuestions() {
-      for (let meta of metaIds) {
-        try {
-          const res = await fetch(`https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`);
-          const data = await res.json();
-          if (data[0]) allQuestions.biology.push(...data[0].questions.map(q => ({ ...q, subject: "Biology", source: meta.title })));
-          if (data[1]) allQuestions.chemistry.push(...data[1].questions.map(q => ({ ...q, subject: "Chemistry", source: meta.title })));
-          if (data[2]) allQuestions.physics.push(...data[2].questions.map(q => ({ ...q, subject: "Physics", source: meta.title })));
-        } catch (e) {
-          console.error("Error loading:", meta.title);
+        function fetchQuestions() {
+            // Placeholder function to simulate fetching questions
+            // Replace this with actual data fetching logic
+            const sampleQuestions = [
+                { id: 1, subject: 'Biology', content: 'What is the powerhouse of the cell?', options: ['Nucleus', 'Mitochondria', 'Ribosome', 'Endoplasmic Reticulum'], correct: 1 },
+                { id: 2, subject: 'Chemistry', content: 'What is the chemical symbol for water?', options: ['O2', 'H2O', 'CO2', 'HO'], correct: 1 },
+                { id: 3, subject: 'Physics', content: 'What is the speed of light?', options: ['3x10^8 m/s', '3x10^6 m/s', '3x10^5 m/s', '3x10^7 m/s'], correct: 0 },
+                // Add more questions as needed
+            ];
+            return sampleQuestions;
         }
-      }
-    }
 
-    function shuffle(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-    }
+        function initializeQuiz() {
+            const userInput = prompt('Enter the number of questions:');
+            totalQuestions = parseInt(userInput);
+            if (isNaN(totalQuestions) || totalQuestions <= 0) {
+                alert('Please enter a valid number.');
+                return;
+            }
 
-    async function startQuiz() {
-      const total = parseInt(document.getElementById("total-questions").value);
-      if (!total || total < 3) {
-        alert("Enter at least 3 questions.");
-        return;
-      }
+            const questionsPerSubject = Math.floor(totalQuestions / subjects.length);
+            const extraQuestions = totalQuestions % subjects.length;
 
-      document.getElementById("quiz").innerHTML = "Loading...";
-      if (!allQuestions.biology.length) await fetchQuestions();
+            const allQuestions = fetchQuestions();
+            subjects.forEach((subject, index) => {
+                const subjectQuestions = allQuestions.filter(q => q.subject === subject);
+                const count = questionsPerSubject + (index < extraQuestions ? 1 : 0);
+                questions = questions.concat(subjectQuestions.slice(0, count));
+            });
 
-      shuffle(allQuestions.biology);
-      shuffle(allQuestions.chemistry);
-      shuffle(allQuestions.physics);
-
-      const base = Math.floor(total / 3);
-      const remainder = total % 3;
-
-      const bio = allQuestions.biology.slice(0, base + (remainder > 0 ? 1 : 0));
-      const chem = allQuestions.chemistry.slice(0, base + (remainder > 1 ? 1 : 0));
-      const phy = allQuestions.physics.slice(0, base);
-
-      fullSequence = [...bio, ...chem, ...phy];
-      currentIndex = 0;
-      score = 0;
-      showQuestion();
-    }
-
-    function showQuestion() {
-      const q = fullSequence[currentIndex];
-      const quiz = document.getElementById("quiz");
-      if (!q) {
-        quiz.innerHTML = `<h2>Quiz Completed!</h2><p>Score: ${score} / ${fullSequence.length * 4}</p>`;
-        return;
-      }
-
-      const optionsHTML = q.options.map(opt =>
-        `<li data-id="${opt.identifier}">${opt.identifier}. ${opt.content}</li>`
-      ).join("");
-
-      quiz.innerHTML = `
-        <div class="subject-header">${q.subject}</div>
-        <div class="meta">Source: ${q.source}</div>
-        <div class="question-text">${q.content}</div>
-        <ul class="options">${optionsHTML}</ul>
-        <button onclick="submitAnswer('${q.correct}')">Check</button>
-        <div class="explanation"><strong>Explanation:</strong><br>${q.explanation}</div>
-      `;
-
-      document.querySelectorAll(".options li").forEach(li => {
-        li.addEventListener("click", () => {
-          li.parentElement.querySelectorAll("li").forEach(el => el.classList.remove("selected"));
-          li.classList.add("selected");
-        });
-      });
-
-      MathJax.typeset();
-    }
-
-    function submitAnswer(correctId) {
-      const selected = document.querySelector("li.selected");
-      const options = document.querySelectorAll(".options li");
-      let answered = false;
-
-      options.forEach(opt => {
-        opt.classList.remove("correct", "incorrect");
-        if (opt.dataset.id === correctId) opt.classList.add("correct");
-        if (selected && opt === selected) {
-          answered = true;
-          if (opt.dataset.id === correctId) score += 4;
-          else score -= 1;
-          opt.classList.add(opt.dataset.id === correctId ? "correct" : "incorrect");
+            renderQuestionList();
+            loadQuestion(0);
         }
-      });
 
-      if (!answered) score += 0;
-      document.querySelector(".explanation").style.display = "block";
+        function renderQuestionList() {
+            const questionListContainer = document.getElementById('question-list');
+            questionListContainer.innerHTML = '';
+            questions.forEach((q, index) => {
+                const button = document.createElement('button');
+                button.textContent = index + 1;
+                button.onclick = () => loadQuestion(index);
+                questionListContainer.appendChild(button);
+            });
+        }
 
-      const nextBtn = document.createElement("button");
-      nextBtn.textContent = "Next";
-      nextBtn.onclick = () => {
-        currentIndex++;
-        showQuestion();
-      };
-      document.getElementById("quiz").appendChild(nextBtn);
-    }
-  </script>
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            const question = questions[index];
+            const questionContainer = document.getElementById('question-container');
+            questionContainer.innerHTML = `
+                <h3>${question.subject}: ${question.content}</h3>
+                <ul class="options">
+                    ${question.options.map((opt, i) => `<li data-index="${i}">${opt}</li>`).join('')}
+                </ul>
+                <button onclick="checkAnswer()">Check Answer</button>
+            `;
+
+            const options = questionContainer.querySelectorAll('.options li');
+            options.forEach(option => {
+                option.onclick = () => {
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                };
+            });
+        }
+
+        function checkAnswer() {
+            const question = questions[currentQuestionIndex];
+            const selectedOption = document.querySelector('.options li.selected');
+            if (!selectedOption) {
+                alert('Please select an option.');
+                return;
+            }
+
+            const selectedIndex = parseInt(selectedOption.getAttribute('data-index'));
+            const options = document.querySelectorAll('.options li');
+            options.forEach((opt, i) => {
+                opt.classList.remove('correct', 'incorrect');
+                if (i === question.correct) {
+                    opt.classList.add('correct');
+                } else if (i === selectedIndex) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            if (selectedIndex === question.correct) {
+                score += 4;
+            } else {
+                score -= 1;
+            }
+
+            updateScore();
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = `Score: ${score}`;
+        }
+
+        window.onload = initializeQuiz;
+    </script>
 </body>
 </html>
