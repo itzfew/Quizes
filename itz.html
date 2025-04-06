@@ -19,7 +19,9 @@
   padding: 5px 10px;
   border-radius: 4px;
 }
-
+#menu-icon {
+  transition: opacity 0.3s ease;
+}
 .side-nav {
   position: fixed;
   top: 0;
@@ -60,7 +62,7 @@
 <body>
   <!-- Sidebar Menu Toggle -->
 <div id="menu-icon" onclick="openNav()">
-  <i class="fa fa-bars"></i>
+  <i class="fa fa-bars" id="hamburger-icon"></i>
 </div>
 
 <!-- Slide-out Question Navigation -->
@@ -345,9 +347,12 @@ function renderMath(input) {
 }
     function openNav() {
   document.getElementById('side-nav').classList.add('open');
+  document.getElementById('menu-icon').style.display = 'none';
 }
+
 function closeNav() {
   document.getElementById('side-nav').classList.remove('open');
+  document.getElementById('menu-icon').style.display = 'block';
 }
  function generateNav() {
   const sideNav = document.getElementById('side-nav-content');
