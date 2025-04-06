@@ -192,9 +192,41 @@ function toggleCollapse(header) {
     }
 
     function nextQuestion() {
-      if (currentIndex < quizQuestions.length - 1) loadQuestion(currentIndex + 1);
-      else showResult();
-    }
+  const q = quizQuestions[currentIndex];
+  const selected = document.querySelector('.option.selected');
+  const correctIds = q.correct_options;
+  const navBtn = document.getElementById(`nav-${currentIndex}`);
+  const opts = document.querySelectorAll('.option');
+
+  // If not selected and not already evaluated
+  if (!selected && !answerCache.hasOwnProperty(q.question_id)) {
+    let status = 'missed';
+    opts.forEach(opt => {
+      if (correctIds.includes(opt.dataset.id)) opt.classList.add('correct');
+    });
+
+    navBtn.classList.add('visited', 'nav-missed');
+    navBtn.classList.remove('nav-correct', 'nav-incorrect');
+    answerCache[q.question_id] = 0;
+
+    const explanation = q.explanation || 'No explanation available.';
+    const explanationHTML = `
+      <div class="collapsible">
+        <div class="collapse-header" onclick="toggleCollapse(this)">
+          <span>Show Explanation</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="collapse-content">${explanation}</div>
+      </div>`;
+    document.getElementById('question-box').insertAdjacentHTML('beforeend', explanationHTML);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+    calculateScore();
+  }
+
+  if (currentIndex < quizQuestions.length - 1) loadQuestion(currentIndex + 1);
+  else showResult();
+}
 
     function prevQuestion() {
       if (currentIndex > 0) loadQuestion(currentIndex - 1);
