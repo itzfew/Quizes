@@ -7,9 +7,71 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <Link rel="stylesheet" href="css/style.css">
+  <style>
+    #menu-icon {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  font-size: 24px;
+  z-index: 1000;
+  cursor: pointer;
+  background: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.side-nav {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 250px;
+  height: 100%;
+  background-color: #ffffff;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  z-index: 999;
+  padding: 10px;
+}
+
+.side-nav.open {
+  left: 0;
+}
+
+.side-nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+#side-nav-content button {
+  display: inline-block;
+  margin: 5px;
+  width: 40px;
+  height: 40px;
+}
+ 
+  </style>
 </head>
 
 <body>
+  <!-- Sidebar Menu Toggle -->
+<div id="menu-icon" onclick="openNav()">
+  <i class="fa fa-bars"></i>
+</div>
+
+<!-- Slide-out Question Navigation -->
+<div id="side-nav" class="side-nav">
+  <div class="side-nav-header">
+    <span>Questions</span>
+    <button onclick="closeNav()">×</button>
+  </div>
+  <div id="side-nav-content"></div>
+</div>
+ 
   <h1>NEET PYQ Practice Game</h1>
 
   <div id="setup">
@@ -19,7 +81,7 @@
   </div>
 
   <div id="quiz" class="hidden">
-    <div id="navigation"></div>
+    
     <div id="source"></div>
     <div id="question-box"></div>
     <div class="controls">
@@ -281,7 +343,28 @@ function renderMath(input) {
         return `<span class="mathjax-inline">$$${p1}$$</span>`;
     });
 }
-    
+    function openNav() {
+  document.getElementById('side-nav').classList.add('open');
+}
+function closeNav() {
+  document.getElementById('side-nav').classList.remove('open');
+}
+ function generateNav() {
+  const sideNav = document.getElementById('side-nav-content');
+  sideNav.innerHTML = '';
+
+  quizQuestions.forEach((_, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = i + 1;
+    btn.onclick = () => {
+      loadQuestion(i);
+      closeNav();
+    };
+    btn.id = `nav-${i}`;
+    sideNav.appendChild(btn);
+  });
+}
+
   </script>
 </body>
 </html>
