@@ -146,6 +146,35 @@
     .hidden {
       display: none;
     }
+
+    /* Explanation Collapsible */
+    .collapsible {
+      background-color: #f1f8e9;
+      color: #333;
+      cursor: pointer;
+      padding: 10px 15px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 16px;
+      margin-top: 15px;
+      border-radius: 5px;
+    }
+
+    .collapsible:hover {
+      background-color: #dce775;
+    }
+
+    .content {
+      padding: 0 15px;
+      display: none;
+      overflow: hidden;
+      background-color: #f9fbe7;
+      border: 1px solid #cddc39;
+      border-radius: 0 0 5px 5px;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 
@@ -250,63 +279,69 @@
     }
 
     function checkAnswer() {
-  const q = quizQuestions[currentIndex];
-  const selected = document.querySelector('.option.selected');
-  const correctIds = q.correct_options;
-  const navBtn = document.getElementById(`nav-${currentIndex}`);
-  const opts = document.querySelectorAll('.option');
+      const q = quizQuestions[currentIndex];
+      const selected = document.querySelector('.option.selected');
+      const correctIds = q.correct_options;
+      const navBtn = document.getElementById(`nav-${currentIndex}`);
+      const opts = document.querySelectorAll('.option');
 
-  let status;
+      let status;
 
-  opts.forEach(opt => {
-    const id = opt.dataset.id;
+      opts.forEach(opt => {
+        const id = opt.dataset.id;
+        if (correctIds.includes(id)) opt.classList.add('correct');
+        if (selected && id === selected.dataset.id) {
+          if (correctIds.includes(id)) {
+            opt.classList.add('correct');
+            status = 'correct';
+          } else {
+            opt.classList.add('incorrect');
+            status = 'incorrect';
+          }
+        }
+      });
 
-    if (correctIds.includes(id)) {
-      opt.classList.add('correct');
-    }
-
-    if (selected && id === selected.dataset.id) {
-      if (correctIds.includes(id)) {
-        opt.classList.add('correct');
-        status = 'correct';
-      } else {
-        opt.classList.add('incorrect');
-        status = 'incorrect';
+      if (!selected) {
+        status = 'missed';
+        opts.forEach(opt => {
+          if (correctIds.includes(opt.dataset.id)) opt.classList.add('correct');
+        });
       }
+
+      navBtn.classList.add('visited');
+      if (status === 'correct') {
+        navBtn.classList.add('nav-correct');
+        answerCache[q.question_id] = 4;
+      } else if (status === 'incorrect') {
+        navBtn.classList.add('nav-incorrect');
+        answerCache[q.question_id] = -1;
+      } else {
+        navBtn.style.backgroundColor = 'gold';
+        navBtn.style.color = '#000';
+        answerCache[q.question_id] = 0;
+      }
+
+      // Show collapsible explanation
+      const box = document.getElementById('question-box');
+      const explanation = q.explanation || 'No explanation available.';
+      const collapsible = `
+        <button class="collapsible">Show/Hide Explanation</button>
+        <div class="content"><p>${explanation}</p></div>
+      `;
+      box.insertAdjacentHTML('beforeend', collapsible);
+      setupCollapsible();
+      calculateScore();
     }
-  });
 
-  if (!selected) {
-    status = 'missed';
-    opts.forEach(opt => {
-      if (correctIds.includes(opt.dataset.id)) opt.classList.add('correct');
-    });
-  }
-
-  // Update navigation button styling
-  navBtn.classList.add('visited');
-  if (status === 'correct') {
-    navBtn.classList.add('nav-correct');
-    answerCache[q.question_id] = 4;
-  } else if (status === 'incorrect') {
-    navBtn.classList.add('nav-incorrect');
-    answerCache[q.question_id] = -1;
-  } else if (status === 'missed') {
-    navBtn.style.backgroundColor = 'gold';
-    navBtn.style.color = '#000';
-    answerCache[q.question_id] = 0;
-  }
-
-  // Show explanation below question
-  const box = document.getElementById('question-box');
-  const explanation = q.explanation || 'No explanation available.';
-  const explanationHTML = `<div style="margin-top: 20px; padding: 10px; background: #f9fbe7; border: 1px solid #cddc39;"><b>Explanation:</b><br>${explanation}</div>`;
-  box.insertAdjacentHTML('beforeend', explanationHTML);
-
-  // Update score
-  calculateScore();
-}
-
+    function setupCollapsible() {
+      const coll = document.querySelector('.collapsible');
+      const content = document.querySelector('.content');
+      if (!coll || !content) return;
+      coll.onclick = () => {
+        content.style.display = content.style.display === "block" ? "none" : "block";
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, content]);
+      };
+    }
 
     function nextQuestion() {
       if (currentIndex < quizQuestions.length - 1) loadQuestion(currentIndex + 1);
