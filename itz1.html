@@ -2,152 +2,151 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Random NEET PYQ Generator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEET PYQ Blocked by Subject</title>
   <style>
-    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
-    h1 { text-align: center; }
+    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
     .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h1 { text-align: center; }
     .input-group { text-align: center; margin-bottom: 20px; }
-    .input-group input { padding: 10px; width: 100px; font-size: 18px; }
-    .question-box { margin-top: 20px; }
-    .question { font-size: 18px; margin-bottom: 10px; }
-    .options li { list-style: none; padding: 8px; margin-bottom: 5px; background: #eee; cursor: pointer; border-radius: 5px; }
-    .options li.selected { background-color: #cce5ff; }
+    input[type="number"] { padding: 10px; width: 100px; font-size: 16px; }
+    button { padding: 10px 20px; margin-top: 10px; font-size: 16px; cursor: pointer; }
+    .question-block { margin-top: 30px; }
+    .subject-header { font-size: 20px; font-weight: bold; color: #2b2b2b; margin-top: 20px; border-bottom: 2px solid #2196f3; padding-bottom: 5px; }
+    .question { margin-top: 15px; padding: 10px; background: #f0f0f0; border-radius: 8px; }
+    .meta { font-size: 14px; color: #555; }
+    .question-text { font-size: 17px; margin-bottom: 10px; }
+    .options li { list-style: none; margin-bottom: 5px; padding: 8px; background: #e0e0e0; border-radius: 5px; cursor: pointer; }
+    .options li.selected { background: #bbdefb; }
     .options li.correct { background-color: #c8e6c9; }
     .options li.incorrect { background-color: #ffcdd2; }
-    .meta { font-size: 14px; color: #555; margin-top: 5px; }
-    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; cursor: pointer; }
-    #explanation { display: none; margin-top: 10px; background: #fafafa; padding: 10px; border-left: 4px solid #2196f3; }
+    .explanation { margin-top: 8px; padding: 10px; background: #e3f2fd; display: none; border-left: 4px solid #2196f3; }
   </style>
 </head>
 <body>
-<div class="container">
-  <h1>Random NEET PYQs</h1>
-  <div class="input-group">
-    <label>Enter number of questions: </label>
-    <input type="number" id="question-count" min="1" max="90">
-    <button onclick="generateQuiz()">Start</button>
+  <div class="container">
+    <h1>NEET PYQs by Subject Blocks</h1>
+    <div class="input-group">
+      <label>Enter total number of questions: </label>
+      <input type="number" id="total-questions" min="3" max="90">
+      <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+    <div id="quiz-area" class="question-block"></div>
   </div>
-  <div class="question-box" id="quiz-box"></div>
-</div>
 
-<script>
-const metaIds = [
-  { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
-  { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-  { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
-  { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" }
-  // Add more as needed...
-];
+  <script>
+    const metaIds = [
+      { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+      { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+      { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+      { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" }
+    ];
 
-let allQuestions = { biology: [], chemistry: [], physics: [] };
-let selectedQuestions = [];
-let currentIndex = 0;
+    let allQuestions = { biology: [], chemistry: [], physics: [] };
 
-async function fetchAllQuestions() {
-  for (let meta of metaIds) {
-    try {
-      const res = await fetch(`https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`);
-      const data = await res.json();
-      if (data[0]) allQuestions.biology.push(...data[0].questions.map(q => ({ ...q, source: meta.title })));
-      if (data[1]) allQuestions.chemistry.push(...data[1].questions.map(q => ({ ...q, source: meta.title })));
-      if (data[2]) allQuestions.physics.push(...data[2].questions.map(q => ({ ...q, source: meta.title })));
-    } catch (e) {
-      console.error("Error fetching:", meta.title);
+    async function fetchQuestions() {
+      for (let meta of metaIds) {
+        try {
+          const res = await fetch(`https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`);
+          const data = await res.json();
+          if (data[0]) allQuestions.biology.push(...data[0].questions.map(q => ({ ...q, subject: "Biology", source: meta.title })));
+          if (data[1]) allQuestions.chemistry.push(...data[1].questions.map(q => ({ ...q, subject: "Chemistry", source: meta.title })));
+          if (data[2]) allQuestions.physics.push(...data[2].questions.map(q => ({ ...q, subject: "Physics", source: meta.title })));
+        } catch (e) {
+          console.error("Error loading:", meta.title);
+        }
+      }
     }
-  }
-}
 
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i+1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-}
-
-function generateSubjectWiseQuestions(total) {
-  const perSubject = Math.floor(total / 3);
-  const extra = total % 3;
-
-  const bioQs = allQuestions.biology.sort(() => 0.5 - Math.random()).slice(0, perSubject + (extra > 0 ? 1 : 0));
-  const chemQs = allQuestions.chemistry.sort(() => 0.5 - Math.random()).slice(0, perSubject + (extra > 1 ? 1 : 0));
-  const phyQs = allQuestions.physics.sort(() => 0.5 - Math.random()).slice(0, perSubject);
-
-  // Arrange sequence as bio → chem → phy → bio ...
-  const combined = [];
-  let maxLen = Math.max(bioQs.length, chemQs.length, phyQs.length);
-  for (let i = 0; i < maxLen; i++) {
-    if (bioQs[i]) combined.push(bioQs[i]);
-    if (chemQs[i]) combined.push(chemQs[i]);
-    if (phyQs[i]) combined.push(phyQs[i]);
-  }
-  return combined;
-}
-
-async function generateQuiz() {
-  document.getElementById("quiz-box").innerHTML = "Loading questions...";
-  if (!allQuestions.biology.length) await fetchAllQuestions();
-
-  const count = parseInt(document.getElementById("question-count").value);
-  if (!count || count < 1) return alert("Enter a valid number.");
-
-  selectedQuestions = generateSubjectWiseQuestions(count);
-  currentIndex = 0;
-  showQuestion();
-}
-
-function showQuestion() {
-  const q = selectedQuestions[currentIndex];
-  const container = document.getElementById("quiz-box");
-
-  let optionsHTML = q.options.map((opt, i) =>
-    `<li data-id="${opt.identifier}">${String.fromCharCode(65 + i)}. ${opt.content}</li>`
-  ).join("");
-
-  container.innerHTML = `
-    <div class="meta"><strong>Subject:</strong> ${q.subject.toUpperCase()} | <strong>Source:</strong> ${q.source}</div>
-    <div class="question">${q.content}</div>
-    <ul class="options">${optionsHTML}</ul>
-    <button onclick="checkAnswer()">Check Answer</button>
-    <button onclick="nextQuestion()">Next</button>
-    <div id="explanation"><strong>Explanation:</strong><br>${q.explanation}</div>
-  `;
-
-  document.querySelectorAll(".options li").forEach(li => {
-    li.addEventListener("click", () => {
-      document.querySelectorAll(".options li").forEach(el => el.classList.remove("selected"));
-      li.classList.add("selected");
-    });
-  });
-}
-
-function checkAnswer() {
-  const selected = document.querySelector(".options li.selected");
-  if (!selected) return alert("Please select an option.");
-
-  const q = selectedQuestions[currentIndex];
-  const correct = q.correct;
-
-  document.querySelectorAll(".options li").forEach(li => {
-    if (li.dataset.id === correct) {
-      li.classList.add("correct");
-    } else if (li.classList.contains("selected")) {
-      li.classList.add("incorrect");
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
     }
-  });
 
-  document.getElementById("explanation").style.display = "block";
-}
+    async function startQuiz() {
+      const total = parseInt(document.getElementById("total-questions").value);
+      if (!total || total < 3) return alert("Enter valid number ≥ 3");
+      document.getElementById("quiz-area").innerHTML = "Loading questions...";
 
-function nextQuestion() {
-  if (currentIndex < selectedQuestions.length - 1) {
-    currentIndex++;
-    showQuestion();
-  } else {
-    document.getElementById("quiz-box").innerHTML = "<h3>You've completed the quiz!</h3>";
-  }
-}
-</script>
+      if (!allQuestions.biology.length) await fetchQuestions();
+
+      const perSub = Math.floor(total / 3);
+      const extra = total % 3;
+
+      shuffle(allQuestions.biology);
+      shuffle(allQuestions.chemistry);
+      shuffle(allQuestions.physics);
+
+      const bio = allQuestions.biology.slice(0, perSub + (extra > 0 ? 1 : 0));
+      const chem = allQuestions.chemistry.slice(0, perSub + (extra > 1 ? 1 : 0));
+      const phy = allQuestions.physics.slice(0, perSub);
+
+      const blocks = [
+        { subject: "Biology", questions: bio },
+        { subject: "Chemistry", questions: chem },
+        { subject: "Physics", questions: phy }
+      ];
+
+      renderBlocks(blocks);
+    }
+
+    function renderBlocks(blocks) {
+      const container = document.getElementById("quiz-area");
+      container.innerHTML = "";
+
+      blocks.forEach(block => {
+        const section = document.createElement("div");
+        section.innerHTML = `<div class="subject-header">${block.subject}</div>`;
+
+        block.questions.forEach((q, index) => {
+          const qBox = document.createElement("div");
+          qBox.className = "question";
+          const optList = q.options.map(opt =>
+            `<li data-id="${opt.identifier}">${opt.identifier}. ${opt.content}</li>`
+          ).join("");
+
+          qBox.innerHTML = `
+            <div class="meta">Source: ${q.source}</div>
+            <div class="question-text">${q.content}</div>
+            <ul class="options">${optList}</ul>
+            <button onclick="checkAnswer(this, '${q.correct}')">Check</button>
+            <div class="explanation"><strong>Explanation:</strong><br>${q.explanation}</div>
+          `;
+          section.appendChild(qBox);
+        });
+
+        container.appendChild(section);
+      });
+
+      addOptionListeners();
+    }
+
+    function addOptionListeners() {
+      document.querySelectorAll(".options").forEach(list => {
+        list.querySelectorAll("li").forEach(li => {
+          li.addEventListener("click", () => {
+            list.querySelectorAll("li").forEach(el => el.classList.remove("selected"));
+            li.classList.add("selected");
+          });
+        });
+      });
+    }
+
+    function checkAnswer(btn, correctId) {
+      const qBox = btn.closest(".question");
+      const selected = qBox.querySelector("li.selected");
+      if (!selected) return alert("Select an option first.");
+      const options = qBox.querySelectorAll("li");
+
+      options.forEach(opt => {
+        opt.classList.remove("correct", "incorrect");
+        if (opt.dataset.id === correctId) opt.classList.add("correct");
+        else if (opt.classList.contains("selected")) opt.classList.add("incorrect");
+      });
+
+      qBox.querySelector(".explanation").style.display = "block";
+    }
+  </script>
 </body>
 </html>
