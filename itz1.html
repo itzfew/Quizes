@@ -5,26 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NEET PYQ Practice</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    .hidden { display: none; }
-    .option { cursor: pointer; margin: 5px 0; padding: 5px; border: 1px solid #ccc; border-radius: 5px; }
-    .option.selected { background: #dceeff; }
-    .option.correct { background: #c6f6c6; }
-    .option.incorrect { background: #f8c6c6; }
-    #navigation button.visited { font-weight: bold; }
-    .nav-correct { background-color: #8f8; }
-    .nav-incorrect { background-color: #f88; }
-    .nav-missed { background-color: #ff0; }
-    .collapsible { margin-top: 15px; border: 1px solid #ccc; border-radius: 5px; }
-    .collapse-header { background: #f0f0f0; cursor: pointer; padding: 5px; display: flex; justify-content: space-between; align-items: center; }
-    .collapse-content { display: none; padding: 10px; }
-    #pdf-output { display: none; }
-  </style>
 </head>
-
 <body>
   <h1>NEET PYQ Practice Game</h1>
 
@@ -35,10 +18,7 @@
   </div>
 
   <div id="quiz" class="hidden">
-    <div>
-      <div id="navigation" style="margin-bottom: 10px;"></div>
-      <button onclick="generatePDF()">Download PDF</button>
-    </div>
+    <div id="navigation"></div>
     <div id="source"></div>
     <div id="question-box"></div>
     <div class="controls">
@@ -47,9 +27,8 @@
       <button onclick="nextQuestion()">Next</button>
     </div>
     <div id="result"></div>
+    <div id="detailed-result" class="hidden"></div>
   </div>
-
-  <div id="pdf-output"></div>
 
   <script>
     const subjects = ['biology', 'chemistry', 'physics'];
@@ -60,7 +39,7 @@
       { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" }
     ];
 
-    let allQuestions = [], quizQuestions = [], currentIndex = 0, answerCache = {};
+    let allQuestions = [], quizQuestions = [], currentIndex = 0, answerCache = {}, visitCache = {};
 
     async function startQuiz() {
       const count = parseInt(document.getElementById('numQuestions').value);
@@ -106,11 +85,10 @@
     }
 
     function loadQuestion(index) {
-      document.querySelector(".controls button:nth-child(2)").disabled = false;
-
       currentIndex = index;
       const q = quizQuestions[index];
       document.getElementById('source').textContent = `Subject: ${q.subject.toUpperCase()} | Source: ${q.source}`;
+      visitCache[q.question_id] = true;
 
       let html = `<h3>${renderMath(q.content)}</h3><ul>`;
       q.options.forEach((opt, i) => {
@@ -122,6 +100,8 @@
 
       const saved = localStorage.getItem(`q-${q.question_id}`);
       if (saved) selectOption(saved);
+      updateNavColors(q.question_id, currentIndex);
+      document.querySelector(".controls button:nth-child(2)").disabled = false;
     }
 
     function selectOption(id) {
@@ -161,18 +141,9 @@
         });
       }
 
-      navBtn.classList.add('visited');
-      navBtn.classList.remove('nav-correct', 'nav-incorrect', 'nav-missed');
-      if (status === 'correct') {
-        navBtn.classList.add('nav-correct');
-        answerCache[q.question_id] = 4;
-      } else if (status === 'incorrect') {
-        navBtn.classList.add('nav-incorrect');
-        answerCache[q.question_id] = -1;
-      } else {
-        navBtn.classList.add('nav-missed');
-        answerCache[q.question_id] = 0;
-      }
+      answerCache[q.question_id] = (status === 'correct') ? 4 : (status === 'incorrect') ? -1 : 0;
+
+      updateNavColors(q.question_id, currentIndex, status);
 
       const explanation = q.explanation || 'No explanation available.';
       const explanationHTML = `
@@ -190,19 +161,35 @@
       document.querySelector(".controls button:nth-child(2)").disabled = true;
     }
 
+    function updateNavColors(qid, idx, status = null) {
+      const btn = document.getElementById(`nav-${idx}`);
+      btn.classList.add('visited');
+      btn.classList.remove('nav-correct', 'nav-incorrect', 'nav-missed');
+
+      const selected = localStorage.getItem(`q-${qid}`);
+      if (status === 'correct') btn.classList.add('nav-correct');
+      else if (status === 'incorrect') btn.classList.add('nav-incorrect');
+      else if (!selected && visitCache[qid]) btn.classList.add('nav-missed');
+    }
+
+    function renderMath(str) {
+      return str.replace(/\$\$(.*?)\$\$/g, (_, eq) => `<span class="mathjax">$$${eq}$$</span>`);
+    }
+
     function toggleCollapse(header) {
       const content = header.nextElementSibling;
       const icon = header.querySelector('i');
+      const span = header.querySelector('span');
       if (content.style.display === 'block') {
         content.style.display = 'none';
         icon.classList.remove('fa-chevron-up');
         icon.classList.add('fa-chevron-down');
-        header.querySelector('span').textContent = 'Show Explanation';
+        span.textContent = 'Show Explanation';
       } else {
         content.style.display = 'block';
         icon.classList.remove('fa-chevron-down');
         icon.classList.add('fa-chevron-up');
-        header.querySelector('span').textContent = 'Hide Explanation';
+        span.textContent = 'Hide Explanation';
       }
     }
 
@@ -217,51 +204,42 @@
 
     function calculateScore() {
       const total = quizQuestions.reduce((sum, q) => sum + (answerCache[q.question_id] || 0), 0);
-      document.getElementById('result').textContent = `Score: ${total}`;
+      const maxScore = quizQuestions.length * 4;
+      document.getElementById('result').textContent = `Score: ${total} / ${maxScore}`;
     }
 
     function showResult() {
       calculateScore();
-      alert('Quiz Complete!');
-    }
+      let correct = 0, incorrect = 0, missed = 0;
 
-    function renderMath(str) {
-      return str.replace(/\$\$(.*?)\$\$/g, (_, eq) => `<span class="mathjax">$$${eq}$$</span>`);
-    }
-
-    function generatePDF() {
-      const container = document.getElementById('pdf-output');
-      container.innerHTML = '';
-      const colLeft = document.createElement('div');
-      const colRight = document.createElement('div');
-      colLeft.style.width = colRight.style.width = '48%';
-      colLeft.style.float = 'left';
-      colRight.style.float = 'right';
-
-      quizQuestions.forEach((q, i) => {
-        const html = document.createElement('div');
-        html.style.marginBottom = '20px';
-        html.innerHTML = `<b>Q${i + 1}:</b> ${q.content}<br>${q.options.map((o, j) => `${String.fromCharCode(65 + j)}. ${o.content}`).join('<br>')}`;
-        if (i % 2 === 0) colLeft.appendChild(html);
-        else colRight.appendChild(html);
+      quizQuestions.forEach(q => {
+        const score = answerCache[q.question_id];
+        if (score === 4) correct++;
+        else if (score === -1) incorrect++;
+        else missed++;
       });
 
-      container.appendChild(colLeft);
-      container.appendChild(colRight);
-
-      const answerKey = document.createElement('div');
-      answerKey.style.clear = 'both';
-      answerKey.innerHTML = `<h3>Answer Key</h3><ol>${quizQuestions.map(q => {
-        const correct = q.correct_options.map(id => {
-          const opt = q.options.find(o => o.identifier === id);
-          return q.options.indexOf(opt);
-        }).map(i => String.fromCharCode(65 + i)).join(', ');
-        return `<li>${correct}</li>`;
-      }).join('')}</ol>`;
-
-      container.appendChild(answerKey);
-
-      html2pdf().from(container).set({ margin: 0.5, filename: 'NEET_PYQ_Practice.pdf' }).save();
+      const maxScore = quizQuestions.length * 4;
+      const resultDiv = document.getElementById('detailed-result');
+      resultDiv.innerHTML = `
+        <h3>Detailed Result</h3>
+        <p>✅ Correct: ${correct}</p>
+        <p>❌ Incorrect: ${incorrect}</p>
+        <p>⚠️ Missed: ${missed}</p>
+        <p>💯 Final Score: ${correct * 4 - incorrect} / ${maxScore}</p>
+        <hr/>
+        <h4>Missed Questions (Highlighted First)</h4>
+        <ul>
+          ${quizQuestions
+            .sort((a, b) => (answerCache[a.question_id] || 0) - (answerCache[b.question_id] || 0))
+            .map(q => {
+              const score = answerCache[q.question_id];
+              const color = score === 4 ? 'green' : score === -1 ? 'red' : 'orange';
+              return `<li style="color:${color}">Q${q.number} - ${score === 0 ? 'Missed' : score === 4 ? 'Correct' : 'Incorrect'}</li>`;
+            }).join('')}
+        </ul>`;
+      resultDiv.classList.remove('hidden');
+      alert('Quiz Complete!');
     }
   </script>
 </body>
