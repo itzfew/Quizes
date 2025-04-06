@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Random NEET PYQ Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+    h1 { text-align: center; }
+    .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .input-group { text-align: center; margin-bottom: 20px; }
+    .input-group input { padding: 10px; width: 100px; font-size: 18px; }
+    .question-box { margin-top: 20px; }
+    .question { font-size: 18px; margin-bottom: 10px; }
+    .options li { list-style: none; padding: 8px; margin-bottom: 5px; background: #eee; cursor: pointer; border-radius: 5px; }
+    .options li.selected { background-color: #cce5ff; }
+    .options li.correct { background-color: #c8e6c9; }
+    .options li.incorrect { background-color: #ffcdd2; }
+    .meta { font-size: 14px; color: #555; margin-top: 5px; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; cursor: pointer; }
+    #explanation { display: none; margin-top: 10px; background: #fafafa; padding: 10px; border-left: 4px solid #2196f3; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Random NEET PYQs</h1>
+  <div class="input-group">
+    <label>Enter number of questions: </label>
+    <input type="number" id="question-count" min="1" max="90">
+    <button onclick="generateQuiz()">Start</button>
+  </div>
+  <div class="question-box" id="quiz-box"></div>
+</div>
+
+<script>
+const metaIds = [
+  { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+  { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+  { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+  { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" }
+  // Add more as needed...
+];
+
+let allQuestions = { biology: [], chemistry: [], physics: [] };
+let selectedQuestions = [];
+let currentIndex = 0;
+
+async function fetchAllQuestions() {
+  for (let meta of metaIds) {
+    try {
+      const res = await fetch(`https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`);
+      const data = await res.json();
+      if (data[0]) allQuestions.biology.push(...data[0].questions.map(q => ({ ...q, source: meta.title })));
+      if (data[1]) allQuestions.chemistry.push(...data[1].questions.map(q => ({ ...q, source: meta.title })));
+      if (data[2]) allQuestions.physics.push(...data[2].questions.map(q => ({ ...q, source: meta.title })));
+    } catch (e) {
+      console.error("Error fetching:", meta.title);
+    }
+  }
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function generateSubjectWiseQuestions(total) {
+  const perSubject = Math.floor(total / 3);
+  const extra = total % 3;
+
+  const bioQs = allQuestions.biology.sort(() => 0.5 - Math.random()).slice(0, perSubject + (extra > 0 ? 1 : 0));
+  const chemQs = allQuestions.chemistry.sort(() => 0.5 - Math.random()).slice(0, perSubject + (extra > 1 ? 1 : 0));
+  const phyQs = allQuestions.physics.sort(() => 0.5 - Math.random()).slice(0, perSubject);
+
+  // Arrange sequence as bio → chem → phy → bio ...
+  const combined = [];
+  let maxLen = Math.max(bioQs.length, chemQs.length, phyQs.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (bioQs[i]) combined.push(bioQs[i]);
+    if (chemQs[i]) combined.push(chemQs[i]);
+    if (phyQs[i]) combined.push(phyQs[i]);
+  }
+  return combined;
+}
+
+async function generateQuiz() {
+  document.getElementById("quiz-box").innerHTML = "Loading questions...";
+  if (!allQuestions.biology.length) await fetchAllQuestions();
+
+  const count = parseInt(document.getElementById("question-count").value);
+  if (!count || count < 1) return alert("Enter a valid number.");
+
+  selectedQuestions = generateSubjectWiseQuestions(count);
+  currentIndex = 0;
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = selectedQuestions[currentIndex];
+  const container = document.getElementById("quiz-box");
+
+  let optionsHTML = q.options.map((opt, i) =>
+    `<li data-id="${opt.identifier}">${String.fromCharCode(65 + i)}. ${opt.content}</li>`
+  ).join("");
+
+  container.innerHTML = `
+    <div class="meta"><strong>Subject:</strong> ${q.subject.toUpperCase()} | <strong>Source:</strong> ${q.source}</div>
+    <div class="question">${q.content}</div>
+    <ul class="options">${optionsHTML}</ul>
+    <button onclick="checkAnswer()">Check Answer</button>
+    <button onclick="nextQuestion()">Next</button>
+    <div id="explanation"><strong>Explanation:</strong><br>${q.explanation}</div>
+  `;
+
+  document.querySelectorAll(".options li").forEach(li => {
+    li.addEventListener("click", () => {
+      document.querySelectorAll(".options li").forEach(el => el.classList.remove("selected"));
+      li.classList.add("selected");
+    });
+  });
+}
+
+function checkAnswer() {
+  const selected = document.querySelector(".options li.selected");
+  if (!selected) return alert("Please select an option.");
+
+  const q = selectedQuestions[currentIndex];
+  const correct = q.correct;
+
+  document.querySelectorAll(".options li").forEach(li => {
+    if (li.dataset.id === correct) {
+      li.classList.add("correct");
+    } else if (li.classList.contains("selected")) {
+      li.classList.add("incorrect");
+    }
+  });
+
+  document.getElementById("explanation").style.display = "block";
+}
+
+function nextQuestion() {
+  if (currentIndex < selectedQuestions.length - 1) {
+    currentIndex++;
+    showQuestion();
+  } else {
+    document.getElementById("quiz-box").innerHTML = "<h3>You've completed the quiz!</h3>";
+  }
+}
+</script>
+</body>
+</html>
