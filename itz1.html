@@ -178,7 +178,7 @@
   const explanation = q.explanation || 'No explanation available.';
   const explanationHTML = `<div style="margin-top: 20px; padding: 10px; background: #f9fbe7; border: 1px solid #cddc39;"><b>Explanation:</b><br>${explanation}</div>`;
   box.insertAdjacentHTML('beforeend', explanationHTML);
-
+MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
   // Update score
   calculateScore();
 }
