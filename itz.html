@@ -212,6 +212,13 @@ function toggleCollapse(header) {
     function renderMath(str) {
       return str.replace(/\$\$(.*?)\$\$/g, (_, eq) => `<span class="mathjax">$$${eq}$$</span>`);
     }
+        // Render LaTeX using MathJax
+function renderMath(input) {
+    return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+    });
+}
+    
   </script>
 </body>
 </html>
