@@ -3,51 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NEET PYQ Game</title>
+  <title>NEET PYQ Practice</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
   <style>
     body {
       margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: #f9f9fb;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
     }
 
-    h1 {
+    h1, h2 {
       text-align: center;
-      margin: 1rem 0;
-      color: #2c3e50;
+      margin: 20px 0;
     }
 
-    #setup, #quiz {
-      max-width: 700px;
-      margin: auto;
-      padding: 1rem;
+    #setup {
+      text-align: center;
+      padding: 2rem;
     }
 
-    input[type="number"] {
-      padding: 10px;
-      font-size: 16px;
-      width: 100%;
-      max-width: 200px;
+    #setup input {
+      padding: 0.5rem;
+      font-size: 1rem;
+      width: 80px;
+      margin-right: 10px;
     }
 
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      border-radius: 8px;
-      background: #1976d2;
+    #setup button {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: #00796b;
       color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
 
-    button:hover {
-      background: #1565c0;
+    #setup button:hover {
+      background-color: #004d40;
     }
 
-    .hidden {
-      display: none;
+    #quiz {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
     }
 
     #navigation {
@@ -55,103 +56,105 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 5px;
-      margin: 1em 0;
+      margin-bottom: 1rem;
     }
 
     #navigation button {
       width: 35px;
       height: 35px;
       border-radius: 50%;
+      border: 1px solid #ccc;
       font-weight: bold;
-      background: #eee;
-      color: #333;
+      cursor: pointer;
+      background-color: #e0e0e0;
     }
 
-    .nav-correct { background: green !important; color: white; }
-    .nav-incorrect { background: red !important; color: white; }
-    .visited { background: #ccc !important; }
-
-    #question-box {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      margin-bottom: 1rem;
-    }
+    .visited { background-color: #b0bec5; }
+    .nav-correct { background-color: green; color: white; }
+    .nav-incorrect { background-color: red; color: white; }
 
     #source {
       text-align: center;
+      margin: 10px 0;
       font-weight: bold;
-      margin-bottom: 1rem;
-      color: #333;
+    }
+
+    #question-box {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .option {
-      background: #f1f1f1;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px 0;
       cursor: pointer;
-      transition: background 0.3s, border 0.3s;
+      background-color: #f7f7f7;
     }
 
     .option:hover {
-      background: #e3f2fd;
+      background-color: #e0f7fa;
     }
 
     .selected {
-      border: 2px solid #1976d2;
-      background: #bbdefb;
+      background-color: #b2ebf2;
+      border-color: #00796b;
     }
 
     .correct {
-      background: #c8e6c9 !important;
-      border: 2px solid green;
+      background-color: #c8e6c9 !important;
+      border-color: green !important;
     }
 
     .incorrect {
-      background: #ffcdd2 !important;
-      border: 2px solid red;
+      background-color: #ffcdd2 !important;
+      border-color: red !important;
+    }
+
+    .mathjax { font-size: 1.05rem; }
+
+    .controls {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .controls button {
+      padding: 0.5rem 1.2rem;
+      margin: 0 8px;
+      font-size: 1rem;
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      background-color: #0d47a1;
     }
 
     #result {
+      margin-top: 20px;
       text-align: center;
-      font-size: 20px;
+      font-size: 1.3rem;
       font-weight: bold;
-      margin: 1rem;
     }
 
-    #explanation {
-      background: #fff3e0;
-      border-left: 6px solid #ff9800;
-      padding: 10px;
-      margin-top: 15px;
-      border-radius: 6px;
-    }
-
-    @media (max-width: 600px) {
-      button {
-        font-size: 14px;
-        padding: 8px 16px;
-      }
-
-      .option {
-        font-size: 14px;
-        padding: 10px;
-      }
-
-      #navigation button {
-        width: 30px;
-        height: 30px;
-      }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
+
 <body>
-  <h1>NEET PYQ Practice</h1>
+  <h1>NEET PYQ Practice Game</h1>
+
   <div id="setup">
     <h2>Enter number of questions:</h2>
-    <input type="number" id="numQuestions" min="3" step="1"/>
+    <input type="number" id="numQuestions" min="3" step="1" />
     <button onclick="startQuiz()">Start</button>
   </div>
 
@@ -159,7 +162,7 @@
     <div id="navigation"></div>
     <div id="source"></div>
     <div id="question-box"></div>
-    <div style="text-align: center;">
+    <div class="controls">
       <button onclick="prevQuestion()">Back</button>
       <button onclick="checkAnswer()">Check Answer</button>
       <button onclick="nextQuestion()">Next</button>
@@ -196,7 +199,7 @@
 
       const perSubject = Math.floor(count / 3);
       const remainder = count % 3;
-      const subjectDist = [perSubject + (remainder >= 1 ? 1 : 0), perSubject + (remainder >= 2 ? 1 : 0), perSubject];
+      const subjectDist = [perSubject + (remainder >= 1), perSubject + (remainder >= 2), perSubject];
 
       for (let i = 0; i < 3; i++) {
         const subjectQs = allQuestions.filter(q => q.subject === subjects[i]);
@@ -212,7 +215,7 @@
     function generateNav() {
       const nav = document.getElementById('navigation');
       nav.innerHTML = '';
-      quizQuestions.forEach((q, i) => {
+      quizQuestions.forEach((_, i) => {
         const btn = document.createElement('button');
         btn.textContent = i + 1;
         btn.onclick = () => loadQuestion(i);
@@ -225,15 +228,13 @@
       currentIndex = index;
       const q = quizQuestions[index];
       document.getElementById('source').textContent = `Subject: ${q.subject.toUpperCase()} | Source: ${q.source}`;
-      const box = document.getElementById('question-box');
 
-      let html = `<h3>${renderMath(q.content)}</h3>`;
+      let html = `<h3>${renderMath(q.content)}</h3><ul>`;
       q.options.forEach((opt, i) => {
-        html += `<div class="option" data-id="${opt.identifier}" onclick="selectOption('${opt.identifier}')">${String.fromCharCode(65+i)}. ${renderMath(opt.content)}</div>`;
+        html += `<li class="option" data-id="${opt.identifier}" onclick="selectOption('${opt.identifier}')">${String.fromCharCode(65 + i)}. ${renderMath(opt.content)}</li>`;
       });
-      html += `<div id="explanation" class="hidden">${q.explanation ? "Explanation: " + renderMath(q.explanation) : "No explanation available."}</div>`;
-      box.innerHTML = html;
-
+      html += '</ul>';
+      document.getElementById('question-box').innerHTML = html;
       MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 
       const saved = localStorage.getItem(`q-${q.question_id}`);
@@ -241,40 +242,71 @@
     }
 
     function selectOption(id) {
-      const opts = document.querySelectorAll('.option');
-      opts.forEach(o => o.classList.remove('selected'));
-      const el = [...opts].find(o => o.dataset.id === id);
+      const options = document.querySelectorAll('.option');
+      options.forEach(o => o.classList.remove('selected'));
+      const el = [...options].find(o => o.dataset.id === id);
       if (el) el.classList.add('selected');
       localStorage.setItem(`q-${quizQuestions[currentIndex].question_id}`, id);
     }
 
     function checkAnswer() {
-      const q = quizQuestions[currentIndex];
-      const selected = document.querySelector('.option.selected');
-      const correct = q.options.find(opt => opt.is_correct);
+  const q = quizQuestions[currentIndex];
+  const selected = document.querySelector('.option.selected');
+  const correctIds = q.correct_options;
+  const navBtn = document.getElementById(`nav-${currentIndex}`);
+  const opts = document.querySelectorAll('.option');
 
-      if (!selected) return alert('Please select an option!');
+  let status;
 
-      document.querySelectorAll('.option').forEach(opt => {
-        opt.classList.remove('correct', 'incorrect');
-        if (opt.dataset.id === correct.identifier) opt.classList.add('correct');
-        if (opt === selected && selected.dataset.id !== correct.identifier) opt.classList.add('incorrect');
-      });
+  opts.forEach(opt => {
+    const id = opt.dataset.id;
 
-      const navBtn = document.getElementById(`nav-${currentIndex}`);
-      if (selected.dataset.id === correct.identifier) {
-        navBtn.classList.add('nav-correct');
-        answerCache[q.question_id] = 4;
-      } else {
-        navBtn.classList.add('nav-incorrect');
-        answerCache[q.question_id] = -1;
-      }
-
-      navBtn.classList.add('visited');
-      calculateScore();
-      document.getElementById('explanation').classList.remove('hidden');
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    if (correctIds.includes(id)) {
+      opt.classList.add('correct');
     }
+
+    if (selected && id === selected.dataset.id) {
+      if (correctIds.includes(id)) {
+        opt.classList.add('correct');
+        status = 'correct';
+      } else {
+        opt.classList.add('incorrect');
+        status = 'incorrect';
+      }
+    }
+  });
+
+  if (!selected) {
+    status = 'missed';
+    opts.forEach(opt => {
+      if (correctIds.includes(opt.dataset.id)) opt.classList.add('correct');
+    });
+  }
+
+  // Update navigation button styling
+  navBtn.classList.add('visited');
+  if (status === 'correct') {
+    navBtn.classList.add('nav-correct');
+    answerCache[q.question_id] = 4;
+  } else if (status === 'incorrect') {
+    navBtn.classList.add('nav-incorrect');
+    answerCache[q.question_id] = -1;
+  } else if (status === 'missed') {
+    navBtn.style.backgroundColor = 'gold';
+    navBtn.style.color = '#000';
+    answerCache[q.question_id] = 0;
+  }
+
+  // Show explanation below question
+  const box = document.getElementById('question-box');
+  const explanation = q.explanation || 'No explanation available.';
+  const explanationHTML = `<div style="margin-top: 20px; padding: 10px; background: #f9fbe7; border: 1px solid #cddc39;"><b>Explanation:</b><br>${explanation}</div>`;
+  box.insertAdjacentHTML('beforeend', explanationHTML);
+
+  // Update score
+  calculateScore();
+}
+
 
     function nextQuestion() {
       if (currentIndex < quizQuestions.length - 1) loadQuestion(currentIndex + 1);
