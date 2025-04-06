@@ -1,0 +1,191 @@
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    #setup {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    #setup input {
+      padding: 0.5rem;
+      font-size: 1rem;
+      width: 80px;
+      margin-right: 10px;
+    }
+
+    #setup button {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #setup button:hover {
+      background-color: #004d40;
+    }
+
+    #quiz {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    #navigation {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 1rem;
+    }
+
+    #navigation button {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: 1px solid #ccc;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: #e0e0e0;
+    }
+
+    .visited { background-color: #b0bec5; }
+    .nav-correct { background-color: green !important; color: white !important; }
+    .nav-incorrect { background-color: red !important; color: white !important; }
+    .nav-missed { background-color: gold !important; color: black !important; }
+
+    #source {
+      text-align: center;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+
+    #question-box {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .option {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px 0;
+      cursor: pointer;
+      background-color: #f7f7f7;
+    }
+
+    .option:hover {
+      background-color: #e0f7fa;
+    }
+
+    .selected {
+      background-color: #b2ebf2;
+      border-color: #00796b;
+    }
+
+    .correct {
+      background-color: #c8e6c9 !important;
+      border-color: green !important;
+    }
+
+    .incorrect {
+      background-color: #ffcdd2 !important;
+      border-color: red !important;
+    }
+
+    .mathjax { font-size: 1.05rem; }
+
+    .controls {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .controls button {
+      padding: 0.5rem 1.2rem;
+      margin: 0 8px;
+      font-size: 1rem;
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      background-color: #0d47a1;
+    }
+
+    #result {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .hidden { display: none; }
+
+    .collapsible {
+      margin-top: 20px;
+      padding: 10px;
+      background: #f9fbe7;
+      border: 1px solid #cddc39;
+      border-radius: 5px;
+    }
+
+    .collapse-header {
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .collapse-content {
+      display: none;
+      margin-top: 10px;
+    }
+    .controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  text-align: center;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+.controls button {
+  padding: 0.5rem 1.2rem;
+  margin: 0 8px;
+  font-size: 1rem;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.controls button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.controls button:hover:enabled {
+  background-color: #0d47a1;
+}
