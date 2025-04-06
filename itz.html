@@ -134,11 +134,12 @@
       });
 
       if (!selected) {
-        status = 'missed';
-        opts.forEach(opt => {
-          if (correctIds.includes(opt.dataset.id)) opt.classList.add('correct');
-        });
-      }
+  status = 'missed';
+  opts.forEach(opt => {
+    if (correctIds.includes(opt.dataset.id)) opt.classList.add('correct');
+  });
+  answerCache[q.question_id] = 0;
+}
 
       navBtn.classList.add('visited');
       navBtn.classList.remove('nav-correct', 'nav-incorrect', 'nav-missed');
@@ -205,9 +206,39 @@ function toggleCollapse(header) {
     }
 
     function showResult() {
-      calculateScore();
-      alert('Quiz Complete!');
+  const totalQ = quizQuestions.length;
+  let correct = 0, incorrect = 0, missed = 0;
+
+  quizQuestions.forEach(q => {
+    const saved = localStorage.getItem(`q-${q.question_id}`);
+    const score = answerCache[q.question_id];
+    const navBtn = document.getElementById(`nav-${quizQuestions.indexOf(q)}`);
+
+    if (score === 4) {
+      correct++;
+    } else if (score === -1) {
+      incorrect++;
+    } else {
+      missed++;
+      // Highlight missed question nav yellow
+      navBtn.classList.add('nav-missed');
     }
+  });
+
+  const maxScore = totalQ * 4;
+  const totalScore = correct * 4 + incorrect * -1;
+
+  const resultBox = document.getElementById('result');
+  resultBox.innerHTML = `
+    <h3>Quiz Summary</h3>
+    <p><strong>Total Questions:</strong> ${totalQ}</p>
+    <p><strong>Correct:</strong> ${correct} | <strong>Incorrect:</strong> ${incorrect} | <strong>Missed:</strong> ${missed}</p>
+    <p><strong>Score:</strong> ${totalScore} / ${maxScore}</p>
+  `;
+
+  alert('Quiz Complete! Scroll down to view your detailed result.');
+}
+
 
     function renderMath(str) {
       return str.replace(/\$\$(.*?)\$\$/g, (_, eq) => `<span class="mathjax">$$${eq}$$</span>`);
