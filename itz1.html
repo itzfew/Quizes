@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>NEET PYQ Quiz</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -90,7 +92,7 @@
 </head>
 <body>
   <h1>NEET PYQ Game</h1>
-  <p>Enter total questions (multiple of 3):</p>
+  <p>Enter total questions:</p>
   <input type="number" id="total-questions" min="3" max="90">
   <button onclick="startQuiz()">Start Quiz</button>
 
@@ -106,6 +108,7 @@
 
     let allQuestions = { biology: [], chemistry: [], physics: [] };
     let fullSequence = [], currentIndex = 0;
+    let score = 0;
 
     async function fetchQuestions() {
       for (let meta of metaIds) {
@@ -130,8 +133,8 @@
 
     async function startQuiz() {
       const total = parseInt(document.getElementById("total-questions").value);
-      if (!total || total < 3 || total % 3 !== 0) {
-        alert("Please enter a valid number divisible by 3 (e.g. 6, 9, 12)");
+      if (!total || total < 3) {
+        alert("Please enter a number greater than or equal to 3");
         return;
       }
 
@@ -142,14 +145,16 @@
       shuffle(allQuestions.chemistry);
       shuffle(allQuestions.physics);
 
-      const perSub = total / 3;
-      const bio = allQuestions.biology.slice(0, perSub);
-      const chem = allQuestions.chemistry.slice(0, perSub);
-      const phy = allQuestions.physics.slice(0, perSub);
+      const each = Math.floor(total / 3);
+      const rem = total % 3;
+      const bio = allQuestions.biology.slice(0, each + (rem > 0 ? 1 : 0));
+      const chem = allQuestions.chemistry.slice(0, each + (rem > 1 ? 1 : 0));
+      const phy = allQuestions.physics.slice(0, each);
 
-      // Combine in subject blocks
       fullSequence = [...bio, ...chem, ...phy];
+      shuffle(fullSequence); // Optional: Remove if you want subject block order
       currentIndex = 0;
+      score = 0;
       showQuestion();
     }
 
@@ -157,7 +162,7 @@
       const q = fullSequence[currentIndex];
       const quiz = document.getElementById("quiz");
       if (!q) {
-        quiz.innerHTML = "<h2>Quiz Completed!</h2>";
+        quiz.innerHTML = `<h2>Quiz Completed!</h2><p>Score: ${score} / ${fullSequence.length * 4}</p>`;
         return;
       }
 
@@ -180,22 +185,29 @@
           li.classList.add("selected");
         });
       });
+
+      MathJax.typeset();
     }
 
     function submitAnswer(correctId) {
       const selected = document.querySelector("li.selected");
-      if (!selected) return alert("Please select an option first.");
-
       const options = document.querySelectorAll(".options li");
+      let attempted = false;
+
       options.forEach(opt => {
-        opt.classList.remove("correct", "incorrect");
-        if (opt.dataset.id === correctId) opt.classList.add("correct");
-        else if (opt.classList.contains("selected")) opt.classList.add("incorrect");
+        if (opt.dataset.id === correctId) {
+          opt.classList.add("correct");
+        } else if (opt.classList.contains("selected")) {
+          opt.classList.add("incorrect");
+          attempted = true;
+        }
       });
+
+      if (selected && selected.dataset.id === correctId) score += 4;
+      else if (selected) score -= 1;
 
       document.querySelector(".explanation").style.display = "block";
 
-      // Next button after checking
       const nextBtn = document.createElement("button");
       nextBtn.textContent = "Next";
       nextBtn.onclick = () => {
