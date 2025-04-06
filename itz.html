@@ -1,197 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>NEET Quiz Generator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    .question {
-      margin-bottom: 20px;
-      padding: 15px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      background-color: #f9f9f9;
-    }
-    .question-number {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .options {
-      list-style-type: none;
-      padding: 0;
-    }
-    .options li {
-      margin-bottom: 5px;
-    }
-    #submit-btn {
-      margin-top: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Mixed Subject Quiz</title>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        input[type="number"] {
+            width: 100px;
+            padding: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .question {
+            background: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .question .options label {
+            display: block;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-
-<h2>NEET Quiz Generator</h2>
-
-<div id="setup-container">
-  <label for="num-questions">Enter number of questions:</label>
-  <input type="number" id="num-questions" min="1">
-  <button onclick="generateQuiz()">Generate Quiz</button>
+<div class="container">
+    <h1>Generate Mixed Subject Quiz</h1>
+    <label for="num-questions">Enter number of questions:</label>
+    <input type="number" id="num-questions" min="1" value="10">
+    <button onclick="generateMixedQuiz()">Generate</button>
+    <div id="quiz"></div>
 </div>
 
-<hr>
-
-<div id="quiz-container"></div>
-
 <script>
-  // Sample quizData (Replace with real questions)
-  const quizData = [
-    {
-      subject: "Physics",
-      questions: [
-        { content: "What is Newton's second law?", options: [
-          { identifier: "A", content: "F = ma" },
-          { identifier: "B", content: "E = mc²" },
-          { identifier: "C", content: "v = u + at" },
-          { identifier: "D", content: "F = Gm1m2/r²" }
-        ]},
-        { content: "Unit of Power is?", options: [
-          { identifier: "A", content: "Joule" },
-          { identifier: "B", content: "Watt" },
-          { identifier: "C", content: "Newton" },
-          { identifier: "D", content: "Volt" }
-        ]},
-        // Add more Physics questions
-      ]
-    },
-    {
-      subject: "Chemistry",
-      questions: [
-        { content: "Atomic number of Oxygen?", options: [
-          { identifier: "A", content: "6" },
-          { identifier: "B", content: "8" },
-          { identifier: "C", content: "10" },
-          { identifier: "D", content: "12" }
-        ]},
-        { content: "HCl is an example of?", options: [
-          { identifier: "A", content: "Salt" },
-          { identifier: "B", content: "Base" },
-          { identifier: "C", content: "Acid" },
-          { identifier: "D", content: "Alcohol" }
-        ]},
-        // Add more Chemistry questions
-      ]
-    },
-    {
-      subject: "Biology",
-      questions: [
-        { content: "Cell is the basic unit of?", options: [
-          { identifier: "A", content: "Air" },
-          { identifier: "B", content: "Life" },
-          { identifier: "C", content: "Water" },
-          { identifier: "D", content: "Energy" }
-        ]},
-        { content: "Photosynthesis occurs in?", options: [
-          { identifier: "A", content: "Mitochondria" },
-          { identifier: "B", content: "Chloroplast" },
-          { identifier: "C", content: "Nucleus" },
-          { identifier: "D", content: "Cytoplasm" }
-        ]},
-        // Add more Biology questions
-      ]
+    let quizData = [];
+    const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/meta.json`;
+
+    fetch(jsonUrl)
+        .then(response => response.json())
+        .then(data => {
+            quizData = data;
+        });
+
+    function generateMixedQuiz() {
+        const quizContainer = document.getElementById("quiz");
+        quizContainer.innerHTML = "";
+        const numQuestions = parseInt(document.getElementById("num-questions").value);
+
+        const allQuestions = [];
+
+        // Collect questions from each subject
+        quizData.forEach(subject => {
+            const count = Math.floor(numQuestions / quizData.length);
+            const shuffled = subject.questions.sort(() => 0.5 - Math.random());
+            allQuestions.push(...shuffled.slice(0, count));
+        });
+
+        // Display questions
+        allQuestions.forEach((q, index) => {
+            const div = document.createElement("div");
+            div.className = "question";
+            div.innerHTML = `
+                <p><strong>Q${index + 1}:</strong> ${q.content}</p>
+                ${q.options.map(opt => `
+                    <label>
+                        <input type="radio" name="q${index}" value="${opt.identifier}"> ${opt.content}
+                    </label>
+                `).join('')}
+                <p style="display:none" class="answer">Correct Answer: <span>${q.correct_options[0]}</span></p>
+                <p class="explanation" style="display:none">${q.explanation || "No explanation provided."}</p>
+            `;
+            quizContainer.appendChild(div);
+        });
+
+        const submit = document.createElement("button");
+        submit.textContent = "Submit Quiz";
+        submit.onclick = () => {
+            const questions = document.querySelectorAll(".question");
+            questions.forEach((q, i) => {
+                const selected = q.querySelector("input[type=radio]:checked");
+                const answer = q.querySelector(".answer span").textContent;
+                const explanation = q.querySelector(".explanation");
+                if (selected) {
+                    if (selected.value === answer) {
+                        selected.parentElement.classList.add("correct");
+                    } else {
+                        selected.parentElement.classList.add("incorrect");
+                    }
+                } else {
+                    q.style.border = "2px dashed red";
+                }
+                q.querySelector(".answer").style.display = "block";
+                explanation.style.display = "block";
+            });
+        };
+        quizContainer.appendChild(submit);
+
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
     }
-  ];
-
-  function generateQuiz() {
-    const numQuestions = parseInt(document.getElementById('num-questions').value);
-    if (isNaN(numQuestions) || numQuestions <= 0) {
-      alert("Please enter a valid number of questions.");
-      return;
-    }
-
-    const selectedQuestions = getBalancedQuestions(numQuestions);
-    displayQuestions(selectedQuestions);
-  }
-
-  function getBalancedQuestions(totalQuestions) {
-    const totalSubjects = quizData.length;
-    const perSubjectCount = Math.floor(totalQuestions / totalSubjects);
-    const remainder = totalQuestions % totalSubjects;
-
-    let allSelected = [];
-
-    quizData.forEach((subjectData, index) => {
-      let count = perSubjectCount + (index < remainder ? 1 : 0); // distribute remainder
-      const shuffled = shuffle([...subjectData.questions]);
-      const selected = shuffled.slice(0, count).map(q => ({ ...q, subject: subjectData.subject }));
-      allSelected = allSelected.concat(selected);
-    });
-
-    // Shuffle final mix of questions
-    return shuffle(allSelected);
-  }
-
-  function displayQuestions(questions) {
-    const quizContainer = document.getElementById('quiz-container');
-    quizContainer.innerHTML = '';
-
-    questions.forEach((question, index) => {
-      const questionDiv = document.createElement('div');
-      questionDiv.className = 'question';
-
-      const number = document.createElement('div');
-      number.className = 'question-number';
-      number.textContent = `Q${index + 1} (${question.subject})`;
-      questionDiv.appendChild(number);
-
-      const content = document.createElement('div');
-      content.className = 'question-content';
-      content.innerHTML = question.content;
-      questionDiv.appendChild(content);
-
-      const optionsList = document.createElement('ul');
-      optionsList.className = 'options';
-
-      question.options.forEach(option => {
-        const li = document.createElement('li');
-        const label = document.createElement('label');
-        const input = document.createElement('input');
-
-        input.type = 'radio';
-        input.name = `question${index}`;
-        input.value = option.identifier;
-
-        label.appendChild(input);
-        label.innerHTML += option.content;
-        li.appendChild(label);
-        optionsList.appendChild(li);
-      });
-
-      questionDiv.appendChild(optionsList);
-      quizContainer.appendChild(questionDiv);
-    });
-
-    const submitBtn = document.createElement('button');
-    submitBtn.id = 'submit-btn';
-    submitBtn.textContent = 'Submit Answers';
-    submitBtn.onclick = submitAnswers;
-    quizContainer.appendChild(submitBtn);
-  }
-
-  function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
-
-  function submitAnswers() {
-    alert("Submission logic not implemented in this demo.");
-  }
 </script>
-
 </body>
 </html>
