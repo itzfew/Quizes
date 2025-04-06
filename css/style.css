@@ -49,7 +49,11 @@
       margin: 0 auto;
       padding: 1rem;
     }
-
+.mathjax-inline {
+    display: inline-block;
+    font-size: 1.2em;
+    color: #007bff;
+}
     #navigation {
       display: flex;
       flex-wrap: wrap;
