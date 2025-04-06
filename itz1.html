@@ -5,54 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NEET PYQ Practice</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-<link rel="stylesheet" href="style/play.css">
+  <link rel="stylesheet" href="css/style.css">
   <style>
-    body { font-family: sans-serif; margin: 0; padding-bottom: 70px; }
     .hidden { display: none; }
-    #navigation button { margin: 2px; }
-    .option { cursor: pointer; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin: 5px 0; }
-    .option.selected { background-color: #e0f7fa; }
-    .option.correct { background-color: #c8e6c9; }
-    .option.incorrect { background-color: #ffcdd2; }
-    .nav-correct { background-color: green; color: white; }
-    .nav-incorrect { background-color: red; color: white; }
-    .nav-missed { background-color: yellow; }
-    .collapsible { margin-top: 10px; }
-    .collapse-header { cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #eee; padding: 5px; border-radius: 5px; }
-    .collapse-content { display: none; padding: 10px; background: #f9f9f9; }
-    .controls {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      padding: 10px;
-      border-top: 1px solid #ccc;
-      text-align: center;
-      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-      z-index: 1000;
-    }
-    .controls button {
-      padding: 0.5rem 1.2rem;
-      margin: 0 8px;
-      font-size: 1rem;
-      background-color: #1976d2;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .controls button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-    .controls button:hover:enabled {
-      background-color: #0d47a1;
-    }
+    .option { cursor: pointer; margin: 5px 0; padding: 5px; border: 1px solid #ccc; border-radius: 5px; }
+    .option.selected { background: #dceeff; }
+    .option.correct { background: #c6f6c6; }
+    .option.incorrect { background: #f8c6c6; }
+    #navigation button.visited { font-weight: bold; }
+    .nav-correct { background-color: #8f8; }
+    .nav-incorrect { background-color: #f88; }
+    .nav-missed { background-color: #ff0; }
+    .collapsible { margin-top: 15px; border: 1px solid #ccc; border-radius: 5px; }
+    .collapse-header { background: #f0f0f0; cursor: pointer; padding: 5px; display: flex; justify-content: space-between; align-items: center; }
+    .collapse-content { display: none; padding: 10px; }
+    #pdf-output { display: none; }
   </style>
 </head>
+
 <body>
   <h1>NEET PYQ Practice Game</h1>
 
@@ -63,17 +35,21 @@
   </div>
 
   <div id="quiz" class="hidden">
-    <div id="navigation"></div>
+    <div>
+      <div id="navigation" style="margin-bottom: 10px;"></div>
+      <button onclick="generatePDF()">Download PDF</button>
+    </div>
     <div id="source"></div>
     <div id="question-box"></div>
     <div class="controls">
       <button onclick="prevQuestion()">Back</button>
       <button onclick="checkAnswer()">Check Answer</button>
       <button onclick="nextQuestion()">Next</button>
-      <button onclick="generatePDF()"><i class="fas fa-file-pdf"></i> PDF</button>
     </div>
     <div id="result"></div>
   </div>
+
+  <div id="pdf-output"></div>
 
   <script>
     const subjects = ['biology', 'chemistry', 'physics'];
@@ -253,42 +229,39 @@
       return str.replace(/\$\$(.*?)\$\$/g, (_, eq) => `<span class="mathjax">$$${eq}$$</span>`);
     }
 
-    async function generatePDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      let x = 10, y = 10, col = 0;
+    function generatePDF() {
+      const container = document.getElementById('pdf-output');
+      container.innerHTML = '';
+      const colLeft = document.createElement('div');
+      const colRight = document.createElement('div');
+      colLeft.style.width = colRight.style.width = '48%';
+      colLeft.style.float = 'left';
+      colRight.style.float = 'right';
 
-      quizQuestions.forEach((q, index) => {
-        let text = `${index + 1}. ${q.content.replace(/<[^>]+>/g, '')}`;
-        q.options.forEach((opt, i) => {
-          text += `\n  ${String.fromCharCode(65 + i)}. ${opt.content.replace(/<[^>]+>/g, '')}`;
-        });
-        if (y > 260) {
-          if (col === 0) {
-            col = 1;
-            x = 110; y = 10;
-          } else {
-            col = 0;
-            x = 10; y = 10;
-            doc.addPage();
-          }
-        }
-        doc.text(text, x, y);
-        y += 40;
+      quizQuestions.forEach((q, i) => {
+        const html = document.createElement('div');
+        html.style.marginBottom = '20px';
+        html.innerHTML = `<b>Q${i + 1}:</b> ${q.content}<br>${q.options.map((o, j) => `${String.fromCharCode(65 + j)}. ${o.content}`).join('<br>')}`;
+        if (i % 2 === 0) colLeft.appendChild(html);
+        else colRight.appendChild(html);
       });
 
-      y += 10;
-      doc.addPage();
-      doc.text("Answer Key:", 10, 10);
-      quizQuestions.forEach((q, index) => {
+      container.appendChild(colLeft);
+      container.appendChild(colRight);
+
+      const answerKey = document.createElement('div');
+      answerKey.style.clear = 'both';
+      answerKey.innerHTML = `<h3>Answer Key</h3><ol>${quizQuestions.map(q => {
         const correct = q.correct_options.map(id => {
-          const optIndex = q.options.findIndex(o => o.identifier === id);
-          return String.fromCharCode(65 + optIndex);
-        }).join(', ');
-        doc.text(`${index + 1}. ${correct}`, 10, 20 + index * 10);
-      });
+          const opt = q.options.find(o => o.identifier === id);
+          return q.options.indexOf(opt);
+        }).map(i => String.fromCharCode(65 + i)).join(', ');
+        return `<li>${correct}</li>`;
+      }).join('')}</ol>`;
 
-      doc.save("neet-pyq.pdf");
+      container.appendChild(answerKey);
+
+      html2pdf().from(container).set({ margin: 0.5, filename: 'NEET_PYQ_Practice.pdf' }).save();
     }
   </script>
 </body>
