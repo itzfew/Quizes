@@ -2,146 +2,99 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>NEET PYQ Game Mode</title>
+  <title>NEET PYQ Quiz</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #e0f7fa, #fce4ec);
       margin: 0;
-      background: linear-gradient(135deg, #e3f2fd, #fffde7);
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: auto;
-      padding: 0 10px;
+      padding: 30px;
+      color: #333;
+      text-align: center;
     }
 
     h1 {
-      text-align: center;
-      font-size: 2.2rem;
-      color: #1e88e5;
-      margin-bottom: 30px;
-      background: linear-gradient(to right, #42a5f5, #ab47bc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .input-group {
-      text-align: center;
-      margin-bottom: 30px;
+      font-size: 28px;
+      margin-bottom: 20px;
     }
 
     input[type="number"] {
       padding: 12px;
+      font-size: 16px;
       width: 100px;
-      font-size: 18px;
-      border: none;
       border-radius: 10px;
-      background: #fff;
-      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+      border: 1px solid #999;
+      margin-bottom: 10px;
     }
 
     button {
       padding: 12px 25px;
       font-size: 16px;
-      background: #42a5f5;
+      background: #4caf50;
       color: white;
       border: none;
-      border-radius: 25px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background 0.3s;
+      margin: 10px;
     }
 
-    button:hover {
-      background: #1e88e5;
+    .question-area {
+      margin-top: 30px;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .subject-header {
-      font-size: 24px;
-      font-weight: bold;
-      margin-top: 40px;
-      color: #333;
-      text-align: center;
-      background: #bbdefb;
-      padding: 10px;
-      border-radius: 15px;
-    }
-
-    .question-block {
-      margin-top: 20px;
-    }
-
-    .question {
-      background: rgba(255, 255, 255, 0.9);
-      margin: 20px 0;
-      padding: 20px;
-      border-radius: 20px;
-      transition: transform 0.3s ease;
-    }
-
-    .question:hover {
-      transform: scale(1.01);
-    }
-
-    .meta {
-      font-size: 13px;
-      color: #666;
-      text-align: right;
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #00796b;
     }
 
     .question-text {
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: #212121;
+      font-size: 20px;
+      margin: 20px 0;
+    }
+
+    .meta {
+      font-size: 14px;
+      color: #777;
     }
 
     .options li {
       list-style: none;
-      margin: 8px 0;
+      background: #eee;
       padding: 10px;
-      background: #e0f7fa;
-      border-radius: 12px;
+      margin: 5px auto;
+      border-radius: 8px;
+      max-width: 80%;
       cursor: pointer;
-      transition: background 0.2s;
     }
 
-    .options li:hover {
-      background: #b2ebf2;
-    }
-
-    .options li.selected {
-      background: #81d4fa;
-    }
-
-    .options li.correct {
-      background-color: #a5d6a7 !important;
-    }
-
-    .options li.incorrect {
-      background-color: #ef9a9a !important;
-    }
+    .options li.selected { background: #bbdefb; }
+    .options li.correct { background-color: #c8e6c9; }
+    .options li.incorrect { background-color: #ffcdd2; }
 
     .explanation {
-      margin-top: 12px;
-      padding: 12px;
-      background: #f1f8e9;
-      border-left: 5px solid #8bc34a;
-      border-radius: 10px;
+      margin-top: 15px;
+      background: #e1f5fe;
+      padding: 10px;
+      border-left: 4px solid #2196f3;
       display: none;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>NEET PYQ Game Mode</h1>
-    <div class="input-group">
-      <label>Enter total number of questions: </label>
-      <input type="number" id="total-questions" min="3" max="90">
-      <button onclick="startQuiz()">Start Quiz</button>
-    </div>
-    <div id="quiz-area" class="question-block"></div>
-  </div>
+  <h1>NEET PYQ Game</h1>
+  <p>Enter total questions (multiple of 3):</p>
+  <input type="number" id="total-questions" min="3" max="90">
+  <button onclick="startQuiz()">Start Quiz</button>
+
+  <div id="quiz" class="question-area"></div>
 
   <script>
     const metaIds = [
@@ -152,6 +105,7 @@
     ];
 
     let allQuestions = { biology: [], chemistry: [], physics: [] };
+    let fullSequence = [], currentIndex = 0;
 
     async function fetchQuestions() {
       for (let meta of metaIds) {
@@ -176,86 +130,79 @@
 
     async function startQuiz() {
       const total = parseInt(document.getElementById("total-questions").value);
-      if (!total || total < 3) return alert("Enter valid number ≥ 3");
-      document.getElementById("quiz-area").innerHTML = "Loading questions...";
+      if (!total || total < 3 || total % 3 !== 0) {
+        alert("Please enter a valid number divisible by 3 (e.g. 6, 9, 12)");
+        return;
+      }
 
+      document.getElementById("quiz").innerHTML = "Loading...";
       if (!allQuestions.biology.length) await fetchQuestions();
-
-      const perSub = Math.floor(total / 3);
-      const extra = total % 3;
 
       shuffle(allQuestions.biology);
       shuffle(allQuestions.chemistry);
       shuffle(allQuestions.physics);
 
-      const bio = allQuestions.biology.slice(0, perSub + (extra > 0 ? 1 : 0));
-      const chem = allQuestions.chemistry.slice(0, perSub + (extra > 1 ? 1 : 0));
+      const perSub = total / 3;
+      const bio = allQuestions.biology.slice(0, perSub);
+      const chem = allQuestions.chemistry.slice(0, perSub);
       const phy = allQuestions.physics.slice(0, perSub);
 
-      const blocks = [
-        { subject: "Biology", questions: bio },
-        { subject: "Chemistry", questions: chem },
-        { subject: "Physics", questions: phy }
-      ];
-
-      renderBlocks(blocks);
+      // Combine in subject blocks
+      fullSequence = [...bio, ...chem, ...phy];
+      currentIndex = 0;
+      showQuestion();
     }
 
-    function renderBlocks(blocks) {
-      const container = document.getElementById("quiz-area");
-      container.innerHTML = "";
+    function showQuestion() {
+      const q = fullSequence[currentIndex];
+      const quiz = document.getElementById("quiz");
+      if (!q) {
+        quiz.innerHTML = "<h2>Quiz Completed!</h2>";
+        return;
+      }
 
-      blocks.forEach(block => {
-        const section = document.createElement("div");
-        section.innerHTML = `<div class="subject-header">${block.subject}</div>`;
+      const optionsHTML = q.options.map(opt =>
+        `<li data-id="${opt.identifier}">${opt.identifier}. ${opt.content}</li>`
+      ).join("");
 
-        block.questions.forEach((q, index) => {
-          const qBox = document.createElement("div");
-          qBox.className = "question";
-          const optList = q.options.map(opt =>
-            `<li data-id="${opt.identifier}">${opt.identifier}. ${opt.content}</li>`
-          ).join("");
+      quiz.innerHTML = `
+        <div class="subject-header">${q.subject}</div>
+        <div class="meta">Source: ${q.source}</div>
+        <div class="question-text">${q.content}</div>
+        <ul class="options">${optionsHTML}</ul>
+        <button onclick="submitAnswer('${q.correct}')">Check</button>
+        <div class="explanation"><strong>Explanation:</strong><br>${q.explanation}</div>
+      `;
 
-          qBox.innerHTML = `
-            <div class="meta">Source: ${q.source}</div>
-            <div class="question-text">${q.content}</div>
-            <ul class="options">${optList}</ul>
-            <button onclick="checkAnswer(this, '${q.correct}')">Check</button>
-            <div class="explanation"><strong>Explanation:</strong><br>${q.explanation}</div>
-          `;
-          section.appendChild(qBox);
-        });
-
-        container.appendChild(section);
-      });
-
-      addOptionListeners();
-    }
-
-    function addOptionListeners() {
-      document.querySelectorAll(".options").forEach(list => {
-        list.querySelectorAll("li").forEach(li => {
-          li.addEventListener("click", () => {
-            list.querySelectorAll("li").forEach(el => el.classList.remove("selected"));
-            li.classList.add("selected");
-          });
+      document.querySelectorAll(".options li").forEach(li => {
+        li.addEventListener("click", () => {
+          li.parentElement.querySelectorAll("li").forEach(el => el.classList.remove("selected"));
+          li.classList.add("selected");
         });
       });
     }
 
-    function checkAnswer(btn, correctId) {
-      const qBox = btn.closest(".question");
-      const selected = qBox.querySelector("li.selected");
-      if (!selected) return alert("Select an option first.");
-      const options = qBox.querySelectorAll("li");
+    function submitAnswer(correctId) {
+      const selected = document.querySelector("li.selected");
+      if (!selected) return alert("Please select an option first.");
 
+      const options = document.querySelectorAll(".options li");
       options.forEach(opt => {
         opt.classList.remove("correct", "incorrect");
         if (opt.dataset.id === correctId) opt.classList.add("correct");
         else if (opt.classList.contains("selected")) opt.classList.add("incorrect");
       });
 
-      qBox.querySelector(".explanation").style.display = "block";
+      document.querySelector(".explanation").style.display = "block";
+
+      // Next button after checking
+      const nextBtn = document.createElement("button");
+      nextBtn.textContent = "Next";
+      nextBtn.onclick = () => {
+        currentIndex++;
+        showQuestion();
+      };
+      document.getElementById("quiz").appendChild(nextBtn);
     }
   </script>
 </body>
