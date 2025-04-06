@@ -86,6 +86,7 @@
 
     function loadQuestion(index) {
       document.querySelector(".controls button:nth-child(2)").disabled = false;
+document.getElementById(`nav-${index}`).classList.add('visited');
 
       currentIndex = index;
       const q = quizQuestions[index];
@@ -104,12 +105,21 @@
     }
 
     function selectOption(id) {
-      const options = document.querySelectorAll('.option');
-      options.forEach(o => o.classList.remove('selected'));
-      const el = [...options].find(o => o.dataset.id === id);
-      if (el) el.classList.add('selected');
-      localStorage.setItem(`q-${quizQuestions[currentIndex].question_id}`, id);
-    }
+  const options = document.querySelectorAll('.option');
+  options.forEach(o => o.classList.remove('selected'));
+  const el = [...options].find(o => o.dataset.id === id);
+  if (el) el.classList.add('selected');
+
+  const q = quizQuestions[currentIndex];
+  localStorage.setItem(`q-${q.question_id}`, id);
+
+  // Remove yellow highlight if user now selects an option
+  const navBtn = document.getElementById(`nav-${currentIndex}`);
+  if (navBtn.classList.contains('nav-missed')) {
+    navBtn.classList.remove('nav-missed');
+  }
+}
+
 
     function checkAnswer() {
       const q = quizQuestions[currentIndex];
@@ -192,9 +202,22 @@ function toggleCollapse(header) {
     }
 
     function nextQuestion() {
-      if (currentIndex < quizQuestions.length - 1) loadQuestion(currentIndex + 1);
-      else showResult();
-    }
+  const q = quizQuestions[currentIndex];
+  const selected = localStorage.getItem(`q-${q.question_id}`);
+  const navBtn = document.getElementById(`nav-${currentIndex}`);
+
+  if (!selected && !navBtn.classList.contains('nav-correct') && !navBtn.classList.contains('nav-incorrect')) {
+    navBtn.classList.add('visited', 'nav-missed');
+    answerCache[q.question_id] = 0;
+  }
+
+  if (currentIndex < quizQuestions.length - 1) {
+    loadQuestion(currentIndex + 1);
+  } else {
+    showResult();
+  }
+}
+
 
     function prevQuestion() {
       if (currentIndex > 0) loadQuestion(currentIndex - 1);
