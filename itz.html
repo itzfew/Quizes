@@ -1,311 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Quiz Game</title>
-    <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        main {
-            margin-top: 80px;
-            padding: 20px;
-        }
-
-        .quiz-title {
-            font-size: 1.5em;
-            margin: 5px 0;
-            color: #333;
-            text-align: center;
-            border: 2px solid black;
-        }
-
-        .question {
-            margin-bottom: 30px;
-            padding: 3px;
-            border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-        }
-
-        .question-number {
-            font-weight: bold;
-            font-size: 1.2em;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .question-content {
-            margin-bottom: 15px;
-            word-wrap: break-word;
-            white-space: normal;
-            max-width: 100%;
-            overflow-x: auto;
-        }
-
-        .options li {
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .options label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .options input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        .correct-answer {
-            margin-top: 10px;
-            font-weight: bold;
-            color: green;
-        }
-
-        .submit-button {
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            position: fixed;
-            bottom: 0px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        .explanation-button {
-            display: none;
-            margin-top: 10px;
-            background-color: white;
-            color: black;
-            border: 2px solid black;
-            cursor: pointer;
-            padding: 8px 16px;
-        }
-
-        .explanation-button:hover {
-            background-color: black;
-            color: white;
-        }
-
-        .explanation-content {
-            display: none;
-            margin-top: 10px;
-            background-color: #FFF59D;
-            padding: 10px;
-            border-radius: 5px;
-            font-style: italic;
-            color: #777;
-        }
-
-        .explanation-content.open {
-            display: block;
-        }
-
-        @media (max-width: 600px) {
-            .submit-button {
-                padding: 10px;
-            }
-
-            .options li {
-                padding: 5px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>NEET Quiz Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .question {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+    .question-number {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .options {
+      list-style-type: none;
+      padding: 0;
+    }
+    .options li {
+      margin-bottom: 5px;
+    }
+    #submit-btn {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-    <div class="quiz-title">Random Mixed Quiz Generator</div>
-    <div style="text-align:center; margin-top: 10px;">
-        <input type="number" id="question-count" placeholder="Enter number of questions" min="1">
-        <button onclick="generateQuiz()">Generate</button>
-    </div>
-    <div id="quiz-container"></div>
 
-    <script>
-        let quizData = [];
-        let startTime;
+<h2>NEET Quiz Generator</h2>
 
-        const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/merged.json`;
+<div id="setup-container">
+  <label for="num-questions">Enter number of questions:</label>
+  <input type="number" id="num-questions" min="1">
+  <button onclick="generateQuiz()">Generate Quiz</button>
+</div>
 
-        fetch(jsonUrl)
-            .then(response => response.json())
-            .then(data => {
-                quizData = data;
-            })
-            .catch(error => console.error('Error fetching the JSON data:', error));
+<hr>
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
+<div id="quiz-container"></div>
 
-        function generateQuiz() {
-            const count = parseInt(document.getElementById('question-count').value);
-            if (!count || count <= 0) return;
+<script>
+  // Sample quizData (Replace with real questions)
+  const quizData = [
+    {
+      subject: "Physics",
+      questions: [
+        { content: "What is Newton's second law?", options: [
+          { identifier: "A", content: "F = ma" },
+          { identifier: "B", content: "E = mc²" },
+          { identifier: "C", content: "v = u + at" },
+          { identifier: "D", content: "F = Gm1m2/r²" }
+        ]},
+        { content: "Unit of Power is?", options: [
+          { identifier: "A", content: "Joule" },
+          { identifier: "B", content: "Watt" },
+          { identifier: "C", content: "Newton" },
+          { identifier: "D", content: "Volt" }
+        ]},
+        // Add more Physics questions
+      ]
+    },
+    {
+      subject: "Chemistry",
+      questions: [
+        { content: "Atomic number of Oxygen?", options: [
+          { identifier: "A", content: "6" },
+          { identifier: "B", content: "8" },
+          { identifier: "C", content: "10" },
+          { identifier: "D", content: "12" }
+        ]},
+        { content: "HCl is an example of?", options: [
+          { identifier: "A", content: "Salt" },
+          { identifier: "B", content: "Base" },
+          { identifier: "C", content: "Acid" },
+          { identifier: "D", content: "Alcohol" }
+        ]},
+        // Add more Chemistry questions
+      ]
+    },
+    {
+      subject: "Biology",
+      questions: [
+        { content: "Cell is the basic unit of?", options: [
+          { identifier: "A", content: "Air" },
+          { identifier: "B", content: "Life" },
+          { identifier: "C", content: "Water" },
+          { identifier: "D", content: "Energy" }
+        ]},
+        { content: "Photosynthesis occurs in?", options: [
+          { identifier: "A", content: "Mitochondria" },
+          { identifier: "B", content: "Chloroplast" },
+          { identifier: "C", content: "Nucleus" },
+          { identifier: "D", content: "Cytoplasm" }
+        ]},
+        // Add more Biology questions
+      ]
+    }
+  ];
 
-            startTime = new Date();
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = '';
+  function generateQuiz() {
+    const numQuestions = parseInt(document.getElementById('num-questions').value);
+    if (isNaN(numQuestions) || numQuestions <= 0) {
+      alert("Please enter a valid number of questions.");
+      return;
+    }
 
-            let allQuestions = [];
-            const perSubjectCount = Math.ceil(count / quizData.length);
+    const selectedQuestions = getBalancedQuestions(numQuestions);
+    displayQuestions(selectedQuestions);
+  }
 
-            quizData.forEach(subject => {
-                const questions = shuffleArray(subject.questions).slice(0, perSubjectCount);
-                allQuestions = allQuestions.concat(questions.map(q => ({ ...q, subject: subject.title })));
-            });
+  function getBalancedQuestions(totalQuestions) {
+    const totalSubjects = quizData.length;
+    const perSubjectCount = Math.floor(totalQuestions / totalSubjects);
+    const remainder = totalQuestions % totalSubjects;
 
-            allQuestions = shuffleArray(allQuestions).slice(0, count);
+    let allSelected = [];
 
-            allQuestions.forEach((question, index) => {
-                const questionElement = document.createElement('div');
-                questionElement.className = 'question';
+    quizData.forEach((subjectData, index) => {
+      let count = perSubjectCount + (index < remainder ? 1 : 0); // distribute remainder
+      const shuffled = shuffle([...subjectData.questions]);
+      const selected = shuffled.slice(0, count).map(q => ({ ...q, subject: subjectData.subject }));
+      allSelected = allSelected.concat(selected);
+    });
 
-                const questionNumber = document.createElement('div');
-                questionNumber.className = 'question-number';
-                questionNumber.textContent = `Q${index + 1} (${question.subject}):`;
-                questionElement.appendChild(questionNumber);
+    // Shuffle final mix of questions
+    return shuffle(allSelected);
+  }
 
-                const questionContent = document.createElement('div');
-                questionContent.className = 'question-content';
-                questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                });
-                questionElement.appendChild(questionContent);
+  function displayQuestions(questions) {
+    const quizContainer = document.getElementById('quiz-container');
+    quizContainer.innerHTML = '';
 
-                const optionsList = document.createElement('ul');
-                optionsList.className = 'options';
+    questions.forEach((question, index) => {
+      const questionDiv = document.createElement('div');
+      questionDiv.className = 'question';
 
-                question.options.forEach(option => {
-                    const optionItem = document.createElement('li');
-                    const optionLabel = document.createElement('label');
-                    const optionInput = document.createElement('input');
+      const number = document.createElement('div');
+      number.className = 'question-number';
+      number.textContent = `Q${index + 1} (${question.subject})`;
+      questionDiv.appendChild(number);
 
-                    optionInput.type = 'radio';
-                    optionInput.name = `question${question.question_id}`;
-                    optionInput.value = option.identifier;
+      const content = document.createElement('div');
+      content.className = 'question-content';
+      content.innerHTML = question.content;
+      questionDiv.appendChild(content);
 
-                    optionLabel.appendChild(optionInput);
-                    optionLabel.innerHTML += option.content;
-                    optionItem.appendChild(optionLabel);
-                    optionsList.appendChild(optionItem);
-                });
+      const optionsList = document.createElement('ul');
+      optionsList.className = 'options';
 
-                questionElement.appendChild(optionsList);
+      question.options.forEach(option => {
+        const li = document.createElement('li');
+        const label = document.createElement('label');
+        const input = document.createElement('input');
 
-                const explanationButton = document.createElement('button');
-                explanationButton.className = 'explanation-button';
-                explanationButton.textContent = 'Show Explanation';
-                explanationButton.onclick = () => toggleExplanation(questionElement);
-                questionElement.appendChild(explanationButton);
+        input.type = 'radio';
+        input.name = `question${index}`;
+        input.value = option.identifier;
 
-                const explanationContent = document.createElement('div');
-                explanationContent.className = 'explanation-content';
-                explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-                questionElement.appendChild(explanationContent);
+        label.appendChild(input);
+        label.innerHTML += option.content;
+        li.appendChild(label);
+        optionsList.appendChild(li);
+      });
 
-                quizContainer.appendChild(questionElement);
-            });
+      questionDiv.appendChild(optionsList);
+      quizContainer.appendChild(questionDiv);
+    });
 
-            const submitButton = document.createElement('button');
-            submitButton.className = 'submit-button';
-            submitButton.textContent = 'Submit All';
-            submitButton.onclick = () => showAllExplanations(allQuestions);
-            quizContainer.appendChild(submitButton);
+    const submitBtn = document.createElement('button');
+    submitBtn.id = 'submit-btn';
+    submitBtn.textContent = 'Submit Answers';
+    submitBtn.onclick = submitAnswers;
+    quizContainer.appendChild(submitBtn);
+  }
 
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        }
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
 
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
-        }
+  function submitAnswers() {
+    alert("Submission logic not implemented in this demo.");
+  }
+</script>
 
-        function showAllExplanations(questions) {
-            const quizContainer = document.getElementById('quiz-container');
-            let correct = 0, incorrect = 0, missed = 0;
-
-            questions.forEach((question, index) => {
-                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-                const questionElement = document.querySelectorAll('.question')[index];
-                const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
-
-                const explanationButton = questionElement.querySelector('.explanation-button');
-                explanationButton.style.display = 'block';
-
-                const feedback = document.createElement('div');
-                feedback.className = 'correct-answer';
-                const correctOptionValue = question.correct_options[0];
-
-                if (selectedOption) {
-                    if (selectedOption.value === correctOptionValue) {
-                        correct++;
-                        feedback.innerHTML = "You are correct!";
-                        feedback.style.color = 'green';
-                    } else {
-                        incorrect++;
-                        feedback.innerHTML = `Wrong. Correct: Option ${correctOptionValue}`;
-                        feedback.style.color = 'red';
-                    }
-                } else {
-                    missed++;
-                    feedback.innerHTML = `Not answered. Correct: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red';
-                }
-
-                questionElement.appendChild(feedback);
-
-                options.forEach(option => {
-                    const optionItem = option.closest('li');
-                    if (option.value === correctOptionValue) {
-                        optionItem.style.backgroundColor = 'green';
-                        optionItem.style.color = 'white';
-                    } else if (option.checked) {
-                        optionItem.style.backgroundColor = 'red';
-                        optionItem.style.color = 'white';
-                    }
-                    option.disabled = true;
-                });
-            });
-
-            const endTime = new Date();
-            const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
-            const avgTime = ((endTime - startTime) / (correct + incorrect || 1)).toFixed(2);
-
-            const scoreCard = document.createElement('div');
-            scoreCard.innerHTML = `
-                <table style="width: 100%; text-align: center; border: 1px solid #ccc;">
-                    <tr>
-                        <th>Attempted</th><th>Correct</th><th>Incorrect</th><th>Missed</th><th>Total Time (s)</th><th>Avg Time/Attempt (s)</th>
-                    </tr>
-                    <tr>
-                        <td>${correct + incorrect}</td><td>${correct}</td><td>${incorrect}</td><td>${missed}</td><td>${timeTaken}</td><td>${avgTime}</td>
-                    </tr>
-                </table>`;
-            quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
-
-            window.scrollTo({ top: quizContainer.offsetTop, behavior: 'smooth' });
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        }
-    </script>
 </body>
 </html>
