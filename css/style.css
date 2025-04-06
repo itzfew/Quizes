@@ -73,10 +73,9 @@
     }
 
     .visited { background-color: #b0bec5; }
-.nav-correct { background-color: #4caf50; color: white; }   /* Green */
-.nav-incorrect { background-color: #f44336; color: white; } /* Red */
-.nav-missed { background-color: #ffc107; color: black; }    /* Yellow */
-.visited { border: 2px solid #666; }
+    .nav-correct { background-color: green !important; color: white !important; }
+    .nav-incorrect { background-color: red !important; color: white !important; }
+    .nav-missed { background-color: gold !important; color: black !important; }
 
     #source {
       text-align: center;
