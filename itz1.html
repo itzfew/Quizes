@@ -2,29 +2,139 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>NEET PYQ Blocked by Subject</title>
+  <title>NEET PYQ Game Mode</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-    .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h1 { text-align: center; }
-    .input-group { text-align: center; margin-bottom: 20px; }
-    input[type="number"] { padding: 10px; width: 100px; font-size: 16px; }
-    button { padding: 10px 20px; margin-top: 10px; font-size: 16px; cursor: pointer; }
-    .question-block { margin-top: 30px; }
-    .subject-header { font-size: 20px; font-weight: bold; color: #2b2b2b; margin-top: 20px; border-bottom: 2px solid #2196f3; padding-bottom: 5px; }
-    .question { margin-top: 15px; padding: 10px; background: #f0f0f0; border-radius: 8px; }
-    .meta { font-size: 14px; color: #555; }
-    .question-text { font-size: 17px; margin-bottom: 10px; }
-    .options li { list-style: none; margin-bottom: 5px; padding: 8px; background: #e0e0e0; border-radius: 5px; cursor: pointer; }
-    .options li.selected { background: #bbdefb; }
-    .options li.correct { background-color: #c8e6c9; }
-    .options li.incorrect { background-color: #ffcdd2; }
-    .explanation { margin-top: 8px; padding: 10px; background: #e3f2fd; display: none; border-left: 4px solid #2196f3; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #e3f2fd, #fffde7);
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 0 10px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.2rem;
+      color: #1e88e5;
+      margin-bottom: 30px;
+      background: linear-gradient(to right, #42a5f5, #ab47bc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .input-group {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    input[type="number"] {
+      padding: 12px;
+      width: 100px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      background: #42a5f5;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #1e88e5;
+    }
+
+    .subject-header {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 40px;
+      color: #333;
+      text-align: center;
+      background: #bbdefb;
+      padding: 10px;
+      border-radius: 15px;
+    }
+
+    .question-block {
+      margin-top: 20px;
+    }
+
+    .question {
+      background: rgba(255, 255, 255, 0.9);
+      margin: 20px 0;
+      padding: 20px;
+      border-radius: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .question:hover {
+      transform: scale(1.01);
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #666;
+      text-align: right;
+    }
+
+    .question-text {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #212121;
+    }
+
+    .options li {
+      list-style: none;
+      margin: 8px 0;
+      padding: 10px;
+      background: #e0f7fa;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .options li:hover {
+      background: #b2ebf2;
+    }
+
+    .options li.selected {
+      background: #81d4fa;
+    }
+
+    .options li.correct {
+      background-color: #a5d6a7 !important;
+    }
+
+    .options li.incorrect {
+      background-color: #ef9a9a !important;
+    }
+
+    .explanation {
+      margin-top: 12px;
+      padding: 12px;
+      background: #f1f8e9;
+      border-left: 5px solid #8bc34a;
+      border-radius: 10px;
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>NEET PYQs by Subject Blocks</h1>
+    <h1>NEET PYQ Game Mode</h1>
     <div class="input-group">
       <label>Enter total number of questions: </label>
       <input type="number" id="total-questions" min="3" max="90">
