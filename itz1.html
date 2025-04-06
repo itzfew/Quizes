@@ -107,8 +107,7 @@
     ];
 
     let allQuestions = { biology: [], chemistry: [], physics: [] };
-    let fullSequence = [], currentIndex = 0;
-    let score = 0;
+    let fullSequence = [], currentIndex = 0, score = 0;
 
     async function fetchQuestions() {
       for (let meta of metaIds) {
@@ -134,7 +133,7 @@
     async function startQuiz() {
       const total = parseInt(document.getElementById("total-questions").value);
       if (!total || total < 3) {
-        alert("Please enter a number greater than or equal to 3");
+        alert("Enter at least 3 questions.");
         return;
       }
 
@@ -145,14 +144,14 @@
       shuffle(allQuestions.chemistry);
       shuffle(allQuestions.physics);
 
-      const each = Math.floor(total / 3);
-      const rem = total % 3;
-      const bio = allQuestions.biology.slice(0, each + (rem > 0 ? 1 : 0));
-      const chem = allQuestions.chemistry.slice(0, each + (rem > 1 ? 1 : 0));
-      const phy = allQuestions.physics.slice(0, each);
+      const base = Math.floor(total / 3);
+      const remainder = total % 3;
+
+      const bio = allQuestions.biology.slice(0, base + (remainder > 0 ? 1 : 0));
+      const chem = allQuestions.chemistry.slice(0, base + (remainder > 1 ? 1 : 0));
+      const phy = allQuestions.physics.slice(0, base);
 
       fullSequence = [...bio, ...chem, ...phy];
-      shuffle(fullSequence); // Optional: Remove if you want subject block order
       currentIndex = 0;
       score = 0;
       showQuestion();
@@ -192,20 +191,20 @@
     function submitAnswer(correctId) {
       const selected = document.querySelector("li.selected");
       const options = document.querySelectorAll(".options li");
-      let attempted = false;
+      let answered = false;
 
       options.forEach(opt => {
-        if (opt.dataset.id === correctId) {
-          opt.classList.add("correct");
-        } else if (opt.classList.contains("selected")) {
-          opt.classList.add("incorrect");
-          attempted = true;
+        opt.classList.remove("correct", "incorrect");
+        if (opt.dataset.id === correctId) opt.classList.add("correct");
+        if (selected && opt === selected) {
+          answered = true;
+          if (opt.dataset.id === correctId) score += 4;
+          else score -= 1;
+          opt.classList.add(opt.dataset.id === correctId ? "correct" : "incorrect");
         }
       });
 
-      if (selected && selected.dataset.id === correctId) score += 4;
-      else if (selected) score -= 1;
-
+      if (!answered) score += 0;
       document.querySelector(".explanation").style.display = "block";
 
       const nextBtn = document.createElement("button");
