@@ -1,130 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Mixed Subject Quiz</title>
-    <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-        }
-        input[type="number"] {
-            width: 100px;
-            padding: 5px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: black;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .question {
-            background: white;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .question .options label {
-            display: block;
-        }
-        .correct {
-            color: green;
-        }
-        .incorrect {
-            color: red;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>NEET PYQ Practice</title>
+  <script type="text/javascript" async 
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    .question-box {
+      background: white;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 700px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .options li {
+      list-style: none;
+      padding: 8px;
+      margin: 5px 0;
+      background: #eee;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .options li.selected { background: #d0e6ff; }
+    .options li.correct { background: #a4f3a4; }
+    .options li.incorrect { background: #f7b2b2; }
+    button { margin-top: 10px; padding: 10px 20px; }
+    #explanation { display: none; margin-top: 10px; }
+    #timer { font-weight: bold; margin-top: 10px; }
+    input[type="number"] { padding: 5px; }
+  </style>
 </head>
 <body>
-<div class="container">
-    <h1>Generate Mixed Subject Quiz</h1>
-    <label for="num-questions">Enter number of questions:</label>
-    <input type="number" id="num-questions" min="1" value="10">
-    <button onclick="generateMixedQuiz()">Generate</button>
-    <div id="quiz"></div>
-</div>
+
+  <h2>NEET PYQ Random Practice</h2>
+  <label>Enter number of questions: <input type="number" id="numQ" min="1" max="60" value="6"></label>
+  <button onclick="startQuiz()">Start Quiz</button>
+
+  <div class="question-box" id="quiz-box" style="display:none;">
+    <div id="timer">Time: 2:00</div>
+    <div id="question"></div>
+    <ul class="options" id="options"></ul>
+    <button onclick="checkAnswer()">Check Answer</button>
+    <button onclick="nextQuestion()">Next</button>
+    <div id="explanation"><strong>Explanation:</strong> <p id="explain-text"></p></div>
+  </div>
 
 <script>
-    let quizData = [];
-    const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/meta.json`;
+const metaIds = [
+  { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+  { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+  { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+  { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
+  { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" }
+];
 
-    fetch(jsonUrl)
-        .then(response => response.json())
-        .then(data => {
-            quizData = data;
-        });
+let allQuestions = { biology: [], chemistry: [], physics: [] };
+let quizQuestions = [], current = 0, timerInterval;
 
-    function generateMixedQuiz() {
-        const quizContainer = document.getElementById("quiz");
-        quizContainer.innerHTML = "";
-        const numQuestions = parseInt(document.getElementById("num-questions").value);
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
-        const allQuestions = [];
-
-        // Collect questions from each subject
-        quizData.forEach(subject => {
-            const count = Math.floor(numQuestions / quizData.length);
-            const shuffled = subject.questions.sort(() => 0.5 - Math.random());
-            allQuestions.push(...shuffled.slice(0, count));
-        });
-
-        // Display questions
-        allQuestions.forEach((q, index) => {
-            const div = document.createElement("div");
-            div.className = "question";
-            div.innerHTML = `
-                <p><strong>Q${index + 1}:</strong> ${q.content}</p>
-                ${q.options.map(opt => `
-                    <label>
-                        <input type="radio" name="q${index}" value="${opt.identifier}"> ${opt.content}
-                    </label>
-                `).join('')}
-                <p style="display:none" class="answer">Correct Answer: <span>${q.correct_options[0]}</span></p>
-                <p class="explanation" style="display:none">${q.explanation || "No explanation provided."}</p>
-            `;
-            quizContainer.appendChild(div);
-        });
-
-        const submit = document.createElement("button");
-        submit.textContent = "Submit Quiz";
-        submit.onclick = () => {
-            const questions = document.querySelectorAll(".question");
-            questions.forEach((q, i) => {
-                const selected = q.querySelector("input[type=radio]:checked");
-                const answer = q.querySelector(".answer span").textContent;
-                const explanation = q.querySelector(".explanation");
-                if (selected) {
-                    if (selected.value === answer) {
-                        selected.parentElement.classList.add("correct");
-                    } else {
-                        selected.parentElement.classList.add("incorrect");
-                    }
-                } else {
-                    q.style.border = "2px dashed red";
-                }
-                q.querySelector(".answer").style.display = "block";
-                explanation.style.display = "block";
-            });
-        };
-        quizContainer.appendChild(submit);
-
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+async function fetchAllQuestions() {
+  allQuestions = { biology: [], chemistry: [], physics: [] };
+  for (let meta of metaIds) {
+    try {
+      const res = await fetch(`https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`);
+      const data = await res.json();
+      allQuestions.biology.push(...data[0].questions);
+      allQuestions.chemistry.push(...data[1].questions);
+      allQuestions.physics.push(...data[2].questions);
+    } catch (err) {
+      console.log("Error loading", meta.title);
     }
+  }
+}
+
+function renderMath(str) {
+  return str.replace(/\$\$(.*?)\$\$/g, (_, p1) => `<span class="mathjax-inline">$$${p1}$$</span>`);
+}
+
+function startTimer() {
+  let time = 120;
+  timerInterval = setInterval(() => {
+    const min = Math.floor(time / 60);
+    const sec = time % 60;
+    document.getElementById('timer').textContent = `Time: ${min}:${sec < 10 ? '0' + sec : sec}`;
+    if (time-- <= 0) {
+      clearInterval(timerInterval);
+      alert("Time's up!");
+      checkAnswer();
+    }
+  }, 1000);
+}
+
+async function startQuiz() {
+  const num = parseInt(document.getElementById("numQ").value);
+  if (isNaN(num) || num < 1) return alert("Enter a valid number");
+
+  await fetchAllQuestions();
+
+  const perSubject = Math.floor(num / 3);
+  quizQuestions = [
+    ...shuffle(allQuestions.biology).slice(0, perSubject),
+    ...shuffle(allQuestions.chemistry).slice(0, perSubject),
+    ...shuffle(allQuestions.physics).slice(0, num - 2 * perSubject)
+  ];
+
+  shuffle(quizQuestions);
+  current = 0;
+  document.getElementById("quiz-box").style.display = "block";
+  showQuestion();
+}
+
+function showQuestion() {
+  clearInterval(timerInterval);
+  startTimer();
+
+  document.getElementById("explanation").style.display = "none";
+  const q = quizQuestions[current];
+  document.getElementById("question").innerHTML = `<h3>${renderMath(q.content)}</h3>`;
+  document.getElementById("options").innerHTML = q.options.map((opt, idx) =>
+    `<li data-id="${opt.identifier}">${String.fromCharCode(65 + idx)}. ${renderMath(opt.content)}</li>`
+  ).join('');
+
+  document.querySelectorAll('.options li').forEach(li => {
+    li.addEventListener("click", function() {
+      document.querySelectorAll('.options li').forEach(l => l.classList.remove('selected'));
+      li.classList.add('selected');
+    });
+  });
+
+  MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+}
+
+function checkAnswer() {
+  clearInterval(timerInterval);
+  const selected = document.querySelector('.options li.selected');
+  if (!selected) return alert("Select an option first!");
+
+  const correct = quizQuestions[current].answer;
+  document.querySelectorAll('.options li').forEach(li => {
+    if (li.dataset.id === correct) li.classList.add('correct');
+    else if (li.classList.contains('selected')) li.classList.add('incorrect');
+  });
+
+  document.getElementById("explanation").style.display = "block";
+  document.getElementById("explain-text").innerHTML = renderMath(quizQuestions[current].explanation);
+  MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+}
+
+function nextQuestion() {
+  if (current < quizQuestions.length - 1) {
+    current++;
+    showQuestion();
+  } else {
+    alert("Quiz finished!");
+    document.getElementById("quiz-box").style.display = "none";
+  }
+}
 </script>
 </body>
 </html>
