@@ -55,7 +55,16 @@
   width: 40px;
   height: 40px;
 }
- 
+ #loading {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}
+.hidden {
+  display: none;
+}
+
   </style>
 </head>
 
@@ -81,6 +90,9 @@
     <input type="number" id="numQuestions" min="3" step="1" />
     <button onclick="startQuiz()">Start</button>
   </div>
+<div id="loading" class="hidden">
+  <i class="fas fa-spinner fa-spin"></i> Loading questions...
+</div>
 
   <div id="quiz" class="hidden">
     
@@ -106,35 +118,41 @@
     let allQuestions = [], quizQuestions = [], currentIndex = 0, answerCache = {};
 
     async function startQuiz() {
-      const count = parseInt(document.getElementById('numQuestions').value);
-      if (!count || count < 3) return alert('Enter at least 3 questions.');
+  const count = parseInt(document.getElementById('numQuestions').value);
+  if (!count || count < 3) return alert('Enter at least 3 questions.');
 
-      document.getElementById('setup').classList.add('hidden');
-      document.getElementById('quiz').classList.remove('hidden');
+  document.getElementById('setup').classList.add('hidden');
+  document.getElementById('loading').classList.remove('hidden'); // 👈 Show loading
 
-      for (const meta of metaIds) {
-        const url = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`;
-        const res = await fetch(url);
-        const data = await res.json();
-        allQuestions.push(...data.flatMap(group =>
-          group.questions.map(q => ({ ...q, source: meta.title }))
-        ));
-      }
+  // Simulate loading delay (optional)
+  await new Promise(resolve => setTimeout(resolve, 100));
 
-      const perSubject = Math.floor(count / 3);
-      const remainder = count % 3;
-      const subjectDist = [perSubject + (remainder >= 1), perSubject + (remainder >= 2), perSubject];
+  for (const meta of metaIds) {
+    const url = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`;
+    const res = await fetch(url);
+    const data = await res.json();
+    allQuestions.push(...data.flatMap(group =>
+      group.questions.map(q => ({ ...q, source: meta.title }))
+    ));
+  }
 
-      for (let i = 0; i < 3; i++) {
-        const subjectQs = allQuestions.filter(q => q.subject === subjects[i]);
-        const picked = subjectQs.sort(() => 0.5 - Math.random()).slice(0, subjectDist[i]);
-        quizQuestions.push(...picked);
-      }
+  const perSubject = Math.floor(count / 3);
+  const remainder = count % 3;
+  const subjectDist = [perSubject + (remainder >= 1), perSubject + (remainder >= 2), perSubject];
 
-      quizQuestions = quizQuestions.map((q, i) => ({ ...q, number: i + 1 }));
-      generateNav();
-      loadQuestion(0);
-    }
+  for (let i = 0; i < 3; i++) {
+    const subjectQs = allQuestions.filter(q => q.subject === subjects[i]);
+    const picked = subjectQs.sort(() => 0.5 - Math.random()).slice(0, subjectDist[i]);
+    quizQuestions.push(...picked);
+  }
+
+  quizQuestions = quizQuestions.map((q, i) => ({ ...q, number: i + 1 }));
+  generateNav();
+
+  document.getElementById('loading').classList.add('hidden'); // 👈 Hide loading
+  document.getElementById('quiz').classList.remove('hidden');
+  loadQuestion(0);
+}
 
     function generateNav() {
       const nav = document.getElementById('navigation');
