@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEET PYQ JSON Generator</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 900px; margin: auto; }
+    input, button { padding: 10px; font-size: 16px; margin: 10px 0; }
+    .question-json { background: #f8f9fa; border: 1px solid #ddd; padding: 10px; margin: 10px 0; white-space: pre-wrap; font-family: monospace; }
+    .copy-btn { margin-bottom: 10px; background: #0b7285; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+    #loading { color: green; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Generate NEET PYQ JSON</h1>
+  <label for="numQuestions">Enter number of questions:</label><br>
+  <input type="number" id="numQuestions" min="3" />
+  <button onclick="generateJSON()">Generate JSON</button>
+
+  <p id="loading" style="display: none;">Loading questions...</p>
+  <div id="output"></div>
+
+  <script>
+    const metaIds = [
+      { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+      { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+      { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
+    ];
+
+    async function generateJSON() {
+      const count = parseInt(document.getElementById('numQuestions').value);
+      if (!count || count < 3) return alert('Enter at least 3 questions.');
+
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('output').innerHTML = '';
+
+      let allQuestions = [];
+
+      for (const meta of metaIds) {
+        const url = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`;
+        const res = await fetch(url);
+        const data = await res.json();
+        allQuestions.push(...data.flatMap(group =>
+          group.questions.map(q => ({
+            id: q.question_id,
+            subject: q.subject,
+            chapter: q.chapter || '',
+            question: q.content,
+            options: {
+              A: q.options[0]?.content || '',
+              B: q.options[1]?.content || '',
+              C: q.options[2]?.content || '',
+              D: q.options[3]?.content || ''
+            },
+            correct_option: q.correct_options[0] || '',
+            explanation: q.explanation || '',
+            image: q.image || ''
+          }))
+        ));
+      }
+
+      const selected = allQuestions.sort(() => 0.5 - Math.random()).slice(0, count);
+      const outputDiv = document.getElementById('output');
+
+      selected.forEach((q, idx) => {
+        const jsonStr = JSON.stringify(q, null, 2);
+        const container = document.createElement('div');
+        container.innerHTML = `
+          <button class="copy-btn" onclick="copyToClipboard('json-${idx}')">Copy</button>
+          <div id="json-${idx}" class="question-json">${jsonStr}</div>
+        `;
+        outputDiv.appendChild(container);
+      });
+
+      document.getElementById('loading').style.display = 'none';
+    }
+
+    function copyToClipboard(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
+    }
+  </script>
+</body>
+</html>
