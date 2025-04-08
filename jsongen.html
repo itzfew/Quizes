@@ -3,37 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NEET PYQ JSON Generator</title>
+  <title>NEET PYQ JSON Editor</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; max-width: 900px; margin: auto; }
+    body { font-family: sans-serif; padding: 20px; max-width: 1000px; margin: auto; }
     input, button { padding: 10px; font-size: 16px; margin: 10px 0; }
-    .question-json { background: #f8f9fa; border: 1px solid #ddd; padding: 10px; margin: 10px 0; white-space: pre-wrap; font-family: monospace; }
-    .copy-btn { margin-bottom: 10px; background: #0b7285; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+    .question-block { background: #f1f3f5; border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 8px; }
+    .question-block label { font-weight: bold; }
+    .question-json { background: #fff; border: 1px solid #ddd; padding: 10px; white-space: pre-wrap; font-family: monospace; }
+    .copy-btn { margin-top: 10px; background: #0b7285; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 5px; }
     #loading { color: green; font-weight: bold; }
+    .option { margin-left: 15px; }
   </style>
 </head>
 <body>
-  <h1>Generate NEET PYQ JSON</h1>
+  <h1>NEET PYQ JSON Editor</h1>
   <label for="numQuestions">Enter number of questions:</label><br>
   <input type="number" id="numQuestions" min="3" />
-  <button onclick="generateJSON()">Generate JSON</button>
+  <button onclick="loadQuestions()">Load Questions</button>
 
   <p id="loading" style="display: none;">Loading questions...</p>
-  <div id="output"></div>
+  <div id="questionList"></div>
+  <button onclick="generateFinalJSON()">Generate Final JSON</button>
+  <div id="finalOutput"></div>
 
   <script>
     const metaIds = [
       { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
-      { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-      { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
+    { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+    { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+    { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
+    { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
+    { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
+    { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
+    { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
+    { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
+    { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
+    { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
+    { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
+    { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
+    { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
+    { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
+    { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
+    { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
+    { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
+    { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
+    { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
+    { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
+    { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
+    { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
+    { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
+    { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
+    { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
+    { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
+    { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
+    { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
+    { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
+    { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
+    { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
     ];
 
-    async function generateJSON() {
+    let selectedQuestions = [];
+
+    async function loadQuestions() {
       const count = parseInt(document.getElementById('numQuestions').value);
       if (!count || count < 3) return alert('Enter at least 3 questions.');
 
       document.getElementById('loading').style.display = 'block';
-      document.getElementById('output').innerHTML = '';
+      document.getElementById('questionList').innerHTML = '';
+      document.getElementById('finalOutput').innerHTML = '';
 
       let allQuestions = [];
 
@@ -43,7 +80,6 @@
         const data = await res.json();
         allQuestions.push(...data.flatMap(group =>
           group.questions.map(q => ({
-            id: q.question_id,
             subject: q.subject,
             chapter: q.chapter || '',
             question: q.content,
@@ -60,20 +96,44 @@
         ));
       }
 
-      const selected = allQuestions.sort(() => 0.5 - Math.random()).slice(0, count);
-      const outputDiv = document.getElementById('output');
+      selectedQuestions = allQuestions.sort(() => 0.5 - Math.random()).slice(0, count);
 
-      selected.forEach((q, idx) => {
-        const jsonStr = JSON.stringify(q, null, 2);
-        const container = document.createElement('div');
-        container.innerHTML = `
-          <button class="copy-btn" onclick="copyToClipboard('json-${idx}')">Copy</button>
-          <div id="json-${idx}" class="question-json">${jsonStr}</div>
+      const listDiv = document.getElementById('questionList');
+      selectedQuestions.forEach((q, idx) => {
+        const qBlock = document.createElement('div');
+        qBlock.className = 'question-block';
+        qBlock.innerHTML = `
+          <label><input type="checkbox" checked data-index="${idx}" onchange="toggleQuestion(this)"> Question ${idx + 1}</label>
+          <div><strong>Subject:</strong> ${q.subject} | <strong>Chapter:</strong> ${q.chapter}</div>
+          <div><strong>Q:</strong> ${q.question}</div>
+          ${q.image ? `<img src="${q.image}" style="max-width: 100%; margin: 10px 0;" />` : ''}
+          <div class="option"><strong>A:</strong> ${q.options.A}</div>
+          <div class="option"><strong>B:</strong> ${q.options.B}</div>
+          <div class="option"><strong>C:</strong> ${q.options.C}</div>
+          <div class="option"><strong>D:</strong> ${q.options.D}</div>
+          <div><strong>Correct Option:</strong> ${q.correct_option}</div>
+          <div><strong>Explanation:</strong> ${q.explanation}</div>
         `;
-        outputDiv.appendChild(container);
+        listDiv.appendChild(qBlock);
       });
 
       document.getElementById('loading').style.display = 'none';
+    }
+
+    function toggleQuestion(checkbox) {
+      const index = parseInt(checkbox.getAttribute('data-index'));
+      selectedQuestions[index].exclude = !checkbox.checked;
+    }
+
+    function generateFinalJSON() {
+      const filtered = selectedQuestions.filter(q => !q.exclude);
+      const jsonStr = JSON.stringify(filtered, null, 2);
+
+      const outputDiv = document.getElementById('finalOutput');
+      outputDiv.innerHTML = `
+        <button class="copy-btn" onclick="copyToClipboard('final-json')">Copy Final JSON</button>
+        <div id="final-json" class="question-json">${jsonStr}</div>
+      `;
     }
 
     function copyToClipboard(id) {
