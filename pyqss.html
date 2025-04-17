@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Quiz App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <style>
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        nav ul li {
+            margin: 5px 15px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 5px 10px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            border-bottom: 2px solid #f4f4f9;
+        }
+        
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        h1, h2, h3 {
+            color: #333;
+        }
+        
+        /* Chapter Selection Styles */
+        .chapter-list {
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .chapter {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+        }
+        
+        .chapter:hover {
+            background-color: #e9ecef;
+        }
+        
+        .chapter.selected {
+            background-color: #d4edda;
+        }
+        
+        .chapter input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        
+        .fa-icon {
+            margin-right: 8px;
+        }
+        
+        .line-break {
+            border-top: 1px solid #ddd;
+            margin: 5px 0;
+        }
+        
+        /* Quiz Configuration Styles */
+        .quiz-config {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .config-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .config-item label {
+            margin-right: 10px;
+            min-width: 150px;
+        }
+        
+        .config-item input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100px;
+        }
+        
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-continue {
+            background-color: #28a745;
+        }
+        
+        .btn-continue:hover {
+            background-color: #218838;
+        }
+        
+        .btn-generate {
+            background-color: #17a2b8;
+        }
+        
+        .btn-generate:hover {
+            background-color: #138496;
+        }
+        
+        /* Quiz Question Styles */
+        .question-container {
+            display: none;
+        }
+        
+        .question {
+            border-bottom: 2px solid #ddd;
+            padding: 15px;
+            margin: 0;
+            overflow-x: auto;
+            position: relative;
+            min-height: 80px;
+        }
+        
+        .question-number {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .question-content {
+            margin-bottom: 15px;
+        }
+        
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .option {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .option.selected {
+            background-color: #e7f5ff;
+            border-color: #4dabf7;
+        }
+        
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+        
+        .timer {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .explanation h4 {
+            margin-top: 0;
+        }
+        
+        /* Results Page Styles */
+        .results-container {
+            display: none;
+        }
+        
+        .result-summary {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .result-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-item.correct {
+            border-left: 4px solid #28a745;
+        }
+        
+        .result-item.incorrect {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .result-question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .result-answer {
+            margin-bottom: 10px;
+        }
+        
+        .result-explanation {
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        /* Navigation Controls */
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav ul li {
+                margin: 5px 10px;
+            }
+            
+            nav ul li a {
+                font-size: 0.9rem;
+            }
+            
+            .config-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .config-item label {
+                margin-bottom: 5px;
+            }
+            
+            .timer {
+                position: static;
+                margin: 10px 0;
+                display: inline-block;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            nav ul li a {
+                font-size: 0.8rem;
+                padding: 3px 7px;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Active states */
+        nav ul li a.active {
+            border-bottom: 2px solid #f4f4f9;
+        }
+        
+        .subject-section {
+            display: none;
+        }
+        
+        .subject-section.active {
+            display: block;
+        }
+        
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #28a745;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#" id="biology-nav" onclick="showSubject('biology')">Biology</a></li>
+                <li><a href="#" id="physics-nav" onclick="showSubject('physics')">Physics</a></li>
+                <li><a href="#" id="chemistry-nav" onclick="showSubject('chemistry')">Chemistry</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Chapter Selection Section -->
+        <div class="container" id="chapter-selection">
+            <h1>Select Chapters</h1>
+            <div id="biology" class="subject-section active">
+                <div class="chapter-list" id="biology-chapter-list"></div>
+            </div>
+            <div id="physics" class="subject-section">
+                <div class="chapter-list" id="physics-chapter-list"></div>
+            </div>
+            <div id="chemistry" class="subject-section">
+                <div class="chapter-list" id="chemistry-chapter-list"></div>
+            </div>
+            
+            <div class="quiz-config">
+                <div class="config-item">
+                    <label for="question-count">Number of Questions:</label>
+                    <input type="number" id="question-count" min="1" max="50" value="10">
+                </div>
+                <button class="btn btn-continue" id="continue-btn">Continue</button>
+            </div>
+        </div>
+        
+        <!-- Quiz Configuration Section -->
+        <div class="container" id="quiz-configuration" style="display: none;">
+            <h2>Quiz Configuration</h2>
+            <div id="selected-chapters-list"></div>
+            <p>Total questions available from selected chapters: <span id="total-questions-count">0</span></p>
+            <div class="quiz-config">
+                <div class="config-item">
+                    <label for="quiz-question-count">Number of Questions:</label>
+                    <input type="number" id="quiz-question-count" min="1" value="10">
+                </div>
+                <button class="btn btn-generate" id="generate-btn">Generate Quiz</button>
+                <button class="btn" id="back-to-chapters">Back to Chapters</button>
+            </div>
+        </div>
+        
+        <!-- Quiz Section -->
+        <div class="container question-container" id="quiz-section">
+            <div class="progress-container">
+                <div class="progress-bar" id="quiz-progress"></div>
+            </div>
+            <div id="question-display"></div>
+            <div class="quiz-controls">
+                <button class="btn" id="prev-question" disabled>Previous</button>
+                <button class="btn" id="check-answer">Check Answer</button>
+                <button class="btn" id="next-question">Next Question</button>
+            </div>
+            <div class="explanation" id="question-explanation"></div>
+        </div>
+        
+        <!-- Results Section -->
+        <div class="container results-container" id="results-section">
+            <h2>Quiz Results</h2>
+            <div class="result-summary">
+                <h3>Summary</h3>
+                <p>Total Questions: <span id="total-questions">0</span></p>
+                <p>Correct Answers: <span id="correct-answers">0</span></p>
+                <p>Incorrect Answers: <span id="incorrect-answers">0</span></p>
+                <p>Score: <span id="quiz-score">0</span>%</p>
+                <p>Time Taken: <span id="time-taken">0:00</span></p>
+            </div>
+            
+            <h3>Detailed Results</h3>
+            <div id="detailed-results"></div>
+            
+            <div class="nav-controls">
+                <button class="btn" id="restart-quiz">Restart Quiz</button>
+                <button class="btn" id="back-to-home">Back to Home</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="timer" id="quiz-timer" style="display: none;">Time: 0:00</div>
+
+    <script>
+        // Global variables
+        const metaIds = [
+            "3c48616f-298a-5f69-91d2-bcd59444c455", "cbfbed57-d7d8-5a07-9957-478e4cb62f17", "8dd253c6-09a8-5875-b127-a0c00a165a1b",
+            "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", "2ff56f11-0061-566e-aeca-9cc14246e8fb", "27ba990b-5085-5196-87dd-9727f95fc228",
+            "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", "ce68b80b-fff0-5db8-8d6a-668d729d487a", "57222784-be0a-5653-930c-8ac44c689e21"
+        ];
+        
+        let allQuestions = [];
+        let selectedChapters = [];
+        let currentSubject = 'biology';
+        let quizQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let quizStartTime;
+        let timerInterval;
+        let availableQuestionsCount = 0;
+
+        // DOM Elements
+        const chapterSelectionSection = document.getElementById('chapter-selection');
+        const quizConfigurationSection = document.getElementById('quiz-configuration');
+        const quizSection = document.getElementById('quiz-section');
+        const resultsSection = document.getElementById('results-section');
+        const selectedChaptersList = document.getElementById('selected-chapters-list');
+        const totalQuestionsCountSpan = document.getElementById('total-questions-count');
+        const quizQuestionCountInput = document.getElementById('quiz-question-count');
+        const questionDisplay = document.getElementById('question-display');
+        const questionExplanation = document.getElementById('question-explanation');
+        const quizTimer = document.getElementById('quiz-timer');
+        const quizProgress = document.getElementById('quiz-progress');
+        const prevQuestionBtn = document.getElementById('prev-question');
+        const nextQuestionBtn = document.getElementById('next-question');
+        const checkAnswerBtn = document.getElementById('check-answer');
+        const totalQuestionsSpan = document.getElementById('total-questions');
+        const correctAnswersSpan = document.getElementById('correct-answers');
+        const incorrectAnswersSpan = document.getElementById('incorrect-answers');
+        const quizScoreSpan = document.getElementById('quiz-score');
+        const timeTakenSpan = document.getElementById('time-taken');
+        const detailedResultsDiv = document.getElementById('detailed-results');
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            showSubject('biology');
+            
+            // Event listeners
+            document.getElementById('continue-btn').addEventListener('click', showQuizConfiguration);
+            document.getElementById('generate-btn').addEventListener('click', generateQuiz);
+            document.getElementById('back-to-chapters').addEventListener('click', backToChapters);
+            document.getElementById('prev-question').addEventListener('click', showPreviousQuestion);
+            document.getElementById('next-question').addEventListener('click', showNextQuestion);
+            document.getElementById('check-answer').addEventListener('click', checkAnswer);
+            document.getElementById('restart-quiz').addEventListener('click', restartQuiz);
+            document.getElementById('back-to-home').addEventListener('click', backToHome);
+            
+            // Load chapters for all subjects initially
+            loadChaptersForAllSubjects();
+        });
+
+        // Load chapters for all subjects
+        function loadChaptersForAllSubjects() {
+            loadChapters('biology');
+            loadChapters('physics');
+            loadChapters('chemistry');
+        }
+
+        // Load chapters for a specific subject
+        function loadChapters(subject) {
+            const metaId = metaIds[0]; // Using the first metaId for chapter listing
+            
+            fetch(`https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`)
+                .then(response => response.json())
+                .then(data => {
+                    let chapters = [];
+                    if (subject === 'biology') {
+                        chapters = data[0].questions;
+                    } else if (subject === 'chemistry') {
+                        chapters = data[1].questions;
+                    } else if (subject === 'physics') {
+                        chapters = data[2].questions;
+                    }
+
+                    let chapterListHTML = '';
+                    const uniqueChapters = new Set();
+                    
+                    chapters.forEach(q => {
+                        if (q.chapter && !uniqueChapters.has(q.chapter)) {
+                            uniqueChapters.add(q.chapter);
+                            chapterListHTML += `
+                                <div class="chapter">
+                                    <input type="checkbox" id="${subject}-${q.chapter}" data-subject="${subject}" data-chapter="${q.chapter}">
+                                    <label for="${subject}-${q.chapter}">
+                                        ${q.chapter.charAt(0).toUpperCase() + q.chapter.slice(1)}
+                                    </label>
+                                </div>
+                                <div class="line-break"></div>
+                            `;
+                        }
+                    });
+
+                    document.getElementById(`${subject}-chapter-list`).innerHTML = chapterListHTML;
+                    
+                    // Add event listeners to checkboxes
+                    document.querySelectorAll(`#${subject}-chapter-list input[type="checkbox"]`).forEach(checkbox => {
+                        checkbox.addEventListener('change', function() {
+                            if (this.checked) {
+                                this.parentElement.classList.add('selected');
+                            } else {
+                                this.parentElement.classList.remove('selected');
+                            }
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error(`Error loading ${subject} chapters:`, error);
+                    document.getElementById(`${subject}-chapter-list`).innerHTML = '<p>Error loading chapters. Please try again later.</p>';
+                });
+        }
+
+        // Show selected subject
+        function showSubject(subject) {
+            currentSubject = subject;
+            const subjects = ['biology', 'physics', 'chemistry'];
+            subjects.forEach(s => {
+                document.getElementById(s).classList.remove('active');
+                document.getElementById(`${s}-nav`).classList.remove('active');
+            });
+            document.getElementById(subject).classList.add('active');
+            document.getElementById(`${subject}-nav`).classList.add('active');
+        }
+
+        // Show quiz configuration section
+        function showQuizConfiguration() {
+            // Get selected chapters
+            selectedChapters = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                selectedChapters.push({
+                    subject: checkbox.dataset.subject,
+                    chapter: checkbox.dataset.chapter
+                });
+            });
+            
+            if (selectedChapters.length === 0) {
+                alert('Please select at least one chapter.');
+                return;
+            }
+            
+            // Update selected chapters list
+            updateSelectedChaptersList();
+            
+            // Load questions from selected chapters
+            loadQuestionsFromSelectedChapters()
+                .then(() => {
+                    // Show configuration section
+                    chapterSelectionSection.style.display = 'none';
+                    quizConfigurationSection.style.display = 'block';
+                    
+                    // Set max value for question count input
+                    const questionCount = Math.min(availableQuestionsCount, 50);
+                    quizQuestionCountInput.max = questionCount;
+                    quizQuestionCountInput.value = Math.min(10, questionCount);
+                })
+                .catch(error => {
+                    console.error('Error loading questions:', error);
+                    alert('Error loading questions. Please try again.');
+                });
+        }
+
+        // Update the selected chapters list display
+        function updateSelectedChaptersList() {
+            let html = '<h3>Selected Chapters</h3><ul>';
+            
+            selectedChapters.forEach(chapter => {
+                html += `<li>${chapter.subject.charAt(0).toUpperCase() + chapter.subject.slice(1)} - ${chapter.chapter.charAt(0).toUpperCase() + chapter.chapter.slice(1)}</li>`;
+            });
+            
+            html += '</ul>';
+            selectedChaptersList.innerHTML = html;
+        }
+
+        // Load questions from selected chapters
+        async function loadQuestionsFromSelectedChapters() {
+            allQuestions = [];
+            availableQuestionsCount = 0;
+            
+            // Load questions from all metaIds for selected chapters
+            for (const metaId of metaIds) {
+                try {
+                    const response = await fetch(`https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`);
+                    const data = await response.json();
+                    
+                    for (const chapter of selectedChapters) {
+                        let subjectQuestions = [];
+                        
+                        if (chapter.subject === 'biology') {
+                            subjectQuestions = data[0].questions;
+                        } else if (chapter.subject === 'chemistry') {
+                            subjectQuestions = data[1].questions;
+                        } else if (chapter.subject === 'physics') {
+                            subjectQuestions = data[2].questions;
+                        }
+                        
+                        const chapterQuestions = subjectQuestions.filter(q => 
+                            q.chapter === chapter.chapter && q.subject === chapter.subject
+                        );
+                        
+                        allQuestions = allQuestions.concat(chapterQuestions);
+                    }
+                } catch (error) {
+                    console.error(`Error loading questions from metaId ${metaId}:`, error);
+                }
+            }
+            
+            // Filter out duplicates by question_id
+            const uniqueQuestions = [];
+            const questionIds = new Set();
+            
+            allQuestions.forEach(question => {
+                if (!questionIds.has(question.question_id)) {
+                    questionIds.add(question.question_id);
+                    uniqueQuestions.push(question);
+                }
+            });
+            
+            allQuestions = uniqueQuestions;
+            availableQuestionsCount = allQuestions.length;
+            totalQuestionsCountSpan.textContent = availableQuestionsCount;
+            
+            return Promise.resolve();
+        }
+
+        // Generate quiz with selected number of questions
+        function generateQuiz() {
+            const questionCount = parseInt(quizQuestionCountInput.value);
+            
+            if (isNaN(questionCount) || questionCount < 1 || questionCount > availableQuestionsCount) {
+                alert(`Please enter a number between 1 and ${availableQuestionsCount}`);
+                return;
+            }
+            
+            // Shuffle questions and select the requested number
+            quizQuestions = shuffleArray([...allQuestions]).slice(0, questionCount);
+            userAnswers = new Array(quizQuestions.length).fill(null);
+            
+            // Initialize quiz
+            currentQuestionIndex = 0;
+            quizStartTime = new Date();
+            
+            // Show quiz section
+            quizConfigurationSection.style.display = 'none';
+            quizSection.style.display = 'block';
+            quizTimer.style.display = 'block';
+            
+            // Start timer
+            startTimer();
+            
+            // Display first question
+            displayCurrentQuestion();
+        }
+
+        // Shuffle array using Fisher-Yates algorithm
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Start quiz timer
+        function startTimer() {
+            let seconds = 0;
+            
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            timerInterval = setInterval(() => {
+                seconds++;
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = seconds % 60;
+                quizTimer.textContent = `Time: ${minutes}:${remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds}`;
+            }, 1000);
+        }
+
+        // Display current question
+        function displayCurrentQuestion() {
+            if (currentQuestionIndex >= quizQuestions.length) {
+                showResults();
+                return;
+            }
+            
+            const question = quizQuestions[currentQuestionIndex];
+            const questionNumber = currentQuestionIndex + 1;
+            const totalQuestions = quizQuestions.length;
+            
+            // Update progress bar
+            const progressPercent = (currentQuestionIndex / quizQuestions.length) * 100;
+            quizProgress.style.width = `${progressPercent}%`;
+            
+            // Build question HTML
+            let html = `
+                <div class="question-number">Question ${questionNumber} of ${totalQuestions}</div>
+                <div class="question-content">${renderMath(question.content)}</div>
+                <ul class="options">
+            `;
+            
+            question.options.forEach((option, index) => {
+                const optionClass = userAnswers[currentQuestionIndex] === option.identifier ? 'selected' : '';
+                html += `
+                    <li class="option ${optionClass}" data-option="${option.identifier}" onclick="selectOption(this)">
+                        ${String.fromCharCode(65 + index)}. ${renderMath(option.content)}
+                    </li>
+                `;
+            });
+            
+            html += '</ul>';
+            questionDisplay.innerHTML = html;
+            
+            // Update navigation buttons
+            prevQuestionBtn.disabled = currentQuestionIndex === 0;
+            nextQuestionBtn.textContent = currentQuestionIndex === quizQuestions.length - 1 ? 'Finish Quiz' : 'Next Question';
+            
+            // Hide explanation
+            questionExplanation.style.display = 'none';
+            
+            // Render MathJax
+            if (window.MathJax) {
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            }
+        }
+
+        // Render LaTeX using MathJax
+        function renderMath(input) {
+            if (!input) return '';
+            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            });
+        }
+
+        // Select an option
+        function selectOption(element) {
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            // Save user's answer
+            userAnswers[currentQuestionIndex] = element.dataset.option;
+        }
+
+        // Show previous question
+        function showPreviousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayCurrentQuestion();
+            }
+        }
+
+        // Show next question
+        function showNextQuestion() {
+            if (userAnswers[currentQuestionIndex] === null) {
+                alert('Please select an answer before proceeding.');
+                return;
+            }
+            
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                displayCurrentQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Check current answer
+        function checkAnswer() {
+            if (userAnswers[currentQuestionIndex] === null) {
+                alert('Please select an answer first.');
+                return;
+            }
+            
+            const question = quizQuestions[currentQuestionIndex];
+            const correctAnswer = question.options.find(opt => opt.correct).identifier;
+            const userAnswer = userAnswers[currentQuestionIndex];
+            
+            // Highlight correct and incorrect answers
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+                
+                if (option.dataset.option === correctAnswer) {
+                    option.classList.add('correct');
+                } else if (option.dataset.option === userAnswer) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Show explanation
+            questionExplanation.innerHTML = `
+                <h4>Explanation:</h4>
+                <p>${renderMath(question.explanation)}</p>
+            `;
+            questionExplanation.style.display = 'block';
+            
+            // Render MathJax in explanation
+            if (window.MathJax) {
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            }
+        }
+
+        // Show quiz results
+        function showResults() {
+            // Stop timer
+            clearInterval(timerInterval);
+            
+            // Calculate results
+            let correctCount = 0;
+            const results = [];
+            
+            quizQuestions.forEach((question, index) => {
+                const correctAnswer = question.options.find(opt => opt.correct).identifier;
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === correctAnswer;
+                
+                if (isCorrect) {
+                    correctCount++;
+                }
+                
+                results.push({
+                    question,
+                    userAnswer,
+                    correctAnswer,
+                    isCorrect
+                });
+            });
+            
+            const score = Math.round((correctCount / quizQuestions.length) * 100);
+            const timeTaken = quizTimer.textContent.replace('Time: ', '');
+            
+            // Update results summary
+            totalQuestionsSpan.textContent = quizQuestions.length;
+            correctAnswersSpan.textContent = correctCount;
+            incorrectAnswersSpan.textContent = quizQuestions.length - correctCount;
+            quizScoreSpan.textContent = score;
+            timeTakenSpan.textContent = timeTaken;
+            
+            // Generate detailed results
+            let detailedHTML = '';
+            results.forEach((result, index) => {
+                const question = result.question;
+                const userOption = question.options.find(opt => opt.identifier === result.userAnswer);
+                const correctOption = question.options.find(opt => opt.identifier === result.correctAnswer);
+                
+                detailedHTML += `
+                    <div class="result-item ${result.isCorrect ? 'correct' : 'incorrect'}">
+                        <div class="result-question">Question ${index + 1}: ${renderMath(question.content)}</div>
+                        <div class="result-answer">
+                            <p>Your answer: ${userOption ? String.fromCharCode(65 + question.options.indexOf(userOption)) + '. ' + renderMath(userOption.content) : 'Not answered'}</p>
+                            <p>Correct answer: ${String.fromCharCode(65 + question.options.indexOf(correctOption))}. ${renderMath(correctOption.content)}</p>
+                        </div>
+                        <div class="result-explanation">
+                            <p>${renderMath(question.explanation)}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            detailedResultsDiv.innerHTML = detailedHTML;
+            
+            // Show results section
+            quizSection.style.display = 'none';
+            quizTimer.style.display = 'none';
+            resultsSection.style.display = 'block';
+            
+            // Render MathJax in results
+            if (window.MathJax) {
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            }
+        }
+
+        // Back to chapters selection
+        function backToChapters() {
+            quizConfigurationSection.style.display = 'none';
+            chapterSelectionSection.style.display = 'block';
+        }
+
+        // Restart quiz with same questions
+        function restartQuiz() {
+            // Reset quiz state
+            currentQuestionIndex = 0;
+            userAnswers = new Array(quizQuestions.length).fill(null);
+            quizStartTime = new Date();
+            
+            // Show quiz section
+            resultsSection.style.display = 'none';
+            quizSection.style.display = 'block';
+            quizTimer.style.display = 'block';
+            
+            // Start timer
+            startTimer();
+            
+            // Display first question
+            displayCurrentQuestion();
+        }
+
+        // Back to home (chapter selection)
+        function backToHome() {
+            resultsSection.style.display = 'none';
+            chapterSelectionSection.style.display = 'block';
+        }
+
+        // Make selectOption available globally
+        window.selectOption = selectOption;
+    </script>
+</body>
+</html>
