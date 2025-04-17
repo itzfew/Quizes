@@ -276,6 +276,7 @@
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
+            text-align: center;
         }
         
         .result-item {
@@ -303,10 +304,21 @@
             margin-bottom: 10px;
         }
         
+        .user-answer {
+            font-weight: bold;
+            color: #dc3545;
+        }
+        
+        .correct-answer {
+            font-weight: bold;
+            color: #28a745;
+        }
+        
         .result-explanation {
             padding: 10px;
             background-color: #f8f9fa;
             border-radius: 4px;
+            margin-top: 10px;
         }
         
         /* Navigation Controls */
@@ -314,6 +326,38 @@
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
+        }
+        
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin: 20px 0;
+            height: 10px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #28a745;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        /* Score Display */
+        .score-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .score-correct {
+            color: #28a745;
+        }
+        
+        .score-incorrect {
+            color: #dc3545;
         }
         
         /* Responsive Design */
@@ -340,6 +384,15 @@
                 margin: 10px 0;
                 display: inline-block;
             }
+            
+            .quiz-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
         }
         
         @media (max-width: 480px) {
@@ -365,22 +418,6 @@
         
         .subject-section.active {
             display: block;
-        }
-        
-        /* Progress bar */
-        .progress-container {
-            width: 100%;
-            background-color: #e9ecef;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        
-        .progress-bar {
-            height: 10px;
-            background-color: #28a745;
-            border-radius: 5px;
-            width: 0%;
-            transition: width 0.3s;
         }
     </style>
 </head>
@@ -452,10 +489,15 @@
             <h2>Quiz Results</h2>
             <div class="result-summary">
                 <h3>Summary</h3>
-                <p>Total Questions: <span id="total-questions">0</span></p>
-                <p>Correct Answers: <span id="correct-answers">0</span></p>
-                <p>Incorrect Answers: <span id="incorrect-answers">0</span></p>
-                <p>Score: <span id="quiz-score">0</span>%</p>
+                <div class="score-display">
+                    <span>Your Score: </span>
+                    <span class="score-correct" id="correct-answers">0</span>
+                    <span>/</span>
+                    <span id="total-questions">0</span>
+                    <span> (</span>
+                    <span id="quiz-score">0</span>
+                    <span>%)</span>
+                </div>
                 <p>Time Taken: <span id="time-taken">0:00</span></p>
             </div>
             
@@ -488,6 +530,7 @@
         let quizStartTime;
         let timerInterval;
         let availableQuestionsCount = 0;
+        let timeElapsed = 0;
 
         // DOM Elements
         const chapterSelectionSection = document.getElementById('chapter-selection');
@@ -506,7 +549,6 @@
         const checkAnswerBtn = document.getElementById('check-answer');
         const totalQuestionsSpan = document.getElementById('total-questions');
         const correctAnswersSpan = document.getElementById('correct-answers');
-        const incorrectAnswersSpan = document.getElementById('incorrect-answers');
         const quizScoreSpan = document.getElementById('quiz-score');
         const timeTakenSpan = document.getElementById('time-taken');
         const detailedResultsDiv = document.getElementById('detailed-results');
@@ -717,6 +759,7 @@
             // Initialize quiz
             currentQuestionIndex = 0;
             quizStartTime = new Date();
+            timeElapsed = 0;
             
             // Show quiz section
             quizConfigurationSection.style.display = 'none';
@@ -741,16 +784,14 @@
 
         // Start quiz timer
         function startTimer() {
-            let seconds = 0;
-            
             if (timerInterval) {
                 clearInterval(timerInterval);
             }
             
             timerInterval = setInterval(() => {
-                seconds++;
-                const minutes = Math.floor(seconds / 60);
-                const remainingSeconds = seconds % 60;
+                timeElapsed++;
+                const minutes = Math.floor(timeElapsed / 60);
+                const remainingSeconds = timeElapsed % 60;
                 quizTimer.textContent = `Time: ${minutes}:${remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds}`;
             }, 1000);
         }
@@ -843,111 +884,125 @@
             }
         }
 
-        // Check current answer
         function checkAnswer() {
-            if (userAnswers[currentQuestionIndex] === null) {
-                alert('Please select an answer first.');
-                return;
-            }
-            
-            const question = quizQuestions[currentQuestionIndex];
-            const correctAnswer = question.options.find(opt => opt.correct).identifier;
-            const userAnswer = userAnswers[currentQuestionIndex];
-            
-            // Highlight correct and incorrect answers
-            const options = document.querySelectorAll('.option');
-            options.forEach(option => {
-                option.classList.remove('correct', 'incorrect');
-                
-                if (option.dataset.option === correctAnswer) {
-                    option.classList.add('correct');
-                } else if (option.dataset.option === userAnswer) {
-                    option.classList.add('incorrect');
-                }
-            });
-            
-            // Show explanation
-            questionExplanation.innerHTML = `
-                <h4>Explanation:</h4>
-                <p>${renderMath(question.explanation)}</p>
-            `;
-            questionExplanation.style.display = 'block';
-            
-            // Render MathJax in explanation
-            if (window.MathJax) {
-                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-            }
+    if (userAnswers[currentQuestionIndex] === null) {
+        alert('Please select an answer first.');
+        return;
+    }
+
+    const question = quizQuestions[currentQuestionIndex];
+    const correctAnswer = question.correct_options?.[0];  // From your JSON structure
+
+    if (!correctAnswer) {
+        console.error('No correct answer found for question:', question);
+        alert('Error: No correct answer found for this question.');
+        return;
+    }
+
+    const userAnswer = userAnswers[currentQuestionIndex];
+
+    // Highlight correct and incorrect answers
+    const options = document.querySelectorAll('.option');
+    options.forEach(option => {
+        option.classList.remove('correct', 'incorrect');
+
+        if (option.dataset.option === correctAnswer) {
+            option.classList.add('correct');
         }
 
-        // Show quiz results
-        function showResults() {
-            // Stop timer
-            clearInterval(timerInterval);
-            
-            // Calculate results
-            let correctCount = 0;
-            const results = [];
-            
-            quizQuestions.forEach((question, index) => {
-                const correctAnswer = question.options.find(opt => opt.correct).identifier;
-                const userAnswer = userAnswers[index];
-                const isCorrect = userAnswer === correctAnswer;
-                
-                if (isCorrect) {
-                    correctCount++;
-                }
-                
-                results.push({
-                    question,
-                    userAnswer,
-                    correctAnswer,
-                    isCorrect
-                });
-            });
-            
-            const score = Math.round((correctCount / quizQuestions.length) * 100);
-            const timeTaken = quizTimer.textContent.replace('Time: ', '');
-            
-            // Update results summary
-            totalQuestionsSpan.textContent = quizQuestions.length;
-            correctAnswersSpan.textContent = correctCount;
-            incorrectAnswersSpan.textContent = quizQuestions.length - correctCount;
-            quizScoreSpan.textContent = score;
-            timeTakenSpan.textContent = timeTaken;
-            
-            // Generate detailed results
-            let detailedHTML = '';
-            results.forEach((result, index) => {
-                const question = result.question;
-                const userOption = question.options.find(opt => opt.identifier === result.userAnswer);
-                const correctOption = question.options.find(opt => opt.identifier === result.correctAnswer);
-                
-                detailedHTML += `
-                    <div class="result-item ${result.isCorrect ? 'correct' : 'incorrect'}">
-                        <div class="result-question">Question ${index + 1}: ${renderMath(question.content)}</div>
-                        <div class="result-answer">
-                            <p>Your answer: ${userOption ? String.fromCharCode(65 + question.options.indexOf(userOption)) + '. ' + renderMath(userOption.content) : 'Not answered'}</p>
-                            <p>Correct answer: ${String.fromCharCode(65 + question.options.indexOf(correctOption))}. ${renderMath(correctOption.content)}</p>
-                        </div>
-                        <div class="result-explanation">
-                            <p>${renderMath(question.explanation)}</p>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            detailedResultsDiv.innerHTML = detailedHTML;
-            
-            // Show results section
-            quizSection.style.display = 'none';
-            quizTimer.style.display = 'none';
-            resultsSection.style.display = 'block';
-            
-            // Render MathJax in results
-            if (window.MathJax) {
-                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-            }
+        if (option.dataset.option === userAnswer && userAnswer !== correctAnswer) {
+            option.classList.add('incorrect');
         }
+    });
+
+    // Show explanation
+    questionExplanation.innerHTML = `
+        <h4>Explanation:</h4>
+        <p>${renderMath(question.explanation)}</p>
+    `;
+    questionExplanation.style.display = 'block';
+
+    // Render MathJax in explanation
+    if (window.MathJax) {
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    }
+}
+
+function showResults() {
+    // Stop timer
+    clearInterval(timerInterval);
+
+    // Calculate results
+    let correctCount = 0;
+    const results = [];
+
+    quizQuestions.forEach((question, index) => {
+        const correctAnswer = question.correct_options?.[0];  // updated from .find(opt => opt.correct)
+        const userAnswer = userAnswers[index];
+        const isCorrect = userAnswer === correctAnswer;
+
+        if (isCorrect) {
+            correctCount++;
+        }
+
+        results.push({
+            question,
+            userAnswer,
+            correctAnswer,
+            isCorrect
+        });
+    });
+
+    const score = Math.round((correctCount / quizQuestions.length) * 100);
+    const timeTaken = quizTimer.textContent.replace('Time: ', '');
+
+    // Update summary section
+    totalQuestionsSpan.textContent = quizQuestions.length;
+    correctAnswersSpan.textContent = correctCount;
+    quizScoreSpan.textContent = score;
+    timeTakenSpan.textContent = timeTaken;
+
+    // Generate detailed results
+    let detailedHTML = '';
+    results.forEach((result, index) => {
+        const question = result.question;
+        const userOption = question.options.find(opt => opt.identifier === result.userAnswer);
+        const correctOption = question.options.find(opt => opt.identifier === result.correctAnswer);
+
+        detailedHTML += `
+            <div class="result-item ${result.isCorrect ? 'correct' : 'incorrect'}">
+                <div class="result-question">Question ${index + 1}: ${renderMath(question.content)}</div>
+                <div class="result-answer">
+                    <p><span class="user-answer">Your answer:</span> ${
+                        userOption
+                            ? String.fromCharCode(65 + question.options.indexOf(userOption)) + '. ' + renderMath(userOption.content)
+                            : 'Not answered'
+                    }</p>
+                    <p><span class="correct-answer">Correct answer:</span> ${
+                        correctOption
+                            ? String.fromCharCode(65 + question.options.indexOf(correctOption)) + '. ' + renderMath(correctOption.content)
+                            : 'Unknown'
+                    }</p>
+                </div>
+                <div class="result-explanation">
+                    <p>${renderMath(question.explanation)}</p>
+                </div>
+            </div>
+        `;
+    });
+
+    detailedResultsDiv.innerHTML = detailedHTML;
+
+    // Show results section
+    quizSection.style.display = 'none';
+    quizTimer.style.display = 'none';
+    resultsSection.style.display = 'block';
+
+    // Render MathJax
+    if (window.MathJax) {
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    }
+}
 
         // Back to chapters selection
         function backToChapters() {
@@ -961,11 +1016,13 @@
             currentQuestionIndex = 0;
             userAnswers = new Array(quizQuestions.length).fill(null);
             quizStartTime = new Date();
+            timeElapsed = 0;
             
             // Show quiz section
             resultsSection.style.display = 'none';
             quizSection.style.display = 'block';
             quizTimer.style.display = 'block';
+            quizTimer.textContent = 'Time: 0:00';
             
             // Start timer
             startTimer();
