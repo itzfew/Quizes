@@ -626,80 +626,6 @@
             background-color: #f39c12;
         }
         
-        /* User Profile */
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #3498db;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .user-info {
-            flex-grow: 1;
-        }
-        
-        .user-name {
-            font-weight: bold;
-            margin: 0;
-        }
-        
-        .user-email {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            margin: 0;
-        }
-        
-        .logout-btn {
-            background: none;
-            border: none;
-            color: #e74c3c;
-            cursor: pointer;
-            font-size: 0.9rem;
-            padding: 5px;
-        }
-        
-        /* Stats */
-        .stats-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .stat-card {
-            background-color: white;
-            border-radius: 8px;
-            padding: 15px;
-            min-width: 150px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin: 5px 0;
-        }
-        
-        .stat-label {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-        }
-        
         /* Responsive Design */
         @media (max-width: 768px) {
             nav ul li {
@@ -854,36 +780,6 @@
             </div>
         </div>
 
-        <!-- User Profile Section -->
-        <div class="container" id="user-profile-section" style="display: none;">
-            <div class="user-profile">
-                <div class="user-avatar" id="user-avatar">U</div>
-                <div class="user-info">
-                    <h3 class="user-name" id="user-name">User Name</h3>
-                    <p class="user-email" id="user-email">user@example.com</p>
-                </div>
-                <button class="logout-btn" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            </div>
-            
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-value" id="total-tests">0</div>
-                    <div class="stat-label">Tests Taken</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="avg-score">0%</div>
-                    <div class="stat-label">Average Score</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="total-questions-stats">0</div>
-                    <div class="stat-label">Questions Attempted</div>
-                </div>
-            </div>
-            
-            <h3>Recent Tests</h3>
-            <div id="recent-tests-list"></div>
-        </div>
-
         <!-- Chapter Selection Section -->
         <div class="container" id="chapter-selection">
             <h1>Select Chapters</h1>
@@ -1008,16 +904,16 @@
 
     <script>
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDIWtVfoGIWQoRVe36v6g6S3slTRRYUAgk",
-  authDomain: "quizes-3028d.firebaseapp.com",
-  databaseURL: "https://quizes-3028d-default-rtdb.firebaseio.com",
-  projectId: "quizes-3028d",
-  storageBucket: "quizes-3028d.appspot.com",
-  messagingSenderId: "624591251031",
-  appId: "1:624591251031:web:e093472f24fdeb29fc2512",
-  measurementId: "G-QMZK5Y6769"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyDIWtVfoGIWQoRVe36v6g6S3slTRRYUAgk",
+            authDomain: "quizes-3028d.firebaseapp.com",
+            databaseURL: "https://quizes-3028d-default-rtdb.firebaseio.com",
+            projectId: "quizes-3028d",
+            storageBucket: "quizes-3028d.appspot.com",
+            messagingSenderId: "624591251031",
+            appId: "1:624591251031:web:e093472f24fdeb29fc2512",
+            measurementId: "G-QMZK5Y6769"
+        };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
@@ -1044,11 +940,9 @@ const firebaseConfig = {
         let timeLimit = 30; // minutes
         let quizEndTime;
         let currentUser = null;
-        let userTestHistory = [];
 
         // DOM Elements
         const authSection = document.getElementById('auth-section');
-        const userProfileSection = document.getElementById('user-profile-section');
         const chapterSelectionSection = document.getElementById('chapter-selection');
         const quizConfigurationSection = document.getElementById('quiz-configuration');
         const quizSection = document.getElementById('quiz-section');
@@ -1073,13 +967,6 @@ const firebaseConfig = {
         const totalMarksSpan = document.getElementById('total-marks');
         const quizDateSpan = document.getElementById('quiz-date');
         const authText = document.getElementById('auth-text');
-        const userAvatar = document.getElementById('user-avatar');
-        const userName = document.getElementById('user-name');
-        const userEmail = document.getElementById('user-email');
-        const totalTestsSpan = document.getElementById('total-tests');
-        const avgScoreSpan = document.getElementById('avg-score');
-        const totalQuestionsStatsSpan = document.getElementById('total-questions-stats');
-        const recentTestsList = document.getElementById('recent-tests-list');
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
@@ -1101,16 +988,12 @@ const firebaseConfig = {
                 if (user) {
                     // User is signed in
                     currentUser = user;
-                    updateUserProfile(user);
-                    loadUserTestHistory(user.uid);
                     authText.textContent = 'Profile';
                     authSection.style.display = 'none';
-                    userProfileSection.style.display = 'block';
                 } else {
                     // No user is signed in
                     currentUser = null;
                     authText.textContent = 'Login';
-                    userProfileSection.style.display = 'none';
                 }
             });
             
@@ -1126,7 +1009,6 @@ const firebaseConfig = {
                 quizConfigurationSection.style.display = 'none';
                 quizSection.style.display = 'none';
                 resultsSection.style.display = 'none';
-                userProfileSection.style.display = 'none';
             } else {
                 authSection.style.display = 'none';
                 chapterSelectionSection.style.display = 'block';
@@ -1213,93 +1095,10 @@ const firebaseConfig = {
         function logoutUser() {
             auth.signOut().then(() => {
                 currentUser = null;
-                userProfileSection.style.display = 'none';
                 chapterSelectionSection.style.display = 'block';
             }).catch((error) => {
                 console.error('Logout error:', error);
             });
-        }
-
-        function updateUserProfile(user) {
-            // Get user data from database
-            database.ref('users/' + user.uid).once('value').then((snapshot) => {
-                const userData = snapshot.val();
-                const displayName = userData?.name || user.displayName || user.email.split('@')[0];
-                const firstLetter = displayName.charAt(0).toUpperCase();
-                
-                userName.textContent = displayName;
-                userEmail.textContent = user.email;
-                userAvatar.textContent = firstLetter;
-                
-                // Set random background color based on first letter
-                const colors = ['#3498db', '#2ecc71', '#e74c3c', '#9b59b6', '#f39c12', '#1abc9c'];
-                const colorIndex = firstLetter.charCodeAt(0) % colors.length;
-                userAvatar.style.backgroundColor = colors[colorIndex];
-            });
-        }
-
-        function loadUserTestHistory(userId) {
-            database.ref('userTests/' + userId).orderByChild('timestamp').limitToLast(5).once('value')
-                .then((snapshot) => {
-                    userTestHistory = [];
-                    const tests = [];
-                    
-                    snapshot.forEach((childSnapshot) => {
-                        const test = childSnapshot.val();
-                        test.id = childSnapshot.key;
-                        tests.unshift(test); // Reverse order to show latest first
-                        userTestHistory.push(test);
-                    });
-                    
-                    updateTestHistoryUI(tests);
-                    updateUserStats();
-                });
-        }
-
-        function updateTestHistoryUI(tests) {
-            if (tests.length === 0) {
-                recentTestsList.innerHTML = '<p>No tests taken yet.</p>';
-                return;
-            }
-            
-            let html = '';
-            tests.forEach(test => {
-                const date = new Date(test.timestamp);
-                const dateStr = date.toLocaleDateString();
-                const timeStr = date.toLocaleTimeString();
-                
-                html += `
-                    <div class="result-item">
-                        <div class="result-question">${test.subject} Test - ${dateStr} ${timeStr}</div>
-                        <div class="result-answer">
-                            <p>Score: ${test.score}% (${test.correctAnswers}/${test.totalQuestions})</p>
-                            <p>Marks: ${test.marksObtained}/${test.totalMarks}</p>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            recentTestsList.innerHTML = html;
-        }
-
-        function updateUserStats() {
-            if (userTestHistory.length === 0) {
-                totalTestsSpan.textContent = '0';
-                avgScoreSpan.textContent = '0%';
-                totalQuestionsStatsSpan.textContent = '0';
-                return;
-            }
-            
-            totalTestsSpan.textContent = userTestHistory.length;
-            
-            // Calculate average score
-            const totalScore = userTestHistory.reduce((sum, test) => sum + test.score, 0);
-            const avgScore = Math.round(totalScore / userTestHistory.length);
-            avgScoreSpan.textContent = `${avgScore}%`;
-            
-            // Calculate total questions attempted
-            const totalQuestions = userTestHistory.reduce((sum, test) => sum + test.totalQuestions, 0);
-            totalQuestionsStatsSpan.textContent = totalQuestions;
         }
 
         // Quiz mode selection
@@ -1823,10 +1622,6 @@ const firebaseConfig = {
         function saveTestResults(userId, testData) {
             const testRef = database.ref('userTests/' + userId).push();
             testRef.set(testData)
-                .then(() => {
-                    // Update user's test history
-                    loadUserTestHistory(userId);
-                })
                 .catch(error => {
                     console.error('Error saving test results:', error);
                 });
