@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Details - Quiz App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -101,32 +102,18 @@
         
         /* Test Summary */
         .test-summary {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .summary-card {
-            flex: 1;
-            min-width: 200px;
             background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+            border: 1px solid #e9ecef;
         }
         
-        .summary-title {
+        .score-display {
+            font-size: 1.8rem;
             font-weight: bold;
-            color: #7f8c8d;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
-        
-        .summary-value {
-            font-size: 1.5rem;
-            font-weight: bold;
+            margin: 20px 0;
         }
         
         .score-correct {
@@ -141,14 +128,127 @@
             color: #f39c12;
         }
         
+        /* Test Details */
+        .result-item {
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .result-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-item.correct {
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .result-item.incorrect {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .result-question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .result-answer {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        
+        .user-answer {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .correct-answer {
+            font-weight: bold;
+            color: #2ecc71;
+        }
+        
+        .result-explanation {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-top: 15px;
+            border-left: 3px solid #3498db;
+        }
+        
+        /* Navigation Controls */
+        .nav-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: center;
+            display: inline-block;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
         /* Subject Badges */
         .subject-badge {
             display: inline-block;
-            padding: 5px 15px;
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: bold;
-            margin-right: 10px;
+            margin-right: 8px;
         }
         
         .biology-badge {
@@ -164,137 +264,6 @@
         .chemistry-badge {
             background-color: #3498db;
             color: white;
-        }
-        
-        /* Test Details */
-        .test-details {
-            margin-top: 30px;
-        }
-        
-        .question-container {
-            margin-bottom: 30px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
-        }
-        
-        .question-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .question-number {
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: #2c3e50;
-        }
-        
-        .question-status {
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        
-        .correct-status {
-            background-color: #d5f5e3;
-            color: #2ecc71;
-        }
-        
-        .incorrect-status {
-            background-color: #fadbd8;
-            color: #e74c3c;
-        }
-        
-        .skipped-status {
-            background-color: #fdebd0;
-            color: #f39c12;
-        }
-        
-        .question-text {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-        
-        .options-list {
-            list-style-type: none;
-            margin: 15px 0;
-        }
-        
-        .option-item {
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            background-color: #f8f9fa;
-            border-left: 4px solid #ddd;
-            transition: all 0.3s;
-        }
-        
-        .correct-answer {
-            background-color: #d5f5e3;
-            border-left-color: #2ecc71;
-        }
-        
-        .user-answer {
-            background-color: #fadbd8;
-            border-left-color: #e74c3c;
-        }
-        
-        .option-text {
-            margin-left: 10px;
-        }
-        
-        .explanation {
-            margin-top: 15px;
-            padding: 15px;
-            background-color: #f0f8ff;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-        
-        .explanation-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #3498db;
-        }
-        
-        /* Buttons */
-        .btn {
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-align: center;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 20px;
-        }
-        
-        .btn-primary {
-            background-color: #3498db;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background-color: #95a5a6;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #7f8c8d;
-            transform: translateY(-2px);
         }
         
         /* Loading Spinner */
@@ -324,8 +293,13 @@
                 padding: 6px 12px;
             }
             
-            .summary-card {
-                min-width: 150px;
+            .nav-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
             }
         }
         
@@ -335,9 +309,21 @@
                 padding: 5px 10px;
             }
             
-            .summary-card {
-                width: 100%;
+            .container {
+                padding: 15px;
             }
+            
+            .result-item {
+                padding: 15px;
+            }
+        }
+        
+        /* MathJax inline styling */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.2em;
+            color: #3498db;
         }
     </style>
 </head>
@@ -354,48 +340,51 @@
 
     <main>
         <div class="container" id="test-details-container">
-            <div id="loading" class="spinner"></div>
+            <div id="test-loading" class="spinner"></div>
             
-            <div id="test-header" style="display: none;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h1 id="test-title">Test Details</h1>
-                    <div id="test-date" style="color: #7f8c8d;"></div>
-                </div>
-                
+            <div id="test-summary" style="display: none;">
+                <h1>Test Details</h1>
                 <div class="test-summary">
-                    <div class="summary-card">
-                        <div class="summary-title">Score</div>
-                        <div class="summary-value score-correct" id="test-score">0%</div>
+                    <h2 id="test-title">Test Summary</h2>
+                    <div class="score-display">
+                        <span>Your Score: </span>
+                        <span class="score-correct" id="correct-answers">0</span>
+                        <span>/</span>
+                        <span id="total-questions">0</span>
+                        <span> (</span>
+                        <span id="quiz-score">0</span>
+                        <span>%)</span>
                     </div>
-                    <div class="summary-card">
-                        <div class="summary-title">Correct Answers</div>
-                        <div class="summary-value score-correct" id="correct-answers">0/0</div>
+                    <div class="score-display">
+                        <span>Marks: </span>
+                        <span class="score-correct" id="marks-obtained">0</span>
+                        <span>/</span>
+                        <span id="total-marks">0</span>
                     </div>
-                    <div class="summary-card">
-                        <div class="summary-title">Marks Obtained</div>
-                        <div class="summary-value score-correct" id="marks-obtained">0/0</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-title">Time Taken</div>
-                        <div class="summary-value" id="time-taken">N/A</div>
-                    </div>
+                    <p>Time Taken: <span id="time-taken">0:00</span></p>
+                    <p>Date: <span id="test-date"></span></p>
+                    <p>Mode: <span id="test-mode"></span></p>
+                    <p>Chapters: <span id="test-chapters"></span></p>
                 </div>
                 
-                <div class="test-details" id="questions-container"></div>
+                <h2>Question-wise Results</h2>
+                <div id="detailed-results"></div>
                 
-                <button class="btn btn-primary" id="reattempt-btn">
-                    <i class="fas fa-redo"></i> Reattempt This Test
-                </button>
-                <button class="btn btn-secondary" onclick="window.location.href='profile.html'">
-                    <i class="fas fa-arrow-left"></i> Back to Profile
-                </button>
+                <div class="nav-controls">
+                    <button class="btn btn-primary" id="reattempt-btn">
+                        <i class="fas fa-redo"></i> Reattempt This Test
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.location.href='profile.html'">
+                        <i class="fas fa-arrow-left"></i> Back to Profile
+                    </button>
+                </div>
             </div>
             
-            <div id="error-message" style="display: none; text-align: center; padding: 40px;">
-                <h2>Test Not Found</h2>
-                <p>The test you're trying to view doesn't exist or you don't have permission to view it.</p>
-                <button class="btn btn-secondary" onclick="window.location.href='profile.html'">
-                    <i class="fas fa-arrow-left"></i> Back to Profile
+            <div class="container" id="login-prompt" style="display: none; text-align: center;">
+                <h2>Please Login to View Test Details</h2>
+                <p>You need to be logged in to access test details.</p>
+                <button class="btn btn-primary" onclick="window.location.href='index.html'">
+                    <i class="fas fa-sign-in-alt"></i> Go to Login Page
                 </button>
             </div>
         </div>
@@ -421,208 +410,305 @@
 
         // DOM Elements
         const testDetailsContainer = document.getElementById('test-details-container');
-        const loadingDiv = document.getElementById('loading');
-        const testHeader = document.getElementById('test-header');
-        const errorMessage = document.getElementById('error-message');
-        const testTitle = document.getElementById('test-title');
-        const testDate = document.getElementById('test-date');
-        const testScore = document.getElementById('test-score');
-        const correctAnswers = document.getElementById('correct-answers');
-        const marksObtained = document.getElementById('marks-obtained');
-        const timeTaken = document.getElementById('time-taken');
-        const questionsContainer = document.getElementById('questions-container');
+        const testLoading = document.getElementById('test-loading');
+        const testSummary = document.getElementById('test-summary');
+        const loginPrompt = document.getElementById('login-prompt');
+        const correctAnswersSpan = document.getElementById('correct-answers');
+        const totalQuestionsSpan = document.getElementById('total-questions');
+        const quizScoreSpan = document.getElementById('quiz-score');
+        const timeTakenSpan = document.getElementById('time-taken');
+        const marksObtainedSpan = document.getElementById('marks-obtained');
+        const totalMarksSpan = document.getElementById('total-marks');
+        const testDateSpan = document.getElementById('test-date');
+        const testModeSpan = document.getElementById('test-mode');
+        const testChaptersSpan = document.getElementById('test-chapters');
+        const detailedResultsDiv = document.getElementById('detailed-results');
         const reattemptBtn = document.getElementById('reattempt-btn');
         const authText = document.getElementById('auth-text');
+        const testTitle = document.getElementById('test-title');
 
         // Global variables
         let currentUser = null;
-        let currentTest = null;
+        let currentTestId = null;
+        let testData = null;
+        const metaIds = [
+            "3c48616f-298a-5f69-91d2-bcd59444c455", "cbfbed57-d7d8-5a07-9957-478e4cb62f17", "8dd253c6-09a8-5875-b127-a0c00a165a1b",
+            "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", "2ff56f11-0061-566e-aeca-9cc14246e8fb", "27ba990b-5085-5196-87dd-9727f95fc228",
+            "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", "ce68b80b-fff0-5db8-8d6a-668d729d487a", "57222784-be0a-5653-930c-8ac44c689e21"
+        ];
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
+            // Get test ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            currentTestId = urlParams.get('testId');
+            const userId = urlParams.get('userId');
+            
             // Initialize auth state listener
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    // User is signed in
                     currentUser = user;
                     authText.textContent = 'Profile';
-                    loadTestDetails();
+                    
+                    // Verify the test belongs to the current user
+                    if (userId === user.uid) {
+                        loadTestDetails(user.uid, currentTestId);
+                    } else {
+                        showError("You can only view your own test details.");
+                    }
                 } else {
-                    // No user is signed in
                     currentUser = null;
                     authText.textContent = 'Login';
-                    window.location.href = 'index.html';
+                    testSummary.style.display = 'none';
+                    loginPrompt.style.display = 'block';
+                    testLoading.style.display = 'none';
                 }
             });
-
+            
             // Reattempt button click handler
-            reattemptBtn.addEventListener('click', function() {
-                if (currentTest) {
-                    reattemptTest(currentTest);
-                }
-            });
+            reattemptBtn.addEventListener('click', reattemptCurrentTest);
         });
 
-        // Load test details from URL parameters
-        function loadTestDetails() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const testId = urlParams.get('testId');
-            const userId = urlParams.get('userId') || (currentUser ? currentUser.uid : null);
-            
-            if (!testId || !userId) {
-                showError();
-                return;
-            }
-            
-            loadingDiv.style.display = 'block';
-            testHeader.style.display = 'none';
-            errorMessage.style.display = 'none';
+        // Load test details from Firebase
+        function loadTestDetails(userId, testId) {
+            testLoading.style.display = 'block';
+            testSummary.style.display = 'none';
             
             database.ref(`userTests/${userId}/${testId}`).once('value')
                 .then(snapshot => {
-                    loadingDiv.style.display = 'none';
+                    testData = snapshot.val();
                     
-                    if (snapshot.exists()) {
-                        const testData = snapshot.val();
-                        currentTest = {
-                            id: testId,
-                            ...testData
-                        };
-                        
-                        displayTestDetails(testData);
-                        testHeader.style.display = 'block';
-                    } else {
-                        showError();
+                    if (!testData) {
+                        showError("Test not found.");
+                        return;
                     }
+                    
+                    // Fetch full question details for each question in the test
+                    fetchQuestionDetails(testData);
                 })
                 .catch(error => {
                     console.error('Error loading test:', error);
-                    loadingDiv.style.display = 'none';
-                    showError();
+                    showError("Error loading test details. Please try again.");
                 });
+        }
+
+        // Fetch full question details for each question in the test
+        async function fetchQuestionDetails(testData) {
+            try {
+                // We'll store the enhanced questions here
+                const enhancedQuestions = [];
+                
+                // Search through all metaIds to find each question
+                for (const questionData of testData.questions) {
+                    let foundQuestion = null;
+                    
+                    // Search through each metaId JSON file
+                    for (const metaId of metaIds) {
+                        if (foundQuestion) break;
+                        
+                        try {
+                            const response = await fetch(`https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`);
+                            const data = await response.json();
+                            
+                            // Search through all subjects in the metaId
+                            for (const subjectData of data) {
+                                if (foundQuestion) break;
+                                
+                                // Search through all questions in the subject
+                                for (const question of subjectData.questions) {
+                                    if (question.question_id === questionData.questionId) {
+                                        foundQuestion = question;
+                                        break;
+                                    }
+                                }
+                            }
+                        } catch (error) {
+                            console.error(`Error loading metaId ${metaId}:`, error);
+                        }
+                    }
+                    
+                    if (foundQuestion) {
+                        // Combine the test data with the full question details
+                        enhancedQuestions.push({
+                            ...questionData,
+                            content: foundQuestion.content,
+                            options: foundQuestion.options,
+                            correct_options: foundQuestion.correct_options,
+                            explanation: foundQuestion.explanation,
+                            chapter: foundQuestion.chapter,
+                            subject: foundQuestion.subject
+                        });
+                    } else {
+                        console.warn(`Question not found: ${questionData.questionId}`);
+                        // Use the basic data we have if we can't find the full question
+                        enhancedQuestions.push(questionData);
+                    }
+                }
+                
+                // Update the test data with enhanced questions
+                testData.questions = enhancedQuestions;
+                
+                // Now display the test with full question details
+                displayTestDetails();
+            } catch (error) {
+                console.error('Error fetching question details:', error);
+                // Display the test with whatever data we have
+                displayTestDetails();
+            }
         }
 
         // Display test details
-        function displayTestDetails(testData) {
-            // Set test header information
-            const date = new Date(testData.timestamp);
-            const dateStr = date.toLocaleDateString();
-            const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        function displayTestDetails() {
+            // Update summary section
+            correctAnswersSpan.textContent = testData.correctAnswers;
+            totalQuestionsSpan.textContent = testData.totalQuestions;
+            quizScoreSpan.textContent = testData.score;
+            marksObtainedSpan.textContent = testData.marksObtained;
+            totalMarksSpan.textContent = testData.totalMarks;
+            timeTakenSpan.textContent = testData.timeTaken || 'N/A';
             
-            testDate.textContent = `${dateStr} at ${timeStr}`;
-            testScore.textContent = `${testData.score}%`;
-            correctAnswers.textContent = `${testData.correctAnswers}/${testData.totalQuestions}`;
-            marksObtained.textContent = `${testData.marksObtained}/${testData.totalMarks}`;
-            timeTaken.textContent = testData.timeTaken || 'N/A';
+            // Format date
+            const date = new Date(testData.timestamp);
+            testDateSpan.textContent = date.toLocaleDateString() + ' at ' + date.toLocaleTimeString();
+            
+            // Set mode and subject
+            testModeSpan.textContent = testData.mode === 'exam' ? 'Exam Mode' : 'Practice Mode';
+            
+            // Format chapters
+            const subjectName = testData.subject.charAt(0).toUpperCase() + testData.subject.slice(1);
+            const chapters = testData.chapters ? testData.chapters.join(', ') : 'Multiple chapters';
+            testChaptersSpan.textContent = `${subjectName} - ${chapters}`;
             
             // Set test title with subject badge
             const subjectBadgeClass = `${testData.subject}-badge`;
-            const subjectName = testData.subject.charAt(0).toUpperCase() + testData.subject.slice(1);
-            const testType = testData.mode === 'exam' ? 'Exam' : 'Practice';
-            
             testTitle.innerHTML = `
                 <span class="subject-badge ${subjectBadgeClass}">${subjectName}</span>
-                ${testType} Test Results
+                ${testData.mode === 'exam' ? 'Exam' : 'Practice'} Test Results
             `;
             
-            // Display questions
-            displayQuestions(testData.questions);
+            // Generate detailed results
+            generateDetailedResults();
+            
+            // Hide loading and show content
+            testLoading.style.display = 'none';
+            testSummary.style.display = 'block';
         }
 
-        // Display questions with answers
-        function displayQuestions(questions) {
+        // Generate detailed question results
+        function generateDetailedResults() {
             let html = '';
             
-            questions.forEach((question, index) => {
-                const questionNumber = index + 1;
-                let statusClass = '';
-                let statusText = '';
+            testData.questions.forEach((questionData, index) => {
+                const question = questionData;
+                const isCorrect = questionData.isCorrect;
+                const userAnswer = questionData.userAnswer;
+                const correctAnswer = questionData.correctAnswer || (question.correct_options ? question.correct_options[0] : null);
                 
-                if (question.userAnswer === null || question.userAnswer === undefined) {
-                    statusClass = 'skipped-status';
-                    statusText = 'Skipped';
-                } else if (question.userAnswer === question.correctAnswer) {
-                    statusClass = 'correct-status';
-                    statusText = 'Correct';
-                } else {
-                    statusClass = 'incorrect-status';
-                    statusText = 'Incorrect';
-                }
+                // Find the actual question content from the question data
+                const questionContent = question.content || "Question content not available";
+                const options = question.options || [];
+                
+                // Find user and correct options
+                const userOption = options.find(opt => opt.identifier === userAnswer);
+                const correctOption = options.find(opt => opt.identifier === correctAnswer);
                 
                 html += `
-                    <div class="question-container">
-                        <div class="question-header">
-                            <div class="question-number">Question ${questionNumber}</div>
-                            <div class="question-status ${statusClass}">${statusText}</div>
+                    <div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">
+                        <div class="result-question">Question ${index + 1}: ${renderMath(questionContent)}</div>
+                        
+                        <div class="result-answer">
+                            <p><span class="user-answer">Your answer:</span> ${
+                                userOption
+                                    ? String.fromCharCode(65 + options.indexOf(userOption)) + '. ' + renderMath(userOption.content)
+                                    : '<span class="score-skipped">Skipped</span>'
+                            }</p>
+                            <p><span class="correct-answer">Correct answer:</span> ${
+                                correctOption
+                                    ? String.fromCharCode(65 + options.indexOf(correctOption)) + '. ' + renderMath(correctOption.content)
+                                    : correctAnswer ? correctAnswer : 'Unknown'
+                            }</p>
+                            <p>Marks: ${
+                                isCorrect 
+                                    ? '<span class="score-correct">+4</span>' 
+                                    : userAnswer 
+                                        ? '<span class="score-incorrect">-1</span>' 
+                                        : '<span class="score-skipped">0</span>'
+                            }</p>
                         </div>
                         
-                        <div class="question-text">${question.question}</div>
-                        
-                        <ul class="options-list">
-                `;
-                
-                // Display all options
-                question.options.forEach((option, optionIndex) => {
-                    let optionClass = '';
-                    let icon = '';
-                    
-                    // Check if this is the correct answer
-                    if (optionIndex === question.correctAnswer) {
-                        optionClass = 'correct-answer';
-                        icon = '<i class="fas fa-check"></i> ';
-                    }
-                    // Check if this is the user's answer (and it's wrong)
-                    else if (optionIndex === question.userAnswer && optionIndex !== question.correctAnswer) {
-                        optionClass = 'user-answer';
-                        icon = '<i class="fas fa-times"></i> ';
-                    }
-                    
-                    html += `
-                        <li class="option-item ${optionClass}">
-                            ${icon}<span class="option-text">${option}</span>
-                        </li>
-                    `;
-                });
-                
-                html += `
-                        </ul>
-                        
-                        <div class="explanation">
-                            <div class="explanation-title">Explanation:</div>
-                            ${question.explanation || 'No explanation available.'}
+                        ${question.explanation ? `
+                        <div class="result-explanation">
+                            <p>${renderMath(question.explanation || 'No explanation available.')}</p>
                         </div>
+                        ` : ''}
                     </div>
                 `;
             });
             
-            questionsContainer.innerHTML = html;
+            detailedResultsDiv.innerHTML = html;
+            
+            // Render MathJax
+            if (window.MathJax) {
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            }
         }
 
-        // Reattempt the test
-        function reattemptTest(testData) {
-            if (!testData || !testData.questions) {
-                alert('Error preparing test for reattempt. Please try again.');
-                return;
-            }
+        // Reattempt the current test
+        function reattemptCurrentTest() {
+            if (!testData) return;
             
-            // Store the test data in sessionStorage to use in index.html
-            sessionStorage.setItem('reattemptTest', JSON.stringify({
-                questions: testData.questions,
+            // Prepare test data for reattempt
+            const reattemptData = {
+                questions: testData.questions.map(q => ({
+                    question_id: q.questionId,
+                    content: q.content,
+                    options: q.options,
+                    correct_options: q.correct_options || [q.correctAnswer],
+                    explanation: q.explanation,
+                    chapter: q.chapter,
+                    subject: q.subject
+                })),
                 subject: testData.subject,
                 chapters: testData.chapters,
-                mode: testData.mode
-            }));
+                mode: testData.mode,
+                examId: currentTestId // Include the exam ID for reference
+            };
             
-            // Redirect to index.html
-            window.location.href = 'index.html';
+            // Store in sessionStorage
+            sessionStorage.setItem('reattemptTest', JSON.stringify(reattemptData));
+            
+            // Redirect to index.html with examId parameter
+            window.location.href = `index.html?examId=${currentTestId}`;
         }
 
         // Show error message
-        function showError() {
-            loadingDiv.style.display = 'none';
-            testHeader.style.display = 'none';
-            errorMessage.style.display = 'block';
+        function showError(message) {
+            testLoading.style.display = 'none';
+            testSummary.style.display = 'none';
+            
+            const errorHTML = `
+                <div class="container" style="text-align: center;">
+                    <h2>Error</h2>
+                    <p>${message}</p>
+                    <button class="btn btn-secondary" onclick="window.location.href='profile.html'" style="margin-top: 20px;">
+                        <i class="fas fa-arrow-left"></i> Back to Profile
+                    </button>
+                </div>
+            `;
+            
+            testDetailsContainer.innerHTML = errorHTML;
         }
+
+        // Render LaTeX using MathJax
+        function renderMath(input) {
+            if (!input) return '';
+            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            });
+        }
+
+        // Make functions available globally
+        window.renderMath = renderMath;
     </script>
 </body>
 </html>
