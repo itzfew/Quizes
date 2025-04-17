@@ -439,26 +439,30 @@
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            // Get test ID from URL
             const urlParams = new URLSearchParams(window.location.search);
-            currentTestId = urlParams.get('testId');
+            currentTestId = urlParams.get('testId') || urlParams.get('examId');
             const userId = urlParams.get('userId');
             
-            // Initialize auth state listener
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    // User is signed in
                     currentUser = user;
                     authText.textContent = 'Profile';
                     
-                    // Verify the test belongs to the current user
+                    // Check if we have reattempt data in sessionStorage
+                    const reattemptData = sessionStorage.getItem('reattemptTest');
+                    if (reattemptData) {
+                        testData = JSON.parse(reattemptData);
+                        displayTestDetails();
+                        return;
+                    }
+                    
+                    // If no userId parameter or it matches current user, load test
                     if (!userId || userId === user.uid) {
                         loadTestDetails(user.uid, currentTestId);
                     } else {
                         showError("You can only view your own test details.");
                     }
                 } else {
-                    // No user is signed in
                     currentUser = null;
                     authText.textContent = 'Login';
                     testSummary.style.display = 'none';
@@ -467,9 +471,9 @@
                 }
             });
             
-            // Reattempt button click handler
             reattemptBtn.addEventListener('click', reattemptCurrentTest);
         });
+
 
         // Load test details from Firebase
         function loadTestDetails(userId, testId) {
@@ -485,17 +489,9 @@
                         return;
                     }
                     
-                    // Fetch full question details for each question in the test
-                    fetchQuestionDetails(testData)
-                        .then(updatedTestData => {
-                            testData = updatedTestData;
-                            displayTestDetails();
-                        })
-                        .catch(error => {
-                            console.error('Error fetching question details:', error);
-                            // Display with whatever data we have
-                            displayTestDetails();
-                        });
+                    // Store the original test ID
+                    testData.originalTestId = testId;
+                    fetchQuestionDetails(testData);
                 })
                 .catch(error => {
                     console.error('Error loading test:', error);
@@ -652,28 +648,29 @@
         function reattemptCurrentTest() {
             if (!testData) return;
             
-            // Prepare test data for reattempt
+            // Prepare test data for reattempt in exam mode
             const reattemptData = {
                 questions: testData.questions.map(q => ({
                     question_id: q.questionId,
                     content: q.content,
                     options: q.options,
-                    correct_options: [q.correctAnswer],
+                    correct_options: q.correct_options || [q.correctAnswer],
                     explanation: q.explanation,
                     chapter: q.chapter,
                     subject: q.subject
                 })),
                 subject: testData.subject,
                 chapters: testData.chapters,
-                mode: testData.mode,
-                examId: currentTestId // Include the exam ID for reference
+                mode: 'exam', // Force exam mode for reattempt
+                originalTestId: testData.originalTestId || currentTestId, // Preserve original test ID
+                isReattempt: true // Flag to indicate this is a reattempt
             };
             
             // Store in sessionStorage
             sessionStorage.setItem('reattemptTest', JSON.stringify(reattemptData));
             
-            // Redirect to index.html with examId parameter
-            window.location.href = `index.html?examId=${currentTestId}`;
+            // Redirect to index.html with reattempt flag
+            window.location.href = `index.html?reattempt=true&examId=${currentTestId}`;
         }
 
         // Show error message
