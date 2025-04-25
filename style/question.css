@@ -4,213 +4,228 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Arial, sans-serif;
     line-height: 1.6;
-    background-color: #f5f7fa;
-    color: #333;
-    padding: 0;
+    padding: 10px;
     margin: 0;
-    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
 }
-
 main {
-    max-width: 800px;
-    margin: 60px auto 80px;
-    padding: 20px;
     background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    margin-top: 20px; /* Adds 20px gap at the top */
 }
 
-#question-detail {
+.question-detail {
+    overflow-x: auto;
     margin-bottom: 30px;
-    padding: 15px;
+    padding: 3px;
+    border-bottom: 1px solid #ccc;
     word-wrap: break-word;
+    white-space: normal;
 }
 
-#question-detail h3 {
-    font-size: 1.4rem;
-    color: #2c3e50;
-    margin-bottom: 20px;
-    font-weight: 600;
-    line-height: 1.4;
+.question-detail h3 {
+    font-size: 1.6em;
+    color: #333;
+    margin-bottom: 15px;
 }
 
 .options {
-    margin: 25px 0;
+    margin: 20px 0;
     padding: 0;
     list-style-type: none;
 }
 
 .options li {
-    margin-bottom: 12px;
-    border: 2px solid #e0e0e0;
-    padding: 15px;
-    border-radius: 8px;
-    background-color: #fff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 1.1rem;
-    position: relative;
-    overflow: hidden;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 100%; /* Allow options to take up full width */
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .options li:hover {
-    border-color: #3498db;
-    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
-    transform: translateY(-2px);
-}
-
-.options li::before {
-    content: attr(data-option);
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-weight: bold;
-    color: #7f8c8d;
-}
-
-.options li span {
-    display: block;
-    margin-left: 25px;
+    background-color: #e6f7ff;
+    transform: translateY(-5px);
 }
 
 .options li.selected {
-    border-color: #3498db;
-    background-color: #e8f4fc;
+    background-color: #c1e7fc;
 }
 
 .options li.correct {
-    border-color: #2ecc71;
-    background-color: #e8f8ef;
-    color: #27ae60;
+    background-color: #28a745;
+    color: white;
 }
 
 .options li.incorrect {
-    border-color: #e74c3c;
-    background-color: #fdedec;
-    color: #c0392b;
+    background-color: #dc3545;
+    color: white;
 }
 
+/* .check-btn */
 .check-btn {
-    display: block;
-    width: 90%;
-    max-width: 300px;
-    margin: 25px auto;
-    padding: 14px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    position: fixed;
+    bottom: 10px;
+    left: 10%; /* Position the button from the left */
+    background-color: #17a2b8; /* Blue background */
+    color: white; /* White text */
+    border: 2px solid black; /* Black border */
+    padding: 12px 24px; /* Top and bottom padding, left and right padding */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Bold text */
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: all 0.3s ease; /* Smooth hover effect */
+    z-index: 1000; /* Ensure it's above other elements */
 }
 
 .check-btn:hover {
-    background-color: #2980b9;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(52, 152, 219, 0.4);
+    background-color: black; /* Black background on hover */
+    color: white; /* White text on hover */
 }
 
-.check-btn:active {
-    transform: translateY(0);
+.check-btn:focus {
+    outline: none; /* Remove outline on focus */
 }
 
-.back-btn {
+/* #next-btn */
+#next-btn {
     position: fixed;
-    top: 15px;
-    left: 15px;
-    padding: 10px 18px;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    bottom: 10px;
+    right: 10%; /* Position the button from the right */
+    background-color: #f39c12; /* Orange background */
+    color: white; /* White text */
+    border: none; /* Remove border */
+    padding: 12px 24px; /* Top and bottom padding, left and right padding */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Bold text */
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: all 0.3s ease; /* Smooth hover effect */
+    z-index: 1000; /* Ensure it's above other elements */
 }
 
-.back-btn:hover {
-    background-color: #c0392b;
-    transform: translateY(-2px);
+#next-btn:hover {
+    background-color: #e67e22; /* Darker orange on hover */
+    transform: translateY(-3px); /* Slight lift effect */
 }
+
+#next-btn:focus {
+    outline: none; /* Remove outline on focus */
+}
+
+/* Timer Button Style */
+.timer {
+    position: fixed;
+    top: 1px; /* Position at the top of the screen */
+    right: 1px; /* Position at the right side */
+    padding: 10px 15px;
+    background-color: #f44336; /* Red background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+/* Back Button Style */
+.back-btn {
+    position: fixed; /* Fixes the button position */
+    top: 1px; /* Position at the top of the screen */
+    left: 1px; /* Position at the left side */
+    padding: 10px 15px;
+    background-color: #f44336; /* Red background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
 
 .explanation {
     display: none;
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid #3498db;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 100%; /* Ensures it takes the full available width */
+    box-sizing: border-box; /* Includes padding and border in the element's total width */
+    white-space: normal; /* Prevents text from overflowing horizontally */
 }
 
 .explanation h4 {
-    font-size: 1.2rem;
-    color: #2c3e50;
-    margin-bottom: 15px;
-    font-weight: 600;
+    font-size: 1.4em;
+    color: #333;
+    margin-bottom: 10px;
 }
 
 .explanation p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #34495e;
+    font-size: 1.2em;
+    line-height: 1.5;
+    color: #555;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+
+.mathjax-inline {
+    display: inline-block;
+    font-size: 1.2em;
+    color: #007bff;
 }
 
 .source {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 0.9rem;
-    color: #7f8c8d;
-    font-style: italic;
+    bottom: 5px;
+    text-align:center;
+    left: 5px;
+    font-size: 1em;
+    color: #555;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
 }
 
-.mathjax-inline {
-    display: inline;
-    color: #3498db;
+/* Fullscreen and Responsiveness */
+html, body {
+    height: 100%;
 }
 
-/* Responsive Design */
 @media screen and (max-width: 768px) {
-    main {
-        margin: 50px 15px 70px;
-        padding: 15px;
-    }
-
-    #question-detail h3 {
-        font-size: 1.2rem;
-    }
-
     .options li {
+        font-size: 1.1em;
         padding: 12px;
-        font-size: 1rem;
     }
 
-    .check-btn {
-        width: 100%;
-        padding: 12px;
+    .check-btn, #next-btn {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+
+    .timer, .back-btn {
+        font-size: 14px;
+        padding: 10px 20px;
     }
 }
 
-@media screen and (max-width: 480px) {
-    main {
-        margin: 40px 10px 60px;
-        padding: 10px;
+/* Ensure page loads in full screen */
+@media screen and (min-width: 769px) {
+    html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    
     }
-
-    .back-btn {
-        top: 10px;
-        left: 10px;
-        padding: 8px 14px;
-        font-size: 0.9rem;
+    main {
+        width: 100%;
+        max-width: 1200px;
     }
 }
