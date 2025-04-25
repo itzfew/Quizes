@@ -13,6 +13,7 @@
 <main>
     <div class="source" id="source"></div>
     <div id="question-detail"></div>
+    <div class="timer" id="timer">Time: 2:00</div>
 </main>
 
 <script>
@@ -52,9 +53,26 @@
 ]
         
 // Initialize variables
+let timerInterval;
 let currentQuestionId;
 let subject, chapter;
 let questionsData = [];
+
+// Timer function with automatic submit and check
+function startTimer() {
+    let timeLeft = 120; // 2-minute timer
+    timerInterval = setInterval(function () {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer').textContent = `Time: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        if (timeLeft === 0) {
+            clearInterval(timerInterval);
+            alert("Time's up! Your answer will be submitted.");
+            checkAnswer();  // Automatically check the answer when time runs out
+        }
+        timeLeft--;
+    }, 1000);
+}
 
 // Load question details from all metaIds
 function loadQuestionDetail() {
@@ -84,6 +102,7 @@ function loadQuestionDetail() {
                 if (questionsData.length > 0) {
                     questionFound = true;
                     renderQuestionDetail(questionsData.find(q => q.question_id === currentQuestionId));
+                    startTimer();
                     document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
                     break;
                 }
@@ -110,6 +129,7 @@ function renderQuestionDetail(question) {
             ).join('')}
         </ul>
         <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
+        <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
         <div class="explanation" id="explanation">
             <h4>Explanation:</h4>
             <p>${renderMath(question.explanation)}</p>
@@ -176,6 +196,39 @@ function checkAnswer() {
 // Get correct answer based on the question ID (example logic)
 function getCorrectAnswer(questionId) {
     return 'A'; // Placeholder for correct answer
+}
+
+// Load next question and update URL
+function loadNextQuestion() {
+    const selectedOption = document.querySelector('.options li.selected');
+    
+    // Force check answer if not already selected
+    if (!selectedOption) {
+        alert("You need to select an answer before proceeding.");
+        return;
+    }
+
+    // Check the answer before proceeding to the next question
+    checkAnswer();
+
+    // Get the next question from the same chapter and subject
+    const nextQuestion = getNextQuestion();
+    if (nextQuestion) {
+        const newUrl = `?id=${subject}/${chapter}/${nextQuestion.question_id}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+        currentQuestionId = nextQuestion.question_id;
+        loadQuestionDetail();
+    }
+}
+
+// Get the next question from the same chapter and subject
+function getNextQuestion() {
+    const currentIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
+    if (currentIndex === -1 || currentIndex === questionsData.length - 1) {
+        return questionsData[0]; // If it's the last question or not found, go to the first question
+    } else {
+        return questionsData[currentIndex + 1];
+    }
 }
 
 // Load the question detail on page load
