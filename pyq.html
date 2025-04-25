@@ -258,14 +258,9 @@
         loadChapters(subject, metaIds[0]);
     }
 
-    function goBack() {
-        // Try to go back in history, if not possible redirect to a default page
-        if (window.history.length > 1) {
-            window.history.back();
-        } else {
-            window.location.href = 'index.html'; // Change to your default page
-        }
-    }
+function goBack() {
+    window.location.href = 'index.html';
+}
 
     // Make Biology section active initially
     showSubject('biology');
