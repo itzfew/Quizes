@@ -21,6 +21,33 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background-color: #4361ee;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            margin-left: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #3a56d4;
+            transform: translateX(-3px);
+        }
+
+        .back-btn i {
+            font-size: 0.9rem;
         }
 
         nav ul {
@@ -30,6 +57,7 @@
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
+            flex-grow: 1;
         }
 
         nav ul li {
@@ -71,10 +99,17 @@
             font-weight: bold;
             border-radius: 5px;
             transition: all 0.3s ease;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .chapter:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
 
         .chapter a {
-            color: black;
+            color: #333;
             text-decoration: none;
             display: block;
             width: 100%;
@@ -90,6 +125,17 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 10px 0;
+            }
+            
+            .back-btn {
+                margin: 0 0 10px 0;
+                align-self: flex-start;
+                padding: 6px 12px;
+            }
+            
             nav ul li {
                 margin: 5px 10px;
             }
@@ -108,15 +154,21 @@
                 font-size: 0.8rem;
                 padding: 3px 7px;
             }
+            
+            .chapter {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
         }
 
         .line-break {
-            border-top: 1px solid black;
+            border-top: 1px solid #ddd;
             margin: 5px 0;
         }
 
         .fa-icon {
             margin-right: 8px;
+            color: #4361ee;
         }
 
         nav ul li a.active {
@@ -127,6 +179,9 @@
 <body>
 
 <header>
+    <button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
     <nav>
         <ul>
             <li><a href="#" id="biology-nav" onclick="showSubject('biology')">Biology</a></li>
@@ -170,17 +225,18 @@
                     chapters = data[2].questions;
                 }
 
+                // Get unique chapters
+                const uniqueChapters = [...new Set(chapters.map(q => q.chapter))];
+                
                 let chapterListHTML = '';
-                chapters.forEach(q => {
-                    if (!chapterListHTML.includes(q.chapter)) {
-                        chapterListHTML += `
-                            <div class="chapter">
-                                <i class="fa fa-book fa-icon"></i>
-                                <a href="subject.html?subject=${subject}&chapter=${encodeURIComponent(q.chapter)}">${q.chapter.charAt(0).toUpperCase() + q.chapter.slice(1)}</a>
-                            </div>
-                            <div class="line-break"></div>
-                        `;
-                    }
+                uniqueChapters.forEach(chapter => {
+                    chapterListHTML += `
+                        <div class="chapter">
+                            <i class="fa fa-book fa-icon"></i>
+                            <a href="subject.html?subject=${subject}&chapter=${encodeURIComponent(chapter)}">${chapter.charAt(0).toUpperCase() + chapter.slice(1)}</a>
+                        </div>
+                        <div class="line-break"></div>
+                    `;
                 });
 
                 document.getElementById(`${subject}-chapter-list`).innerHTML = chapterListHTML;
@@ -200,6 +256,15 @@
         document.getElementById(subject).classList.add('active');
         document.getElementById(`${subject}-nav`).classList.add('active');
         loadChapters(subject, metaIds[0]);
+    }
+
+    function goBack() {
+        // Try to go back in history, if not possible redirect to a default page
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = 'index.html'; // Change to your default page
+        }
     }
 
     // Make Biology section active initially
