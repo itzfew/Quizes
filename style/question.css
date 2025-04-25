@@ -93,44 +93,6 @@ main {
     outline: none; /* Remove outline on focus */
 }
 
-/* #next-btn */
-#next-btn {
-    position: fixed;
-    bottom: 10px;
-    right: 10%; /* Position the button from the right */
-    background-color: #f39c12; /* Orange background */
-    color: white; /* White text */
-    border: none; /* Remove border */
-    padding: 12px 24px; /* Top and bottom padding, left and right padding */
-    font-size: 16px; /* Font size */
-    font-weight: bold; /* Bold text */
-    border-radius: 8px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: all 0.3s ease; /* Smooth hover effect */
-    z-index: 1000; /* Ensure it's above other elements */
-}
-
-#next-btn:hover {
-    background-color: #e67e22; /* Darker orange on hover */
-    transform: translateY(-3px); /* Slight lift effect */
-}
-
-#next-btn:focus {
-    outline: none; /* Remove outline on focus */
-}
-
-/* Timer Button Style */
-.timer {
-    position: fixed;
-    top: 1px; /* Position at the top of the screen */
-    right: 1px; /* Position at the right side */
-    padding: 10px 15px;
-    background-color: #f44336; /* Red background */
-    color: white; /* White text */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-}
 
 /* Back Button Style */
 .back-btn {
