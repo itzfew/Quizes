@@ -3,264 +3,665 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question Detail</title>
+    <title>QuizMaster</title>
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    <link rel="stylesheet" href="style/question.css">
-</head>
-<body>
-    <!-- Back Button to Go to Index Page -->
-<button class="back-btn" onclick="goBack()">Back</button>
-<main>
-    <div class="source" id="source"></div>
-    <div id="question-detail"></div>
-    <div class="timer" id="timer">Time: 2:00</div>
-</main>
-
-<script>
-    const metaIds = [
-    { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
-    { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-    { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
-    { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
-    { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
-    { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
-    { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
-    { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
-    { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
-    { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
-    { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
-    { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
-    { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
-    { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
-    { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
-    { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
-    { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
-    { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
-    { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
-    { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
-    { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
-    { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
-    { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
-    { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
-    { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
-    { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
-    { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
-    { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
-    { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
-    { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
-    { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
-    { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
-]
-        
-// Initialize variables
-let timerInterval;
-let currentQuestionId;
-let subject, chapter;
-let questionsData = [];
-
-// Timer function with automatic submit and check
-function startTimer() {
-    let timeLeft = 120; // 2-minute timer
-    timerInterval = setInterval(function () {
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        document.getElementById('timer').textContent = `Time: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-        if (timeLeft === 0) {
-            clearInterval(timerInterval);
-            alert("Time's up! Your answer will be submitted.");
-            checkAnswer();  // Automatically check the answer when time runs out
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --warning-color: #ff9800;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --text-color: #333;
+            --bg-color: #ffffff;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        timeLeft--;
-    }, 1000);
-}
 
-// Load question details from all metaIds
-function loadQuestionDetail() {
-    const urlParams = new URLSearchParams(window.location.search);
-    [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #f5f5f5;
+            --light-color: #2d2d2d;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
 
-    let questionFound = false;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    (async function fetchQuestion() {
-        for (let i = 0; i < metaIds.length; i++) {
-            const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaIds[i].id}.json`;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-            try {
-                const response = await fetch(chaptersUrl);
-                const data = await response.json();
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-                let question = {};
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-                if (subject === 'biology') {
-                    questionsData = data[0].questions.filter(q => q.chapter === chapter && q.subject === subject);
-                } else if (subject === 'chemistry') {
-                    questionsData = data[1].questions.filter(q => q.chapter === chapter && q.subject === subject);
-                } else if (subject === 'physics') {
-                    questionsData = data[2].questions.filter(q => q.chapter === chapter && q.subject === subject);
-                }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
 
-                if (questionsData.length > 0) {
-                    questionFound = true;
-                    renderQuestionDetail(questionsData.find(q => q.question_id === currentQuestionId));
-                    startTimer();
-                    document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
-                    break;
-                }
-            } catch (error) {
-                console.error('Error fetching question data:', error);
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .source {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .options {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .options li {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background-color: var(--light-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .options li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .options li.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .options li.correct {
+            background-color: rgba(76, 175, 80, 0.2);
+            border-color: var(--success-color);
+        }
+
+        .options li.incorrect {
+            background-color: rgba(244, 67, 54, 0.2);
+            border-color: var(--error-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+
+        .back-btn {
+            background-color: var(--light-color);
+            color: var(--text-color);
+        }
+
+        .check-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .next-btn {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .explanation {
+            padding: 15px;
+            background-color: var(--light-color);
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .explanation h4 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: var(--light-color);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            height: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 8px;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .timer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            background-color: var(--light-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .stats {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stat-box {
+            background-color: var(--light-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .correct-stat {
+            color: var(--success-color);
+        }
+
+        .incorrect-stat {
+            color: var(--error-color);
+        }
+
+        .mathjax-inline {
+            display: inline-block;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .quiz-card {
+                padding: 15px;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
             }
         }
 
-        if (!questionFound) {
-            document.getElementById('question-detail').innerHTML = '<p>Question not found.</p>';
+        /* Animation for correct/incorrect feedback */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
-    })();
-}
 
-// Render question details in the HTML
-function renderQuestionDetail(question) {
-    let questionDetailHTML = `
-        <h3>${renderMath(question.content)}</h3>
-        <ul class="options">
-            ${question.options.map((opt, index) => 
-                `<li data-option="${opt.identifier}" id="option${index}">
-                    ${String.fromCharCode(65 + index)}. ${renderMath(opt.content)}
-                 </li>`
-            ).join('')}
-        </ul>
-        <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
-        <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
+        .feedback {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: pulse 0.5s;
+            display: none;
+        }
+
+        .feedback.correct {
+            background-color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background-color: var(--error-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">QuizMaster</div>
+            <button class="theme-toggle" id="themeToggle">🌓</button>
+        </header>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="timer-container">
+            <div class="stats">
+                <div class="stat-box correct-stat" id="correctCount">✓ 0</div>
+                <div class="stat-box incorrect-stat" id="incorrectCount">✗ 0</div>
+            </div>
+            <div class="timer" id="timer">⏱️ 2:00</div>
+        </div>
+
+        <div class="quiz-card">
+            <div class="source" id="source"></div>
+            <div class="question" id="question-detail"></div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="back-btn" onclick="goBack()">← Back</button>
+            <button class="check-btn" id="checkBtn" onclick="checkAnswer()">Check Answer</button>
+            <button class="next-btn" id="nextBtn" onclick="loadNextQuestion()">Next →</button>
+        </div>
+
         <div class="explanation" id="explanation">
             <h4>Explanation:</h4>
-            <p>${renderMath(question.explanation)}</p>
+            <p id="explanationText"></p>
         </div>
-    `;
+    </div>
 
-    document.getElementById('question-detail').innerHTML = questionDetailHTML;
+    <div class="feedback" id="feedback"></div>
 
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    <script>
+        // Quiz data and state
+        const metaIds = [
+            { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+            { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+            { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+            { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
+            { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
+            { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
+            { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
+            { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
+            { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
+            { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
+            { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
+            { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
+            { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
+            { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
+            { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
+            { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
+            { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
+            { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
+            { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
+            { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
+            { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
+            { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
+            { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
+            { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
+            { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
+            { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
+            { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
+            { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
+            { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
+            { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
+            { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
+            { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
+        ];
+        
+        // App state
+        let state = {
+            timerInterval: null,
+            currentQuestionId: null,
+            subject: null,
+            chapter: null,
+            questionsData: [],
+            currentIndex: 0,
+            correctAnswers: 0,
+            incorrectAnswers: 0,
+            answeredQuestions: 0,
+            timerRunning: false,
+            timeLeft: 120, // 2 minutes in seconds
+            darkMode: localStorage.getItem('darkMode') === 'true'
+        };
 
-    // Attach event listeners to options
-    const options = document.querySelectorAll('.options li');
-    options.forEach(option => {
-        option.addEventListener('click', function () {
-            options.forEach(opt => opt.classList.remove('selected'));
-            option.classList.add('selected');
-            saveAnswer(option.dataset.option);
-        });
-    });
+        // DOM elements
+        const elements = {
+            questionDetail: document.getElementById('question-detail'),
+            source: document.getElementById('source'),
+            timer: document.getElementById('timer'),
+            progressBar: document.getElementById('progressBar'),
+            correctCount: document.getElementById('correctCount'),
+            incorrectCount: document.getElementById('incorrectCount'),
+            explanation: document.getElementById('explanation'),
+            explanationText: document.getElementById('explanationText'),
+            checkBtn: document.getElementById('checkBtn'),
+            nextBtn: document.getElementById('nextBtn'),
+            feedback: document.getElementById('feedback'),
+            themeToggle: document.getElementById('themeToggle')
+        };
 
-    // Check for saved answer in localStorage
-    const savedAnswer = localStorage.getItem(`answer-${currentQuestionId}`);
-    if (savedAnswer) {
-        document.querySelector(`#option${savedAnswer}`).classList.add('selected');
-    }
-}
+        // Initialize the app
+        function init() {
+            // Set theme
+            if (state.darkMode) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                elements.themeToggle.textContent = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                elements.themeToggle.textContent = '🌙';
+            }
 
-// Render LaTeX using MathJax
-function renderMath(input) {
-    return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-        return `<span class="mathjax-inline">$$${p1}$$</span>`;
-    });
-}
+            // Load question details
+            loadQuestionDetail();
 
-// Save selected answer to localStorage
-function saveAnswer(optionId) {
-    localStorage.setItem(`answer-${currentQuestionId}`, optionId);
-}
-
-// Check and display the correct answer
-function checkAnswer() {
-    const selectedOption = document.querySelector('.options li.selected');
-    if (!selectedOption) {
-        alert("Please select an option.");
-        return;
-    }
-
-    const correctAnswer = getCorrectAnswer(currentQuestionId);
-    const options = document.querySelectorAll('.options li');
-
-    options.forEach(option => {
-        option.classList.remove('correct', 'incorrect');
-        if (option.dataset.option === correctAnswer) {
-            option.classList.add('correct');
-        } else if (option === selectedOption) {
-            option.classList.add('incorrect');
+            // Add event listeners
+            elements.themeToggle.addEventListener('click', toggleTheme);
         }
-    });
 
-    // Show explanation after checking the answer
-    document.getElementById('explanation').style.display = 'block';
-}
+        // Toggle dark/light theme
+        function toggleTheme() {
+            state.darkMode = !state.darkMode;
+            localStorage.setItem('darkMode', state.darkMode);
+            
+            if (state.darkMode) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                elements.themeToggle.textContent = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                elements.themeToggle.textContent = '🌙';
+            }
+        }
 
-// Get correct answer based on the question ID (example logic)
-function getCorrectAnswer(questionId) {
-    return 'A'; // Placeholder for correct answer
-}
+        // Timer functions
+        function startTimer() {
+            if (state.timerRunning) return;
+            
+            state.timerRunning = true;
+            updateTimerDisplay();
+            
+            state.timerInterval = setInterval(() => {
+                state.timeLeft--;
+                updateTimerDisplay();
+                
+                if (state.timeLeft <= 0) {
+                    clearInterval(state.timerInterval);
+                    showFeedback("Time's up!", 'incorrect');
+                    checkAnswer();
+                }
+            }, 1000);
+        }
 
-// Load next question and update URL
-function loadNextQuestion() {
-    const selectedOption = document.querySelector('.options li.selected');
-    
-    // Force check answer if not already selected
-    if (!selectedOption) {
-        alert("You need to select an answer before proceeding.");
-        return;
-    }
+        function updateTimerDisplay() {
+            const minutes = Math.floor(state.timeLeft / 60);
+            const seconds = state.timeLeft % 60;
+            elements.timer.textContent = `⏱️ ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+            
+            // Change color when time is running low
+            if (state.timeLeft <= 30) {
+                elements.timer.style.color = 'var(--error-color)';
+            } else {
+                elements.timer.style.color = 'var(--primary-color)';
+            }
+        }
 
-    // Check the answer before proceeding to the next question
-    checkAnswer();
+        function resetTimer() {
+            clearInterval(state.timerInterval);
+            state.timeLeft = 120;
+            state.timerRunning = false;
+            updateTimerDisplay();
+        }
 
-    // Get the next question from the same chapter and subject
-    const nextQuestion = getNextQuestion();
-    if (nextQuestion) {
-        const newUrl = `?id=${subject}/${chapter}/${nextQuestion.question_id}`;
-        window.history.pushState({ path: newUrl }, '', newUrl);
-        currentQuestionId = nextQuestion.question_id;
-        loadQuestionDetail();
-    }
-}
+        // Load question details
+        function loadQuestionDetail() {
+            const urlParams = new URLSearchParams(window.location.search);
+            [state.subject, state.chapter, state.currentQuestionId] = urlParams.get('id').split('/');
 
-// Get the next question from the same chapter and subject
-function getNextQuestion() {
-    const currentIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
-    if (currentIndex === -1 || currentIndex === questionsData.length - 1) {
-        return questionsData[0]; // If it's the last question or not found, go to the first question
-    } else {
-        return questionsData[currentIndex + 1];
-    }
-}
+            // Reset UI elements for new question
+            resetQuestionUI();
+            
+            // Try to find the question in our metaIds
+            findQuestion();
+        }
 
-// Load the question detail on page load
-window.onload = loadQuestionDetail;
-</script>
-<button class="back-btn" onclick="goBack()">Back</button>
+        function resetQuestionUI() {
+            elements.explanation.style.display = 'none';
+            elements.checkBtn.style.display = 'block';
+            elements.nextBtn.style.display = 'none';
+            resetTimer();
+        }
 
-<script>
-function goBack() {
-    // Get the current URL
-    const currentUrl = window.location.href;
+        async function findQuestion() {
+            let questionFound = false;
+            
+            for (const meta of metaIds) {
+                const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`;
+                
+                try {
+                    const response = await fetch(chaptersUrl);
+                    const data = await response.json();
+                    
+                    // Filter questions based on subject
+                    let subjectIndex;
+                    if (state.subject === 'biology') subjectIndex = 0;
+                    else if (state.subject === 'chemistry') subjectIndex = 1;
+                    else if (state.subject === 'physics') subjectIndex = 2;
+                    
+                    state.questionsData = data[subjectIndex].questions.filter(
+                        q => q.chapter === state.chapter && q.subject === state.subject
+                    );
+                    
+                    if (state.questionsData.length > 0) {
+                        questionFound = true;
+                        state.currentIndex = state.questionsData.findIndex(q => q.question_id === state.currentQuestionId);
+                        renderQuestionDetail();
+                        elements.source.textContent = `Source: ${meta.title}`;
+                        updateProgress();
+                        startTimer();
+                        break;
+                    }
+                } catch (error) {
+                    console.error('Error fetching question data:', error);
+                }
+            }
+            
+            if (!questionFound) {
+                elements.questionDetail.innerHTML = '<p>Question not found.</p>';
+            }
+        }
 
-    // Extract the part after '?id='
-    const urlParams = new URLSearchParams(window.location.search);
-    const questionId = urlParams.get('id');  // e.g., 'biology/biomolecules/1lipxfxx3'
+        // Render question details
+        function renderQuestionDetail() {
+            const question = state.questionsData[state.currentIndex];
+            
+            let optionsHTML = question.options.map((opt, index) => `
+                <li data-option="${opt.identifier}" id="option${index}">
+                    ${String.fromCharCode(65 + index)}. ${renderMath(opt.content)}
+                </li>
+            `).join('');
+            
+            elements.questionDetail.innerHTML = `
+                <h3>${renderMath(question.content)}</h3>
+                <ul class="options">${optionsHTML}</ul>
+            `;
+            
+            // Render MathJax
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            
+            // Add event listeners to options
+            document.querySelectorAll('.options li').forEach(option => {
+                option.addEventListener('click', function() {
+                    if (elements.explanation.style.display === 'block') return;
+                    
+                    document.querySelectorAll('.options li').forEach(opt => 
+                        opt.classList.remove('selected')
+                    );
+                    option.classList.add('selected');
+                });
+            });
+            
+            // Check for saved answer in session
+            const savedAnswer = sessionStorage.getItem(`answer-${question.question_id}`);
+            if (savedAnswer) {
+                document.querySelector(`[data-option="${savedAnswer}"]`).classList.add('selected');
+            }
+        }
 
-    if (questionId) {
-        // Split the questionId to get subject and chapter
-        const urlParts = questionId.split('/');  // Split by '/'
-        const subject = urlParts[0];  // 'biology'
-        const chapter = urlParts[1];  // 'biomolecules'
+        // Render LaTeX using MathJax
+        function renderMath(input) {
+            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            });
+        }
 
-        // Construct the new URL
-        const newUrl = `subject.html?subject=${subject}&chapter=${chapter}`;
+        // Check answer and show feedback
+        function checkAnswer() {
+            const selectedOption = document.querySelector('.options li.selected');
+            if (!selectedOption) {
+                showFeedback("Please select an option first!", 'incorrect');
+                return;
+            }
+            
+            const question = state.questionsData[state.currentIndex];
+            const correctOption = question.options.find(opt => opt.is_correct).identifier;
+            const isCorrect = selectedOption.dataset.option === correctOption;
+            
+            // Update stats
+            if (isCorrect) {
+                state.correctAnswers++;
+                elements.correctCount.textContent = `✓ ${state.correctAnswers}`;
+                showFeedback("Correct! 🎉", 'correct');
+            } else {
+                state.incorrectAnswers++;
+                elements.incorrectCount.textContent = `✗ ${state.incorrectAnswers}`;
+                showFeedback("Incorrect 😢", 'incorrect');
+            }
+            
+            state.answeredQuestions++;
+            
+            // Highlight correct and incorrect answers
+            document.querySelectorAll('.options li').forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+                if (option.dataset.option === correctOption) {
+                    option.classList.add('correct');
+                } else if (option === selectedOption) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Show explanation
+            elements.explanationText.innerHTML = renderMath(question.explanation);
+            elements.explanation.style.display = 'block';
+            
+            // Update button visibility
+            elements.checkBtn.style.display = 'none';
+            elements.nextBtn.style.display = 'block';
+            
+            // Stop timer for this question
+            clearInterval(state.timerInterval);
+            state.timerRunning = false;
+        }
 
-        // Redirect to the new URL
-        window.location.href = newUrl;
-    } else {
-        console.error('No "id" parameter found in the URL.');
-    }
-}
-</script>
+        // Show feedback message
+        function showFeedback(message, type) {
+            elements.feedback.textContent = message;
+            elements.feedback.className = `feedback ${type}`;
+            elements.feedback.style.display = 'block';
+            
+            setTimeout(() => {
+                elements.feedback.style.display = 'none';
+            }, 3000);
+        }
 
+        // Load next question
+        function loadNextQuestion() {
+            // Move to next question (or wrap around)
+            state.currentIndex = (state.currentIndex + 1) % state.questionsData.length;
+            const nextQuestion = state.questionsData[state.currentIndex];
+            
+            // Update URL without reloading
+            const newUrl = `?id=${state.subject}/${state.chapter}/${nextQuestion.question_id}`;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+            
+            // Update UI for new question
+            renderQuestionDetail();
+            resetQuestionUI();
+            updateProgress();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = ((state.currentIndex + 1) / state.questionsData.length) * 100;
+            elements.progressBar.style.width = `${progress}%`;
+        }
+
+        // Navigation
+        function goBack() {
+            const currentUrl = window.location.href;
+            const urlParams = new URLSearchParams(window.location.search);
+            const questionId = urlParams.get('id');
+            
+            if (questionId) {
+                const [subject, chapter] = questionId.split('/');
+                window.location.href = `subject.html?subject=${subject}&chapter=${chapter}`;
+            } else {
+                console.error('No "id" parameter found in the URL.');
+            }
+        }
+
+        // Initialize the app when the page loads
+        window.onload = init;
+    </script>
 </body>
 </html>
