@@ -340,7 +340,7 @@
 <body>
     <div class="header">
         <button class="back-btn" onclick="goBack()">
-            <i class="fas fa-arrow-left"></i> Back
+        <i class="fas fa-arrow-left"></i> Back
         </button>
         <div class="timer-container">
             <i class="fas fa-clock"></i>
@@ -687,19 +687,20 @@
 
         // Go back to subject/chapter page
         function goBack() {
-            const currentUrl = window.location.href;
-            const urlParams = new URLSearchParams(window.location.search);
-            const questionId = urlParams.get('id');
+    // Try to go back in history if possible
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        // If no history, fallback to subject/chapter based on URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const questionId = urlParams.get('id');
 
-            if (questionId) {
-                const urlParts = questionId.split('/');
-                const subject = urlParts[0];
-                const chapter = urlParts[1];
-                window.location.href = `subject.html?subject=${subject}&chapter=${chapter}`;
-            } else {
-                console.error('No "id" parameter found in the URL.');
-            }
+        if (questionId) {
+            const [subject, chapter] = questionId.split('/');
+            window.location.href = `subject.html?subject=${subject}&chapter=${chapter}`;
         }
+    }
+}
 
         // Load the question detail on page load
         window.onload = loadQuestionDetail;
