@@ -110,8 +110,8 @@
 </head>
 <body>
 
-<button class="back-btn" onclick="window.location.href='pyq.html'">
-    <i class="fas fa-arrow-left"></i> Back to Subjects
+<button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> Back
 </button>
 
 <div id="question-list">
@@ -153,7 +153,14 @@
         { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
         { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
     ];
-
+function goBack() {
+        // Try to go back in history, if not possible redirect to a default page
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = 'pyq.html'; // Change to your default page
+        }
+}
     function loadQuestions() {
         const urlParams = new URLSearchParams(window.location.search);
         const subject = urlParams.get('subject') || 'biology';
