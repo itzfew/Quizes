@@ -3,268 +3,487 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Quiz App</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Science Quiz App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary-color: #4cc9f0;
+            --dark-color: #2b2d42;
+            --light-color: #f8f9fa;
+            --success-color: #4caf50;
+            --danger-color: #f44336;
+            --warning-color: #ff9800;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.05);
+            position: relative;
+            overflow-x: hidden;
         }
 
         header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 20px;
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .back-btn {
-            background-color: #4361ee;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 8px 15px;
-            margin-left: 20px;
-            cursor: pointer;
-            font-weight: 500;
+        .header-content {
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .back-btn:hover {
-            background-color: #3a56d4;
-            transform: translateX(-3px);
-        }
-
-        .back-btn i {
-            font-size: 0.9rem;
-        }
-
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            flex-grow: 1;
-        }
-
-        nav ul li {
-            margin: 5px 15px;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1rem;
-            padding: 5px 10px;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            border-bottom: 2px solid #f4f4f9;
-        }
-
-        main {
-            padding: 20px;
-        }
-
-        .chapter-list {
-            margin: 20px auto;
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .chapter {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .chapter:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-
-        .chapter a {
-            color: #333;
-            text-decoration: none;
-            display: block;
             width: 100%;
         }
 
-        .subject-section {
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-right: 15px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-3px);
+        }
+
+        .app-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .subject-tabs {
+            display: flex;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 70px;
+            z-index: 90;
+        }
+
+        .subject-tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .subject-tab.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            font-weight: 600;
+        }
+
+        .subject-tab i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .subject-content {
+            padding: 20px;
             display: none;
         }
 
-        .active {
+        .subject-content.active {
             display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chapter-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .chapter-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            box-shadow: var(--box-shadow);
+            border-left: 4px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .chapter-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        .chapter-info {
+            flex: 1;
+        }
+
+        .chapter-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .chapter-meta {
+            font-size: 0.85rem;
+            color: #777;
+            display: flex;
+            align-items: center;
+        }
+
+        .chapter-meta span {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .chapter-meta i {
+            margin-right: 5px;
+            font-size: 0.8rem;
+        }
+
+        .progress-ring {
+            width: 40px;
+            height: 40px;
+        }
+
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.5s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .chapter-action {
+            margin-left: 15px;
+            color: var(--primary-color);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .chapter-card:hover .chapter-action {
+            opacity: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+
+        .empty-state h3 {
+            font-weight: 500;
+            margin-bottom: 10px;
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                padding: 10px 0;
-            }
-            
-            .back-btn {
-                margin: 0 0 10px 0;
-                align-self: flex-start;
-                padding: 6px 12px;
-            }
-            
-            nav ul li {
-                margin: 5px 10px;
-            }
-
-            nav ul li a {
-                font-size: 0.9rem;
-            }
-
-            .chapter-list {
+            .app-container {
                 max-width: 100%;
+            }
+            
+            .chapter-card {
+                padding: 15px;
+            }
+            
+            .chapter-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .chapter-meta span {
+                margin-right: 0;
+                margin-bottom: 3px;
             }
         }
 
         @media (max-width: 480px) {
-            nav ul li a {
-                font-size: 0.8rem;
-                padding: 3px 7px;
+            .app-title {
+                font-size: 1.1rem;
             }
             
-            .chapter {
-                padding: 8px;
+            .subject-tab {
                 font-size: 0.9rem;
+                padding: 12px 0;
+            }
+            
+            .subject-tab i {
+                display: none;
+            }
+            
+            .chapter-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .chapter-name {
+                font-size: 1rem;
             }
         }
 
-        .line-break {
-            border-top: 1px solid #ddd;
-            margin: 5px 0;
+        /* Loading skeleton */
+        .skeleton {
+            animation: skeleton-loading 1s linear infinite alternate;
+            opacity: 0.7;
+            border-radius: 4px;
         }
 
-        .fa-icon {
-            margin-right: 8px;
-            color: #4361ee;
+        @keyframes skeleton-loading {
+            0% { background-color: hsl(200, 20%, 80%); }
+            100% { background-color: hsl(200, 20%, 95%); }
         }
 
-        nav ul li a.active {
-            border-bottom: 2px solid #f4f4f9;
+        .skeleton-chapter {
+            height: 80px;
+            margin-bottom: 15px;
+            border-radius: var(--border-radius);
         }
     </style>
 </head>
 <body>
+    <div class="app-container">
+        <header>
+            <div class="header-content">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="app-title">Science Quiz</div>
+            </div>
+        </header>
 
-<header>
-    <button class="back-btn" onclick="goBack()">
-        <i class="fas fa-arrow-left"></i> Back
-    </button>
-    <nav>
-        <ul>
-            <li><a href="#" id="biology-nav" onclick="showSubject('biology')">Biology</a></li>
-            <li><a href="#" id="physics-nav" onclick="showSubject('physics')">Physics</a></li>
-            <li><a href="#" id="chemistry-nav" onclick="showSubject('chemistry')">Chemistry</a></li>
-        </ul>
-    </nav>
-</header>
+        <div class="subject-tabs">
+            <div class="subject-tab active" onclick="showSubject('biology')">
+                <i class="fas fa-dna"></i> Biology
+            </div>
+            <div class="subject-tab" onclick="showSubject('physics')">
+                <i class="fas fa-atom"></i> Physics
+            </div>
+            <div class="subject-tab" onclick="showSubject('chemistry')">
+                <i class="fas fa-flask"></i> Chemistry
+            </div>
+        </div>
 
-<main>
-    <div id="biology" class="subject-section">
-        <div class="chapter-list" id="biology-chapter-list"></div>
+        <div id="biology" class="subject-content active">
+            <div class="chapter-list" id="biology-chapter-list">
+                <!-- Skeleton loading -->
+                <div class="skeleton skeleton-chapter"></div>
+                <div class="skeleton skeleton-chapter"></div>
+                <div class="skeleton skeleton-chapter"></div>
+            </div>
+        </div>
+
+        <div id="physics" class="subject-content">
+            <div class="chapter-list" id="physics-chapter-list">
+                <div class="skeleton skeleton-chapter"></div>
+                <div class="skeleton skeleton-chapter"></div>
+                <div class="skeleton skeleton-chapter"></div>
+            </div>
+        </div>
+
+        <div id="chemistry" class="subject-content">
+            <div class="chapter-list" id="chemistry-chapter-list">
+                <div class="skeleton skeleton-chapter"></div>
+                <div class="skeleton skeleton-chapter"></div>
+                <div class="skeleton skeleton-chapter"></div>
+            </div>
+        </div>
     </div>
-    <div id="physics" class="subject-section">
-        <div class="chapter-list" id="physics-chapter-list"></div>
-    </div>
-    <div id="chemistry" class="subject-section">
-        <div class="chapter-list" id="chemistry-chapter-list"></div>
-    </div>
-</main>
 
-<script>
-    const metaIds = [
-        "3c48616f-298a-5f69-91d2-bcd59444c455", "cbfbed57-d7d8-5a07-9957-478e4cb62f17", "8dd253c6-09a8-5875-b127-a0c00a165a1b",
-        "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", "2ff56f11-0061-566e-aeca-9cc14246e8fb", "27ba990b-5085-5196-87dd-9727f95fc228",
-        "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", "ce68b80b-fff0-5db8-8d6a-668d729d487a", "57222784-be0a-5653-930c-8ac44c689e21"
-    ];
+    <script>
+        const metaIds = [
+            "3c48616f-298a-5f69-91d2-bcd59444c455", "cbfbed57-d7d8-5a07-9957-478e4cb62f17", 
+            "8dd253c6-09a8-5875-b127-a0c00a165a1b", "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", 
+            "2ff56f11-0061-566e-aeca-9cc14246e8fb", "27ba990b-5085-5196-87dd-9727f95fc228",
+            "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", "ce68b80b-fff0-5db8-8d6a-668d729d487a", 
+            "57222784-be0a-5653-930c-8ac44c689e21"
+        ];
 
-    function loadChapters(subject, metaId) {
-        const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
+        // Icons for different subjects
+        const subjectIcons = {
+            biology: ['fa-seedling', 'fa-dna', 'fa-leaf', 'fa-brain', 'fa-heartbeat'],
+            physics: ['fa-atom', 'fa-meteor', 'fa-satellite', 'fa-lightbulb', 'fa-bolt'],
+            chemistry: ['fa-flask', 'fa-vial', 'fa-poop', 'fa-fire', 'fa-tint']
+        };
 
-        fetch(chaptersUrl)
-            .then(response => response.json())
-            .then(data => {
-                let chapters = [];
-                if (subject === 'biology') {
-                    chapters = data[0].questions;
-                } else if (subject === 'chemistry') {
-                    chapters = data[1].questions;
-                } else if (subject === 'physics') {
-                    chapters = data[2].questions;
-                }
+        function getRandomIcon(subject) {
+            const icons = subjectIcons[subject];
+            return icons[Math.floor(Math.random() * icons.length)];
+        }
 
-                // Get unique chapters
-                const uniqueChapters = [...new Set(chapters.map(q => q.chapter))];
-                
-                let chapterListHTML = '';
-                uniqueChapters.forEach(chapter => {
-                    chapterListHTML += `
-                        <div class="chapter">
-                            <i class="fa fa-book fa-icon"></i>
-                            <a href="subject.html?subject=${subject}&chapter=${encodeURIComponent(chapter)}">${chapter.charAt(0).toUpperCase() + chapter.slice(1)}</a>
+        function loadChapters(subject, metaId) {
+            const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
+
+            fetch(chaptersUrl)
+                .then(response => response.json())
+                .then(data => {
+                    let chapters = [];
+                    if (subject === 'biology') {
+                        chapters = data[0]?.questions || [];
+                    } else if (subject === 'chemistry') {
+                        chapters = data[1]?.questions || [];
+                    } else if (subject === 'physics') {
+                        chapters = data[2]?.questions || [];
+                    }
+
+                    // Get unique chapters with question counts
+                    const chapterMap = new Map();
+                    chapters.forEach(q => {
+                        if (chapterMap.has(q.chapter)) {
+                            chapterMap.get(q.chapter).count++;
+                        } else {
+                            chapterMap.set(q.chapter, {
+                                name: q.chapter,
+                                count: 1,
+                                icon: getRandomIcon(subject)
+                            });
+                        }
+                    });
+
+                    let chapterListHTML = '';
+                    if (chapterMap.size === 0) {
+                        chapterListHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-book-open"></i>
+                                <h3>No Chapters Available</h3>
+                                <p>We couldn't find any chapters for this subject.</p>
+                            </div>
+                        `;
+                    } else {
+                        chapterMap.forEach((chapter, name) => {
+                            const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+                            chapterListHTML += `
+                                <div class="chapter-card" onclick="navigateToChapter('${subject}', '${encodeURIComponent(name)}')">
+                                    <div class="chapter-icon">
+                                        <i class="fas ${chapter.icon}"></i>
+                                    </div>
+                                    <div class="chapter-info">
+                                        <div class="chapter-name">${formattedName}</div>
+                                        <div class="chapter-meta">
+                                            <span><i class="fas fa-question-circle"></i> ${chapter.count} Questions</span>
+                                            <span><i class="fas fa-clock"></i> ${Math.ceil(chapter.count * 0.5)} min</span>
+                                        </div>
+                                    </div>
+                                    <div class="chapter-action">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    }
+
+                    document.getElementById(`${subject}-chapter-list`).innerHTML = chapterListHTML;
+                })
+                .catch(error => {
+                    console.error('Error loading chapters:', error);
+                    document.getElementById(`${subject}-chapter-list`).innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Error Loading Content</h3>
+                            <p>Please check your connection and try again.</p>
+                            <button onclick="loadChapters('${subject}', '${metaId}')" style="margin-top: 15px; padding: 8px 15px; background: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                <i class="fas fa-sync-alt"></i> Retry
+                            </button>
                         </div>
-                        <div class="line-break"></div>
                     `;
                 });
+        }
 
-                document.getElementById(`${subject}-chapter-list`).innerHTML = chapterListHTML;
-            })
-            .catch(error => {
-                console.error('Error loading chapters:', error);
-                document.getElementById(`${subject}-chapter-list`).innerHTML = '<p>Error loading chapters. Please try again later.</p>';
+        function showSubject(subject) {
+            // Update active tab
+            document.querySelectorAll('.subject-tab').forEach(tab => {
+                tab.classList.remove('active');
             });
-    }
+            document.querySelector(`.subject-tab[onclick="showSubject('${subject}')"]`).classList.add('active');
 
-    function showSubject(subject) {
-        const subjects = ['biology', 'physics', 'chemistry'];
-        subjects.forEach(s => {
-            document.getElementById(s).classList.remove('active');
-            document.getElementById(`${s}-nav`).classList.remove('active');
+            // Update active content
+            document.querySelectorAll('.subject-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(subject).classList.add('active');
+
+            // Load chapters if not already loaded
+            if (document.getElementById(`${subject}-chapter-list`).children.length <= 3) {
+                loadChapters(subject, metaIds[0]);
+            }
+        }
+
+        function navigateToChapter(subject, chapter) {
+            window.location.href = `subject.html?subject=${subject}&chapter=${chapter}`;
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Initialize with Biology loaded
+        window.addEventListener('DOMContentLoaded', () => {
+            loadChapters('biology', metaIds[0]);
         });
-        document.getElementById(subject).classList.add('active');
-        document.getElementById(`${subject}-nav`).classList.add('active');
-        loadChapters(subject, metaIds[0]);
-    }
-
-function goBack() {
-    window.location.href = 'index.html';
-}
-
-    // Make Biology section active initially
-    showSubject('biology');
-</script>
-
+    </script>
 </body>
 </html>
