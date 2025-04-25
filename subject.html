@@ -5,27 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subject - Questions</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             padding: 20px;
             margin: 0;
             width: 100%;
             overflow-x: hidden;
+            background-color: #f5f7fa;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            background-color: #4361ee;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .back-btn:hover {
+            background-color: #3a56d4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .page-title {
+            color: #2b2d42;
+            font-size: 1.5rem;
+            margin: 0;
         }
 
         main {
             margin: 20px 0;
             padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             overflow-x: auto;
             width: 100%;
         }
+
         .question {
-            border-bottom: 2px solid #ddd;
+            border-bottom: 1px solid #e9ecef;
             padding: 15px;
             margin: 0;
             overflow-x: auto;
@@ -33,83 +70,160 @@
             align-items: flex-start;
             position: relative;
             min-height: 80px;
+            transition: all 0.3s ease;
         }
+
+        .question:hover {
+            background-color: #f8f9fa;
+        }
+
         .question a {
             text-decoration: none;
-            color: #333;
-            font-weight: bold;
+            color: #2b2d42;
+            font-weight: 600;
+            transition: color 0.2s ease;
         }
+
+        .question a:hover {
+            color: #4361ee;
+        }
+
         .question-number {
             font-weight: bold;
-            margin-right: 10px;
+            margin-right: 15px;
+            color: #4361ee;
+            min-width: 25px;
         }
+
         .question-content {
             flex-grow: 1;
         }
+
         .mathjax-inline {
             white-space: nowrap;
             display: inline-block;
-            font-size: 1.2em;
-            color: #007bff;
+            font-size: 1.1em;
+            color: #4361ee;
         }
+
         .source-label {
-            font-size: 0.9em;
-            color: #555;
-            font-style: italic;
+            font-size: 0.8em;
+            color: #6c757d;
             position: absolute;
             bottom: 5px;
-            left: 10px;
-            opacity: 0.7;
+            left: 50px;
+            opacity: 0.8;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #4361ee;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .question {
+                flex-direction: column;
+                padding: 15px 10px;
+            }
+            
+            .question-number {
+                margin-bottom: 5px;
+                margin-right: 0;
+            }
+            
+            .source-label {
+                position: relative;
+                left: 0;
+                margin-top: 10px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div id="question-list">
-    <!-- Questions will appear here -->
+<div class="header">
+    <button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> Back to PYQs
+    </button>
+    <h1 class="page-title" id="page-title">Loading Questions...</h1>
+</div>
+
+<div id="question-list" class="loading">
+    <i class="fas fa-spinner"></i>
+    <p>Loading questions, please wait...</p>
 </div>
 
 <script>
     const metaIds = [
-    { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
-    { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-    { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
-    { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
-    { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
-    { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
-    { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
-    { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
-    { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
-    { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
-    { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
-    { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
-    { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
-    { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
-    { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
-    { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
-    { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
-    { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
-    { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
-    { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
-    { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
-    { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
-    { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
-    { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
-    { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
-    { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
-    { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
-    { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
-    { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
-    { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
-    { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
-    { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
-];
+        { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+        { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+        { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+        { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
+        { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
+        { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
+        { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
+        { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
+        { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
+        { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
+        { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
+        { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
+        { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
+        { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
+        { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
+        { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
+        { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
+        { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
+        { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
+        { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
+        { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
+        { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
+        { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
+        { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
+        { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
+        { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
+        { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
+        { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
+        { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
+        { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
+        { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
+        { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
+    ];
 
+    function goBack() {
+        window.location.href = 'pyq.html';
+    }
 
     function loadQuestions() {
         const urlParams = new URLSearchParams(window.location.search);
         const subject = urlParams.get('subject') || 'biology';
         const chapter = urlParams.get('chapter') || 'biomolecule';
+        
+        // Update page title
+        document.getElementById('page-title').textContent = 
+            `${subject.charAt(0).toUpperCase() + subject.slice(1)} - ${chapter.charAt(0).toUpperCase() + chapter.slice(1)}`;
         
         let allQuestions = [];
 
@@ -135,24 +249,43 @@
 
         Promise.all(fetchPromises)
             .then(() => {
+                // Flatten all questions into a single array
+                const flattenedQuestions = allQuestions.reduce((acc, meta) => {
+                    return acc.concat(meta.questions.map(q => ({
+                        ...q,
+                        source: meta.title
+                    }));
+                }, []);
+
+                if (flattenedQuestions.length === 0) {
+                    document.getElementById('question-list').innerHTML = `
+                        <div class="no-questions">
+                            <i class="fas fa-book-open" style="font-size: 2rem; color: #6c757d; margin-bottom: 15px;"></i>
+                            <p>No questions found for this chapter.</p>
+                            <button class="back-btn" onclick="goBack()" style="margin-top: 20px;">
+                                <i class="fas fa-arrow-left"></i> Back to PYQs
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+
                 let questionListHTML = '';
 
-                allQuestions.forEach(meta => {
-                    meta.questions.forEach((q, index) => {
-                        const formattedContent = q.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                            return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                        });
-
-                        questionListHTML += `
-                            <div class="question">
-                                <div class="question-number">${index + 1}.</div>
-                                <div class="question-content">
-                                    <a href="question.html?id=${subject}/${chapter}/${q.question_id}"><h3>${formattedContent}</h3></a>
-                                    <div class="source-label">example (source: ${meta.title})</div>
-                                </div>
-                            </div>
-                        `;
+                flattenedQuestions.forEach((q, index) => {
+                    const formattedContent = q.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                        return `<span class="mathjax-inline">$$${p1}$$</span>`;
                     });
+
+                    questionListHTML += `
+                        <div class="question">
+                            <div class="question-number">${index + 1}.</div>
+                            <div class="question-content">
+                                <a href="question.html?id=${subject}/${chapter}/${q.question_id}">${formattedContent}</a>
+                                <div class="source-label">Source: ${q.source}</div>
+                            </div>
+                        </div>
+                    `;
                 });
 
                 document.getElementById('question-list').innerHTML = questionListHTML;
@@ -164,7 +297,15 @@
             })
             .catch(error => {
                 console.error('Error loading all questions:', error);
-                document.getElementById('question-list').innerHTML = '<p>Error loading questions. Please try again later.</p>';
+                document.getElementById('question-list').innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle" style="color: #f44336; font-size: 2rem; margin-bottom: 15px;"></i>
+                        <p>Error loading questions. Please try again later.</p>
+                        <button class="back-btn" onclick="goBack()" style="margin-top: 20px;">
+                            <i class="fas fa-arrow-left"></i> Back to PYQs
+                        </button>
+                    </div>
+                `;
             });
     }
 
