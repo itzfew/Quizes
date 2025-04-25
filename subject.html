@@ -8,61 +8,46 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             line-height: 1.6;
             padding: 20px;
             margin: 0;
             width: 100%;
             overflow-x: hidden;
-            background-color: #f5f7fa;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
         }
 
         .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
             background-color: #4361ee;
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
         }
 
         .back-btn:hover {
             background-color: #3a56d4;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-
-        .page-title {
-            color: #2b2d42;
-            font-size: 1.5rem;
-            margin: 0;
         }
 
         main {
             margin: 20px 0;
             padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             overflow-x: auto;
             width: 100%;
         }
 
         .question {
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 2px solid #ddd;
             padding: 15px;
             margin: 0;
             overflow-x: auto;
@@ -70,28 +55,17 @@
             align-items: flex-start;
             position: relative;
             min-height: 80px;
-            transition: all 0.3s ease;
-        }
-
-        .question:hover {
-            background-color: #f8f9fa;
         }
 
         .question a {
             text-decoration: none;
-            color: #2b2d42;
-            font-weight: 600;
-            transition: color 0.2s ease;
-        }
-
-        .question a:hover {
-            color: #4361ee;
+            color: #333;
+            font-weight: bold;
         }
 
         .question-number {
             font-weight: bold;
-            margin-right: 15px;
-            color: #4361ee;
+            margin-right: 10px;
             min-width: 25px;
         }
 
@@ -102,78 +76,46 @@
         .mathjax-inline {
             white-space: nowrap;
             display: inline-block;
-            font-size: 1.1em;
-            color: #4361ee;
+            font-size: 1.2em;
+            color: #007bff;
         }
 
         .source-label {
-            font-size: 0.8em;
-            color: #6c757d;
+            font-size: 0.9em;
+            color: #555;
+            font-style: italic;
             position: absolute;
             bottom: 5px;
-            left: 50px;
-            opacity: 0.8;
+            left: 35px;
+            opacity: 0.7;
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #6c757d;
-        }
-
-        .loading i {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            color: #4361ee;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-            
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
+        @media (max-width: 600px) {
             .question {
                 flex-direction: column;
-                padding: 15px 10px;
+                padding: 10px;
             }
             
             .question-number {
                 margin-bottom: 5px;
-                margin-right: 0;
             }
             
             .source-label {
                 position: relative;
                 left: 0;
-                margin-top: 10px;
+                margin-top: 5px;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <button class="back-btn" onclick="goBack()">
-        <i class="fas fa-arrow-left"></i> Back to PYQs
-    </button>
-    <h1 class="page-title" id="page-title">Loading Questions...</h1>
-</div>
+<button class="back-btn" onclick="window.location.href='pyq.html'">
+    <i class="fas fa-arrow-left"></i> Back to Subjects
+</button>
 
-<div id="question-list" class="loading">
-    <i class="fas fa-spinner"></i>
-    <p>Loading questions, please wait...</p>
+<div id="question-list">
+    <!-- Questions will appear here -->
 </div>
 
 <script>
@@ -212,18 +154,10 @@
         { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
     ];
 
-    function goBack() {
-        window.location.href = 'pyq.html';
-    }
-
     function loadQuestions() {
         const urlParams = new URLSearchParams(window.location.search);
         const subject = urlParams.get('subject') || 'biology';
         const chapter = urlParams.get('chapter') || 'biomolecule';
-        
-        // Update page title
-        document.getElementById('page-title').textContent = 
-            `${subject.charAt(0).toUpperCase() + subject.slice(1)} - ${chapter.charAt(0).toUpperCase() + chapter.slice(1)}`;
         
         let allQuestions = [];
 
@@ -249,43 +183,25 @@
 
         Promise.all(fetchPromises)
             .then(() => {
-                // Flatten all questions into a single array
-                const flattenedQuestions = allQuestions.reduce((acc, meta) => {
-                    return acc.concat(meta.questions.map(q => ({
-                        ...q,
-                        source: meta.title
-                    }));
-                }, []);
-
-                if (flattenedQuestions.length === 0) {
-                    document.getElementById('question-list').innerHTML = `
-                        <div class="no-questions">
-                            <i class="fas fa-book-open" style="font-size: 2rem; color: #6c757d; margin-bottom: 15px;"></i>
-                            <p>No questions found for this chapter.</p>
-                            <button class="back-btn" onclick="goBack()" style="margin-top: 20px;">
-                                <i class="fas fa-arrow-left"></i> Back to PYQs
-                            </button>
-                        </div>
-                    `;
-                    return;
-                }
-
                 let questionListHTML = '';
+                let questionCounter = 1;
 
-                flattenedQuestions.forEach((q, index) => {
-                    const formattedContent = q.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                        return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                    });
+                allQuestions.forEach(meta => {
+                    meta.questions.forEach(q => {
+                        const formattedContent = q.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                            return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                        });
 
-                    questionListHTML += `
-                        <div class="question">
-                            <div class="question-number">${index + 1}.</div>
-                            <div class="question-content">
-                                <a href="question.html?id=${subject}/${chapter}/${q.question_id}">${formattedContent}</a>
-                                <div class="source-label">Source: ${q.source}</div>
+                        questionListHTML += `
+                            <div class="question">
+                                <div class="question-number">${questionCounter++}.</div>
+                                <div class="question-content">
+                                    <a href="question.html?id=${subject}/${chapter}/${q.question_id}"><h3>${formattedContent}</h3></a>
+                                    <div class="source-label">Source: ${meta.title}</div>
+                                </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    });
                 });
 
                 document.getElementById('question-list').innerHTML = questionListHTML;
@@ -297,15 +213,7 @@
             })
             .catch(error => {
                 console.error('Error loading all questions:', error);
-                document.getElementById('question-list').innerHTML = `
-                    <div class="error-message">
-                        <i class="fas fa-exclamation-triangle" style="color: #f44336; font-size: 2rem; margin-bottom: 15px;"></i>
-                        <p>Error loading questions. Please try again later.</p>
-                        <button class="back-btn" onclick="goBack()" style="margin-top: 20px;">
-                            <i class="fas fa-arrow-left"></i> Back to PYQs
-                        </button>
-                    </div>
-                `;
+                document.getElementById('question-list').innerHTML = '<p>Error loading questions. Please try again later.</p>';
             });
     }
 
