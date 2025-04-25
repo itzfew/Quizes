@@ -3,200 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuizMaster Pro</title>
+    <title>Quiz Game</title>
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --accent-color: #4cc9f0;
-            --success-color: #4caf50;
-            --error-color: #f44336;
-            --warning-color: #ff9800;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
+            --primary-color: #4a6bff;
+            --secondary-color: #f5f7ff;
+            --correct-color: #4caf50;
+            --incorrect-color: #f44336;
             --text-color: #333;
-            --bg-color: #ffffff;
-            --card-bg: #ffffff;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --border-radius: 12px;
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-color: #f5f5f5;
-            --light-color: #2d2d2d;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --light-text: #666;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
+            background-color: #f9f9f9;
             color: var(--text-color);
-            min-height: 100vh;
-            transition: background-color 0.3s, color 0.3s;
             line-height: 1.6;
-        }
-
-        .container {
+            padding: 20px;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
         }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-        }
-
-        [data-theme="dark"] header {
-            border-bottom-color: rgba(255,255,255,0.1);
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            font-size: 1.8rem;
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .theme-toggle, .sound-toggle {
-            background: none;
+        .back-btn {
+            background-color: var(--primary-color);
+            color: white;
             border: none;
-            font-size: 1.2rem;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            color: var(--text-color);
-            padding: 5px;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            box-shadow: var(--box-shadow);
         }
 
-        .theme-toggle:hover, .sound-toggle:hover {
-            background-color: rgba(0,0,0,0.05);
+        .back-btn:hover {
+            background-color: #3a5bef;
+            transform: translateY(-2px);
         }
 
-        [data-theme="dark"] .theme-toggle:hover, 
-        [data-theme="dark"] .sound-toggle:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-
-        .quiz-card {
-            background-color: var(--card-bg);
+        main {
+            background-color: white;
             border-radius: var(--border-radius);
             padding: 25px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--box-shadow);
             margin-bottom: 20px;
-            position: relative;
         }
 
         .source {
-            font-size: 0.9rem;
-            color: var(--primary-color);
+            font-size: 14px;
+            color: var(--light-text);
             margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .question-content {
+            font-size: 18px;
+            margin-bottom: 25px;
             font-weight: 500;
         }
 
-        .question {
-            font-size: 1.2rem;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-
         .options {
-            list-style: none;
+            list-style-type: none;
             margin-bottom: 25px;
         }
 
         .options li {
-            padding: 12px 15px;
+            padding: 15px;
             margin-bottom: 10px;
-            border-radius: 8px;
-            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            background-color: var(--secondary-color);
             cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .option-letter {
-            font-weight: 600;
-            color: var(--primary-color);
+            transition: all 0.3s;
+            border: 2px solid transparent;
         }
 
         .options li:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #e0e5ff;
+            transform: translateX(5px);
         }
 
         .options li.selected {
             border-color: var(--primary-color);
-            background-color: rgba(67, 97, 238, 0.1);
+            background-color: #e0e5ff;
+            font-weight: bold;
         }
 
         .options li.correct {
-            background-color: rgba(76, 175, 80, 0.2);
-            border-color: var(--success-color);
+            background-color: #e8f5e9;
+            border-color: var(--correct-color);
+            color: var(--correct-color);
         }
 
         .options li.incorrect {
-            background-color: rgba(244, 67, 54, 0.2);
-            border-color: var(--error-color);
+            background-color: #ffebee;
+            border-color: var(--incorrect-color);
+            color: var(--incorrect-color);
         }
 
-        .action-buttons {
+        .btn-container {
             display: flex;
-            justify-content: space-between;
             gap: 10px;
             margin-bottom: 20px;
         }
 
-        button {
-            padding: 12px 20px;
+        .check-btn, #next-btn {
+            flex: 1;
+            padding: 12px;
             border: none;
             border-radius: var(--border-radius);
-            font-weight: 500;
+            font-size: 16px;
             cursor: pointer;
-            transition: all 0.2s;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .back-btn {
-            background-color: var(--light-color);
-            color: var(--text-color);
+            transition: all 0.3s;
+            box-shadow: var(--box-shadow);
         }
 
         .check-btn {
@@ -204,32 +132,40 @@
             color: white;
         }
 
-        .next-btn {
-            background-color: var(--success-color);
-            color: white;
-        }
-
-        button:hover {
+        .check-btn:hover {
+            background-color: #3a5bef;
             transform: translateY(-2px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        button:active {
-            transform: translateY(0);
+        #next-btn {
+            background-color: #f5f5f5;
+            color: var(--text-color);
         }
 
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
+        #next-btn:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .timer {
+            background-color: #333;
+            color: white;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow);
         }
 
         .explanation {
+            background-color: #f5f5f5;
             padding: 15px;
-            background-color: var(--light-color);
             border-radius: var(--border-radius);
             margin-top: 20px;
             display: none;
+            border-left: 4px solid var(--primary-color);
         }
 
         .explanation h4 {
@@ -239,10 +175,10 @@
 
         .progress-container {
             width: 100%;
-            background-color: var(--light-color);
+            background-color: #e0e0e0;
             border-radius: var(--border-radius);
             margin-bottom: 20px;
-            height: 8px;
+            height: 10px;
         }
 
         .progress-bar {
@@ -250,680 +186,323 @@
             border-radius: var(--border-radius);
             background-color: var(--primary-color);
             width: 0%;
-            transition: width 0.3s;
-        }
-
-        .timer-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .timer {
-            background-color: var(--light-color);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 500;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .stats {
-            display: flex;
-            gap: 10px;
-        }
-
-        .stat-box {
-            background-color: var(--light-color);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .correct-stat {
-            color: var(--success-color);
-        }
-
-        .incorrect-stat {
-            color: var(--error-color);
-        }
-
-        .mathjax-inline {
-            display: inline-block;
-        }
-
-        /* Animation for correct/incorrect feedback */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .feedback {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 30px;
-            border-radius: var(--border-radius);
-            color: white;
-            font-weight: 500;
-            z-index: 1000;
-            animation: fadeIn 0.3s, pulse 0.5s 0.3s;
-            display: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            max-width: 90%;
-            text-align: center;
-        }
-
-        .feedback.correct {
-            background-color: var(--success-color);
-        }
-
-        .feedback.incorrect {
-            background-color: var(--error-color);
-        }
-
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-            font-size: 1.2rem;
-            color: var(--primary-color);
-        }
-
-        .loading-spinner {
-            border: 3px solid rgba(0,0,0,0.1);
-            border-radius: 50%;
-            border-top: 3px solid var(--primary-color);
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            transition: width 0.5s ease;
         }
 
         @media (max-width: 600px) {
-            .container {
+            body {
+                padding: 10px;
+            }
+            
+            main {
                 padding: 15px;
             }
             
-            .quiz-card {
-                padding: 15px;
-            }
-            
-            .question {
-                font-size: 1.1rem;
-            }
-            
-            .action-buttons {
+            .btn-container {
                 flex-direction: column;
-            }
-            
-            .feedback {
-                top: 10px;
-                padding: 10px 15px;
-                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <span class="logo-icon">🧠</span>
-                <span>QuizMaster Pro</span>
-            </div>
-            <div class="header-controls">
-                <button class="sound-toggle" id="soundToggle">🔊</button>
-                <button class="theme-toggle" id="themeToggle">🌙</button>
-            </div>
-        </header>
-
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-
-        <div class="timer-container">
-            <div class="stats">
-                <div class="stat-box correct-stat" id="correctCount">
-                    <span>✓</span>
-                    <span>0</span>
-                </div>
-                <div class="stat-box incorrect-stat" id="incorrectCount">
-                    <span>✗</span>
-                    <span>0</span>
-                </div>
-            </div>
-            <div class="timer" id="timer">
-                <span>⏱️</span>
-                <span>2:00</span>
-            </div>
-        </div>
-
-        <div class="quiz-card">
-            <div class="source" id="source"></div>
-            <div class="question" id="question-detail">
-                <div class="loading">
-                    <div class="loading-spinner"></div>
-                    <span>Loading question...</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="action-buttons">
-            <button class="back-btn" onclick="goBack()">
-                <span>←</span>
-                <span>Back</span>
-            </button>
-            <button class="check-btn" id="checkBtn" onclick="checkAnswer()" disabled>
-                <span>✓</span>
-                <span>Check</span>
-            </button>
-            <button class="next-btn" id="nextBtn" onclick="loadNextQuestion()" disabled>
-                <span>→</span>
-                <span>Next</span>
-            </button>
-        </div>
-
-        <div class="explanation" id="explanation">
-            <h4>Explanation:</h4>
-            <p id="explanationText"></p>
-        </div>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
     </div>
 
-    <div class="feedback" id="feedback"></div>
+    <!-- Back Button -->
+    <button class="back-btn" onclick="goBack()">← Back to Questions</button>
 
-    <!-- Audio elements for sound effects -->
-    <audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" preload="auto"></audio>
-    <audio id="incorrectSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" preload="auto"></audio>
-    <audio id="timerSound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" preload="auto"></audio>
-    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-modern-click-box-check-1120.mp3" preload="auto"></audio>
+    <main>
+        <div class="source" id="source"></div>
+        <div class="timer" id="timer">Time: 2:00</div>
+        <div id="question-detail">
+            <div class="question-content" id="question-content"></div>
+            <ul class="options" id="options-container"></ul>
+        </div>
+        <div class="btn-container">
+            <button class="check-btn" id="check-btn">Check Answer</button>
+            <button id="next-btn">Next Question</button>
+        </div>
+        <div class="explanation" id="explanation">
+            <h4>Explanation:</h4>
+            <p id="explanation-text"></p>
+        </div>
+    </main>
 
-    <script>
-        // Quiz data and state
-        const metaIds = [
-            { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
-            { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-            { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
-            { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
-            { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
-            { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
-            { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
-            { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
-            { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
-            { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
-            { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
-            { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
-            { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
-            { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
-            { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
-            { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
-            { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
-            { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
-            { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
-            { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
-            { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
-            { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
-            { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
-            { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
-            { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
-            { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
-            { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
-            { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
-            { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
-            { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
-            { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
-            { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
-        ];
+<script>
+    const metaIds = [
+        { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+        { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+        { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+        { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
+        { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
+        { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
+        { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
+        { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
+        { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
+        { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
+        { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
+        { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
+        { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
+        { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
+        { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
+        { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
+        { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
+        { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
+        { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
+        { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
+        { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
+        { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
+        { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
+        { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
+        { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
+        { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
+        { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
+        { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
+        { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
+        { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
+        { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
+        { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
+    ];
         
-        // App state
-        let state = {
-            timerInterval: null,
-            currentQuestionId: null,
-            subject: null,
-            chapter: null,
-            questionsData: [],
-            currentIndex: 0,
-            correctAnswers: 0,
-            incorrectAnswers: 0,
-            answeredQuestions: 0,
-            timerRunning: false,
-            timeLeft: 120, // 2 minutes in seconds
-            darkMode: localStorage.getItem('darkMode') === 'true',
-            soundEnabled: localStorage.getItem('soundEnabled') !== 'false', // default to true
-            selectedOption: null
-        };
+    // Initialize variables
+    let timerInterval;
+    let currentQuestionId;
+    let subject, chapter;
+    let questionsData = [];
+    let currentQuestionIndex = 0;
+    let timeLeft = 120; // 2 minutes in seconds
 
-        // DOM elements
-        const elements = {
-            questionDetail: document.getElementById('question-detail'),
-            source: document.getElementById('source'),
-            timer: document.getElementById('timer'),
-            progressBar: document.getElementById('progressBar'),
-            correctCount: document.getElementById('correctCount'),
-            incorrectCount: document.getElementById('incorrectCount'),
-            explanation: document.getElementById('explanation'),
-            explanationText: document.getElementById('explanationText'),
-            checkBtn: document.getElementById('checkBtn'),
-            nextBtn: document.getElementById('nextBtn'),
-            feedback: document.getElementById('feedback'),
-            themeToggle: document.getElementById('themeToggle'),
-            soundToggle: document.getElementById('soundToggle'),
-            correctSound: document.getElementById('correctSound'),
-            incorrectSound: document.getElementById('incorrectSound'),
-            timerSound: document.getElementById('timerSound'),
-            clickSound: document.getElementById('clickSound')
-        };
-
-        // Initialize the app
-        function init() {
-            // Set theme
-            if (state.darkMode) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                elements.themeToggle.textContent = '☀️';
-            } else {
-                document.documentElement.removeAttribute('data-theme');
-                elements.themeToggle.textContent = '🌙';
-            }
-
-            // Set sound
-            if (state.soundEnabled) {
-                elements.soundToggle.textContent = '🔊';
-            } else {
-                elements.soundToggle.textContent = '🔇';
-            }
-
-            // Load question details
-            loadQuestionDetail();
-
-            // Add event listeners
-            elements.themeToggle.addEventListener('click', toggleTheme);
-            elements.soundToggle.addEventListener('click', toggleSound);
-        }
-
-        // Toggle dark/light theme
-        function toggleTheme() {
-            playSound('click');
-            state.darkMode = !state.darkMode;
-            localStorage.setItem('darkMode', state.darkMode);
-            
-            if (state.darkMode) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                elements.themeToggle.textContent = '☀️';
-            } else {
-                document.documentElement.removeAttribute('data-theme');
-                elements.themeToggle.textContent = '🌙';
-            }
-        }
-
-        // Toggle sound on/off
-        function toggleSound() {
-            playSound('click');
-            state.soundEnabled = !state.soundEnabled;
-            localStorage.setItem('soundEnabled', state.soundEnabled);
-            
-            if (state.soundEnabled) {
-                elements.soundToggle.textContent = '🔊';
-            } else {
-                elements.soundToggle.textContent = '🔇';
-            }
-        }
-
-        // Play sound effects
-        function playSound(type) {
-            if (!state.soundEnabled) return;
-            
-            try {
-                let sound;
-                switch(type) {
-                    case 'correct':
-                        sound = elements.correctSound;
-                        break;
-                    case 'incorrect':
-                        sound = elements.incorrectSound;
-                        break;
-                    case 'timer':
-                        sound = elements.timerSound;
-                        break;
-                    case 'click':
-                        sound = elements.clickSound;
-                        break;
-                    default:
-                        return;
-                }
-                
-                sound.currentTime = 0;
-                sound.play();
-            } catch (e) {
-                console.error('Error playing sound:', e);
-            }
-        }
-
-        // Timer functions
-        function startTimer() {
-            if (state.timerRunning) return;
-            
-            state.timerRunning = true;
+    // Timer function with automatic submit and check
+    function startTimer() {
+        clearInterval(timerInterval); // Clear any existing timer
+        updateTimerDisplay();
+        
+        timerInterval = setInterval(function() {
+            timeLeft--;
             updateTimerDisplay();
             
-            state.timerInterval = setInterval(() => {
-                state.timeLeft--;
-                updateTimerDisplay();
-                
-                // Play sound when time is running low
-                if (state.timeLeft === 10) {
-                    playSound('timer');
-                }
-                
-                if (state.timeLeft <= 0) {
-                    clearInterval(state.timerInterval);
-                    showFeedback("Time's up!", 'incorrect');
-                    checkAnswer();
-                }
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(state.timeLeft / 60);
-            const seconds = state.timeLeft % 60;
-            elements.timer.querySelector('span:last-child').textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-            
-            // Change color when time is running low
-            if (state.timeLeft <= 30) {
-                elements.timer.style.color = 'var(--error-color)';
-            } else {
-                elements.timer.style.color = 'var(--primary-color)';
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('timer').textContent = "Time's up!";
+                document.getElementById('timer').style.backgroundColor = var(--incorrect-color);
+                checkAnswer(); // Automatically check the answer when time runs out
             }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer').textContent = `Time: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        
+        // Change color when time is running low
+        if (timeLeft <= 30) {
+            document.getElementById('timer').style.backgroundColor = "#ff9800";
         }
-
-        function resetTimer() {
-            clearInterval(state.timerInterval);
-            state.timeLeft = 120;
-            state.timerRunning = false;
-            updateTimerDisplay();
+        if (timeLeft <= 10) {
+            document.getElementById('timer').style.backgroundColor = var(--incorrect-color);
         }
+    }
 
-        // Load question details
-        function loadQuestionDetail() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const idParam = urlParams.get('id');
-            
-            if (!idParam) {
-                showError("Invalid question URL");
-                return;
-            }
-            
-            const parts = idParam.split('/');
-            if (parts.length < 3) {
-                showError("Invalid question URL format");
-                return;
-            }
-            
-            [state.subject, state.chapter, state.currentQuestionId] = parts;
+    // Load question details from all metaIds
+    function loadQuestionDetail() {
+        const urlParams = new URLSearchParams(window.location.search);
+        [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
 
-            // Reset UI elements for new question
-            resetQuestionUI();
-            
-            // Try to find the question in our metaIds
-            findQuestion();
-        }
+        let questionFound = false;
 
-        function showError(message) {
-            elements.questionDetail.innerHTML = `<p class="error">${message}</p>`;
-        }
+        (async function fetchQuestion() {
+            for (let i = 0; i < metaIds.length; i++) {
+                const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaIds[i].id}.json`;
 
-        function resetQuestionUI() {
-            elements.explanation.style.display = 'none';
-            elements.checkBtn.disabled = true;
-            elements.nextBtn.disabled = true;
-            elements.checkBtn.style.display = 'block';
-            elements.nextBtn.style.display = 'none';
-            state.selectedOption = null;
-            resetTimer();
-        }
-
-        async function findQuestion() {
-            let questionFound = false;
-            
-            for (const meta of metaIds) {
-                const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`;
-                
                 try {
                     const response = await fetch(chaptersUrl);
-                    if (!response.ok) continue;
-                    
                     const data = await response.json();
-                    
-                    // Filter questions based on subject
-                    let subjectIndex;
-                    if (state.subject === 'biology') subjectIndex = 0;
-                    else if (state.subject === 'chemistry') subjectIndex = 1;
-                    else if (state.subject === 'physics') subjectIndex = 2;
-                    else {
-                        showError("Invalid subject");
-                        return;
+
+                    if (subject === 'biology') {
+                        questionsData = data[0].questions.filter(q => q.chapter === chapter && q.subject === subject);
+                    } else if (subject === 'chemistry') {
+                        questionsData = data[1].questions.filter(q => q.chapter === chapter && q.subject === subject);
+                    } else if (subject === 'physics') {
+                        questionsData = data[2].questions.filter(q => q.chapter === chapter && q.subject === subject);
                     }
-                    
-                    state.questionsData = data[subjectIndex].questions.filter(
-                        q => q.chapter === state.chapter && q.subject === state.subject
-                    );
-                    
-                    if (state.questionsData.length > 0) {
+
+                    if (questionsData.length > 0) {
                         questionFound = true;
-                        state.currentIndex = state.questionsData.findIndex(q => q.question_id === state.currentQuestionId);
-                        
-                        if (state.currentIndex === -1) {
-                            state.currentIndex = 0;
-                            state.currentQuestionId = state.questionsData[0].question_id;
-                            // Update URL to reflect the correct question ID
-                            const newUrl = `?id=${state.subject}/${state.chapter}/${state.currentQuestionId}`;
-                            window.history.replaceState({ path: newUrl }, '', newUrl);
-                        }
-                        
-                        renderQuestionDetail();
-                        elements.source.textContent = `Source: ${meta.title}`;
-                        updateProgress();
+                        currentQuestionIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
+                        updateProgressBar();
+                        renderQuestionDetail(questionsData[currentQuestionIndex]);
                         startTimer();
+                        document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
                         break;
                     }
                 } catch (error) {
                     console.error('Error fetching question data:', error);
                 }
             }
-            
+
             if (!questionFound) {
-                showError("Question not found");
+                document.getElementById('question-detail').innerHTML = '<p>Question not found.</p>';
             }
-        }
+        })();
+    }
 
-        // Render question details
-        function renderQuestionDetail() {
-            const question = state.questionsData[state.currentIndex];
-            
-            let optionsHTML = question.options.map((opt, index) => {
-                const letter = String.fromCharCode(65 + index);
-                return `
-                    <li data-option="${opt.identifier}" id="option${index}">
-                        <span class="option-letter">${letter}.</span>
-                        <span>${renderMath(opt.content)}</span>
-                    </li>
-                `;
-            }).join('');
-            
-            elements.questionDetail.innerHTML = `
-                <h3>${renderMath(question.content)}</h3>
-                <ul class="options">${optionsHTML}</ul>
-            `;
-            
-            // Render MathJax
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-            
-            // Add event listeners to options
-            document.querySelectorAll('.options li').forEach(option => {
-                option.addEventListener('click', function() {
-                    if (elements.explanation.style.display === 'block') return;
-                    
-                    playSound('click');
-                    document.querySelectorAll('.options li').forEach(opt => 
-                        opt.classList.remove('selected')
-                    );
-                    option.classList.add('selected');
-                    state.selectedOption = option.dataset.option;
-                    elements.checkBtn.disabled = false;
-                });
+    function updateProgressBar() {
+        const progress = ((currentQuestionIndex + 1) / questionsData.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+    }
+
+    // Render question details in the HTML
+    function renderQuestionDetail(question) {
+        document.getElementById('question-content').innerHTML = renderMath(question.content);
+        
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+        
+        question.options.forEach((opt, index) => {
+            const optionElement = document.createElement('li');
+            optionElement.dataset.option = opt.identifier;
+            optionElement.id = `option${index}`;
+            optionElement.innerHTML = `${String.fromCharCode(65 + index)}. ${renderMath(opt.content)}`;
+            optionElement.addEventListener('click', function() {
+                selectOption(optionElement);
             });
-            
-            // Check for saved answer in session
-            const savedAnswer = sessionStorage.getItem(`answer-${question.question_id}`);
-            if (savedAnswer) {
-                document.querySelector(`[data-option="${savedAnswer}"]`).classList.add('selected');
-                state.selectedOption = savedAnswer;
-                elements.checkBtn.disabled = false;
-            }
-        }
-
-        // Render LaTeX using MathJax
-        function renderMath(input) {
-            if (!input) return '';
-            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
-        }
-
-        // Check answer and show feedback
-        function checkAnswer() {
-            if (!state.selectedOption) {
-                showFeedback("Please select an option first!", 'incorrect');
-                return;
-            }
-            
-            const question = state.questionsData[state.currentIndex];
-            const correctOption = question.options.find(opt => opt.is_correct)?.identifier;
-            
-            if (!correctOption) {
-                showFeedback("Error: Could not determine correct answer", 'incorrect');
-                return;
-            }
-            
-            const isCorrect = state.selectedOption === correctOption;
-            
-            // Update stats
-            if (isCorrect) {
-                state.correctAnswers++;
-                elements.correctCount.querySelector('span:last-child').textContent = state.correctAnswers;
-                showFeedback("Correct! 🎉", 'correct');
-                playSound('correct');
-            } else {
-                state.incorrectAnswers++;
-                elements.incorrectCount.querySelector('span:last-child').textContent = state.incorrectAnswers;
-                showFeedback("Incorrect 😢", 'incorrect');
-                playSound('incorrect');
-            }
-            
-            state.answeredQuestions++;
-            
-            // Highlight correct and incorrect answers
-            document.querySelectorAll('.options li').forEach(option => {
-                option.classList.remove('correct', 'incorrect');
-                if (option.dataset.option === correctOption) {
-                    option.classList.add('correct');
-                } else if (option.dataset.option === state.selectedOption) {
-                    option.classList.add('incorrect');
-                }
-            });
-            
-            // Show explanation
-            elements.explanationText.innerHTML = renderMath(question.explanation) || "No explanation available.";
-            elements.explanation.style.display = 'block';
-            
-            // Update button visibility
-            elements.checkBtn.style.display = 'none';
-            elements.nextBtn.style.display = 'block';
-            elements.nextBtn.disabled = false;
-            
-            // Stop timer for this question
-            clearInterval(state.timerInterval);
-            state.timerRunning = false;
-            
-            // Save the answer
-            sessionStorage.setItem(`answer-${question.question_id}`, state.selectedOption);
-        }
-
-        // Show feedback message
-        function showFeedback(message, type) {
-            elements.feedback.textContent = message;
-            elements.feedback.className = `feedback ${type}`;
-            elements.feedback.style.display = 'block';
-            
-            setTimeout(() => {
-                elements.feedback.style.display = 'none';
-            }, 3000);
-        }
-
-        // Load next question
-        function loadNextQuestion() {
-            playSound('click');
-            
-            // Move to next question (or wrap around)
-            state.currentIndex = (state.currentIndex + 1) % state.questionsData.length;
-            const nextQuestion = state.questionsData[state.currentIndex];
-            
-            // Update URL without reloading
-            const newUrl = `?id=${state.subject}/${state.chapter}/${nextQuestion.question_id}`;
-            window.history.pushState({ path: newUrl }, '', newUrl);
-            
-            // Update UI for new question
-            renderQuestionDetail();
-            resetQuestionUI();
-            updateProgress();
-        }
-
-        // Update progress bar
-        function updateProgress() {
-            const progress = ((state.currentIndex + 1) / state.questionsData.length) * 100;
-            elements.progressBar.style.width = `${progress}%`;
-        }
-
-        // Navigation
-        function goBack() {
-            playSound('click');
-            const urlParams = new URLSearchParams(window.location.search);
-            const questionId = urlParams.get('id');
-            
-            if (questionId) {
-                const [subject, chapter] = questionId.split('/');
-                window.location.href = `subject.html?subject=${subject}&chapter=${chapter}`;
-            } else {
-                console.error('No "id" parameter found in the URL.');
-                window.location.href = 'index.html';
-            }
-        }
-
-        // Handle browser back/forward buttons
-        window.addEventListener('popstate', function() {
-            loadQuestionDetail();
+            optionsContainer.appendChild(optionElement);
         });
 
-        // Initialize the app when the page loads
-        window.onload = init;
-    </script>
+        document.getElementById('explanation-text').innerHTML = renderMath(question.explanation || 'No explanation available.');
+        document.getElementById('explanation').style.display = 'none';
+
+        // Check for saved answer in localStorage
+        const savedAnswer = localStorage.getItem(`answer-${currentQuestionId}`);
+        if (savedAnswer) {
+            const optionIndex = question.options.findIndex(opt => opt.identifier === savedAnswer);
+            if (optionIndex !== -1) {
+                document.querySelector(`#option${optionIndex}`).classList.add('selected');
+            }
+        }
+
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    }
+
+    function selectOption(optionElement) {
+        const options = document.querySelectorAll('.options li');
+        options.forEach(opt => opt.classList.remove('selected'));
+        optionElement.classList.add('selected');
+        saveAnswer(optionElement.dataset.option);
+    }
+
+    // Render LaTeX using MathJax
+    function renderMath(input) {
+        if (!input) return '';
+        return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+            return `<span class="mathjax-inline">$$${p1}$$</span>`;
+        });
+    }
+
+    // Save selected answer to localStorage
+    function saveAnswer(optionId) {
+        localStorage.setItem(`answer-${currentQuestionId}`, optionId);
+    }
+
+    // Check and display the correct answer
+    function checkAnswer() {
+        clearInterval(timerInterval);
+        
+        const selectedOption = document.querySelector('.options li.selected');
+        if (!selectedOption) {
+            alert("Please select an option.");
+            return;
+        }
+
+        const correctAnswer = questionsData[currentQuestionIndex].correct_answer;
+        const options = document.querySelectorAll('.options li');
+
+        options.forEach(option => {
+            option.classList.remove('correct', 'incorrect');
+            if (option.dataset.option === correctAnswer) {
+                option.classList.add('correct');
+            } else if (option === selectedOption) {
+                option.classList.add('incorrect');
+            }
+        });
+
+        // Disable options after checking
+        options.forEach(option => {
+            option.style.pointerEvents = 'none';
+        });
+
+        // Show explanation
+        document.getElementById('explanation').style.display = 'block';
+        
+        // Scroll to explanation
+        document.getElementById('explanation').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Load next question and update URL
+    function loadNextQuestion() {
+        const selectedOption = document.querySelector('.options li.selected');
+        
+        // Force check answer if not already checked
+        if (!selectedOption) {
+            alert("Please select an answer before proceeding.");
+            return;
+        }
+
+        // Check if answer was already checked
+        const options = document.querySelectorAll('.options li');
+        const isChecked = Array.from(options).some(opt => 
+            opt.classList.contains('correct') || opt.classList.contains('incorrect')
+        );
+        
+        if (!isChecked) {
+            checkAnswer();
+            return;
+        }
+
+        // Move to next question
+        currentQuestionIndex++;
+        if (currentQuestionIndex >= questionsData.length) {
+            currentQuestionIndex = 0; // Loop back to first question
+        }
+
+        const nextQuestion = questionsData[currentQuestionIndex];
+        const newUrl = `?id=${subject}/${chapter}/${nextQuestion.question_id}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+        currentQuestionId = nextQuestion.question_id;
+        timeLeft = 120; // Reset timer
+        loadQuestionDetail();
+    }
+
+    // Go back to subject/chapter page
+    function goBack() {
+        const currentUrl = window.location.href;
+        const urlParams = new URLSearchParams(window.location.search);
+        const questionId = urlParams.get('id');
+
+        if (questionId) {
+            const urlParts = questionId.split('/');
+            const subject = urlParts[0];
+            const chapter = urlParts[1];
+            window.location.href = `subject.html?subject=${subject}&chapter=${chapter}`;
+        } else {
+            console.error('No "id" parameter found in the URL.');
+        }
+    }
+
+    // Event listeners for buttons
+    document.getElementById('check-btn').addEventListener('click', checkAnswer);
+    document.getElementById('next-btn').addEventListener('click', loadNextQuestion);
+
+    // Load the question detail on page load
+    window.onload = loadQuestionDetail;
+
+    // Handle browser back/forward navigation
+    window.onpopstate = function() {
+        loadQuestionDetail();
+    };
+</script>
 </body>
 </html>
