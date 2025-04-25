@@ -3,506 +3,746 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Game</title>
+    <title>Quiz Master | Question</title>
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #4a6bff;
-            --secondary-color: #f5f7ff;
-            --correct-color: #4caf50;
-            --incorrect-color: #f44336;
-            --text-color: #333;
-            --light-text: #666;
-            --border-radius: 10px;
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --warning-color: #ff9800;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-color: #6c757d;
+            --border-radius: 12px;
             --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #f9f9f9;
-            color: var(--text-color);
+            background-color: #f5f7fb;
+            color: var(--dark-color);
             line-height: 1.6;
             padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
             max-width: 800px;
             margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
         }
 
         .back-btn {
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 10px 20px;
             border-radius: var(--border-radius);
             cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 20px;
-            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: var(--transition);
             box-shadow: var(--box-shadow);
         }
 
         .back-btn:hover {
-            background-color: #3a5bef;
+            background-color: var(--secondary-color);
             transform: translateY(-2px);
         }
 
-        main {
+        .timer-container {
             background-color: white;
             border-radius: var(--border-radius);
-            padding: 25px;
+            padding: 10px 20px;
             box-shadow: var(--box-shadow);
-            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .timer {
+            font-size: 1.2rem;
+        }
+
+        .timer.warning {
+            color: var(--warning-color);
+        }
+
+        .timer.danger {
+            color: var(--error-color);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
         .source {
-            font-size: 14px;
-            color: var(--light-text);
-            margin-bottom: 15px;
-            font-style: italic;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow);
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            text-align: center;
         }
 
-        .question-content {
-            font-size: 18px;
+        .source strong {
+            color: var(--primary-color);
+        }
+
+        .question-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .question-text {
+            font-size: 1.2rem;
             margin-bottom: 25px;
             font-weight: 500;
+            line-height: 1.5;
         }
 
-        .options {
-            list-style-type: none;
-            margin-bottom: 25px;
+        .options-list {
+            list-style: none;
+            margin-bottom: 30px;
         }
 
-        .options li {
+        .option {
             padding: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             border-radius: var(--border-radius);
-            background-color: var(--secondary-color);
+            background-color: var(--light-color);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
             border: 2px solid transparent;
         }
 
-        .options li:hover {
-            background-color: #e0e5ff;
+        .option:hover {
+            background-color: #e9ecef;
             transform: translateX(5px);
         }
 
-        .options li.selected {
+        .option.selected {
             border-color: var(--primary-color);
-            background-color: #e0e5ff;
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .option.correct {
+            border-color: var(--success-color);
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .option.incorrect {
+            border-color: var(--error-color);
+            background-color: rgba(244, 67, 54, 0.1);
+        }
+
+        .option-prefix {
             font-weight: bold;
+            min-width: 24px;
+            text-align: center;
         }
 
-        .options li.correct {
-            background-color: #e8f5e9;
-            border-color: var(--correct-color);
-            color: var(--correct-color);
+        .option-content {
+            flex: 1;
         }
 
-        .options li.incorrect {
-            background-color: #ffebee;
-            border-color: var(--incorrect-color);
-            color: var(--incorrect-color);
-        }
-
-        .btn-container {
+        .action-buttons {
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
+            gap: 15px;
             margin-bottom: 20px;
         }
 
-        .check-btn, #next-btn {
+        .btn {
             flex: 1;
             padding: 12px;
-            border: none;
             border-radius: var(--border-radius);
-            font-size: 16px;
+            border: none;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .check-btn {
+        .btn-primary {
             background-color: var(--primary-color);
             color: white;
         }
 
-        .check-btn:hover {
-            background-color: #3a5bef;
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
             transform: translateY(-2px);
         }
 
-        #next-btn {
-            background-color: #f5f5f5;
-            color: var(--text-color);
+        .btn-secondary {
+            background-color: var(--light-color);
+            color: var(--dark-color);
         }
 
-        #next-btn:hover {
-            background-color: #e0e0e0;
-            transform: translateY(-2px);
+        .btn-secondary:hover {
+            background-color: #e9ecef;
         }
 
-        .timer {
-            background-color: #333;
-            color: white;
-            padding: 10px 15px;
+        .explanation-container {
+            background-color: white;
             border-radius: var(--border-radius);
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 20px;
+            padding: 20px;
             box-shadow: var(--box-shadow);
-        }
-
-        .explanation {
-            background-color: #f5f5f5;
-            padding: 15px;
-            border-radius: var(--border-radius);
             margin-top: 20px;
             display: none;
-            border-left: 4px solid var(--primary-color);
         }
 
-        .explanation h4 {
-            margin-bottom: 10px;
+        .explanation-title {
             color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .explanation-text {
+            line-height: 1.7;
         }
 
         .progress-container {
             width: 100%;
-            background-color: #e0e0e0;
-            border-radius: var(--border-radius);
+            background-color: #e9ecef;
+            border-radius: 10px;
             margin-bottom: 20px;
             height: 10px;
+            overflow: hidden;
         }
 
         .progress-bar {
             height: 100%;
-            border-radius: var(--border-radius);
             background-color: var(--primary-color);
-            width: 0%;
-            transition: width 0.5s ease;
+            border-radius: 10px;
+            transition: width 0.3s ease;
         }
 
-        @media (max-width: 600px) {
-            body {
+        .progress-text {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            margin-bottom: 5px;
+        }
+
+        .mathjax-inline {
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
                 padding: 10px;
             }
             
-            main {
+            .question-card {
                 padding: 15px;
             }
             
-            .btn-container {
+            .action-buttons {
                 flex-direction: column;
+            }
+        }
+
+        /* Loading animation */
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .loader-circle {
+            width: 15px;
+            height: 15px;
+            margin: 0 5px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            animation: bounce 1.5s infinite ease-in-out;
+        }
+
+        .loader-circle:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loader-circle:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
             }
         }
     </style>
 </head>
 <body>
-    <!-- Progress Bar -->
-    <div class="progress-container">
-        <div class="progress-bar" id="progress-bar"></div>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <div class="timer-container">
+                <i class="fas fa-clock"></i>
+                <div class="timer" id="timer">02:00</div>
+            </div>
+        </div>
+
+        <div class="source" id="source">
+            <div class="loader">
+                <div class="loader-circle"></div>
+                <div class="loader-circle"></div>
+                <div class="loader-circle"></div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-text" id="progress-text">Question 1 of 10</div>
+            <div class="progress-bar" id="progress-bar" style="width: 10%"></div>
+        </div>
+
+        <div class="question-card" id="question-detail">
+            <div class="loader">
+                <div class="loader-circle"></div>
+                <div class="loader-circle"></div>
+                <div class="loader-circle"></div>
+            </div>
+        </div>
+
+        <div class="explanation-container" id="explanation">
+            <h4 class="explanation-title">
+                <i class="fas fa-lightbulb"></i> Explanation
+            </h4>
+            <div class="explanation-text" id="explanation-text"></div>
+        </div>
     </div>
 
-    <!-- Back Button -->
-    <button class="back-btn" onclick="goBack()">← Back to Questions</button>
-
-    <main>
-        <div class="source" id="source"></div>
-        <div class="timer" id="timer">Time: 2:00</div>
-        <div id="question-detail">
-            <div class="question-content" id="question-content"></div>
-            <ul class="options" id="options-container"></ul>
-        </div>
-        <div class="btn-container">
-            <button class="check-btn" id="check-btn">Check Answer</button>
-            <button id="next-btn">Next Question</button>
-        </div>
-        <div class="explanation" id="explanation">
-            <h4>Explanation:</h4>
-            <p id="explanation-text"></p>
-        </div>
-    </main>
-
-<script>
-    const metaIds = [
-        { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
-        { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-        { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
-        { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
-        { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
-        { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
-        { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
-        { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
-        { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
-        { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
-        { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
-        { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
-        { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
-        { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
-        { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
-        { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
-        { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
-        { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
-        { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
-        { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
-        { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
-        { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
-        { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
-        { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
-        { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
-        { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
-        { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
-        { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
-        { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
-        { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
-        { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
-        { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
-    ];
+    <script>
+        const metaIds = [
+            { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+            { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+            { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+            { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
+            { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
+            { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
+            { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
+            { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
+            { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
+            { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
+            { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
+            { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
+            { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
+            { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
+            { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
+            { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
+            { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
+            { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
+            { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
+            { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
+            { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
+            { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
+            { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
+            { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
+            { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
+            { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
+            { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
+            { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
+            { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
+            { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
+            { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
+            { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
+        ];
         
-    // Initialize variables
-    let timerInterval;
-    let currentQuestionId;
-    let subject, chapter;
-    let questionsData = [];
-    let currentQuestionIndex = 0;
-    let timeLeft = 120; // 2 minutes in seconds
+        // Initialize variables
+        let timerInterval;
+        let currentQuestionId;
+        let subject, chapter;
+        let questionsData = [];
+        let timeLeft = 120; // 2 minutes in seconds
+        let currentQuestionIndex = 0;
 
-    // Timer function with automatic submit and check
-    function startTimer() {
-        clearInterval(timerInterval); // Clear any existing timer
-        updateTimerDisplay();
-        
-        timerInterval = setInterval(function() {
-            timeLeft--;
+        // Timer function with automatic submit and check
+        function startTimer() {
+            clearInterval(timerInterval); // Clear any existing timer
+            
             updateTimerDisplay();
             
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                document.getElementById('timer').textContent = "Time's up!";
-                document.getElementById('timer').style.backgroundColor = var(--incorrect-color);
-                checkAnswer(); // Automatically check the answer when time runs out
-            }
-        }, 1000);
-    }
-
-    function updateTimerDisplay() {
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        document.getElementById('timer').textContent = `Time: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-        
-        // Change color when time is running low
-        if (timeLeft <= 30) {
-            document.getElementById('timer').style.backgroundColor = "#ff9800";
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').classList.add('danger');
+                    checkAnswer();
+                    showToast("Time's up! Your answer has been submitted.", 'warning');
+                } else if (timeLeft <= 30) {
+                    document.getElementById('timer').classList.add('warning');
+                }
+            }, 1000);
         }
-        if (timeLeft <= 10) {
-            document.getElementById('timer').style.backgroundColor = var(--incorrect-color);
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
-    }
 
-    // Load question details from all metaIds
-    function loadQuestionDetail() {
-        const urlParams = new URLSearchParams(window.location.search);
-        [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
+        // Load question details from all metaIds
+        function loadQuestionDetail() {
+            const urlParams = new URLSearchParams(window.location.search);
+            [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
 
-        let questionFound = false;
+            let questionFound = false;
 
-        (async function fetchQuestion() {
-            for (let i = 0; i < metaIds.length; i++) {
-                const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaIds[i].id}.json`;
+            (async function fetchQuestion() {
+                for (let i = 0; i < metaIds.length; i++) {
+                    const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaIds[i].id}.json`;
 
-                try {
-                    const response = await fetch(chaptersUrl);
-                    const data = await response.json();
+                    try {
+                        const response = await fetch(chaptersUrl);
+                        const data = await response.json();
 
-                    if (subject === 'biology') {
-                        questionsData = data[0].questions.filter(q => q.chapter === chapter && q.subject === subject);
-                    } else if (subject === 'chemistry') {
-                        questionsData = data[1].questions.filter(q => q.chapter === chapter && q.subject === subject);
-                    } else if (subject === 'physics') {
-                        questionsData = data[2].questions.filter(q => q.chapter === chapter && q.subject === subject);
+                        if (subject === 'biology') {
+                            questionsData = data[0].questions.filter(q => q.chapter === chapter && q.subject === subject);
+                        } else if (subject === 'chemistry') {
+                            questionsData = data[1].questions.filter(q => q.chapter === chapter && q.subject === subject);
+                        } else if (subject === 'physics') {
+                            questionsData = data[2].questions.filter(q => q.chapter === chapter && q.subject === subject);
+                        }
+
+                        if (questionsData.length > 0) {
+                            questionFound = true;
+                            currentQuestionIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
+                            updateProgress();
+                            renderQuestionDetail(questionsData.find(q => q.question_id === currentQuestionId));
+                            startTimer();
+                            document.getElementById('source').innerHTML = `<strong>Source:</strong> ${metaIds[i].title}`;
+                            break;
+                        }
+                    } catch (error) {
+                        console.error('Error fetching question data:', error);
                     }
+                }
 
-                    if (questionsData.length > 0) {
-                        questionFound = true;
-                        currentQuestionIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
-                        updateProgressBar();
-                        renderQuestionDetail(questionsData[currentQuestionIndex]);
-                        startTimer();
-                        document.getElementById('source').textContent = `Source: ${metaIds[i].title}`;
-                        break;
-                    }
-                } catch (error) {
-                    console.error('Error fetching question data:', error);
+                if (!questionFound) {
+                    document.getElementById('question-detail').innerHTML = `
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Question not found. Please try another one.</p>
+                        </div>
+                    `;
+                }
+            })();
+        }
+
+        // Update progress bar and text
+        function updateProgress() {
+            const progressPercent = ((currentQuestionIndex + 1) / questionsData.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('progress-text').textContent = 
+                `Question ${currentQuestionIndex + 1} of ${questionsData.length}`;
+        }
+
+        // Render question details in the HTML
+        function renderQuestionDetail(question) {
+            let questionDetailHTML = `
+                <div class="question-text">${renderMath(question.content)}</div>
+                <ul class="options-list">
+                    ${question.options.map((opt, index) => 
+                        `<li class="option" data-option="${opt.identifier}" id="option${index}">
+                            <span class="option-prefix">${String.fromCharCode(65 + index)}.</span>
+                            <span class="option-content">${renderMath(opt.content)}</span>
+                         </li>`
+                    ).join('')}
+                </ul>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="checkAnswer()">
+                        <i class="fas fa-check-circle"></i> Check Answer
+                    </button>
+                    <button class="btn btn-secondary" id="next-btn" onclick="loadNextQuestion()">
+                        <i class="fas fa-arrow-right"></i> Next Question
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('question-detail').innerHTML = questionDetailHTML;
+            document.getElementById('explanation-text').innerHTML = renderMath(question.explanation);
+            document.getElementById('explanation').style.display = 'none';
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+            // Attach event listeners to options
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    saveAnswer(option.dataset.option);
+                });
+            });
+
+            // Check for saved answer in localStorage
+            const savedAnswer = localStorage.getItem(`answer-${currentQuestionId}`);
+            if (savedAnswer) {
+                const optionIndex = question.options.findIndex(opt => opt.identifier === savedAnswer);
+                if (optionIndex >= 0) {
+                    document.querySelector(`#option${optionIndex}`).classList.add('selected');
                 }
             }
+        }
 
-            if (!questionFound) {
-                document.getElementById('question-detail').innerHTML = '<p>Question not found.</p>';
-            }
-        })();
-    }
-
-    function updateProgressBar() {
-        const progress = ((currentQuestionIndex + 1) / questionsData.length) * 100;
-        document.getElementById('progress-bar').style.width = `${progress}%`;
-    }
-
-    // Render question details in the HTML
-    function renderQuestionDetail(question) {
-        document.getElementById('question-content').innerHTML = renderMath(question.content);
-        
-        const optionsContainer = document.getElementById('options-container');
-        optionsContainer.innerHTML = '';
-        
-        question.options.forEach((opt, index) => {
-            const optionElement = document.createElement('li');
-            optionElement.dataset.option = opt.identifier;
-            optionElement.id = `option${index}`;
-            optionElement.innerHTML = `${String.fromCharCode(65 + index)}. ${renderMath(opt.content)}`;
-            optionElement.addEventListener('click', function() {
-                selectOption(optionElement);
+        // Render LaTeX using MathJax
+        function renderMath(input) {
+            if (!input) return '';
+            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
             });
-            optionsContainer.appendChild(optionElement);
-        });
+        }
 
-        document.getElementById('explanation-text').innerHTML = renderMath(question.explanation || 'No explanation available.');
-        document.getElementById('explanation').style.display = 'none';
+        // Save selected answer to localStorage
+        function saveAnswer(optionId) {
+            localStorage.setItem(`answer-${currentQuestionId}`, optionId);
+        }
 
-        // Check for saved answer in localStorage
-        const savedAnswer = localStorage.getItem(`answer-${currentQuestionId}`);
-        if (savedAnswer) {
-            const optionIndex = question.options.findIndex(opt => opt.identifier === savedAnswer);
-            if (optionIndex !== -1) {
-                document.querySelector(`#option${optionIndex}`).classList.add('selected');
+        // Check and display the correct answer
+        function checkAnswer() {
+            const selectedOption = document.querySelector('.option.selected');
+            if (!selectedOption) {
+                showToast("Please select an option before checking.", 'error');
+                return;
+            }
+
+            const correctAnswer = getCorrectAnswer(currentQuestionId);
+            const options = document.querySelectorAll('.option');
+
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+                if (option.dataset.option === correctAnswer) {
+                    option.classList.add('correct');
+                } else if (option === selectedOption) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            // Show explanation after checking the answer
+            document.getElementById('explanation').style.display = 'block';
+            document.getElementById('next-btn').focus();
+
+            // Disable options after answer is checked
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+
+            // Stop the timer
+            clearInterval(timerInterval);
+        }
+
+        // Get correct answer based on the question ID
+        function getCorrectAnswer(questionId) {
+            const question = questionsData.find(q => q.question_id === questionId);
+            if (question) {
+                const correctOption = question.options.find(opt => opt.is_correct);
+                return correctOption ? correctOption.identifier : 'A';
+            }
+            return 'A'; // Fallback
+        }
+
+        // Load next question and update URL
+        function loadNextQuestion() {
+            const selectedOption = document.querySelector('.option.selected');
+            
+            // Force check answer if not already selected
+            if (!selectedOption) {
+                showToast("Please select an answer before proceeding.", 'error');
+                return;
+            }
+
+            // Reset timer for next question
+            timeLeft = 120;
+            document.getElementById('timer').classList.remove('warning', 'danger');
+            
+            // Get the next question from the same chapter and subject
+            const nextQuestion = getNextQuestion();
+            if (nextQuestion) {
+                currentQuestionIndex = questionsData.findIndex(q => q.question_id === nextQuestion.question_id);
+                const newUrl = `?id=${subject}/${chapter}/${nextQuestion.question_id}`;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+                currentQuestionId = nextQuestion.question_id;
+                updateProgress();
+                loadQuestionDetail();
+            } else {
+                showToast("No more questions in this chapter!", 'info');
             }
         }
 
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-    }
-
-    function selectOption(optionElement) {
-        const options = document.querySelectorAll('.options li');
-        options.forEach(opt => opt.classList.remove('selected'));
-        optionElement.classList.add('selected');
-        saveAnswer(optionElement.dataset.option);
-    }
-
-    // Render LaTeX using MathJax
-    function renderMath(input) {
-        if (!input) return '';
-        return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-            return `<span class="mathjax-inline">$$${p1}$$</span>`;
-        });
-    }
-
-    // Save selected answer to localStorage
-    function saveAnswer(optionId) {
-        localStorage.setItem(`answer-${currentQuestionId}`, optionId);
-    }
-
-    // Check and display the correct answer
-    function checkAnswer() {
-        clearInterval(timerInterval);
-        
-        const selectedOption = document.querySelector('.options li.selected');
-        if (!selectedOption) {
-            alert("Please select an option.");
-            return;
+        // Get the next question from the same chapter and subject
+        function getNextQuestion() {
+            const nextIndex = (currentQuestionIndex + 1) % questionsData.length;
+            return questionsData[nextIndex];
         }
 
-        const correctAnswer = questionsData[currentQuestionIndex].correct_answer;
-        const options = document.querySelectorAll('.options li');
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    ${type === 'error' ? '<i class="fas fa-exclamation-circle"></i>' : 
+                      type === 'success' ? '<i class="fas fa-check-circle"></i>' : 
+                      type === 'warning' ? '<i class="fas fa-exclamation-triangle"></i>' : 
+                      '<i class="fas fa-info-circle"></i>'}
+                </div>
+                <div class="toast-message">${message}</div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
 
-        options.forEach(option => {
-            option.classList.remove('correct', 'incorrect');
-            if (option.dataset.option === correctAnswer) {
-                option.classList.add('correct');
-            } else if (option === selectedOption) {
-                option.classList.add('incorrect');
+        // Go back to subject/chapter page
+        function goBack() {
+            const currentUrl = window.location.href;
+            const urlParams = new URLSearchParams(window.location.search);
+            const questionId = urlParams.get('id');
+
+            if (questionId) {
+                const urlParts = questionId.split('/');
+                const subject = urlParts[0];
+                const chapter = urlParts[1];
+                window.location.href = `subject.html?subject=${subject}&chapter=${chapter}`;
+            } else {
+                console.error('No "id" parameter found in the URL.');
             }
-        });
-
-        // Disable options after checking
-        options.forEach(option => {
-            option.style.pointerEvents = 'none';
-        });
-
-        // Show explanation
-        document.getElementById('explanation').style.display = 'block';
-        
-        // Scroll to explanation
-        document.getElementById('explanation').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Load next question and update URL
-    function loadNextQuestion() {
-        const selectedOption = document.querySelector('.options li.selected');
-        
-        // Force check answer if not already checked
-        if (!selectedOption) {
-            alert("Please select an answer before proceeding.");
-            return;
         }
 
-        // Check if answer was already checked
-        const options = document.querySelectorAll('.options li');
-        const isChecked = Array.from(options).some(opt => 
-            opt.classList.contains('correct') || opt.classList.contains('incorrect')
-        );
-        
-        if (!isChecked) {
-            checkAnswer();
-            return;
-        }
+        // Load the question detail on page load
+        window.onload = loadQuestionDetail;
 
-        // Move to next question
-        currentQuestionIndex++;
-        if (currentQuestionIndex >= questionsData.length) {
-            currentQuestionIndex = 0; // Loop back to first question
-        }
+        // Handle browser back/forward buttons
+        window.onpopstate = function() {
+            loadQuestionDetail();
+        };
 
-        const nextQuestion = questionsData[currentQuestionIndex];
-        const newUrl = `?id=${subject}/${chapter}/${nextQuestion.question_id}`;
-        window.history.pushState({ path: newUrl }, '', newUrl);
-        currentQuestionId = nextQuestion.question_id;
-        timeLeft = 120; // Reset timer
-        loadQuestionDetail();
-    }
-
-    // Go back to subject/chapter page
-    function goBack() {
-        const currentUrl = window.location.href;
-        const urlParams = new URLSearchParams(window.location.search);
-        const questionId = urlParams.get('id');
-
-        if (questionId) {
-            const urlParts = questionId.split('/');
-            const subject = urlParts[0];
-            const chapter = urlParts[1];
-            window.location.href = `subject.html?subject=${subject}&chapter=${chapter}`;
-        } else {
-            console.error('No "id" parameter found in the URL.');
-        }
-    }
-
-    // Event listeners for buttons
-    document.getElementById('check-btn').addEventListener('click', checkAnswer);
-    document.getElementById('next-btn').addEventListener('click', loadNextQuestion);
-
-    // Load the question detail on page load
-    window.onload = loadQuestionDetail;
-
-    // Handle browser back/forward navigation
-    window.onpopstate = function() {
-        loadQuestionDetail();
-    };
-</script>
+        // Add toast styles dynamically
+        const toastStyles = document.createElement('style');
+        toastStyles.textContent = `
+            .toast {
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: white;
+                padding: 15px 20px;
+                border-radius: var(--border-radius);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                z-index: 1000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                max-width: 90%;
+                width: max-content;
+            }
+            
+            .toast.show {
+                opacity: 1;
+            }
+            
+            .toast-error {
+                border-left: 4px solid var(--error-color);
+            }
+            
+            .toast-success {
+                border-left: 4px solid var(--success-color);
+            }
+            
+            .toast-warning {
+                border-left: 4px solid var(--warning-color);
+            }
+            
+            .toast-info {
+                border-left: 4px solid var(--primary-color);
+            }
+            
+            .toast-icon {
+                font-size: 1.2rem;
+            }
+            
+            .toast-error .toast-icon {
+                color: var(--error-color);
+            }
+            
+            .toast-success .toast-icon {
+                color: var(--success-color);
+            }
+            
+            .toast-warning .toast-icon {
+                color: var(--warning-color);
+            }
+            
+            .toast-info .toast-icon {
+                color: var(--primary-color);
+            }
+            
+            .toast-message {
+                font-size: 0.9rem;
+            }
+        `;
+        document.head.appendChild(toastStyles);
+    </script>
 </body>
 </html>
