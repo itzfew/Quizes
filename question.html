@@ -464,26 +464,22 @@
                         const response = await fetch(chaptersUrl);
                         const data = await response.json();
 
-                        // Find the correct subject group in the data
-                        const subjectGroup = data.find(group => {
-                            if (subject === 'biology' && group.subject === 'biology') return true;
-                            if (subject === 'chemistry' && group.subject === 'chemistry') return true;
-                            if (subject === 'physics' && group.subject === 'physics') return true;
-                            return false;
-                        });
+                        if (subject === 'biology') {
+                            questionsData = data[0].questions.filter(q => q.chapter === chapter && q.subject === subject);
+                        } else if (subject === 'chemistry') {
+                            questionsData = data[1].questions.filter(q => q.chapter === chapter && q.subject === subject);
+                        } else if (subject === 'physics') {
+                            questionsData = data[2].questions.filter(q => q.chapter === chapter && q.subject === subject);
+                        }
 
-                        if (subjectGroup) {
-                            questionsData = subjectGroup.questions.filter(q => q.chapter === chapter);
-                            
-                            if (questionsData.length > 0) {
-                                questionFound = true;
-                                currentQuestionIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
-                                updateProgress();
-                                renderQuestionDetail(questionsData.find(q => q.question_id === currentQuestionId));
-                                startTimer();
-                                document.getElementById('source').innerHTML = `<strong>Source:</strong> ${metaIds[i].title}`;
-                                break;
-                            }
+                        if (questionsData.length > 0) {
+                            questionFound = true;
+                            currentQuestionIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
+                            updateProgress();
+                            renderQuestionDetail(questionsData.find(q => q.question_id === currentQuestionId));
+                            startTimer();
+                            document.getElementById('source').innerHTML = `<strong>Source:</strong> ${metaIds[i].title}`;
+                            break;
                         }
                     } catch (error) {
                         console.error('Error fetching question data:', error);
@@ -519,7 +515,7 @@
                 <ul class="options-list">
                     ${question.options.map((opt, index) => 
                         `<li class="option" data-option="${opt.identifier}" id="option${index}">
-                            <span class="option-prefix">${opt.identifier}.</span>
+                            <span class="option-prefix">${String.fromCharCode(65 + index)}.</span>
                             <span class="option-content">${renderMath(opt.content)}</span>
                          </li>`
                     ).join('')}
@@ -562,38 +558,41 @@
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
             });
         }
+function checkAnswer() {
+    const selectedOption = document.querySelector('.option.selected');
+    if (!selectedOption) {
+        showToast("Please select an option before checking.", 'error');
+        return;
+    }
 
-        function checkAnswer() {
-            const selectedOption = document.querySelector('.option.selected');
-            if (!selectedOption) {
-                showToast("Please select an option before checking.", 'error');
-                return;
-            }
+    hasAnsweredCurrentQuestion = true;
 
-            hasAnsweredCurrentQuestion = true;
+    const correctAnswer = getCorrectAnswer(currentQuestionId);
+    const options = document.querySelectorAll('.option');
 
-            const currentQuestion = questionsData.find(q => q.question_id === currentQuestionId);
-            const correctAnswer = currentQuestion.correct_options[0]; // Get the first correct option (assuming single correct answer)
-            const options = document.querySelectorAll('.option');
-
-            options.forEach(option => {
-                option.classList.remove('correct', 'incorrect');
-                if (option.dataset.option === correctAnswer) {
-                    option.classList.add('correct');
-                } else if (option === selectedOption) {
-                    option.classList.add('incorrect');
-                }
-            });
-
-            document.getElementById('explanation').style.display = 'block';
-            document.getElementById('next-btn').focus();
-
-            options.forEach(option => {
-                option.style.pointerEvents = 'none';
-            });
-
-            clearInterval(timerInterval);
+    options.forEach(option => {
+        option.classList.remove('correct', 'incorrect');
+        if (option.dataset.option === correctAnswer) {
+            option.classList.add('correct');
+        } else if (option === selectedOption) {
+            option.classList.add('incorrect');
         }
+    });
+
+    document.getElementById('explanation').style.display = 'block';
+    document.getElementById('next-btn').focus();
+
+    options.forEach(option => {
+        option.style.pointerEvents = 'none';
+    });
+
+    clearInterval(timerInterval);
+}
+
+function getCorrectAnswer(questionId) {
+    const question = questionsData.find(q => q.question_id === questionId);
+    return question?.correct_options; // returns 'A', 'B', 'C', or 'D' directly from JSON
+}
 
         // Load next question and update URL
         function loadNextQuestion() {
