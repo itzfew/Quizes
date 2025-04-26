@@ -558,21 +558,19 @@
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
             });
         }
+// Check and display the correct answer
 function checkAnswer() {
-    const selectedOption = document.querySelector('.option.selected');
+    const selectedOption = document.querySelector('.options li.selected');
     if (!selectedOption) {
-        showToast("Please select an option before checking.", 'error');
+        alert("Please select an option.");
         return;
     }
 
-    hasAnsweredCurrentQuestion = true;
-
-    const correctAnswers = getCorrectAnswer(currentQuestionId); // now it's an array
-    const options = document.querySelectorAll('.option');
+    const correctAnswers = getCorrectAnswer(currentQuestionId); // now returns array like ['B']
+    const options = document.querySelectorAll('.options li');
 
     options.forEach(option => {
         option.classList.remove('correct', 'incorrect');
-
         if (correctAnswers.includes(option.dataset.option)) {
             option.classList.add('correct');
         } else if (option === selectedOption) {
@@ -580,25 +578,19 @@ function checkAnswer() {
         }
     });
 
+    // Show explanation after checking the answer
     document.getElementById('explanation').style.display = 'block';
-    document.getElementById('next-btn').focus();
-
-    options.forEach(option => {
-        option.style.pointerEvents = 'none';
-    });
-
-    clearInterval(timerInterval);
 }
 
+// Get correct answer based on the question ID
 function getCorrectAnswer(questionId) {
-    // Since your JSON is wrapped inside [{ questions: [...] }]
     for (const section of questionsData) {
         const question = section.questions.find(q => q.question_id === questionId);
         if (question) {
-            return question.correct_options; // returns ["B"]
+            return question.correct_options; // returns an array like ['B']
         }
     }
-    return []; // no answer if not found
+    return []; // return empty array if not found
 }
 
         // Load next question and update URL
