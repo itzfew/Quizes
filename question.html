@@ -1,782 +1,1020 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Master | Question</title>
-    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --accent-color: #4cc9f0;
-            --success-color: #4caf50;
-            --error-color: #f44336;
-            --warning-color: #ff9800;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --gray-color: #6c757d;
-            --border-radius: 8px;
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: white;
-            color: var(--dark-color);
-            line-height: 1.6;
-            padding: 10px;
-            min-height: 100vh;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 0 5px;
-        }
-
-        .back-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 500;
-            transition: var(--transition);
-            font-size: 14px;
-        }
-
-        .back-btn:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .timer-container {
-            background-color: #f0f2f5;
-            border-radius: var(--border-radius);
-            padding: 8px 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: 14px;
-        }
-
-        .timer {
-            font-size: 1rem;
-        }
-
-        .timer.warning {
-            color: var(--warning-color);
-        }
-
-        .timer.danger {
-            color: var(--error-color);
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .source {
-            font-size: 0.8rem;
-            color: var(--gray-color);
-            text-align: center;
-            margin-bottom: 10px;
-            padding: 0 5px;
-        }
-
-        .source strong {
-            color: var(--primary-color);
-        }
-
-        .question-card {
-            margin-bottom: 15px;
-        }
-
-        .question-text {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-            font-weight: 500;
-            line-height: 1.5;
-            padding: 0 5px;
-        }
-
-        .options-list {
-            list-style: none;
-            margin-bottom: 20px;
-        }
-
-        .option {
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: var(--border-radius);
-            background-color: #f8f9fa;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .option:hover {
-            background-color: #e9ecef;
-        }
-
-        .option.selected {
-            border-color: var(--primary-color);
-            background-color: rgba(67, 97, 238, 0.1);
-        }
-
-        .option.correct {
-            border-color: var(--success-color);
-            background-color: rgba(76, 175, 80, 0.1);
-        }
-
-        .option.incorrect {
-            border-color: var(--error-color);
-            background-color: rgba(244, 67, 54, 0.1);
-        }
-
-        .option-prefix {
-            font-weight: bold;
-            min-width: 20px;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        .option-content {
-            flex: 1;
-            font-size: 0.95rem;
-        }
-
-        .action-buttons {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: var(--border-radius);
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .btn-secondary {
-            background-color: #f0f2f5;
-            color: var(--dark-color);
-        }
-
-        .btn-secondary:hover {
-            background-color: #e9ecef;
-        }
-
-        .btn-secondary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .explanation-container {
-            margin-top: 15px;
-            display: none;
-            padding: 0 5px;
-        }
-
-        .explanation-title {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 1rem;
-        }
-
-        .explanation-text {
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        .progress-container {
-            width: 100%;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            height: 6px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background-color: var(--primary-color);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
-        .progress-text {
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--gray-color);
-            margin-bottom: 5px;
-        }
-
-        .mathjax-inline {
-            display: inline-block;
-        }
-
-        .quiz-complete {
-            text-align: center;
-            padding: 20px;
-            margin-top: 30px;
-        }
-
-        .quiz-complete i {
-            font-size: 3rem;
-            color: var(--success-color);
-            margin-bottom: 15px;
-        }
-
-        .quiz-complete h3 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        /* Loading animation */
-        .loader {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 150px;
-        }
-
-        .loader-circle {
-            width: 12px;
-            height: 12px;
-            margin: 0 4px;
-            background-color: var(--primary-color);
-            border-radius: 50%;
-            animation: bounce 1.5s infinite ease-in-out;
-        }
-
-        .loader-circle:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .loader-circle:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-15px);
-            }
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 480px) {
-            .header {
-                flex-direction: column;
-                gap: 10px;
-                align-items: flex-start;
-            }
-            
-            .question-text {
-                font-size: 1rem;
-            }
-            
-            .option-content {
-                font-size: 0.9rem;
-            }
-            
-            .btn {
-                font-size: 13px;
-                padding: 8px;
-            }
-            
-            .explanation-text {
-                font-size: 0.9rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <button class="back-btn" onclick="goBack()">
-        <i class="fas fa-arrow-left"></i> Back
-        </button>
-        <div class="timer-container">
-            <i class="fas fa-clock"></i>
-            <div class="timer" id="timer">02:00</div>
-        </div>
-    </div>
-
-    <div class="source" id="source">
-        <div class="loader">
-            <div class="loader-circle"></div>
-            <div class="loader-circle"></div>
-            <div class="loader-circle"></div>
-        </div>
-    </div>
-
-    <div class="progress-container">
-        <div class="progress-text" id="progress-text">Question 1 of 10</div>
-        <div class="progress-bar" id="progress-bar" style="width: 10%"></div>
-    </div>
-
-    <div class="question-card" id="question-detail">
-        <div class="loader">
-            <div class="loader-circle"></div>
-            <div class="loader-circle"></div>
-            <div class="loader-circle"></div>
-        </div>
-    </div>
-
-    <div class="explanation-container" id="explanation">
-        <h4 class="explanation-title">
-            <i class="fas fa-lightbulb"></i> Explanation
-        </h4>
-        <div class="explanation-text" id="explanation-text"></div>
-    </div>
-
-    <script>
-        const metaIds = [
-            { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
-            { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-            { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
-            { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
-            { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
-            { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
-            { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
-            { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
-            { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
-            { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
-            { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
-            { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
-            { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
-            { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
-            { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
-            { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
-            { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
-            { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
-            { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
-            { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
-            { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
-            { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
-            { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
-            { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
-            { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
-            { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
-            { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
-            { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
-            { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
-            { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
-            { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
-            { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
-        ];
-        
-        // Initialize variables
-        let timerInterval;
-        let currentQuestionId;
-        let subject, chapter;
-        let questionsData = [];
-        let timeLeft = 120; // 2 minutes in seconds
-        let currentQuestionIndex = 0;
-        let hasAnsweredCurrentQuestion = false;
-
-        // Timer function with automatic submit and check
-        function startTimer() {
-            clearInterval(timerInterval); // Clear any existing timer
-            
-            updateTimerDisplay();
-            
-            timerInterval = setInterval(function() {
-                timeLeft--;
-                updateTimerDisplay();
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    document.getElementById('timer').classList.add('danger');
-                    checkAnswer();
-                    showToast("Time's up! Your answer has been submitted.", 'warning');
-                } else if (timeLeft <= 30) {
-                    document.getElementById('timer').classList.add('warning');
-                }
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            document.getElementById('timer').textContent = 
-                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        // Load question details from all metaIds
-        function loadQuestionDetail() {
-            const urlParams = new URLSearchParams(window.location.search);
-            [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
-
-            let questionFound = false;
-
-            (async function fetchQuestion() {
-                for (let i = 0; i < metaIds.length; i++) {
-                    const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaIds[i].id}.json`;
-
-                    try {
-                        const response = await fetch(chaptersUrl);
-                        const data = await response.json();
-
-                        if (subject === 'biology') {
-                            questionsData = data[0].questions.filter(q => q.chapter === chapter && q.subject === subject);
-                        } else if (subject === 'chemistry') {
-                            questionsData = data[1].questions.filter(q => q.chapter === chapter && q.subject === subject);
-                        } else if (subject === 'physics') {
-                            questionsData = data[2].questions.filter(q => q.chapter === chapter && q.subject === subject);
-                        }
-
-                        if (questionsData.length > 0) {
-                            questionFound = true;
-                            currentQuestionIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
-                            updateProgress();
-                            renderQuestionDetail(questionsData.find(q => q.question_id === currentQuestionId));
-                            startTimer();
-                            document.getElementById('source').innerHTML = `<strong>Source:</strong> ${metaIds[i].title}`;
-                            break;
-                        }
-                    } catch (error) {
-                        console.error('Error fetching question data:', error);
-                    }
-                }
-
-                if (!questionFound) {
-                    document.getElementById('question-detail').innerHTML = `
-                        <div class="error-message">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <p>Question not found. Please try another one.</p>
-                        </div>
-                    `;
-                }
-            })();
-        }
-
-        // Update progress bar and text
-        function updateProgress() {
-            const progressPercent = ((currentQuestionIndex + 1) / questionsData.length) * 100;
-            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
-            document.getElementById('progress-text').textContent = 
-                `Question ${currentQuestionIndex + 1} of ${questionsData.length}`;
-        }
-
-        // Render question details in the HTML
-        function renderQuestionDetail(question) {
-            // Reset answer state for new question
-            hasAnsweredCurrentQuestion = false;
-            
-            let questionDetailHTML = `
-                <div class="question-text">${renderMath(question.content)}</div>
-                <ul class="options-list">
-                    ${question.options.map((opt, index) => 
-                        `<li class="option" data-option="${opt.identifier}" id="option${index}">
-                            <span class="option-prefix">${String.fromCharCode(65 + index)}.</span>
-                            <span class="option-content">${renderMath(opt.content)}</span>
-                         </li>`
-                    ).join('')}
-                </ul>
-                <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="checkAnswer()">
-                        <i class="fas fa-check-circle"></i> Check Answer
-                    </button>
-                    <button class="btn btn-secondary" id="next-btn" onclick="loadNextQuestion()" ${currentQuestionIndex >= questionsData.length - 1 ? 'disabled' : ''}>
-                        <i class="fas fa-arrow-right"></i> Next Question
-                    </button>
-                </div>
-            `;
-
-            document.getElementById('question-detail').innerHTML = questionDetailHTML;
-            document.getElementById('explanation-text').innerHTML = renderMath(question.explanation);
-            document.getElementById('explanation').style.display = 'none';
-
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-
-            // Attach event listeners to options
-            const options = document.querySelectorAll('.option');
-            options.forEach(option => {
-                option.addEventListener('click', function() {
-                    if (!hasAnsweredCurrentQuestion) {
-                        options.forEach(opt => opt.classList.remove('selected'));
-                        option.classList.add('selected');
-                    }
-                });
-            });
-
-            // Clear any previous answer selection
-            localStorage.removeItem(`answer-${currentQuestionId}`);
-        }
-
-        // Render LaTeX using MathJax
-        function renderMath(input) {
-            if (!input) return '';
-            return input.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                return `<span class="mathjax-inline">$$${p1}$$</span>`;
-            });
-        }
-
-        // Check and display the correct answer
-        function checkAnswer() {
-            const selectedOption = document.querySelector('.option.selected');
-            if (!selectedOption) {
-                showToast("Please select an option before checking.", 'error');
-                return;
-            }
-
-            hasAnsweredCurrentQuestion = true;
-            
-            const correctAnswer = getCorrectAnswer(currentQuestionId);
-            const options = document.querySelectorAll('.option');
-
-            options.forEach(option => {
-                option.classList.remove('correct', 'incorrect');
-                if (option.dataset.option === correctAnswer) {
-                    option.classList.add('correct');
-                } else if (option === selectedOption) {
-                    option.classList.add('incorrect');
-                }
-            });
-
-            // Show explanation after checking the answer
-            document.getElementById('explanation').style.display = 'block';
-            document.getElementById('next-btn').focus();
-
-            // Disable options after answer is checked
-            options.forEach(option => {
-                option.style.pointerEvents = 'none';
-            });
-
-            // Stop the timer
-            clearInterval(timerInterval);
-        }
-
-        // Get correct answer based on the question ID
-        function getCorrectAnswer(questionId) {
-            const question = questionsData.find(q => q.question_id === questionId);
-            if (question) {
-                const correctOption = question.options.find(opt => opt.is_correct);
-                return correctOption ? correctOption.identifier : 'A';
-            }
-            return 'A'; // Fallback
-        }
-
-        // Load next question and update URL
-        function loadNextQuestion() {
-            const selectedOption = document.querySelector('.option.selected');
-            
-            // Force check answer if not already checked
-            if (!hasAnsweredCurrentQuestion && selectedOption) {
-                checkAnswer();
-                return;
-            }
-            
-            if (!hasAnsweredCurrentQuestion && !selectedOption) {
-                showToast("Please select an answer before proceeding.", 'error');
-                return;
-            }
-
-            // Check if we've reached the end of questions
-            if (currentQuestionIndex >= questionsData.length - 1) {
-                showQuizComplete();
-                return;
-            }
-
-            // Reset timer for next question
-            timeLeft = 120;
-            document.getElementById('timer').classList.remove('warning', 'danger');
-            
-            // Move to next question
-            currentQuestionIndex++;
-            const nextQuestion = questionsData[currentQuestionIndex];
-            
-            if (nextQuestion) {
-                const newUrl = `?id=${subject}/${chapter}/${nextQuestion.question_id}`;
-                window.history.pushState({ path: newUrl }, '', newUrl);
-                currentQuestionId = nextQuestion.question_id;
-                updateProgress();
-                loadQuestionDetail();
-            }
-        }
-
-        function showQuizComplete() {
-            document.getElementById('question-detail').innerHTML = `
-                <div class="quiz-complete">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Quiz Complete!</h3>
-                    <p>You've answered all the questions in this chapter.</p>
-                    <button class="btn btn-primary" onclick="goBack()">
-                        <i class="fas fa-arrow-left"></i> Back to Chapter
-                    </button>
-                </div>
-            `;
-            document.getElementById('explanation').style.display = 'none';
-            clearInterval(timerInterval);
-        }
-
-        // Show toast notification
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            toast.innerHTML = `
-                <div class="toast-icon">
-                    ${type === 'error' ? '<i class="fas fa-exclamation-circle"></i>' : 
-                      type === 'success' ? '<i class="fas fa-check-circle"></i>' : 
-                      type === 'warning' ? '<i class="fas fa-exclamation-triangle"></i>' : 
-                      '<i class="fas fa-info-circle"></i>'}
-                </div>
-                <div class="toast-message">${message}</div>
-            `;
-            
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10);
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => {
-                    toast.remove();
-                }, 300);
-            }, 3000);
-        }
-
-        // Go back to subject/chapter page
-        function goBack() {
-    // Try to go back in history if possible
-    if (window.history.length > 1) {
-        window.history.back();
-    } else {
-        // If no history, fallback to subject/chapter based on URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const questionId = urlParams.get('id');
-
-        if (questionId) {
-            const [subject, chapter] = questionId.split('/');
-            window.location.href = `subject.html?subject=${subject}&chapter=${chapter}`;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEET PYQ Practice</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #4cc9f0;
+      --success: #4caf50;
+      --danger: #f44336;
+      --warning: #ff9800;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --light-gray: #e9ecef;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      --transition: all 0.3s ease;
     }
-}
 
-        // Load the question detail on page load
-        window.onload = loadQuestionDetail;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        // Handle browser back/forward buttons
-        window.onpopstate = function() {
-            loadQuestionDetail();
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7ff;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .app-container {
+      max-width: 100%;
+      margin: 0 auto;
+      background: white;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 15px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--box-shadow);
+    }
+
+    .app-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .menu-btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .menu-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .side-nav {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 280px;
+      height: 100%;
+      background-color: white;
+      box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+      overflow-y: auto;
+      transition: var(--transition);
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .side-nav.open {
+      left: 0;
+    }
+
+    .side-nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .side-nav-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--gray);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .close-btn:hover {
+      color: var(--danger);
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      height: 40px;
+      border-radius: var(--border-radius);
+      border: 1px solid var(--light-gray);
+      background: white;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .nav-btn.visited {
+      background: var(--light-gray);
+    }
+
+    .nav-btn.correct {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+      border-color: var(--success);
+    }
+
+    .nav-btn.incorrect {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .nav-btn.missed {
+      background: rgba(255, 152, 0, 0.1);
+      color: var(--warning);
+      border-color: var(--warning);
+    }
+
+    .setup-container {
+      padding: 30px 20px;
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .setup-title {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    .num-input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .num-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      padding: 12px 25px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn i {
+      margin-right: 8px;
+    }
+
+    .loading-container {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .loading-spinner {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 1.1rem;
+      color: var(--gray);
+    }
+
+    .quiz-container {
+      padding: 20px;
+      display: none;
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .quiz-progress {
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+
+    .quiz-source {
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .quiz-source i {
+      margin-right: 5px;
+    }
+
+    .question-box {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--box-shadow);
+    }
+
+    .question-text {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .options-list {
+      list-style: none;
+    }
+
+    .option {
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+    }
+
+    .option:hover {
+      background: rgba(67, 97, 238, 0.05);
+      border-color: var(--primary);
+    }
+
+    .option.selected {
+      background: rgba(67, 97, 238, 0.1);
+      border-color: var(--primary);
+    }
+
+    .option.correct {
+      background: rgba(76, 175, 80, 0.1);
+      border-color: var(--success);
+    }
+
+    .option.incorrect {
+      background: rgba(244, 67, 54, 0.1);
+      border-color: var(--danger);
+    }
+
+    .option-prefix {
+      font-weight: bold;
+      margin-right: 10px;
+      width: 20px;
+    }
+
+    .quiz-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .quiz-controls .btn {
+      flex: 1;
+      margin: 0 5px;
+    }
+
+    .quiz-controls .btn:first-child {
+      margin-left: 0;
+    }
+
+    .quiz-controls .btn:last-child {
+      margin-right: 0;
+    }
+
+    .result-container {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: var(--box-shadow);
+      display: none;
+    }
+
+    .result-title {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-box {
+      text-align: center;
+      padding: 15px;
+      border-radius: var(--border-radius);
+    }
+
+    .stat-correct {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+    }
+
+    .stat-incorrect {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--danger);
+    }
+
+    .stat-missed {
+      background: rgba(255, 152, 0, 0.1);
+      color: var(--warning);
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+    }
+
+    .score-display {
+      text-align: center;
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(67, 97, 238, 0.1);
+      border-radius: var(--border-radius);
+      color: var(--primary);
+    }
+
+    .score-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .score-total {
+      font-size: 1rem;
+      color: var(--gray);
+    }
+
+    .explanation {
+      margin-top: 20px;
+      border-top: 1px solid var(--light-gray);
+      padding-top: 15px;
+    }
+
+    .explanation-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      padding: 10px 0;
+    }
+
+    .explanation-title {
+      font-weight: 500;
+      color: var(--primary);
+    }
+
+    .explanation-content {
+      padding: 10px 0;
+      display: none;
+    }
+
+    .explanation-content.show {
+      display: block;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .side-nav {
+        width: 250px;
+      }
+      
+      .nav-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      
+      .quiz-controls {
+        flex-direction: column;
+      }
+      
+      .quiz-controls .btn {
+        margin: 5px 0;
+      }
+      
+      .result-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .app-title {
+        font-size: 1.1rem;
+      }
+      
+      .side-nav {
+        width: 85%;
+      }
+      
+      .nav-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
+      .setup-title {
+        font-size: 1.3rem;
+      }
+    }
+
+    /* MathJax styling */
+    .mathjax-inline {
+      display: inline-block;
+    }
+
+    .mathjax-block {
+      display: block;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Header with menu button -->
+    <header>
+      <button class="menu-btn" onclick="openNav()">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="app-title">NEET PYQ Practice</div>
+      <div style="width: 40px;"></div> <!-- Spacer for balance -->
+    </header>
+
+    <!-- Side navigation for question navigation -->
+    <div id="side-nav" class="side-nav">
+      <div class="side-nav-header">
+        <div class="side-nav-title">
+          <i class="fas fa-list-ol"></i> Questions
+        </div>
+        <button class="close-btn" onclick="closeNav()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div id="side-nav-content" class="nav-grid"></div>
+    </div>
+
+    <!-- Setup screen -->
+    <div id="setup" class="setup-container">
+      <h2 class="setup-title">
+        <i class="fas fa-cogs"></i> Quiz Setup
+      </h2>
+      <div class="input-group">
+        <label for="numQuestions" class="input-label">
+          <i class="fas fa-question-circle"></i> Number of Questions
+        </label>
+        <input type="number" id="numQuestions" class="num-input" min="3" step="1" value="10" />
+      </div>
+      <button class="btn" onclick="startQuiz()">
+        <i class="fas fa-play"></i> Start Quiz
+      </button>
+    </div>
+
+    <!-- Loading screen -->
+    <div id="loading" class="loading-container hidden">
+      <div class="loading-spinner">
+        <i class="fas fa-spinner"></i>
+      </div>
+      <div class="loading-text">
+        Loading questions from previous years...
+      </div>
+    </div>
+
+    <!-- Quiz screen -->
+    <div id="quiz" class="quiz-container">
+      <div class="quiz-header">
+        <div class="quiz-progress" id="quiz-progress">
+          Question 1 of 10
+        </div>
+      </div>
+      
+      <div class="quiz-source" id="source">
+        <i class="fas fa-book"></i> Loading question source...
+      </div>
+      
+      <div class="question-box">
+        <div class="question-text" id="question-text">
+          Loading question...
+        </div>
+        <ul class="options-list" id="options-list"></ul>
+      </div>
+      
+      <div class="quiz-controls">
+        <button class="btn" onclick="prevQuestion()">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button class="btn" onclick="checkAnswer()" id="check-btn">
+          <i class="fas fa-check"></i> Check
+        </button>
+        <button class="btn" onclick="nextQuestion()">
+          Next <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+      
+      <div class="result-container" id="result-container">
+        <h3 class="result-title">
+          <i class="fas fa-chart-bar"></i> Quiz Summary
+        </h3>
+        
+        <div class="result-stats">
+          <div class="stat-box stat-correct">
+            <div class="stat-value" id="correct-count">0</div>
+            <div class="stat-label">Correct</div>
+          </div>
+          <div class="stat-box stat-incorrect">
+            <div class="stat-value" id="incorrect-count">0</div>
+            <div class="stat-label">Incorrect</div>
+          </div>
+          <div class="stat-box stat-missed">
+            <div class="stat-value" id="missed-count">0</div>
+            <div class="stat-label">Missed</div>
+          </div>
+        </div>
+        
+        <div class="score-display">
+          <div class="score-value" id="total-score">0</div>
+          <div class="score-total">out of <span id="max-score">0</span> possible points</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const subjects = ['biology', 'chemistry', 'physics'];
+    const metaIds = [
+      { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+      { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+      { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+      { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
+      { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
+      { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
+      { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
+      { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
+      { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
+      { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
+      { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
+      { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
+      { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
+      { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
+      { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
+      { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
+      { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
+      { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
+      { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
+      { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
+      { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
+      { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
+      { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
+      { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
+      { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
+      { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
+      { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
+      { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
+      { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
+      { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
+      { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
+      { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
+    ];
+
+    let allQuestions = [], quizQuestions = [], currentIndex = 0, answerCache = {};
+
+    async function startQuiz() {
+      const count = parseInt(document.getElementById('numQuestions').value);
+      if (!count || count < 3) {
+        alert('Please enter at least 3 questions.');
+        return;
+      }
+
+      // Show loading screen
+      document.getElementById('setup').classList.add('hidden');
+      document.getElementById('loading').classList.remove('hidden');
+      document.getElementById('quiz').classList.add('hidden');
+
+      try {
+        // Load questions from all meta sources
+        for (const meta of metaIds) {
+          const url = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${meta.id}.json`;
+          const res = await fetch(url);
+          const data = await res.json();
+          allQuestions.push(...data.flatMap(group =>
+            group.questions.map(q => ({ ...q, source: meta.title }))
+          );
+        }
+
+        // Distribute questions evenly among subjects
+        const perSubject = Math.floor(count / 3);
+        const remainder = count % 3;
+        const subjectDist = [perSubject + (remainder >= 1), perSubject + (remainder >= 2), perSubject];
+
+        for (let i = 0; i < 3; i++) {
+          const subjectQs = allQuestions.filter(q => q.subject === subjects[i]);
+          const picked = subjectQs.sort(() => 0.5 - Math.random()).slice(0, subjectDist[i]);
+          quizQuestions.push(...picked);
+        }
+
+        // Shuffle all questions and number them
+        quizQuestions = quizQuestions.sort(() => 0.5 - Math.random()).map((q, i) => ({ ...q, number: i + 1 }));
+
+        // Generate navigation buttons
+        generateNav();
+
+        // Hide loading and show quiz
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('quiz').classList.remove('hidden');
+        loadQuestion(0);
+
+      } catch (error) {
+        console.error('Error loading questions:', error);
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('setup').classList.remove('hidden');
+        alert('Failed to load questions. Please try again later.');
+      }
+    }
+
+    function generateNav() {
+      const sideNav = document.getElementById('side-nav-content');
+      sideNav.innerHTML = '';
+
+      quizQuestions.forEach((q, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'nav-btn';
+        btn.textContent = i + 1;
+        btn.onclick = () => {
+          loadQuestion(i);
+          closeNav();
         };
+        btn.id = `nav-${i}`;
+        sideNav.appendChild(btn);
+      });
+    }
 
-        // Add toast styles dynamically
-        const toastStyles = document.createElement('style');
-        toastStyles.textContent = `
-            .toast {
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: white;
-                padding: 12px 16px;
-                border-radius: var(--border-radius);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                z-index: 1000;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-                max-width: 90%;
-                width: max-content;
-            }
-            
-            .toast.show {
-                opacity: 1;
-            }
-            
-            .toast-error {
-                border-left: 3px solid var(--error-color);
-            }
-            
-            .toast-success {
-                border-left: 3px solid var(--success-color);
-            }
-            
-            .toast-warning {
-                border-left: 3px solid var(--warning-color);
-            }
-            
-            .toast-info {
-                border-left: 3px solid var(--primary-color);
-            }
-            
-            .toast-icon {
-                font-size: 1rem;
-            }
-            
-            .toast-error .toast-icon {
-                color: var(--error-color);
-            }
-            
-            .toast-success .toast-icon {
-                color: var(--success-color);
-            }
-            
-            .toast-warning .toast-icon {
-                color: var(--warning-color);
-            }
-            
-            .toast-info .toast-icon {
-                color: var(--primary-color);
-            }
-            
-            .toast-message {
-                font-size: 0.85rem;
-            }
+    function loadQuestion(index) {
+      currentIndex = index;
+      const q = quizQuestions[index];
+      
+      // Update progress display
+      document.getElementById('quiz-progress').textContent = `Question ${index + 1} of ${quizQuestions.length}`;
+      
+      // Update source display
+      document.getElementById('source').innerHTML = `
+        <i class="fas fa-book"></i> ${q.subject.toUpperCase()} | 
+        <i class="fas fa-calendar-alt"></i> ${q.source}
+      `;
+      
+      // Update question text
+      document.getElementById('question-text').innerHTML = renderMath(q.content);
+      
+      // Update options
+      const optionsList = document.getElementById('options-list');
+      optionsList.innerHTML = '';
+      
+      q.options.forEach((opt, i) => {
+        const li = document.createElement('li');
+        li.className = 'option';
+        li.dataset.id = opt.identifier;
+        li.onclick = () => selectOption(opt.identifier);
+        
+        li.innerHTML = `
+          <span class="option-prefix">${String.fromCharCode(65 + i)}.</span>
+          <span>${renderMath(opt.content)}</span>
         `;
-        document.head.appendChild(toastStyles);
-    </script>
+        
+        optionsList.appendChild(li);
+      });
+      
+      // Reset check button
+      document.getElementById('check-btn').disabled = false;
+      
+      // Load saved answer if exists
+      const saved = localStorage.getItem(`q-${q.question_id}`);
+      if (saved) selectOption(saved);
+      
+      // Update navigation button style
+      updateNavButtons();
+      
+      // Hide result container when loading new question
+      document.getElementById('result-container').style.display = 'none';
+      
+      // Render MathJax
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    }
+
+    function selectOption(id) {
+      const options = document.querySelectorAll('.option');
+      options.forEach(o => {
+        o.classList.remove('selected');
+        if (o.dataset.id === id) {
+          o.classList.add('selected');
+          localStorage.setItem(`q-${quizQuestions[currentIndex].question_id}`, id);
+        }
+      });
+    }
+
+    function checkAnswer() {
+      const q = quizQuestions[currentIndex];
+      const selected = document.querySelector('.option.selected');
+      const correctIds = q.correct_options;
+      const navBtn = document.getElementById(`nav-${currentIndex}`);
+      const options = document.querySelectorAll('.option');
+      
+      // Mark all correct answers
+      options.forEach(opt => {
+        if (correctIds.includes(opt.dataset.id)) {
+          opt.classList.add('correct');
+        }
+      });
+      
+      // Mark user's selection
+      if (selected) {
+        if (correctIds.includes(selected.dataset.id)) {
+          selected.classList.add('correct');
+          answerCache[q.question_id] = 4; // Correct answer
+          navBtn.classList.add('correct');
+        } else {
+          selected.classList.add('incorrect');
+          answerCache[q.question_id] = -1; // Incorrect answer
+          navBtn.classList.add('incorrect');
+        }
+      } else {
+        // No selection
+        answerCache[q.question_id] = 0; // Missed question
+        navBtn.classList.add('missed');
+      }
+      
+      // Mark nav button as visited
+      navBtn.classList.add('visited');
+      
+      // Disable check button
+      document.getElementById('check-btn').disabled = true;
+      
+      // Show explanation if available
+      showExplanation(q.explanation);
+      
+      // Calculate and show score
+      calculateScore();
+    }
+
+    function showExplanation(explanation) {
+      const questionBox = document.querySelector('.question-box');
+      
+      // Remove existing explanation if any
+      const existingExplanation = document.getElementById('question-explanation');
+      if (existingExplanation) {
+        existingExplanation.remove();
+      }
+      
+      if (explanation) {
+        const explanationHTML = `
+          <div class="explanation" id="question-explanation">
+            <div class="explanation-header" onclick="toggleExplanation()">
+              <div class="explanation-title">
+                <i class="fas fa-lightbulb"></i> Explanation
+              </div>
+              <div class="explanation-toggle">
+                <i class="fas fa-chevron-down"></i>
+              </div>
+            </div>
+            <div class="explanation-content">
+              ${renderMath(explanation)}
+            </div>
+          </div>
+        `;
+        
+        questionBox.insertAdjacentHTML('beforeend', explanationHTML);
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+      }
+    }
+
+    function toggleExplanation() {
+      const content = document.querySelector('.explanation-content');
+      const toggleIcon = document.querySelector('.explanation-toggle i');
+      
+      if (content.classList.contains('show')) {
+        content.classList.remove('show');
+        toggleIcon.classList.remove('fa-chevron-up');
+        toggleIcon.classList.add('fa-chevron-down');
+      } else {
+        content.classList.add('show');
+        toggleIcon.classList.remove('fa-chevron-down');
+        toggleIcon.classList.add('fa-chevron-up');
+      }
+    }
+
+    function nextQuestion() {
+      const q = quizQuestions[currentIndex];
+      
+      // If not checked and not already evaluated
+      if (!answerCache[q.question_id]) {
+        const navBtn = document.getElementById(`nav-${currentIndex}`);
+        navBtn.classList.add('visited', 'missed');
+        answerCache[q.question_id] = 0;
+        
+        // Mark correct answers
+        const options = document.querySelectorAll('.option');
+        q.correct_options.forEach(correctId => {
+          const correctOpt = document.querySelector(`.option[data-id="${correctId}"]`);
+          if (correctOpt) correctOpt.classList.add('correct');
+        });
+        
+        // Show explanation if available
+        showExplanation(q.explanation);
+        
+        // Calculate score
+        calculateScore();
+      }
+      
+      // Move to next question or show results
+      if (currentIndex < quizQuestions.length - 1) {
+        loadQuestion(currentIndex + 1);
+      } else {
+        showResult();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        loadQuestion(currentIndex - 1);
+      }
+    }
+
+    function calculateScore() {
+      const totalQ = quizQuestions.length;
+      let correct = 0, incorrect = 0, missed = 0;
+      let totalScore = 0;
+      const maxScore = totalQ * 4;
+      
+      quizQuestions.forEach(q => {
+        const score = answerCache[q.question_id] || 0;
+        
+        if (score === 4) correct++;
+        else if (score === -1) incorrect++;
+        else missed++;
+        
+        totalScore += score;
+      });
+      
+      // Update the result display
+      document.getElementById('correct-count').textContent = correct;
+      document.getElementById('incorrect-count').textContent = incorrect;
+      document.getElementById('missed-count').textContent = missed;
+      document.getElementById('total-score').textContent = totalScore;
+      document.getElementById('max-score').textContent = maxScore;
+      
+      // Show the result container
+      document.getElementById('result-container').style.display = 'block';
+    }
+
+    function showResult() {
+      calculateScore();
+      
+      // Show full result container
+      document.getElementById('result-container').style.display = 'block';
+      
+      // Scroll to results
+      document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
+      
+      // Show completion alert
+      setTimeout(() => {
+        alert('Quiz complete! Scroll down to see your detailed results.');
+      }, 300);
+    }
+
+    function updateNavButtons() {
+      quizQuestions.forEach((q, i) => {
+        const btn = document.getElementById(`nav-${i}`);
+        if (!btn) return;
+        
+        btn.className = 'nav-btn';
+        if (answerCache[q.question_id] === 4) {
+          btn.classList.add('correct');
+        } else if (answerCache[q.question_id] === -1) {
+          btn.classList.add('incorrect');
+        } else if (answerCache[q.question_id] === 0) {
+          btn.classList.add('missed');
+        }
+        
+        if (i === currentIndex) {
+          btn.style.border = '2px solid var(--primary)';
+        } else {
+          btn.style.border = '1px solid var(--light-gray)';
+        }
+      });
+    }
+
+    function renderMath(input) {
+      return input
+        .replace(/\$\$(.*?)\$\$/g, (match, p1) => `<span class="mathjax-block">$$${p1}$$</span>`)
+        .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
+    }
+
+    function openNav() {
+      document.getElementById('side-nav').classList.add('open');
+    }
+
+    function closeNav() {
+      document.getElementById('side-nav').classList.remove('open');
+    }
+
+    // Close nav when clicking outside
+    document.addEventListener('click', (e) => {
+      const sideNav = document.getElementById('side-nav');
+      const menuBtn = document.querySelector('.menu-btn');
+      
+      if (sideNav.classList.contains('open') && 
+          !sideNav.contains(e.target) && 
+          e.target !== menuBtn && 
+          !menuBtn.contains(e.target)) {
+        closeNav();
+      }
+    });
+  </script>
 </body>
 </html>
