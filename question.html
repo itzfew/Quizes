@@ -567,12 +567,13 @@ function checkAnswer() {
 
     hasAnsweredCurrentQuestion = true;
 
-    const correctAnswer = getCorrectAnswer(currentQuestionId);
+    const correctAnswers = getCorrectAnswer(currentQuestionId); // now it's an array
     const options = document.querySelectorAll('.option');
 
     options.forEach(option => {
         option.classList.remove('correct', 'incorrect');
-        if (option.dataset.option === correctAnswer) {
+
+        if (correctAnswers.includes(option.dataset.option)) {
             option.classList.add('correct');
         } else if (option === selectedOption) {
             option.classList.add('incorrect');
@@ -590,8 +591,14 @@ function checkAnswer() {
 }
 
 function getCorrectAnswer(questionId) {
-    const question = questionsData.find(q => q.question_id === questionId);
-    return question?.correct_options; // returns 'A', 'B', 'C', or 'D' directly from JSON
+    // Since your JSON is wrapped inside [{ questions: [...] }]
+    for (const section of questionsData) {
+        const question = section.questions.find(q => q.question_id === questionId);
+        if (question) {
+            return question.correct_options; // returns ["B"]
+        }
+    }
+    return []; // no answer if not found
 }
 
         // Load next question and update URL
