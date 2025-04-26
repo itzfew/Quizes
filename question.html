@@ -558,51 +558,41 @@
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
             });
         }
+function checkAnswer() {
+    const selectedOption = document.querySelector('.option.selected');
+    if (!selectedOption) {
+        showToast("Please select an option before checking.", 'error');
+        return;
+    }
 
-        // Check and display the correct answer
-        function checkAnswer() {
-            const selectedOption = document.querySelector('.option.selected');
-            if (!selectedOption) {
-                showToast("Please select an option before checking.", 'error');
-                return;
-            }
+    hasAnsweredCurrentQuestion = true;
 
-            hasAnsweredCurrentQuestion = true;
-            
-            const correctAnswer = getCorrectAnswer(currentQuestionId);
-            const options = document.querySelectorAll('.option');
+    const correctAnswer = getCorrectAnswer(currentQuestionId);
+    const options = document.querySelectorAll('.option');
 
-            options.forEach(option => {
-                option.classList.remove('correct', 'incorrect');
-                if (option.dataset.option === correctAnswer) {
-                    option.classList.add('correct');
-                } else if (option === selectedOption) {
-                    option.classList.add('incorrect');
-                }
-            });
-
-            // Show explanation after checking the answer
-            document.getElementById('explanation').style.display = 'block';
-            document.getElementById('next-btn').focus();
-
-            // Disable options after answer is checked
-            options.forEach(option => {
-                option.style.pointerEvents = 'none';
-            });
-
-            // Stop the timer
-            clearInterval(timerInterval);
+    options.forEach(option => {
+        option.classList.remove('correct', 'incorrect');
+        if (option.dataset.option === correctAnswer) {
+            option.classList.add('correct');
+        } else if (option === selectedOption) {
+            option.classList.add('incorrect');
         }
+    });
 
-        // Get correct answer based on the question ID
-        function getCorrectAnswer(questionId) {
-            const question = questionsData.find(q => q.question_id === questionId);
-            if (question) {
-                const correctOption = question.options.find(opt => opt.is_correct);
-                return correctOption ? correctOption.identifier : 'A';
-            }
-            return 'A'; // Fallback
-        }
+    document.getElementById('explanation').style.display = 'block';
+    document.getElementById('next-btn').focus();
+
+    options.forEach(option => {
+        option.style.pointerEvents = 'none';
+    });
+
+    clearInterval(timerInterval);
+}
+
+function getCorrectAnswer(questionId) {
+    const question = questionsData.find(q => q.question_id === questionId);
+    return question?.correct_options; // returns 'A', 'B', 'C', or 'D' directly from JSON
+}
 
         // Load next question and update URL
         function loadNextQuestion() {
