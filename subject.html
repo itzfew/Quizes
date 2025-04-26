@@ -90,6 +90,14 @@
             opacity: 0.7;
         }
 
+        .exam-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #4361ee;
+        }
+
         @media (max-width: 600px) {
             .question {
                 flex-direction: column;
@@ -110,9 +118,9 @@
 </head>
 <body>
 
-<button class="back-btn" onclick="goBack()">
-        <i class="fas fa-arrow-left"></i> Back
-</button>
+<a href="pyq.html" class="back-btn">
+    <i class="fas fa-arrow-left"></i> Back
+</a>
 
 <div id="question-list">
     <!-- Questions will appear here -->
@@ -153,14 +161,7 @@
         { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
         { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
     ];
-function goBack() {
-        // Try to go back in history, if not possible redirect to a default page
-        if (window.history.length > 1) {
-            window.history.back();
-        } else {
-            window.location.href = 'pyq.html'; // Change to your default page
-        }
-}
+
     function loadQuestions() {
         const urlParams = new URLSearchParams(window.location.search);
         const subject = urlParams.get('subject') || 'biology';
@@ -182,8 +183,10 @@ function goBack() {
                         questions = data[2].questions.filter(q => q.chapter === chapter);
                     }
 
-                    // Add the title and questions to the array
-                    allQuestions.push({ title: meta.title, questions });
+                    // Only add if there are questions for this exam
+                    if (questions.length > 0) {
+                        allQuestions.push({ title: meta.title, questions });
+                    }
                 })
                 .catch(error => console.error('Error loading questions from metaId:', meta.id, error));
         });
@@ -191,20 +194,22 @@ function goBack() {
         Promise.all(fetchPromises)
             .then(() => {
                 let questionListHTML = '';
-                let questionCounter = 1;
 
                 allQuestions.forEach(meta => {
-                    meta.questions.forEach(q => {
+                    // Add exam title
+                    questionListHTML += `<div class="exam-title">${meta.title}</div>`;
+                    
+                    // Add questions for this exam with numbering restarting at 1
+                    meta.questions.forEach((q, index) => {
                         const formattedContent = q.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
                             return `<span class="mathjax-inline">$$${p1}$$</span>`;
                         });
 
                         questionListHTML += `
                             <div class="question">
-                                <div class="question-number">${questionCounter++}.</div>
+                                <div class="question-number">${index + 1}.</div>
                                 <div class="question-content">
                                     <a href="question.html?id=${subject}/${chapter}/${q.question_id}"><h3>${formattedContent}</h3></a>
-                                    <div class="source-label">Source: ${meta.title}</div>
                                 </div>
                             </div>
                         `;
