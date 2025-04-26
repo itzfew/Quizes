@@ -377,41 +377,6 @@
     </div>
 
     <script>
-        const metaIds = [
-            { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
-            { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
-            { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
-            { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
-            { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
-            { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
-            { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
-            { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
-            { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
-            { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
-            { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
-            { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
-            { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
-            { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
-            { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
-            { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
-            { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
-            { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
-            { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
-            { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
-            { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
-            { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
-            { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
-            { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
-            { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
-            { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
-            { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
-            { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
-            { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
-            { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
-            { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
-            { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
-        ];
-        
         // Initialize variables
         let timerInterval;
         let currentQuestionId;
@@ -420,6 +385,7 @@
         let timeLeft = 120; // 2 minutes in seconds
         let currentQuestionIndex = 0;
         let hasAnsweredCurrentQuestion = false;
+        let currentSource = "";
 
         // Timer function with automatic submit and check
         function startTimer() {
@@ -449,52 +415,43 @@
                 `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        // Load question details from all metaIds
+        // Load question details from JSON data
         function loadQuestionDetail() {
             const urlParams = new URLSearchParams(window.location.search);
             [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
 
-            let questionFound = false;
-
-            (async function fetchQuestion() {
-                for (let i = 0; i < metaIds.length; i++) {
-                    const chaptersUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaIds[i].id}.json`;
-
-                    try {
-                        const response = await fetch(chaptersUrl);
-                        const data = await response.json();
-
-                        if (subject === 'biology') {
-                            questionsData = data[0].questions.filter(q => q.chapter === chapter && q.subject === subject);
-                        } else if (subject === 'chemistry') {
-                            questionsData = data[1].questions.filter(q => q.chapter === chapter && q.subject === subject);
-                        } else if (subject === 'physics') {
-                            questionsData = data[2].questions.filter(q => q.chapter === chapter && q.subject === subject);
-                        }
-
-                        if (questionsData.length > 0) {
-                            questionFound = true;
-                            currentQuestionIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
-                            updateProgress();
-                            renderQuestionDetail(questionsData.find(q => q.question_id === currentQuestionId));
-                            startTimer();
-                            document.getElementById('source').innerHTML = `<strong>Source:</strong> ${metaIds[i].title}`;
-                            break;
-                        }
-                    } catch (error) {
-                        console.error('Error fetching question data:', error);
+            // Load the JSON data for the subject and chapter
+            const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${subject}/${chapter}.json`;
+            
+            fetch(jsonUrl)
+                .then(response => response.json())
+                .then(data => {
+                    questionsData = data.questions;
+                    currentQuestionIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
+                    
+                    if (currentQuestionIndex === -1) {
+                        currentQuestionIndex = 0;
+                        currentQuestionId = questionsData[0].question_id;
+                        // Update URL to reflect the first question
+                        const newUrl = `?id=${subject}/${chapter}/${currentQuestionId}`;
+                        window.history.replaceState({ path: newUrl }, '', newUrl);
                     }
-                }
-
-                if (!questionFound) {
+                    
+                    updateProgress();
+                    renderQuestionDetail(questionsData[currentQuestionIndex]);
+                    startTimer();
+                    document.getElementById('source').innerHTML = `<strong>Source:</strong> ${data.title || 'Previous Year Questions'}`;
+                    currentSource = data.title || 'Previous Year Questions';
+                })
+                .catch(error => {
+                    console.error('Error fetching question data:', error);
                     document.getElementById('question-detail').innerHTML = `
                         <div class="error-message">
                             <i class="fas fa-exclamation-triangle"></i>
-                            <p>Question not found. Please try another one.</p>
+                            <p>Error loading questions. Please try again later.</p>
                         </div>
                     `;
-                }
-            })();
+                });
         }
 
         // Update progress bar and text
@@ -515,7 +472,7 @@
                 <ul class="options-list">
                     ${question.options.map((opt, index) => 
                         `<li class="option" data-option="${opt.identifier}" id="option${index}">
-                            <span class="option-prefix">${String.fromCharCode(65 + index)}.</span>
+                            <span class="option-prefix">${opt.identifier}.</span>
                             <span class="option-content">${renderMath(opt.content)}</span>
                          </li>`
                     ).join('')}
@@ -531,7 +488,7 @@
             `;
 
             document.getElementById('question-detail').innerHTML = questionDetailHTML;
-            document.getElementById('explanation-text').innerHTML = renderMath(question.explanation);
+            document.getElementById('explanation-text').innerHTML = renderMath(question.explanation || 'No explanation available.');
             document.getElementById('explanation').style.display = 'none';
 
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
@@ -558,41 +515,38 @@
                 return `<span class="mathjax-inline">$$${p1}$$</span>`;
             });
         }
-function checkAnswer() {
-    const selectedOption = document.querySelector('.option.selected');
-    if (!selectedOption) {
-        showToast("Please select an option before checking.", 'error');
-        return;
-    }
 
-    hasAnsweredCurrentQuestion = true;
+        function checkAnswer() {
+            const selectedOption = document.querySelector('.option.selected');
+            if (!selectedOption && !hasAnsweredCurrentQuestion) {
+                showToast("Please select an option before checking.", 'error');
+                return;
+            }
 
-    const correctAnswer = getCorrectAnswer(currentQuestionId);
-    const options = document.querySelectorAll('.option');
+            hasAnsweredCurrentQuestion = true;
 
-    options.forEach(option => {
-        option.classList.remove('correct', 'incorrect');
-        if (option.dataset.option === correctAnswer) {
-            option.classList.add('correct');
-        } else if (option === selectedOption) {
-            option.classList.add('incorrect');
+            const currentQuestion = questionsData[currentQuestionIndex];
+            const correctAnswer = currentQuestion.correct_options[0]; // Get the first correct option (assuming single correct answer)
+            const options = document.querySelectorAll('.option');
+
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+                if (option.dataset.option === correctAnswer) {
+                    option.classList.add('correct');
+                } else if (option === selectedOption) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            document.getElementById('explanation').style.display = 'block';
+            document.getElementById('next-btn').focus();
+
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+
+            clearInterval(timerInterval);
         }
-    });
-
-    document.getElementById('explanation').style.display = 'block';
-    document.getElementById('next-btn').focus();
-
-    options.forEach(option => {
-        option.style.pointerEvents = 'none';
-    });
-
-    clearInterval(timerInterval);
-}
-
-function getCorrectAnswer(questionId) {
-    const question = questionsData.find(q => q.question_id === questionId);
-    return question?.correct_options; // returns 'A', 'B', 'C', or 'D' directly from JSON
-}
 
         // Load next question and update URL
         function loadNextQuestion() {
@@ -628,7 +582,8 @@ function getCorrectAnswer(questionId) {
                 window.history.pushState({ path: newUrl }, '', newUrl);
                 currentQuestionId = nextQuestion.question_id;
                 updateProgress();
-                loadQuestionDetail();
+                renderQuestionDetail(nextQuestion);
+                startTimer();
             }
         }
 
@@ -677,18 +632,7 @@ function getCorrectAnswer(questionId) {
 
         // Go back to subject/chapter page
         function goBack() {
-            const currentUrl = window.location.href;
-            const urlParams = new URLSearchParams(window.location.search);
-            const questionId = urlParams.get('id');
-
-            if (questionId) {
-                const urlParts = questionId.split('/');
-                const subject = urlParts[0];
-                const chapter = urlParts[1];
-                window.location.href = `subject.html?subject=${subject}&chapter=${chapter}`;
-            } else {
-                console.error('No "id" parameter found in the URL.');
-            }
+            window.location.href = `subject.html?subject=${subject}&chapter=${chapter}`;
         }
 
         // Load the question detail on page load
@@ -696,7 +640,12 @@ function getCorrectAnswer(questionId) {
 
         // Handle browser back/forward buttons
         window.onpopstate = function() {
-            loadQuestionDetail();
+            const urlParams = new URLSearchParams(window.location.search);
+            [subject, chapter, currentQuestionId] = urlParams.get('id').split('/');
+            currentQuestionIndex = questionsData.findIndex(q => q.question_id === currentQuestionId);
+            updateProgress();
+            renderQuestionDetail(questionsData[currentQuestionIndex]);
+            startTimer();
         };
 
         // Add toast styles dynamically
