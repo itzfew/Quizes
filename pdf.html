@@ -8,6 +8,27 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/paper-css@0.3.0/paper.min.css">
     <style>
       @page { size: A4; margin: 10mm }
+      @media print {
+        .footer { page-break-after: always; }
+        .footer:last-child { page-break-after: avoid; }
+        .noprint { display: none !important; }
+        table {
+          max-width: 100% !important;
+          width: 100% !important;
+        }
+        td, th {
+          overflow-wrap: break-word !important;
+          word-break: break-all !important;
+          white-space: normal !important;
+          max-width: 120px !important;
+          padding: 3px !important;
+          font-size: 9pt !important;
+        }
+        .MJX-TEX {
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+      }
       body {
         font-family: Arial, Helvetica, sans-serif;
       }
@@ -139,20 +160,24 @@
         margin: 20px;
         font-size: 12pt;
       }
-      /* Hide loader and print button in PDF */
-      .loader, #printDiv {
-        display: none !important;
+      /* MathJax styling - fixes spacing issues */
+      .MJX-TEX {
+        margin: 0 !important;
+        padding: 0 !important;
       }
-      /* Prevent mathjax line breaks and ensure inline equations are rendered smoothly */
-        .mathjax-inline {
-            white-space: nowrap;
-            display: inline-block;
-            font-size: 1.1em;
-}
+      mjx-container[jax="CHTML"] {
+        display: inline-block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        vertical-align: middle !important;
+      }
+      .MJX-TEX > * {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src='https://www.neetprep.com/jquery.columnizer.min.js'></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script async src='https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js'></script>
     <script>
       $(function() {
@@ -171,30 +196,29 @@
                   { content: "Watt" },
                   { content: "Pascal" }
                 ]
-              },
-              {
-                content: "Which of the following is a vector quantity? (A) Mass (B) Speed (C) Force (D) Energy",
-                options: [
-                  { content: "Mass" },
-                  { content: "Speed" },
-                  { content: "Force" },
-                  { content: "Energy" }
-                ]
               }
             ]
           }
         ];
+
+        function cleanContent(content) {
+          // Remove unwanted spaces around MathJax
+          return content
+            .replace(/\s*(\$\$.*?\$\$)\s*/g, '$1')
+            .replace(/\s*(\$.*?\$)\s*/g, '$1')
+            .replace(/<br>\s*<br>/g, '<br>');
+        }
 
         function renderQuestions(data) {
           console.log("Rendering questions from data:", data);
           var newsletterContent = $('#newsletterContent');
           newsletterContent.empty();
 
-          // Flatten all questions from all categories
+          // Flatten all questions from all subjects
           var allQuestions = [];
-          data.forEach(function(category) {
-            if (category.questions && category.questions.length > 0) {
-              allQuestions = allQuestions.concat(category.questions);
+          data.forEach(function(subjectData) {
+            if (subjectData.questions && subjectData.questions.length > 0) {
+              allQuestions = allQuestions.concat(subjectData.questions);
             }
           });
 
@@ -203,20 +227,22 @@
             allQuestions = fallbackContent[0].questions;
           }
 
+          // Render all questions sequentially
           allQuestions.forEach(function(q, index) {
+            var cleanedContent = cleanContent(q.content);
             var questionHtml = '<div class="dontsplit question">' +
               '<span class="questionId"><b>' + (index + 1) + '.</b></span> ' +
-              '<p style="display:inline">' + q.content + '</p>';
+              '<p style="display:inline">' + cleanedContent + '</p>';
 
             if (q.options && q.options.length > 0) {
               questionHtml += '<table><tbody>';
               for (var i = 0; i < q.options.length; i += 2) {
                 questionHtml += '<tr>' +
-                  '<td>' + (i + 1) + '.</td>' +
-                  '<td>' + q.options[i].content + '</td>';
+                  '<td>' + String.fromCharCode(65 + i) + '.</td>' +
+                  '<td>' + cleanContent(q.options[i].content) + '</td>';
                 if (i + 1 < q.options.length) {
-                  questionHtml += '<td>' + (i + 2) + '.</td>' +
-                    '<td>' + q.options[i + 1].content + '</td>';
+                  questionHtml += '<td>' + String.fromCharCode(65 + i + 1) + '.</td>' +
+                    '<td>' + cleanContent(q.options[i + 1].content) + '</td>';
                 }
                 questionHtml += '</tr>';
               }
@@ -232,6 +258,7 @@
           $('.question table').each(function() {
             var $table = $(this);
             var parentWidth = $table.parent().width();
+            // Override inline styles
             $table.css({
               'width': '100%',
               'max-width': parentWidth + 'px',
@@ -302,44 +329,51 @@
             $('#printDiv').show();
             $('#newsletterContent').hide();
             $('#printBtn').click(function() {
-              console.log("Generating PDF...");
+              console.log("Print button clicked");
               adjustTableWidths();
-              const element = document.querySelector('body');
-              const opt = {
-                margin: 10,
-                filename: 'NEET_PYQs.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-              };
-              html2pdf().set(opt).from(element).save().then(() => {
-                console.log("PDF generated and downloaded");
-              }).catch(err => {
-                console.error("PDF generation failed:", err);
-                alert("Failed to generate PDF. Please try again.");
-              });
+              setTimeout(function() {
+                window.print();
+              }, 500);
             });
           }
         }
 
-        console.log("Fetching JSON...");
-        $.getJSON('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/3c48616f-298a-5f69-91d2-bcd59444c455.json')
-          .done(function(data) {
-            console.log("JSON fetched successfully");
-            renderQuestions(data);
-            MathJax.typesetPromise().then(() => {
-              console.log("MathJax rendering complete");
-              setTimeout(buildNewsletter, 500);
-            });
-          })
-          .fail(function(jqXHR, textStatus, error) {
-            console.error("JSON fetch failed:", textStatus, error);
-            $('#newsletterContent').append('<div class="error-message">Failed to load questions. Using sample content.</div>');
-            renderQuestions(fallbackContent);
-            MathJax.typesetPromise().then(() => {
-              setTimeout(buildNewsletter, 500);
-            });
-          });
+        // Wait for MathJax to be ready
+        MathJax = {
+          startup: {
+            ready: function() {
+              MathJax.startup.defaultReady();
+              console.log("MathJax is ready");
+              
+              console.log("Fetching JSON...");
+              $.getJSON('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/3c48616f-298a-5f69-91d2-bcd59444c455.json')
+                .done(function(data) {
+                  console.log("JSON fetched successfully");
+                  renderQuestions(data);
+                  MathJax.typesetPromise().then(() => {
+                    console.log("MathJax rendering complete");
+                    setTimeout(buildNewsletter, 500);
+                  });
+                })
+                .fail(function(jqXHR, textStatus, error) {
+                  console.error("JSON fetch failed:", textStatus, error);
+                  $('#newsletterContent').append('<div class="error-message">Failed to load questions. Using sample content.</div>');
+                  renderQuestions(fallbackContent);
+                  MathJax.typesetPromise().then(() => {
+                    setTimeout(buildNewsletter, 500);
+                  });
+                });
+            }
+          },
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          },
+          options: {
+            skipHtmlTags: {'[+]': ['p']},
+            ignoreHtmlClass: 'tex2jax_ignore'
+          }
+        };
       });
     </script>
   </head>
@@ -361,7 +395,7 @@
       <h2 style="text-align: center;">Generating PDF, please wait...</h2>
     </div>
     <div id="printDiv" class="noprint">
-      <button id='printBtn'>Download PDF</button>
+      <button id='printBtn'>Print PDF</button>
     </div>
     <div id="newsletterContent" style="visibility:hidden;display:block;"></div>
   </body>
