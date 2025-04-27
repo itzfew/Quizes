@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>PDF Generator - NEET PYQs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/paper-css@0.3.0/paper.min.css">
+    <style>
+      @page { size: A4; margin: 10mm }
+      @media print {
+        .footer { page-break-after: always; }
+        .footer:last-child { page-break-after: avoid; }
+        .noprint { display: none !important; }
+        table {
+          max-width: 100% !important;
+          width: 100% !important;
+        }
+        td, th {
+          overflow-wrap: break-word !important;
+          word-break: break-all !important;
+          white-space: normal !important;
+          max-width: 120px !important;
+          padding: 3px !important;
+          font-size: 9pt !important;
+        }
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .question {
+        padding: 5px;
+        font-size: 10pt;
+        line-height: 1.3;
+        margin-bottom: 8px;
+      }
+      .loader .spinner {
+        border: 12px solid #f3f3f3;
+        border-top: 12px solid #3498db;
+        border-radius: 50%;
+        margin: auto;
+        width: 80px;
+        height: 80px;
+        animation: spin 1.5s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      #printDiv {
+        display: none;
+        justify-content: center;
+        margin: 20px 0;
+      }
+      #printBtn {
+        width: 250px;
+        padding: 10px;
+        background: #28a745;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      .sheet .content .column {
+        text-align: justify;
+        font-size: 10pt;
+        line-height: 1.3;
+        max-width: 50%;
+      }
+      .sheet .content .column blockquote {
+        background: #f5f5f5;
+        padding: 6px;
+        margin: 4px 10px;
+        border-left: 2px solid #ddd;
+      }
+      .sheet .header {
+        text-align: center;
+        font-size: 14pt;
+        padding: 10px 0;
+      }
+      .sheet .header .contact {
+        float: right;
+        font-size: 10pt;
+      }
+      .sheet .header .logo {
+        float: left;
+      }
+      .sheet .header hr, .sheet .footer hr {
+        width: 95%;
+        margin: 8px auto;
+      }
+      .sheet .footer span {
+        position: absolute;
+        bottom: 8px;
+        right: 10px;
+        font-size: 9pt;
+      }
+      .page_template {
+        display: none;
+      }
+      table {
+        table-layout: fixed;
+        border-collapse: collapse;
+        border: 1px solid #333;
+        width: 100%;
+        max-width: 100%;
+        font-size: 9pt;
+        margin: 4px 0;
+      }
+      th, td {
+        border: 1px solid #333;
+        padding: 3px;
+        text-align: left;
+        vertical-align: top;
+        overflow-wrap: break-word;
+        word-break: break-all;
+        white-space: normal;
+        max-width: 120px;
+        min-width: 15px;
+        font-size: 9pt;
+      }
+      td:nth-child(1), td:nth-child(3) {
+        width: 5%;
+        min-width: 15px;
+      }
+      td:nth-child(2), td:nth-child(4) {
+        width: 45%;
+        max-width: 120px;
+      }
+      .question table, .question table * {
+        width: 100% !important;
+        max-width: 100% !important;
+        table-layout: fixed !important;
+      }
+      .question table colgroup, .question table col {
+        width: auto !important;
+        min-width: 0 !important;
+      }
+      .content {
+        padding: 8px;
+        background: linear-gradient(#000, #000) no-repeat center/0.1px 98%;
+        border-bottom: 1px solid #333;
+      }
+      .content img {
+        max-width: 85%;
+        height: auto;
+        display: block;
+        margin: 4px auto;
+      }
+      .error-message {
+        color: red;
+        text-align: center;
+        margin: 20px;
+        font-size: 12pt;
+      }
+      /* Improved MathJax styling for better inline rendering */
+      .mathjax-block {
+        display: block;
+        margin: 0.5em 0;
+        text-align: center;
+      }
+      .mathjax-inline {
+        display: inline;
+        margin: 0;
+        padding: 0;
+        vertical-align: baseline;
+        line-height: inherit;
+      }
+      /* Prevent line breaks around inline math */
+      .no-break {
+        white-space: nowrap;
+      }
+      /* Ensure proper spacing around equations */
+      .question p {
+        margin: 0;
+        padding: 0;
+        display: inline;
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src='https://www.neetprep.com/jquery.columnizer.min.js'></script>
+    <script async src='https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js'></script>
+    <script>
+      $(function() {
+        var content_height = 960;
+        var page = 1;
+
+        // Fallback content
+        var fallbackContent = [
+          {
+            questions: [
+              {
+                content: "What is the SI unit of force? (A) Newton (B) Joule (C) Watt (D) Pascal",
+                options: [
+                  { content: "Newton" },
+                  { content: "Joule" },
+                  { content: "Watt" },
+                  { content: "Pascal" }
+                ]
+              }
+            ]
+          }
+        ];
+
+        function renderMathJax(content) {
+          // First handle display math ($$...$$)
+          content = content.replace(/\$\$(.*?)\$\$/g, function(match, p1) {
+            return `<span class="mathjax-block">\\[${p1}\\]</span>`;
+          });
+          
+          // Then handle inline math ($...$)
+          content = content.replace(/\$(.*?)\$/g, function(match, p1) {
+            // Wrap in span with no-break class to prevent line breaks
+            return `<span class="no-break"><span class="mathjax-inline">\\(${p1}\\)</span></span>`;
+          });
+          
+          return content;
+        }
+
+        function renderQuestions(data) {
+          console.log("Rendering questions from data:", data);
+          var newsletterContent = $('#newsletterContent');
+          newsletterContent.empty();
+
+          var questions = data.flatMap(subjectData => subjectData.questions);
+          questions.forEach(function(q, index) {
+            var questionContent = renderMathJax(q.content);
+            var questionHtml = '<div class="dontsplit question">' +
+              '<span class="questionId"><b>' + (index + 1) + '.</b></span> ' +
+              '<p>' + questionContent + '</p>';
+
+            if (q.options && q.options.length > 0) {
+              questionHtml += '<table><tbody>';
+              for (var i = 0; i < q.options.length; i += 2) {
+                questionHtml += '<tr>' +
+                  '<td>' + (i + 1) + '.</td>' +
+                  '<td>' + renderMathJax(q.options[i].content) + '</td>';
+                if (i + 1 < q.options.length) {
+                  questionHtml += '<td>' + (i + 2) + '.</td>' +
+                    '<td>' + renderMathJax(q.options[i + 1].content) + '</td>';
+                }
+                questionHtml += '</tr>';
+              }
+              questionHtml += '</tbody></table>';
+            }
+
+            questionHtml += '<br>';
+            newsletterContent.append(questionHtml);
+          });
+        }
+
+        function adjustTableWidths() {
+          $('.question table').each(function() {
+            var $table = $(this);
+            var parentWidth = $table.parent().width();
+            $table.css({
+              'width': '100%',
+              'max-width': parentWidth + 'px',
+              'table-layout': 'fixed'
+            });
+            $table.find('col, colgroup').css({
+              'width': 'auto',
+              'min-width': '0'
+            });
+            $table.find('th, td').css({
+              'max-width': '120px',
+              'padding': '3px',
+              'font-size': '9pt',
+              'overflow-wrap': 'break-word',
+              'word-break': 'break-all',
+              'white-space': 'normal'
+            });
+            if ($table.width() > parentWidth) {
+              console.log("Adjusted table width from", $table.width(), "to parent:", parentWidth);
+              $table.css('width', '100%');
+            }
+            $table.find('td').each(function() {
+              var $td = $(this);
+              if ($td.width() > 120) {
+                $td.css('max-width', '120px');
+                console.log("Compressed table cell width:", $td.width());
+              }
+            });
+          });
+        }
+
+        function buildNewsletter() {
+          console.log("Building newsletter, remaining content:", $('#newsletterContent').contents().length);
+          var images = $('.question img');
+          images.each(function() {
+            var $this = $(this);
+            if ($this.width() > 250) {
+              $this.css({'width': '85%', 'max-width': '250px'});
+            }
+          });
+
+          adjustTableWidths();
+
+          if ($('#newsletterContent').contents().length > 0) {
+            var $page = $('.page_template:first').clone()
+              .addClass('sheet padding-10mm')
+              .css({'display': 'block', 'margin': 'auto'});
+            $page.find('.footer span').append(page);
+            $('body').append($page);
+            page++;
+
+            $('#newsletterContent').columnize({
+              columns: 2,
+              target: '.sheet:last .content',
+              ignoreImageLoading: false,
+              overflow: {
+                height: content_height,
+                id: '#newsletterContent',
+                doneFunc: function() {
+                  console.log("Page completed, moving to next");
+                  adjustTableWidths();
+                  buildNewsletter();
+                }
+              }
+            });
+          } else {
+            $('.loader').hide();
+            $('#printDiv').show();
+            $('#newsletterContent').hide();
+            $('#printBtn').click(function() {
+              console.log("Print button clicked");
+              adjustTableWidths();
+              setTimeout(function() {
+                window.print();
+              }, 500);
+            });
+          }
+        }
+
+        // Configure MathJax before loading
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true,
+            packages: {'[+]': ['mhchem']}
+          },
+          options: {
+            ignoreHtmlClass: 'tex2jax_ignore',
+            processHtmlClass: 'tex2jax_process'
+          },
+          startup: {
+            ready: function() {
+              MathJax.startup.defaultReady();
+              // Ensure MathJax doesn't add extra spacing
+              MathJax.startup.input[0].preFilters.add(function(data) {
+                data.math.display = data.math.display.replace(/^<span[^>]*>/, '').replace(/<\/span>$/, '');
+              });
+              MathJax.startup.input[0].postFilters.add(function(data) {
+                if (!data.display) {
+                  data.math = data.math.replace(/^<span[^>]*>/, '').replace(/<\/span>$/, '');
+                }
+              });
+            }
+          }
+        };
+
+        console.log("Fetching JSON...");
+        $.getJSON('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/3c48616f-298a-5f69-91d2-bcd59444c455.json')
+          .done(function(data) {
+            console.log("JSON fetched successfully");
+            renderQuestions(data);
+            MathJax.typesetPromise().then(() => {
+              console.log("MathJax rendering complete");
+              setTimeout(buildNewsletter, 500);
+            });
+          })
+          .fail(function(jqXHR, textStatus, error) {
+            console.error("JSON fetch failed:", textStatus, error);
+            $('#newsletterContent').append('<div class="error-message">Failed to load questions. Using sample content.</div>');
+            renderQuestions(fallbackContent);
+            MathJax.typesetPromise().then(() => {
+              setTimeout(buildNewsletter, 500);
+            });
+          });
+      });
+    </script>
+  </head>
+  <body class="A4">
+    <div class="page_template">
+      <div class='header'>
+        <img class="logo" src="https://www.neetprep.com/assets/img/logo.png" width="90" height="22">
+        Full Test - NEET PYQs
+        <span class="contact">Contact: 8527521718</span>
+        <hr>
+      </div>
+      <div class='content'></div>
+      <div class='footer'><span>Page: </span></div>
+    </div>
+    <div class="loader">
+      <br><br>
+      <div class="spinner"></div>
+      <br><br>
+      <h2 style="text-align: center;">Generating PDF, please wait...</h2>
+    </div>
+    <div id="printDiv" class="noprint">
+      <button id='printBtn'>Print PDF</button>
+    </div>
+    <div id="newsletterContent" style="visibility:hidden;display:block;"></div>
+  </body>
+</html>
