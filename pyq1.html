@@ -3,3608 +3,516 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Full Test - NEET PYQs - 27 Apr</title>
+    <title>PDF Generator - NEET PYQs</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/paper-css@0.3.0/paper.min.css">
     <style>
-      @page { size: A4 }
+      @page { size: A4; margin: 10mm }
       @media print {
-        .footer {page-break-after: always;}
-        .footer:last-child {page-break-after: avoid;}
-        .noprint {
-          display:none !important;
+        .footer { page-break-after: always; }
+        .footer:last-child { page-break-after: avoid; }
+        .noprint { display: none !important; }
+        table {
+          max-width: 100% !important;
+          width: 100% !important;
+        }
+        td, th {
+          overflow-wrap: break-word !important;
+          word-break: break-all !important;
+          white-space: normal !important;
+          max-width: 120px !important;
+          padding: 3px !important;
+          font-size: 9pt !important;
         }
       }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
       .question {
-        padding-right: 7px;
-        padding-left: 7px;
-        font-size: 11pt;
+        padding: 5px;
+        font-size: 10pt;
+        line-height: 1.3;
+        margin-bottom: 8px;
       }
-      .free-trial {
-        font-size: 30px;
-        background: green;
-        color: white;
-        padding: 20px;
-      }
-      .loader .spinner{
-        border-top: 16px solid blue;
-        border-right: 16px solid green;
-        border-bottom: 16px solid red;
-        border-left: 16px solid pink;
+      .loader .spinner {
+        border: 12px solid #f3f3f3;
+        border-top: 12px solid #3498db;
         border-radius: 50%;
         margin: auto;
-        width: 120px;
-        height: 120px;
-        animation: spin 2s linear infinite;
+        width: 80px;
+        height: 80px;
+        animation: spin 1.5s linear infinite;
       }
       @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
-      #printDiv{
-        display: flex;
+      #printDiv {
+        display: none;
         justify-content: center;
+        margin: 20px 0;
+      }
+      #printBtn {
+        width: 250px;
+        padding: 10px;
+        background: #28a745;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      .sheet .content .column {
+        text-align: justify;
+        font-size: 10pt;
+        line-height: 1.3;
+        max-width: 50%;
+      }
+      .sheet .content .column blockquote {
+        background: #f5f5f5;
+        padding: 6px;
+        margin: 4px 10px;
+        border-left: 2px solid #ddd;
+      }
+      .sheet .header {
+        text-align: center;
+        font-size: 14pt;
+        padding: 10px 0;
+      }
+      .sheet .header .contact {
+        float: right;
+        font-size: 10pt;
+      }
+      .sheet .header .logo {
+        float: left;
+      }
+      .sheet .header hr, .sheet .footer hr {
+        width: 95%;
+        margin: 8px auto;
+      }
+      .sheet .footer span {
+        position: absolute;
+        bottom: 8px;
+        right: 10px;
+        font-size: 9pt;
+      }
+      .page_template {
         display: none;
       }
-      #printBtn{
-        width: 800px;
-        padding: 10px;
-        margin: 20px;
-        background: green;
-        color: white;
-        font-family: Arial,Helvetica,sans-serif;
-        font-size: 20px;
-        font-weight: bold;
-      }
-      .sheet .content .column{ text-align:justify; font-size: 11pt;  }
-      .sheet .content .column blockquote{ background: #DEDEDE; padding: 10px; margin: 4px 20px; clear: both;  }
-      .sheet .content .column h1{ padding: 0 10px;  }
-      .sheet .header{ text-align: center; font-size: 18pt; font-family: helvetica, arial; padding: 20px 0 0;  }
-      .sheet .header .contact{ float: right; font-size: 14pt; font-family: helvetica, arial;}
-      .sheet .header .logo{ float: left; vertical-align: middle;}
-      .sheet .header hr, .sheet .footer hr{ width: 800px;  }
-      .sheet .footer span{ position: absolute; bottom: 10px; right: 10px;  }
-      .page_template{ display: none;  }
       table {
-        table-layout:fixed;
-        text-align: left;
+        table-layout: fixed;
         border-collapse: collapse;
-        border: 1px solid black;
-        min-width: 200px;
-      }
-      .content {
-        padding: 10px;
-        background: linear-gradient(#000, #000) no-repeat center/0.1px 99%;
-        border-bottom: 1px solid black;
+        border: 1px solid #333;
+        width: 100%;
+        max-width: 100%;
+        font-size: 9pt;
+        margin: 4px 0;
       }
       th, td {
-        border: 1px solid black;
+        border: 1px solid #333;
+        padding: 3px;
+        text-align: left;
+        vertical-align: top;
+        overflow-wrap: break-word;
+        word-break: break-all;
+        white-space: normal;
+        max-width: 120px;
+        min-width: 15px;
+        font-size: 9pt;
       }
-      table tr td p {
-        margin: 0px !important;
+      td:nth-child(1), td:nth-child(3) {
+        width: 5%;
+        min-width: 15px;
+      }
+      td:nth-child(2), td:nth-child(4) {
+        width: 45%;
+        max-width: 120px;
+      }
+      .question table, .question table * {
+        width: 100% !important;
+        max-width: 100% !important;
+        table-layout: fixed !important;
+      }
+      .question table colgroup, .question table col {
+        width: auto !important;
+        min-width: 0 !important;
+      }
+      .content {
+        padding: 8px;
+        background: linear-gradient(#000, #000) no-repeat center/0.1px 98%;
+        border-bottom: 1px solid #333;
+      }
+      .content img {
+        max-width: 85%;
+        height: auto;
+        display: block;
+        margin: 4px auto;
+      }
+      .error-message {
+        color: red;
+        text-align: center;
+        margin: 20px;
+        font-size: 12pt;
+      }
+      /* Prevent MathJax line breaks and ensure inline equations are rendered smoothly */
+      .mathjax-inline {
+        white-space: nowrap;
+        display: inline-block;
+        font-size: 1.1em;
       }
     </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src='https://www.neetprep.com/jquery.columnizer.min.js'></script>
-    <script async src='https://cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+    <script async src='https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js'></script>
     <script>
-    $(function(){
-      var content_height = 900;  // the height of the content, discluding the header/footer
-      var page = 1;        // the beginning page number to show in the footer
-      function buildNewsletter(){
-        var image = $('.question img');
-        image.each(function () {
-          var that = $(this);
-          // hardcoding width check as A4 page width is fixed at 210mm and leaving out padding then 50% width should be close to 359px
-          if (that.width() >= 359) {
-            that.width('100%');
-          }
-        });
-        if($('#newsletterContent').contents().length > 0){
-          // when we need to add a new page, use a jq object for a template
-          // or use a long HTML string, whatever your preference
-          $page = $(".page_template:first").clone().addClass("sheet padding-10mm").css("display", "block").css("margin", "auto");
+      $(function() {
+        var content_height = 900;
+        var page = 1;
+        var examTitle = "NEET PYQs";
 
-          // fun stuff, like adding page numbers to the footer
-          $page.find(".footer span").append(page);
-          $("body").append($page);
-          page++;
+        // Meta IDs and titles
+        const metaIds = [
+          { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
+          { id: "cbfbed57-d7d8-5a07-9957-478e4cb62f17", title: "NEET 2023" },
+          { id: "8dd253c6-09a8-5875-b127-a0c00a165a1b", title: "NEET 2022 Phase 2" },
+          { id: "c7fb1fc7-cb24-58d1-99f5-4ced0111082d", title: "NEET 2022 Phase 1" },
+          { id: "2ff56f11-0061-566e-aeca-9cc14246e8fb", title: "NEET 2021" },
+          { id: "27ba990b-5085-5196-87dd-9727f95fc228", title: "NEET 2020 Phase 1" },
+          { id: "c3ae87e9-4094-514a-b2a4-b6e98b1d7ec3", title: "NEET 2019" },
+          { id: "ce68b80b-fff0-5db8-8d6a-668d729d487a", title: "NEET 2018" },
+          { id: "57222784-be0a-5653-930c-8ac44c689e21", title: "NEET 2017" },
+          { id: "80eef6f1-3522-515e-b73d-339d85018141", title: "NEET 2016 Phase 2" },
+          { id: "938f3847-eb62-525b-b1b0-02ee459e81f8", title: "NEET 2016 Phase 1" },
+          { id: "47778809-6194-57b2-868a-e4fedb6e9f3a", title: "AIPMT 2015" },
+          { id: "8713af28-1c8f-53cc-9230-bcc6ea3843c9", title: "AIPMT 2015 Cancelled Paper" },
+          { id: "8756d5f2-5c2a-506e-af0c-0198c9fc2187", title: "AIPMT 2014" },
+          { id: "1c4dc710-3261-5cd5-bb3e-ee281740f624", title: "NEET 2013 (Karnataka)" },
+          { id: "48007b77-2c75-5367-9ca7-98b53cceaca8", title: "NEET 2013" },
+          { id: "068d67b3-bca5-5dc4-af63-9dbf0f7ce7be", title: "AIPMT 2012 Mains" },
+          { id: "9bdb3f61-14cf-57d2-9324-5465da11de4d", title: "AIPMT 2012 Prelims" },
+          { id: "a3afa98f-582a-5a4c-ada4-d17ad73090be", title: "AIPMT 2011 Mains" },
+          { id: "dfc116dc-cf26-5489-aa89-99266a7512a9", title: "AIPMT 2011 Prelims" },
+          { id: "da3ac707-aeab-5c4d-807e-6a0705098929", title: "AIPMT 2010 Mains" },
+          { id: "b91bcb0a-a1ae-550b-a078-b25fcbd422ee", title: "AIPMT 2010 Prelims" },
+          { id: "b0e9a6d4-f603-58b1-9723-66c27d5c959b", title: "AIPMT 2009" },
+          { id: "4432d9cf-5356-5982-b930-2f9d9d752fef", title: "AIPMT 2008" },
+          { id: "4076c9ee-750f-5bd9-a821-c59bed8ab4fd", title: "AIPMT 2007" },
+          { id: "084ad628-cb2a-5390-80d1-ccc658633f19", title: "AIPMT 2006" },
+          { id: "6c2de931-ef9f-52bc-af22-bebe0c0ff520", title: "AIPMT 2005" },
+          { id: "e537df27-eaab-55a1-9a01-c84409f04935", title: "AIPMT 2004" },
+          { id: "9f3fa1a4-1199-5b24-b381-d7df26102489", title: "AIPMT 2003" },
+          { id: "3dbc2670-9688-5143-ae78-7fb777e3eaf6", title: "AIPMT 2002" },
+          { id: "762be6c6-de8f-548d-859d-3a2343237947", title: "AIPMT 2001" },
+          { id: "d594604a-f9e6-5929-b3bf-b720a34fabe3", title: "AIPMT 2000" }
+        ];
 
-          // here is the columnizer magic
-          $('#newsletterContent').columnize({
-            columns: 2,
-            target: ".sheet:last .content",
-            ignoreImageLoading: false,
-            overflow: {
-              height: content_height,
-              id: "#newsletterContent",
-              doneFunc: function(){
-                console.log("done with page");
-                buildNewsletter();
+        // Fallback content
+        var fallbackContent = [
+          {
+            questions: [
+              {
+                content: "What is the SI unit of force? (A) Newton (B) Joule (C) Watt (D) Pascal",
+                options: [
+                  { content: "Newton" },
+                  { content: "Joule" },
+                  { content: "Watt" },
+                  { content: "Pascal" }
+                ]
+              },
+              {
+                content: "Calculate the force: $F = ma$ where $m = 2\\,\\text{kg}$, $a = 3\\,\\text{m/s}^2$.",
+                options: [
+                  { content: "$6\\,\\text{N}$" },
+                  { content: "$12\\,\\text{N}$" },
+                  { content: "$9\\,\\text{N}$" },
+                  { content: "$3\\,\\text{N}$" }
+                ]
               }
+            ]
+          }
+        ];
+
+        // Parse query parameters
+        function getQueryParam(param) {
+          var urlParams = new URLSearchParams(window.location.search);
+          return urlParams.get(param);
+        }
+
+        var selectedMetaId = getQueryParam('metaid') || metaIds[0].id;
+        var totalQuestions = parseInt(getQueryParam('total')) || 0;
+        var selectedMeta = metaIds.find(meta => meta.id === selectedMetaId) || metaIds[0];
+        examTitle = selectedMeta.title;
+
+        // Update header with exam title
+        $('.page_template .header').html(`
+          <img class="logo" src="https://www.neetprep.com/assets/img/logo.png" width="90" height="22">
+          ${examTitle}
+          <span class="contact">Contact: 8527521718</span>
+          <hr>
+        `);
+
+        function renderMathJax(content) {
+          if (!content) return "";
+          return content
+            .replace(/\$\$(.*?)\$\$/g, (match, p1) => `<span class="mathjax-block">\\[${p1}\\]</span>`)
+            .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
+        }
+
+        function typesetMathJax() {
+          if (window.MathJax) {
+            MathJax.typesetPromise().catch(err => console.error("MathJax typesetting error:", err));
+          }
+        }
+
+        function shuffleArray(array) {
+          for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+          }
+          return array;
+        }
+
+        function renderQuestions(questions) {
+          console.log("Rendering questions:", questions.length);
+          var newsletterContent = $('#newsletterContent');
+          newsletterContent.empty();
+
+          if (questions.length === 0) {
+            console.warn("No questions to render");
+            newsletterContent.append('<div class="error-message">No questions available.</div>');
+            return;
+          }
+
+          questions.forEach(function(q, index) {
+            if (!q || !q.content) {
+              console.warn("Invalid question at index", index, q);
+              return;
+            }
+            var questionContent = renderMathJax(q.content);
+            var questionHtml = '<div class="dontsplit question">' +
+              '<span class="questionId"><b>' + (index + 1) + '.</b></span> ' +
+              '<p style="display:inline">' + questionContent + '</p>';
+
+            if (q.options && Array.isArray(q.options) && q.options.length > 0) {
+              questionHtml += '<table><tbody>';
+              for (var i = 0; i < q.options.length; i += 2) {
+                questionHtml += '<tr>' +
+                  '<td>' + (i + 1) + '.</td>' +
+                  '<td>' + renderMathJax(q.options[i]?.content || "") + '</td>';
+                if (i + 1 < q.options.length) {
+                  questionHtml += '<td>' + (i + 2) + '.</td>' +
+                    '<td>' + renderMathJax(q.options[i + 1]?.content || "") + '</td>';
+                }
+                questionHtml += '</tr>';
+              }
+              questionHtml += '</tbody></table>';
+            }
+
+            questionHtml += '<br>';
+            newsletterContent.append(questionHtml);
+          });
+
+          typesetMathJax();
+        }
+
+        function adjustTableWidths() {
+          $('.question table').each(function() {
+            var $table = $(this);
+            var parentWidth = $table.parent().width();
+            $table.css({
+              'width': '100%',
+              'max-width': parentWidth + 'px',
+              'table-layout': 'fixed'
+            });
+            $table.find('col, colgroup').css({
+              'width': 'auto',
+              'min-width': '0'
+            });
+            $table.find('th, td').css({
+              'max-width': '120px',
+              'padding': '3px',
+              'font-size': '9pt',
+              'overflow-wrap': 'break-word',
+              'word-break': 'break-all',
+              'white-space': 'normal'
+            });
+            if ($table.width() > parentWidth) {
+              console.log("Adjusted table width from", $table.width(), "to parent:", parentWidth);
+              $table.css('width', '100%');
+            }
+            $table.find('td').each(function() {
+              var $td = $(this);
+              if ($td.width() > 120) {
+                $td.css('max-width', '120px');
+                console.log("Compressed table cell width:", $td.width());
+              }
+            });
+          });
+        }
+
+        function buildNewsletter() {
+          console.log("Building newsletter, remaining content:", $('#newsletterContent').contents().length);
+          var images = $('.question img');
+          images.each(function() {
+            var $this = $(this);
+            if ($this.width() > 200) {
+              $this.css({'width': '80%', 'max-width': '200px'});
             }
           });
-        }
-        else {
-          $('.loader').hide();
-          $('#printDiv').css('display', 'flex');
-          $('#newsletterContent').css("display", "none");
 
-          $('#printBtn').click(function () {
-            window.print();
+          adjustTableWidths();
+          typesetMathJax();
+
+          if ($('#newsletterContent').contents().length > 0) {
+            var $page = $('.page_template:first').clone()
+              .addClass('sheet padding-10mm')
+              .css({'display': 'block', 'margin': 'auto'});
+            $page.find('.footer span').append(page);
+            $('body').append($page);
+            page++;
+
+            $('#newsletterContent').columnize({
+              columns: 2,
+              target: '.sheet:last .content',
+              ignoreImageLoading: false,
+              dontsplit: 'dontsplit',
+              overflow: {
+                height: content_height,
+                id: '#newsletterContent',
+                doneFunc: function() {
+                  console.log("Page completed, moving to next");
+                  adjustTableWidths();
+                  typesetMathJax();
+                  buildNewsletter();
+                }
+              }
+            });
+          } else {
+            $('.loader').hide();
+            $('#printDiv').show();
+            $('#newsletterContent').hide();
+            $('#printBtn').click(function() {
+              console.log("Print button clicked");
+              adjustTableWidths();
+              typesetMathJax();
+              setTimeout(function() {
+                window.print();
+              }, 500);
+            });
+          }
+        }
+
+        function fetchSingleJson(metaId) {
+          var url = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
+          console.log("Fetching JSON:", url);
+          return $.getJSON(url)
+            .done(function(data) {
+              console.log("JSON fetched successfully for", metaId);
+              return data;
+            })
+            .fail(function(jqXHR, textStatus, error) {
+              console.error("JSON fetch failed for", metaId, ":", textStatus, error);
+              return [];
+            });
+        }
+
+        function fetchAllJsonsAndSelectQuestions(total) {
+          var promises = metaIds.map(meta => fetchSingleJson(meta.id));
+          $.when.apply($, promises).then(function() {
+            var allData = Array.from(arguments).map((result, index) => {
+              return result[0] || [];
+            });
+
+            // Group questions by subject
+            var subjectQuestions = {};
+            allData.forEach(data => {
+              data.forEach(subjectData => {
+                var subject = subjectData.subject || "unknown";
+                if (!subjectQuestions[subject]) {
+                  subjectQuestions[subject] = [];
+                }
+                subjectQuestions[subject].push(...(subjectData.questions || []));
+              });
+            });
+
+            // Calculate questions per subject (assume 3 subjects: physics, chemistry, biology)
+            var subjects = Object.keys(subjectQuestions);
+            var questionsPerSubject = Math.floor(total / subjects.length);
+            var selectedQuestions = [];
+
+            // Randomly select questions for each subject
+            subjects.forEach(subject => {
+              var questions = subjectQuestions[subject];
+              if (questions.length === 0) return;
+              var shuffled = shuffleArray([...questions]);
+              var numToSelect = Math.min(questionsPerSubject, questions.length);
+              selectedQuestions.push(...shuffled.slice(0, numToSelect));
+            });
+
+            // Ensure exact total by filling with random questions if needed
+            if (selectedQuestions.length < total) {
+              var allQuestions = Object.values(subjectQuestions).flat();
+              var remaining = total - selectedQuestions.length;
+              var shuffledRemaining = shuffleArray([...allQuestions]);
+              selectedQuestions.push(...shuffledRemaining.slice(0, remaining));
+            }
+
+            // Sort by subject for rendering
+            var sortedQuestions = [];
+            subjects.forEach(subject => {
+              var subjectQs = selectedQuestions.filter(q => subjectQuestions[subject].includes(q));
+              sortedQuestions.push(...subjectQs);
+            });
+
+            console.log("Selected", sortedQuestions.length, "questions");
+            renderQuestions(sortedQuestions);
+            setTimeout(buildNewsletter, 500);
+          }).fail(function() {
+            console.error("Failed to fetch some JSONs");
+            $('#newsletterContent').append('<div class="error-message">Failed to load questions. Using sample content.</div>');
+            renderQuestions(fallbackContent);
+            setTimeout(buildNewsletter, 500);
           });
         }
-      }
-      setTimeout(buildNewsletter, 36000);
-    });
-  </script>
+
+        // Main logic
+        if (totalQuestions === 180) {
+          console.log("Generating 180 random questions from all JSONs");
+          fetchAllJsonsAndSelectQuestions(totalQuestions);
+        } else {
+          console.log("Fetching single JSON for metaId:", selectedMetaId);
+          fetchSingleJson(selectedMetaId)
+            .done(function(data) {
+              renderQuestions(data.flatMap(subjectData => subjectData.questions || []));
+              setTimeout(buildNewsletter, 500);
+            })
+            .fail(function() {
+              $('#newsletterContent').append('<div class="error-message">Failed to load questions. Using sample content.</div>');
+              renderQuestions(fallbackContent);
+              setTimeout(buildNewsletter, 500);
+            });
+        }
+      });
+    </script>
   </head>
   <body class="A4">
     <div class="page_template">
-      <div class='header'><img class="logo" src="https://www.neetprep.com/assets/img/logo.png" width="111" height="28">Full Test - NEET PYQs - 27 Apr<span class="contact">Contact Number: 8527521718</span><hr></div>
+      <div class='header'>
+        <!-- Dynamically updated by JavaScript -->
+      </div>
       <div class='content'></div>
       <div class='footer'><span>Page: </span></div>
     </div>
-    <div class="loader"><br><br><div class="spinner"></div><br><br><h1 style="text-align: center;">Please be patient as the PDF generation may take upto a minute.</h1></div>
-    <div id="printDiv" class="noprint"><button id='printBtn'>Print</button></div>
-    <div id="newsletterContent" style="visibility:hidden;display:block;">
-        <div class="dontsplit question">
-            <div style="width: 100%; margin: auto; text-align: center; font-size: 32px;"><b>Biology</b></div>
-          <span class="questionId" style="vertical-align: top;"><b>1.</b></span> <p style="display:inline" style="display:inline">How many ATP molecules are produced by the Aerobic oxidation of one molecule of glucose:<br />
-1. 2<br />
-2. 4<br />
-3. 38<br />
-4. 34</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>2.</b></span> Match the following:
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td style="width: 40%;"><strong>List I</strong></td>
-			<td></td>
-			<td><strong>List II</strong></td>
-		</tr>
-		<tr>
-			<td>A.</td>
-			<td style="width: 40%;">Rose</td>
-			<td>I.</td>
-			<td>Twisted aestivation&nbsp;</td>
-		</tr>
-		<tr>
-			<td>B.&nbsp;</td>
-			<td style="width: 40%;">Pea&nbsp;</td>
-			<td>II.</td>
-			<td>Perigynous flower</td>
-		</tr>
-		<tr>
-			<td>C.</td>
-			<td style="width: 40%;">Cotton</td>
-			<td>III.</td>
-			<td>Drupe&nbsp;</td>
-		</tr>
-		<tr>
-			<td>D.</td>
-			<td style="width: 40%;">Mango&nbsp;</td>
-			<td>IV.</td>
-			<td>Marginal placentation</td>
-		</tr>
-	</tbody>
-</table>
-Choose the correct answer from the options given below:
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>A-I, B-II, C-III, D-IV</td>
-			<td>2.</td>
-			<td>A-IV, B-III, C-II, D-I</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>A-II, B-III, C-IV, D-I</td>
-			<td>4.</td>
-			<td>A-II, B-IV, C-I, D-III</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>3.</b></span> <p style="display:inline" style="display:inline">In an ecosystem, the rate of production of organic matter during photosynthesis is termed as:<br>1. net primary productivity<br>2. gross primary productivity<br>3. secondary productivity<br>4. net productivity</p>
-
-
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>4.</b></span> The common characteristics between tomato and potato will be maximum at the level of their:<br />
-1. Family<br />
-2. Order<br />
-3. Division<br />
-4. Genus<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>5.</b></span> <p style="display:inline" style="display:inline">AGGTATCGCAT is a sequence from the coding strand of a gene. What will be the corresponding sequence of the transcribed mRNA?</p>
-
-
-
-<table>
-	<tbody>
-		<tr>
-			<td style = "width: 7%;">1.</td>
-			<td style="width: 43%;">AGGUAUCGCAU</td>
-			<td style="width: 7%;">2.</td>
-			<td style="width: 43%;">UGGTUTCGCAT</td>
-		</tr>
-		<tr>
-			<td style="width: 7%;">3.</td>
-			<td style="width: 43%;">ACCUAUGCGAU</td>
-			<td style="width: 7%;">4.</td>
-			<td style="width: 43%;">UCCAUAGCGUA
-			
-			</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>6.</b></span> <p style="display:inline" style="display:inline">Which of the following is not used as a biopesticide?<br>1. <i>Bacillus thuringiensis</i><br>2. <i>Trichoderma</i> harzianum<br>3. <i>Nucleopolyhedrovirus</i>(NPV)<br>4. Xanthomonas campestris</p><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>7.</b></span> <p style="display:inline" style="display:inline">Which one of the following is not considered as a part of the endomembrane system?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td style="width: 7%;">1.</td>
-			<td style="width: 43%;">Lysosome</td>
-			<td style="width: 7%;">2.</td>
-			<td style="width: 43%;">Golgi complex</td>
-		</tr>
-		<tr>
-			<td style="width: 7%;">3.</td>
-			<td style="width: 43%;">Peroxisome</td>
-			<td style="width: 7%;">4.</td>
-			<td style="width: 43%;">Vacuole</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>8.</b></span> Given below are some statements about plant growth regulators:&nbsp;
-<table>
-	<tbody>
-		<tr>
-			<td><strong>A.</strong></td>
-			<td>All GAs are acidic in nature.&nbsp;</td>
-		</tr>
-		<tr>
-			<td><strong>B.</strong></td>
-			<td>Auxins are antagonists to GAs.</td>
-		</tr>
-		<tr>
-			<td><strong>C.</strong></td>
-			<td>Zeatin was isolated from coconut milk.</td>
-		</tr>
-		<tr>
-			<td><strong>D.</strong></td>
-			<td>Ethylene induces flowering in Mango.</td>
-		</tr>
-		<tr>
-			<td><strong>E.</strong></td>
-			<td>Abscisic acid induces parthenocarpy.</td>
-		</tr>
-	</tbody>
-</table>
-Choose the correct set of statements from the ones given below:
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>A,C,D</td>
-			<td>2.</td>
-			<td>B,E</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>A,B,C</td>
-			<td>4.</td>
-			<td>B,D,E</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>9.</b></span> List of endangered species was released by:<br />
-1. WWF<br />
-2. FOAM<br />
-3. IUCN<br />
-4. GEAC<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>10.</b></span> <p style="display:inline" style="display:inline">Select the correct sequence of events occurring during Prophase-I of Meiosis-I:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>(a)</td>
-			<td>Nuclear envelope breakdown&nbsp;</td>
-		</tr>
-		<tr>
-			<td>(b)</td>
-			<td>Synaptonemal complex formation&nbsp;</td>
-		</tr>
-		<tr>
-			<td>(c)</td>
-			<td>Compaction of chromosomes</td>
-		</tr>
-		<tr>
-			<td>(d)</td>
-			<td>Terminalisation of chiasmata&nbsp;</td>
-		</tr>
-		<tr>
-			<td>(e)</td>
-			<td>Crossing over&nbsp;</td>
-		</tr>
-	</tbody>
-</table>
-
-<p><br />
-Choose the most appropriate answer from the options given below:&nbsp;<br />
-1. (c)&nbsp;&rarr; (b)&nbsp;&nbsp;&rarr; (e)&nbsp;&nbsp;&rarr; (d)&nbsp;&nbsp;&rarr; (a)&nbsp;<br />
-2.&nbsp;(c)&nbsp;&rarr; (a)&nbsp;&nbsp;&rarr; (b)&nbsp;&nbsp;&rarr; (d)&nbsp;&nbsp;&rarr; (e)&nbsp;<br />
-3.&nbsp;(b)&nbsp;&rarr; (c)&nbsp;&nbsp;&rarr; (a)&nbsp;&nbsp;&rarr; (d)&nbsp;&nbsp;&rarr; (e)&nbsp;<br />
-4.&nbsp;(c)&nbsp;&rarr; (a)&nbsp;&nbsp;&rarr; (b)&nbsp;&nbsp;&rarr; (e)&nbsp;&nbsp;&rarr; (d)&nbsp;</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>11.</b></span> <p style="display:inline" style="display:inline">Viroids differ from viruses in having;</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>DNA molecules without protein coat</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>RNA molecules with protein coat</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>RNA molecules without protein coat</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>DNA molecules with protein coat&nbsp;</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>12.</b></span> <p style="display:inline" style="display:inline">A true statement for <i>Ulothrix</i>:<br />
-&nbsp;</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Filamentous thallus and flagellated reproductive structures</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Branched thallus</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Flagellated cells absent</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>None of the above</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>13.</b></span> <p style="display:inline" style="display:inline">The oxygenation activity of RuBisCo enzyme in photorespiration leads to the formation of:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>1 molecule of the 3-C compound</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>1 molecule of the 6-C compound</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>1 molecule of a 4-C compound and 1 molecule of the 2-C compound</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>2 molecules of the 3-C compound</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>14.</b></span> Transfer of pollen grains from anther to stigma of another flower of same plant is known as:
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Geitonogamy</td>
-			<td>2.</td>
-			<td>Xenogamy</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Autogamy</td>
-			<td>4.</td>
-			<td>Cleistogamy</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>15.</b></span> <p style="display:inline" style="display:inline">Which part would be most suitable for raising virus-free plants for micro propagation?<br>1. Bark<br>2. Vascular tissue<br>3. Meristem<br>4. Node</p><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>16.</b></span> <p style="display:inline" style="display:inline">The frequency of recombination between gene pairs on the same chromosome as a measure of the distance between genes was explained by:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Sutton Boveri</td>
-			<td>2.</td>
-			<td>T.H. Morgan</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Gregor J. Mendel</td>
-			<td>4.</td>
-			<td>Alfred Sturtevant</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>17.</b></span> <p style="display:inline" style="display:inline">Match List-I with List-II.</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td><strong>List-I</strong></td>
-			<td></td>
-			<td><strong>List-I</strong></td>
-		</tr>
-		<tr>
-			<td>(a)</td>
-			<td>Lenticels</td>
-			<td>(i)</td>
-			<td>Phellogen</td>
-		</tr>
-		<tr>
-			<td>(b)</td>
-			<td>Cork cambium</td>
-			<td>(ii)</td>
-			<td>Suberin deposition</td>
-		</tr>
-		<tr>
-			<td>(c)</td>
-			<td>Secondary cortex</td>
-			<td>(iii)</td>
-			<td>Exchange of gases</td>
-		</tr>
-		<tr>
-			<td>(d)</td>
-			<td>Cork</td>
-			<td>(iv)</td>
-			<td>Phelloderm</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Choose the correct answer from the options given below:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td>(a)</td>
-			<td>(b)</td>
-			<td>(c)</td>
-			<td>(d)</td>
-		</tr>
-		<tr>
-			<td>1.</td>
-			<td>(ii)</td>
-			<td>(iii)</td>
-			<td>(iv)</td>
-			<td>(i)</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>(iv)</td>
-			<td>(ii)</td>
-			<td>(i)</td>
-			<td>(iii)</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>(iv)</td>
-			<td>(i)</td>
-			<td>(iii)</td>
-			<td>(ii)</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>(iii)</td>
-			<td>(i)</td>
-			<td>(iv)</td>
-			<td>(ii)</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>18.</b></span> <p style="display:inline" style="display:inline">Which of the following is a correct pair:&nbsp;<br>1. <i>Cuscuta</i> &ndash; parasite<br>2. Dischidia &ndash; insectivorous<br>3. <i>Opuntia</i> &ndash; predator<br>4. Capsella &ndash; hydrophyte</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>19.</b></span> <p style="display:inline" style="display:inline"><span style="font-weight: 400;">The number of substrate level of phosphorylations in one turn of citric acid cycle is:</span></p>
-
-
-
-<table>
-	<tbody>
-		<tr>
-			<td style = "width: 7%;">1.</td>
-			<td style="width: 43%;">One</td>
-			<td style="width: 7%;">2.</td>
-			<td style="width: 43%;">Two</td>
-		</tr>
-		<tr>
-			<td style="width: 7%;">3.</td>
-			<td style="width: 43%;">Three</td>
-			<td style="width: 7%;">4.</td>
-			<td style="width: 43%;">Four</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>20.</b></span> <p style="display:inline" style="display:inline">What type of placentation is seen in sweet pea?<br>1. Basal<br>2. Axile<br>3. Free-central<br>4. Marginal</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>21.</b></span> The amount of biomass or organic matter produced per unit area over a time period by plants during photosynthesis is called:<br />
-1. Secondary production<br />
-2. Primary production<br />
-3. Gross primary production<br />
-4. Net primary production<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>22.</b></span> <div style="display:inline" style="display:inline"><span>Match Column I with Column II for housefly classification and select the correct option using the codes given below:&nbsp;</span></div>
-
-<table>
-	<tbody>
-		<tr>
-			<td style="width: 7%;"></td>
-			<td style="width: 43%;"><strong>Column I</strong></td>
-			<td style="width: 7%;"></td>
-			<td><strong>Column II</strong></td>
-		</tr>
-		<tr>
-			<td style="width: 7%;">A.</td>
-			<td style="width: 43%;">Family</td>
-			<td style="width: 7%;">(i)</td>
-			<td>Diptera&nbsp;</td>
-		</tr>
-		<tr>
-			<td style="width: 7%;">B.</td>
-			<td style="width: 43%;">Order</td>
-			<td style="width: 7%;">(ii)</td>
-			<td>Arthropoda</td>
-		</tr>
-		<tr>
-			<td style="width: 7%;">C.</td>
-			<td style="width: 43%;">Class</td>
-			<td style="width: 7%;">(iii)</td>
-			<td>Muscidae&nbsp;</td>
-		</tr>
-		<tr>
-			<td style="width: 7%;">D.</td>
-			<td style="width: 43%;">Phylum</td>
-			<td style="width: 7%;">(iv)</td>
-			<td>Insecta</td>
-		</tr>
-	</tbody>
-</table>
-
-<div>
-<p style="display:inline" style="display:inline">1. A-(iii) B-(i) C-(iv) D-(ii)<br>2. A-(iii) B-(ii) C-(iv) D-(i)<br>3. A-(iv) B-(iii) C-(ii) D-(i)<br>4. A-(iv) B-(ii) C-(i) D-(iii)</p>
-</div>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>23.</b></span> <p style="display:inline" style="display:inline">DNA-dependent RNA polymerase catalyses transcription on one strand of the DNA which is called the?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>template strand</td>
-			<td>2.</td>
-			<td>coding strand</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>alpha strand</td>
-			<td>4.</td>
-			<td>anti strand</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>24.</b></span> <p style="display:inline" style="display:inline">Which one of the following is an example of carrying out biological control of pests/diseases using microbes?<br>1. <i>Trichoderma</i> sp. against certain plant pathogens<br>2. <i>Nucleopolyhedrovirus</i> against white rust in Brassica<br>3. Bt-cotton to increase cotton yield<br>4. Ladybird beetle against aphids in mustard</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>25.</b></span> &nbsp;Match List I with List II:&nbsp;
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td><strong>List I</strong></td>
-			<td></td>
-			<td><strong>List II</strong></td>
-		</tr>
-		<tr>
-			<td>A.</td>
-			<td>Metacentric chromosome</td>
-			<td>I.</td>
-			<td>Chromosome has a terminal centromere</td>
-		</tr>
-		<tr>
-			<td>B.</td>
-			<td>Sub-metacentric chromosome</td>
-			<td>II.</td>
-			<td>Middle centromere forming two equal arms of chromosome</td>
-		</tr>
-		<tr>
-			<td>C.</td>
-			<td>Acrocentric chromosome</td>
-			<td>III.</td>
-			<td>Centromere is slightly away from the middle chromosome resulting into&nbsp;two unequal arms</td>
-		</tr>
-		<tr>
-			<td>D.</td>
-			<td>Telocentric chromosome</td>
-			<td>IV.</td>
-			<td>Centromere is situated close to its end forming one extremely&nbsp;&nbsp;short and one very long arm</td>
-		</tr>
-	</tbody>
-</table>
-<br />
-Choose the correct answer from the options given below:&nbsp;<br />
-1. A-II, B-I, C- IV, D- III<br />
-2.&nbsp;A-IV, B-I, C- II, D- III<br />
-3.&nbsp;A-I, B-II, C- III, D- IV<br />
-4.&nbsp;A-II, B-III, C- IV, D- I<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>26.</b></span> <p style="display:inline" style="display:inline">"Foolish seedling" disease of rice led to the discovery of:<br>1. GA<br>2. ABA<br>3. 2, 4-D<br>4. IAA</p><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>27.</b></span> <p style="display:inline" style="display:inline">Which of the following come under the &quot;Evil Quarter&quot;?<br />
-(a) Habitat loss and fragmentation<br />
-(b) Over-exploitation<br />
-(c) Alien species invasion<br />
-(d) Mortality<br />
-(e) Competition<br>
-Choose the correct answer from the options given below:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td style="width: 7%;">1.</td>
-			<td style="width: 43%;">(a), (c) and (d)</td>
-			<td style="width: 7%;">2.</td>
-			<td style="width: 43%;">(b), (c) and (d)</td>
-		</tr>
-		<tr>
-			<td style="width: 7%;">3.</td>
-			<td style="width: 43%;">(a), (b) and (c)</td>
-			<td style="width: 7%;">4.</td>
-			<td style="width: 43%;">(a), (b) and (d)</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>28.</b></span> <p style="display:inline" style="display:inline">A stage in cell division is shown in the figure. Select the answer which gives the correct identification of the stage with its characteristics:<br />
-&nbsp;<img src="https://d2f8z173p7073l.cloudfront.net/1710486065169" style="width: 100px; height: 189px;" /></p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>
-			<p>1.</p>
-			</td>
-			<td>
-			<p>Late anaphase</p>
-			</td>
-			<td>
-			<p>Chromosomes move away from the equatorial plate, Golgi complex not present</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<p>2.</p>
-			</td>
-			<td>
-			<p>Cytokinesis</p>
-			</td>
-			<td>
-			<p>Cell plate formed, mitochondria distributed between two daughter cells</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<p>3.</p>
-			</td>
-			<td>
-			<p>Telophase</p>
-			</td>
-			<td>
-			<p>Endoplasmic reticulum and nucleolus not reformed yet</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<p>4.</p>
-			</td>
-			<td>
-			<p>Telophase</p>
-			</td>
-			<td>
-			<p>Nuclear envelop reforms, Golgi complex reforms</p>
-			</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>29.</b></span> <p style="display:inline" style="display:inline">Which of the following shows coiled RNA strand and capsomeres?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Poliovirus</td>
-			<td>2.</td>
-			<td>Tobacco mosaic virus</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Measles virus</td>
-			<td>4.</td>
-			<td>Retrovirus</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>30.</b></span> <p style="display:inline" style="display:inline">Sexual reproduction in <i>Spirogyra</i> is an advanced feature because it shows:<br />
-1. Different sizes of motile sex organs<br />
-2. Same size of motile sex organs<br />
-3. Morphologically different sex organs<br />
-4. Physiologically differentiated sex organs</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>31.</b></span> Given below are two statements:&nbsp;
-<table>
-	<tbody>
-		<tr>
-			<td><span style="white-space:nowrap;"><strong>Statement I:</strong></span></td>
-			<td><span id="cke_bm_277S" style="display: none;">&nbsp;</span>The primary&nbsp;<span class="math-tex">\(CO_2\)</span>&nbsp;acceptor in&nbsp;<span class="math-tex">\(C_4\)</span>&nbsp;plants is phosphoenolpyruvate and is found in the mesophyll cells.&nbsp;</td>
-		</tr>
-		<tr>
-			<td><span style="white-space:nowrap;"><strong>Statement II:</strong></span></td>
-			<td><span id="cke_bm_458S" style="display: none;">&nbsp;</span>Mesophyll cells in&nbsp;<span class="math-tex">\(C_4\)</span>&nbsp;plants lack RuBisCO&nbsp;enzyme.</td>
-		</tr>
-	</tbody>
-</table>
-In the light of the above statements, choose the correct answer from the options given below :&nbsp;
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><strong>Statement I</strong> is incorrect but <strong>Statement II </strong>is correct.</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Both <strong>Statement I </strong>and <strong>Statement II </strong>are correct.</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Both <strong>Statement I </strong>and <strong>Statement II&nbsp; </strong>are incorrect.</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td><strong>Statement I </strong>is correct but <strong>Statement II </strong>is incorrect.</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>32.</b></span> <p style="display:inline" style="display:inline">What is the function of germ pores?<br />
-1. Absorption of water for seed germination<br />
-2. Initiation of pollen tube<br />
-3. Release of male gametes<br />
-4. The emergence of radicle</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>33.</b></span> <p style="display:inline" style="display:inline">In order to obtain virus-free plants through tissue culture the best method is:<br>1. protoplast culture<br>2. embryo rescue<br>3. anther culture<br>4. meristem culture</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>34.</b></span> In a plant, black seed color (BB/Bb) is dominant over white seed color (bb). In order to find out the genotype of black seed plant, with which of the following genotype will you cross it?<br />
-1. bb<br />
-2. Bb<br />
-3. BB/Bb<br />
-4. BB<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>35.</b></span> Given below are two statements:
-<table>
-	<tbody>
-		<tr>
-			<td><strong>Statement I:</strong></td>
-			<td>In collenchyma, cell walls are thickened at corners due to deposition of cellulose, hemicellulose and pectin.</td>
-		</tr>
-		<tr>
-			<td><strong>Statement II:</strong></td>
-			<td>Sclerenchyma consists of lignified cell walls and possesses pits.</td>
-		</tr>
-	</tbody>
-</table>
-In&nbsp; light of the above statements, choose the correct&nbsp;answer from the options given below:<br />
-1. Both <strong>Statement I </strong>and <strong>Statement II </strong>are True&nbsp;<br />
-2. Both <strong>Statement I </strong>and <strong>Statement II </strong>are False<br />
-3. <strong>Statement I </strong>is True but <strong>Statement II </strong>is False<br />
-4.&nbsp;<strong>Statement I </strong>is False but <strong>Statement II </strong>is True<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>36.</b></span> <div style="display:inline" style="display:inline">Niche is:<br>
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>All the biological factors in the organism environment</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>The physical space where an organism lives</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>The range of temperature that the organism needs to live</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>The functional role played by the organism where it lives</td>
-		</tr>
-	</tbody>
-</table>
-</div>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>37.</b></span> <div style="display:inline" style="display:inline">
-<div>The energy-releasing process in which the substrate is oxidized without an external electron acceptor is called:</div>
-<br>
-<p style="display:inline" style="display:inline">1. fermentation<br>2. photorespiration<br>3. aerobic respiration<br>4. glycolysis</p>
-</div>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>38.</b></span> <p style="display:inline" style="display:inline">Coconut fruit is a:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td style="width: 7%;">1.</td>
-			<td style="width: 43%;">Berry</td>
-			<td style="width: 7%;">2.</td>
-			<td style="width: 43%;">Nut</td>
-		</tr>
-		<tr>
-			<td style="width: 7%;">3.</td>
-			<td style="width: 43%;">Capsule</td>
-			<td style="width: 7%;">4.</td>
-			<td style="width: 43%;">Drupe</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>39.</b></span> Given below are two statements
-<table>
-	<tbody>
-		<tr>
-			<td><strong>Statement I: </strong></td>
-			<td>The rate of decomposition is not related to chemical composition of detritus and climatic factors.</td>
-		</tr>
-		<tr>
-			<td><strong>Statement II:</strong></td>
-			<td>In a particular climatic condition, decomposition rate is faster if detritus is rich in lignin and chitin.</td>
-		</tr>
-	</tbody>
-</table>
-In light of the above statements, choose the correct answer from the options given below:<br />
-1. Both <strong>Statement I </strong>and <strong>Statement II </strong>are True<br />
-2. Both <strong>Statement I </strong>and <strong>Statement II </strong>are False<br />
-3. <strong>Statement I</strong> is True but <strong>Statement II </strong>is False<br />
-4. <strong>Statement I</strong> is False but <strong>Statement II </strong>is True<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>40.</b></span> <p style="display:inline" style="display:inline">Which of the following is against the rules of ICBN?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Hand written scientific names should be underlined.</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Every species should have a generic name and a specific epithet.</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Scientific names are in Latin and should be italicized.</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Generic and specific names should be written starting with small letters.</td>
-		</tr>
-	</tbody>
-</table>
-
-
-
-
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>41.</b></span> Match List-I with List- II
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td><strong>List-I</strong></td>
-			<td></td>
-			<td><strong>List-II</strong></td>
-		</tr>
-		<tr>
-			<td>(a)</td>
-			<td>In lac operon i gene codes for&nbsp;</td>
-			<td>(i)</td>
-			<td>transacetylase</td>
-		</tr>
-		<tr>
-			<td>(b)</td>
-			<td>In lac operon z gene codes for</td>
-			<td>(ii)</td>
-			<td>permease</td>
-		</tr>
-		<tr>
-			<td>(c)</td>
-			<td>In lac operon y gene codes for</td>
-			<td>(iii)&nbsp;</td>
-			<td><span class="math-tex">\(\beta-\)</span>galactosidase</td>
-		</tr>
-		<tr>
-			<td>(d)</td>
-			<td>In lac operon a gene codes for</td>
-			<td>(iv)</td>
-			<td>Repressor</td>
-		</tr>
-	</tbody>
-</table>
-Choose the correct answer from the options given below:
-
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td>(a)</td>
-			<td>(b)</td>
-			<td>(c)</td>
-			<td>(d)</td>
-		</tr>
-		<tr>
-			<td>1.</td>
-			<td>(iii)</td>
-			<td>(ii)</td>
-			<td>(i)</td>
-			<td>(iv)</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>(iv)</td>
-			<td>(iii)</td>
-			<td>(ii)</td>
-			<td>(i)</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>(iv)</td>
-			<td>(i)</td>
-			<td>(iii)</td>
-			<td>(ii)</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>(iii)</td>
-			<td>(i)</td>
-			<td>(iv)</td>
-			<td>(ii)</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>42.</b></span> <p style="display:inline" style="display:inline">Which of the following in sewage treatment removes suspended solids?<br>1. Secondary treatment<br>2. Primary treatment<br>3. Sludge treatment<br>4. Tertiary treatment</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>43.</b></span> <p style="display:inline" style="display:inline">Which of the following nucleic acids is present in an organism having 70 S ribosomes only?<br>1. Single-stranded DNA with a protein coat<br>2. Double-stranded circular naked DNA<br>3. Double-stranded DNA enclosed in nuclear membrane<br>4. Double-stranded circular DNA with histone proteins</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>44.</b></span> Spraying of which of the following phytohormone on juvenile conifers helps in hastening the maturity period, that leads to early seed production?<br />
-1. Abscisic Acid<br />
-2. Indole-3-butyric Acid<br />
-3. Gibberellic Acid<br />
-4. Zeatin<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>45.</b></span> <p style="display:inline" style="display:inline">One of the most important functions of botanical gardens is that:<br>1. They allow ex-situ conservation of germplasm<br>2. They provide the natural habitat for wildlife<br>3. One can observe tropical plants there<br>4. They provide a beautiful area for recreation</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>46.</b></span> <p style="display:inline" style="display:inline">Metagenesis refers to?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>The presence of different morphic&nbsp;forms</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Alternation of generation between asexual and sexual phases of an organism</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Occurrence of a drastic change in the form during post-embryonic development</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Presence of a segmented body and parthenogenic mode of reproduction</td>
-		</tr>
-	</tbody>
-</table>
-
-
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>47.</b></span> <p style="display:inline" style="display:inline">Which protein is found in the maximum amount:<br />
-1.&nbsp; Catalase<br />
-2.&nbsp; Zinc carbonic anhydrase<br />
-3.&nbsp; Transferase<br />
-4.&nbsp; RUBISCO</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>48.</b></span> <p style="display:inline" style="display:inline">The most popularly known blood grouping is the ABO grouping. It is named ABO and not ABC, because &#39;O&#39; in it refers to having:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>other antigens besides A and B on RBCs</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>over dominance of this type on the genes<br />
-			for A and B types</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>one antibody only- either anti A or anti-B<br />
-			on the RBCs</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>no antigens A and B on RBCs</td>
-		</tr>
-	</tbody>
-</table>
-
-
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>49.</b></span> <p style="display:inline" style="display:inline">At which stage of HIV infection does one usually shows symptoms of AIDS?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>When viral DNA is produced by reverse transcriptase.</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>When HIV replicates rapidly in helper T-lymphocytes and damages a large number of these.</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Within 15 days of sexual contact with an infected person.</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>When the infecting retrovirus enters host cells.</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>50.</b></span> <p style="display:inline" style="display:inline"><span style="font-weight: 400;">Cuboidal epithelium with brush border of microvilli is found in :</span><br><span style="font-weight: 400;">1. Ducts of salivary glands</span><br><span style="font-weight: 400;">2.&nbsp;</span><span style="font-weight: 400;">Proximal convoluted tubule of nephron&nbsp;</span><br><span style="font-weight: 400;">3. Eustachian tube</span><br><span style="font-weight: 400;">4. Lining of intestine</span></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>51.</b></span> <p style="display:inline" style="display:inline">In the following palindromic base sequences of DNA, which one can be cut easily by particular&nbsp;restriction enzyme?<br />
-1. 5&#39;GTATTC3&#39; ; 3&#39;CATAAG5&#39;<br />
-2. 5&#39;GATACT3&#39; ; 3&#39;CTATGA5&#39;<br />
-3. 5&#39;GAATTC3&#39; ; 3&#39;CTTAAG5&#39;<br />
-4. 5&#39;CTCAGT3&#39; ; 3&#39;GAGTCA5&#39;</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>52.</b></span> Match List-I with List-II:
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td><strong>List-I</strong></td>
-			<td></td>
-			<td><strong>List-II</strong></td>
-		</tr>
-		<tr>
-			<td>A.</td>
-			<td>Parathyroid hormone&nbsp;</td>
-			<td>I.</td>
-			<td>Flight or fight response&nbsp;</td>
-		</tr>
-		<tr>
-			<td>B.</td>
-			<td>Epinephrine and Nor-epinephrine&nbsp;</td>
-			<td>II.&nbsp;</td>
-			<td>Regulates the body&#39;s biological clock</td>
-		</tr>
-		<tr>
-			<td>C.&nbsp;</td>
-			<td>Thyroid stimulating&nbsp; hormone&nbsp;</td>
-			<td>III.</td>
-			<td>Increases blood&nbsp;<span class="math-tex">\(\)</span>Ca<sup>2+</sup> level</td>
-		</tr>
-		<tr>
-			<td>D.</td>
-			<td>Melatonin&nbsp;</td>
-			<td>IV.&nbsp;</td>
-			<td>Synthesis of&nbsp;<span class="math-tex">\(\text{T}_3~ \text{and} ~\text{T}_4\)</span>&nbsp;hormones</td>
-		</tr>
-	</tbody>
-</table>
-<br />
-Choose the correct answer from the options given below:<br />
-1. A-III, B-I, C-IV, D-II<br />
-2. A-III, B-IV, C-I, D-II<br />
-3. A-III,&nbsp;B-I, C-II, D-IV<br />
-4. A-I, B-II, C-III, D-IV<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>53.</b></span> <p style="display:inline" style="display:inline">A Hominid fossil discovered in Java in 1891, now extinct, having a cranial capacity of about 900 cc was:</p>
-
-
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><i>Homo erectus</i></td>
-			<td>2.</td>
-			<td>Neanderthal man</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><i>Homo sapiens</i></td>
-			<td>4.</td>
-			<td>Australopithecus
-			
-			</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>54.</b></span> <div style="display:inline" style="display:inline">Which one of the following correctly explains the function of a specific part of a human nephron?
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Henle&rsquo;s loop &ndash; most reabsorption of the major substances from the glomerular filtrate</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Distal convoluted tubule &ndash; reabsorption of ions into the surrounding blood capillaries</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Afferent arteriole &ndash; carries the blood away from the glomerulus towards renal vein</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Podocytes - create minute spaces (slit pores) for the filtration of blood into the Bowman&rsquo;s capsule</td>
-		</tr>
-	</tbody>
-</table>
-</div>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>55.</b></span> <p style="display:inline" style="display:inline">The Adenosine deaminase deficiency results into:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Digestive disorder&nbsp;</td>
-			<td>2.</td>
-			<td>Addison&#39;s disease</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Dysfunction of Immune system</td>
-			<td>4.</td>
-			<td>Parkinson&#39;s disease</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>56.</b></span> <p style="display:inline" style="display:inline">Injury localized to the hypothalamus would most likely disrupt:<br>1. short-term memory<br>2. co-ordination during locomotion<br>3. executive functions, such as decision making<br>4. regulation of body temperature</p>
-
-
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>57.</b></span> Medical Termination of Pregnancy (MTP) is considered safe up to how many weeks of pregnancy?<br />
-1. Twelve weeks<br />
-2. Eighteen weeks<br />
-3. Six weeks<br />
-4. Eight weeks<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>58.</b></span> <p style="display:inline" style="display:inline">Tidal Volume and Expiratory Reserve Volume of an athlete is 500 mL and 1000 mL respectively. What will be his Expiratory Capacity if the Residual Volume is 1200 mL?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>2700 mL</td>
-			<td>2.</td>
-			<td>1500 mL</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>1700 mL</td>
-			<td>4.</td>
-			<td>2200 mL</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>59.</b></span> Given below are two statements: one is labelled as Assertion (A) and the other is labelled as Reason (R):
-<table>
-	<tbody>
-		<tr>
-			<td><span style="white-space:nowrap;"><strong>Assertion (A):</strong></span></td>
-			<td>FSH acts upon ovarian follicles in female and Leydig cells in male.</td>
-		</tr>
-		<tr>
-			<td><span style="white-space:nowrap;"><strong>Reason (R):</strong></span></td>
-			<td>Growing ovarian follicles secrete estrogen in female while interstitial cells secrete androgen in male human being.</td>
-		</tr>
-	</tbody>
-</table>
-&nbsp;<br />
-In the light of the above statements, choose the correct answer from the options given below:&nbsp;
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Both <strong>(A)</strong> and <strong>(R)</strong> are True but <strong>(R)</strong> is not the correct explanation of <strong>(A)</strong>.</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td><strong>(A)</strong> is True but <strong>(R)</strong> is False&nbsp;</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><strong>(A)</strong> is False but <strong>(R)</strong> is True&nbsp;</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Both <strong>(A)</strong> and <strong>(R)</strong> are True and <strong>(R)</strong> is the correct explanation of <strong>(A)</strong>.</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>60.</b></span> <p style="display:inline" style="display:inline">Match the following columns and select the correct option:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td><strong>Column I</strong></td>
-			<td></td>
-			<td><strong>Column II</strong></td>
-		</tr>
-		<tr>
-			<td>(a)</td>
-			<td>Gout&nbsp;</td>
-			<td>(i)</td>
-			<td>Decreased levels of estrogen</td>
-		</tr>
-		<tr>
-			<td>(b)</td>
-			<td>Osteoporosis&nbsp;</td>
-			<td>(ii)</td>
-			<td>Low Ca<sup>++</sup>&nbsp;ions in the blood</td>
-		</tr>
-		<tr>
-			<td>(c)</td>
-			<td>Tetany</td>
-			<td>(iii)</td>
-			<td>Accumulation of uric acid crystals</td>
-		</tr>
-		<tr>
-			<td>(d)</td>
-			<td>Muscular&nbsp;dystrophy&nbsp;</td>
-			<td>(iv)</td>
-			<td>Autoimmune disorder</td>
-		</tr>
-		<tr>
-			<td></td>
-			<td></td>
-			<td>(v)</td>
-			<td>Genetic disorder</td>
-		</tr>
-	</tbody>
-</table>
-&nbsp;
-
-<table>
-	<tbody>
-		<tr>
-			<td>Options:</td>
-			<td>(a)</td>
-			<td>(b)</td>
-			<td>(c)</td>
-			<td>(d)</td>
-		</tr>
-		<tr>
-			<td>1.</td>
-			<td>(ii)</td>
-			<td>(i)</td>
-			<td>(iii)</td>
-			<td>(iv)</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>(iii)</td>
-			<td>(i)</td>
-			<td>(ii)</td>
-			<td>(v)</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>(iv)</td>
-			<td>(v)</td>
-			<td>(i)</td>
-			<td>(ii)</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>(i)</td>
-			<td>(ii)</td>
-			<td>(iii)</td>
-			<td>(iv)</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>61.</b></span> Which of the following animals is not viviparous?</br>
-
-1. Flying fox (bat)<br />
-2. Elephant<br />
-3. Platypus<br />
-4. Whale<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>62.</b></span> The cofactor of the enzyme carboxypeptidase is:<br />
-1. Niacin<br />
-2. Flavin<br />
-3. Haem<br />
-4. Zinc<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>63.</b></span> <p style="display:inline" style="display:inline">Globulins contained in human blood plasma are primarily involved in:<br>1. defence mechanisms of body<br>2. osmotic balance of body fluids<br>3. oxygen transport in the blood<br>4. clotting of blood</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>64.</b></span> <p style="display:inline" style="display:inline">A certain patient, X, is suspected to be suffering from acquired immune deficiency syndrome. Which diagnostic technique will you recommend for its detection?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>&nbsp; MRI</td>
-			<td>2.</td>
-			<td>&nbsp;Ultra Sound</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>&nbsp;WIDAL</td>
-			<td>4.</td>
-			<td>&nbsp;ELISA</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>65.</b></span> <p style="display:inline" style="display:inline">Given below is the diagrammatic sketch of a certain type of connective tissue. Identify the parts labeled A, B, C, and D and select the right option for them:<br>&nbsp; <img src="https://dsbihjlymzdyy.cloudfront.net/question-assets/key__2025-03-21%2014%3A07%3A11%20%2B0000image.png" style="width: 260px; height: 137px;" /></p>
-
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td>Part-A</td>
-			<td>Part-B</td>
-			<td>Part-C</td>
-			<td>Part-D</td>
-		</tr>
-		<tr>
-			<td>1.</td>
-			<td>Mast cell</td>
-			<td>Macrophage</td>
-			<td>Fibroblast</td>
-			<td>Collagen fibres</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Macrophage</td>
-			<td>Collagen fibres</td>
-			<td>Fibroblast</td>
-			<td>Mast cell</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Mast cell</td>
-			<td>Collagen fibres</td>
-			<td>Fibroblast</td>
-			<td>Macrophage</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Macrophage</td>
-			<td>Fibroblast</td>
-			<td>Collagen fibres</td>
-			<td>Mast cell</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>66.</b></span> The enzyme (a) is needed for isolating genetic material from plant cells and enzyme (b) for isolating genetic material from fungus. Choose the correct pair of options from the following :<br />
-1. (a) Cellulase (b) Protease<br />
-2. (a) Cellulase (b) Chitinase<br />
-3. (a) Chitinase (b) Lipase<br />
-4. (a) Cellulase (b) Lipase<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>67.</b></span> <p style="display:inline" style="display:inline">Given ahead is an incomplete table about certain hormones, their source glands and one major effect of each on the body in humans. Identify the correct option for the three blanks A, B and C.</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>&nbsp;Gland</td>
-			<td>&nbsp;Secretion</td>
-			<td>Effect on Body</td>
-		</tr>
-		<tr>
-			<td>&nbsp; A</td>
-			<td>&nbsp; &nbsp;Oestrogen</td>
-			<td>Maintenance of secondary sexual characters</td>
-		</tr>
-		<tr>
-			<td>Alpha cells of islets of Langerhans</td>
-			<td>&nbsp;B</td>
-			<td>Raises blood sugar level</td>
-		</tr>
-		<tr>
-			<td>Anterior&nbsp;pituitary&nbsp;</td>
-			<td>&nbsp;C</td>
-			<td>Oversecretion leads to gigantism</td>
-		</tr>
-	</tbody>
-</table>
-&nbsp;
-
-<table>
-	<tbody>
-		<tr>
-			<td>Options:</td>
-			<td>A</td>
-			<td>B</td>
-			<td>C</td>
-		</tr>
-		<tr>
-			<td>1.</td>
-			<td>Placenta&nbsp;</td>
-			<td>&nbsp;Insulin</td>
-			<td>Vasopressin</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Ovary&nbsp; &nbsp; &nbsp;</td>
-			<td>Insulin</td>
-			<td>Calcium</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Placenta</td>
-			<td>Glucagon&nbsp;</td>
-			<td>Calcitonin</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Ovary&nbsp; &nbsp;</td>
-			<td>Glucagon</td>
-			<td>Growth hormone</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>68.</b></span> <p style="display:inline" style="display:inline">Ernst Haeckel&#39;s embryological support for evolution was disapproved by:</p>
-
-
-
-<table>
-	<tbody>
-		<tr>
-			<td style = "width: 7%;">1.</td>
-			<td style="width: 43%;">Alfred Wallace</td>
-			<td style="width: 7%;">2.</td>
-			<td style="width: 43%;">Charles Darwin</td>
-		</tr>
-		<tr>
-			<td style="width: 7%;">3.</td>
-			<td style="width: 43%;">Oparin</td>
-			<td style="width: 7%;">4.</td>
-			<td style="width: 43%;">Karl Ernst von Baer
-			
-			</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>69.</b></span> <p style="display:inline" style="display:inline">Figure shows a human urinary system with structures labelled A to D. Select option which correctly identifies them and gives their characteristics and/or functions.&nbsp;<br />
-<img src="https://dsbihjlymzdyy.cloudfront.net/bio_images/all/Diagrams%20in%20Svg%20form%2FExcretory%20Products%20_%20their%20Elimination%2F92048.svg.svg" style="width: 187px; height: 160px;" /></p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>B-pelvis - broad funnel-shaped space inner to the hilum, directly connected to loops of Henle.</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>C- Medulla- inner zone of kidney and contains complex nephrons.</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>D- Cortex- outer part of the kidney and does not contain any part of nephrons.</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>A- Adrenal gland- located at the anterior part of the kidney; secretes catecholamines which stimulate glycogen breakdown.</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>70.</b></span> <p style="display:inline" style="display:inline">Use of bioresources by multinational companies and organizations without authorization from the&nbsp;concerned country and its people is called?<br />
-1. Bio-infringement<br />
-2. Biopiracy<br />
-3. Biodegradation<br />
-4. Bio-exploitation</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>71.</b></span> Select the incorrect statement regarding synapses:
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td style="text-align: justify;">Impulse Transmission across a chemical synapse is always faster than that across an electrical synapse.</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td style="text-align: justify;">The membranes of presynaptic and postsynaptic neurons are in close proximity in an electrical synapse.</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td style="text-align: justify;">Electrical current can flow directly from one neuron into the other across the electrical synapse.</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td style="text-align: justify;">Chemical synapses use neurotransmitters.</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>72.</b></span> <div style="display:inline" style="display:inline">Which of the following cannot be detected in a developing foetus by amniocentesis?<br>1. Sex of the foetus<br>2. Down syndrome<br>3. Jaundice<br>4. Klinefelter syndrome</div>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>73.</b></span> <p style="display:inline" style="display:inline">The partial pressures (in mm Hg) of oxygen (O<sub>2</sub>) and carbon dioxide (CO<sub>2</sub>) at alveoli (the site of diffusion) are :<br>1.&nbsp;pO<sub>2&nbsp;</sub>= 95 and pCO<sub>2</sub> = 40<br>2. pO<sub>2</sub> = 159 and pCO<sub>2</sub> = 0.3<br>3. pO<sub>2</sub> = 104 and pCO<sub>2&nbsp;</sub>= 40<br>4. pO<sub>2</sub> = 40 and pCO<sub>2&nbsp;</sub>= 45</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>74.</b></span> <p style="display:inline" style="display:inline">About which day in a normal human menstrual cycle does rapid secretion of LH (popularly&nbsp;called LH-surge) normally occurs?<br />
-1. 11<sup>th</sup> day&nbsp;<br>2. 14<sup>th</sup> day<br>3. 20<sup>th</sup> day&nbsp;<br>4. 5<sup>th</sup> day</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>75.</b></span> <p style="display:inline" style="display:inline">In human body, which one of the following is anatomically correct?<br><table><tr><td>1.</td><td>Floating ribs-2 pairs</td><td>2.</td><td>Collar bones-3 pairs</td></tr><tr><td>3.</td><td>Salivary glands-1 pair</td><td>4.</td><td>Cranial nerves-10 pairs</td></tr></table><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>76.</b></span> <p style="display:inline" style="display:inline">One example of animals having a single opening to the outside that serves both as mouth as well as the anus is:<br>1. <i>Octopus</i><br>2. <i>Asterias</i><br>3. <i>Ascidia</i><br>4. <i>Fasciola</i></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>77.</b></span> <p style="display:inline" style="display:inline">A non-proteinaceous enzyme is:<br>1. lysozyme<br>2. ribozyme<br>3. ligase<br>4. deoxyribonuclease</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>78.</b></span> <p style="display:inline" style="display:inline">Impulse of heartbeat originates from:<br />
-1. S.A. Node<br />
-2. A. V. Node<br />
-3. Vagus Nerve<br />
-4. Cardiac Nerve</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>79.</b></span> <p style="display:inline" style="display:inline">Which one of the following is the correct statement regarding the particular psychotropic drug specified?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Hashish causes alter thought perceptions and hallucinations.</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Opium stimulates the nervous system and causes hallucinations.</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Morphine leads to delusions and disturbed emotions.</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Barbiturates cause relaxation and temporary euphoria.</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>80.</b></span> <p style="display:inline" style="display:inline">Match the following columns with reference to cockroach and select the correct option:&nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>&nbsp; Column - I</td>
-			<td>Column - II</td>
-		</tr>
-		<tr>
-			<td>(a) Grinding of&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-			<td>(i) Hepatic caeca the food particles</td>
-		</tr>
-		<tr>
-			<td>(b) Secrete gastric&nbsp; &nbsp; &nbsp;</td>
-			<td>(ii) 10th segment juice</td>
-		</tr>
-		<tr>
-			<td>(c) 10 pairs &nbsp;</td>
-			<td>(iii) Proventriculus</td>
-		</tr>
-		<tr>
-			<td>(d) Anal cerci</td>
-			<td>(iv) Spiracles</td>
-		</tr>
-		<tr>
-			<td></td>
-			<td>(v)&nbsp; Alary muscles</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>Options:</td>
-			<td>(a)</td>
-			<td>(b)</td>
-			<td>(c)</td>
-			<td>(d)</td>
-		</tr>
-		<tr>
-			<td>1.</td>
-			<td>(iii)</td>
-			<td>(i)</td>
-			<td>(iv)</td>
-			<td>(ii)</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>(iv)</td>
-			<td>(iii)</td>
-			<td>(v)</td>
-			<td>(ii)</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>(i)</td>
-			<td>(iv)</td>
-			<td>(iii)</td>
-			<td>(ii)</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>(ii)</td>
-			<td>(iii)</td>
-			<td>(i)</td>
-			<td>(iv)</td>
-		</tr>
-	</tbody>
-</table>
-
-<p><br />
-&nbsp;</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>81.</b></span> <p style="display:inline" style="display:inline">The two antibiotic resistance genes on vector pBR 322 are for:<br>1. Ampicillin and Tetracycline<br>2. Ampicillin and Chloramphenicol<br>3. Chloramphenicol and Tetracycline<br>4. Tetracycline and Kanamycin</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>82.</b></span> <p style="display:inline" style="display:inline">Which one of the following pairs correctly matches a hormone with a disease resulting from its deficiency:&nbsp;<br />
-1. Relaxin &ndash; Gigantism<br />
-2. Prolactin &ndash; Cretinism<br />
-3. Parathyroid hormone &ndash; Tetany<br />
-4. Insulin &ndash; Diabetes insipidus</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>83.</b></span> Panspermia, an idea that is still a favorite for some astronomers, means:
-<table>
-	<tbody>
-		<tr>
-			<td>1.&nbsp;</td>
-			<td>Creation of life from dead and decaying matter</td>
-		</tr>
-		<tr>
-			<td>2.&nbsp;</td>
-			<td>Creation of life from chemicals</td>
-		</tr>
-		<tr>
-			<td>3.&nbsp;</td>
-			<td>Origin of sperm in human testes</td>
-		</tr>
-		<tr>
-			<td>4.&nbsp;</td>
-			<td>Transfer of spores as a unit of life from other planets of Earth</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>84.</b></span> Nitrogenous waste is excreted in the form of pellet or paste by:
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><em>Pavo</em></td>
-			<td>2.</td>
-			<td><em>Ornithorhynchus</em></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><em>Salamandra</em></td>
-			<td>4.</td>
-			<td><em>Hippocampus</em></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>85.</b></span> <div style="display:inline" style="display:inline">A transgenic food crop, which may help in solving the problem of night blindness in developing countries is:<br />
-&nbsp;
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Flavr savr tomatoes</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Starlink maize</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Bt soybean</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Golden rice</td>
-		</tr>
-	</tbody>
-</table>
-</div>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>86.</b></span> <div style="display:inline" style="display:inline">When a neuron is in resting state i.e., not conducting any impulse, the axonal membrane is:
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>equally permeable to both Na<sup>+</sup>&nbsp;and K<sup>+</sup>&nbsp;ions</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>impermeable to both Na<sup>+</sup>&nbsp;and K<sup>+</sup>&nbsp;ions</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>comparatively more permeable to K<sup>+</sup>&nbsp;ions and nearly impermeable to Na<sup>+</sup>&nbsp;ions</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>comparatively more permeable to Na<sup>+</sup>&nbsp;ions and nearly impermeable to K<sup>+</sup>&nbsp;ions</td>
-		</tr>
-	</tbody>
-</table>
-<br>
-
-</div>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>87.</b></span> <p style="display:inline" style="display:inline">Which of the following is incorrect regarding vasectomy?<br>1. No sperm occurs in seminal fluid<br>2. No sperm occurs in epididymis<br>3. Vasa deferentia is cut and tied<br>4. Irreversible sterility</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>88.</b></span> Select the sequence of steps in respiration.
-<table>
-	<tbody>
-		<tr>
-			<td>(A)</td>
-			<td>Diffusion of gases (O<sub>2</sub> and CO<sub>2</sub>) across alveolar membrane.</td>
-		</tr>
-		<tr>
-			<td>(B)</td>
-			<td>Diffusion of O<sub>2</sub> and CO<sub>2</sub> between blood and tissues</td>
-		</tr>
-		<tr>
-			<td>(C)</td>
-			<td>Transport of gases by the blood</td>
-		</tr>
-		<tr>
-			<td>(D)</td>
-			<td>Pulmonary ventilation by which atmospheric air is drawn in and CO<sub>2</sub> rich alveolar air is released out.</td>
-		</tr>
-		<tr>
-			<td>(E)</td>
-			<td>Utilisation of O<sub>2</sub> by the cells for catabolic reactions and resultant release of CO<sub>2</sub></td>
-		</tr>
-	</tbody>
-</table>
-Choose the correct answer from the options given below:
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>(D), (A), (C), (B), (E)</td>
-			<td>2.</td>
-			<td>(C), (B), (A), (E), (D)</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>(B), (C), (E), (D), (A)</td>
-			<td>4.</td>
-			<td>(A), (C), (B), (E), (D)</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>89.</b></span> <p style="display:inline" style="display:inline">Which of the following hormones are secreted in women only during pregnancy?&nbsp;</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>(a)</td>
-			<td>Relaxin</td>
-			<td>(b)</td>
-			<td>Oxytocin</td>
-		</tr>
-		<tr>
-			<td>(c)</td>
-			<td>hCG</td>
-			<td>(d)</td>
-			<td>hPL</td>
-		</tr>
-		<tr>
-			<td>(e)</td>
-			<td>Progesterone</td>
-			<td></td>
-			<td></td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Choose the most appropriate answer from the options given below:&nbsp;</p>
-1. (c), (d) and (e) only&nbsp;<br />
-2. (b) and (e) only&nbsp;<br />
-3. (b), (c) and (d) only&nbsp;<br />
-4. (a), (c) and (d) only&nbsp;<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>90.</b></span> <p style="display:inline" style="display:inline">Which one of the following is the correct matching of three items and their grouping category?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td>Items</td>
-			<td>Group</td>
-		</tr>
-		<tr>
-			<td>1.</td>
-			<td>Malleus, incus cochlea</td>
-			<td>Ear ossicles</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Ilium, ischium, pubis</td>
-			<td>Coxal bones of pelvic girdle</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Actin, myosin rhodopsin</td>
-			<td>Muscle proteins</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Cytosine, uracil thiamine</td>
-			<td>pyrimidines</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-            <div style="width: 100%; margin: auto; text-align: center; font-size: 32px;"><b>Chemistry</b></div>
-          <span class="questionId" style="vertical-align: top;"><b>91.</b></span> The correct order for the rate of&nbsp;<span class="math-tex">\(\alpha\)</span>&nbsp;,&nbsp;<span class="math-tex">\(\beta\)</span>-dehydrohalogenation for the following compounds is:
-<table>
-	<tbody>
-		<tr>
-			<td>(i)&nbsp;<img src="https://d2f8z173p7073l.cloudfront.net/1686115600835" style="width: 135px; height: 40px;" /></td>
-			<td>(ii)&nbsp;<img src="https://d2f8z173p7073l.cloudfront.net/1686115643626" style="width: 135px; height: 43px;" /></td>
-		</tr>
-		<tr>
-			<td>(iii)&nbsp;<img src="https://d2f8z173p7073l.cloudfront.net/1686115700872" style="width: 86px; height: 70px;" /></td>
-			<td></td>
-		</tr>
-	</tbody>
-</table>
-&nbsp;
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>(i) &lt; (ii) &lt; (iii)</td>
-			<td>2.</td>
-			<td>(ii) &lt; (i) &lt; (iii)</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>(iii) &lt; (ii) &lt; (i)</td>
-			<td>4.</td>
-			<td>(ii) &lt; (iii) &lt; (i)</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>92.</b></span> <span class="math-tex">\(\mathrm{Na_2B_4O_7\xrightarrow{\text{ heat }~~}X+NaBO_2 }\)</span><br />
-in the above reaction the product &quot;X&quot; is :
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>H<sub>3</sub>BO<sub>3</sub></td>
-			<td>2.</td>
-			<td>B<sub>2</sub>O<sub>3</sub></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Na<sub>2</sub>B<sub>2</sub>O<sub>5</sub></td>
-			<td>4.</td>
-			<td>NaB<sub>3</sub>O<sub>5</sub></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>93.</b></span> <div style="display:inline" style="display:inline">
-<div>Which of the following reactions is an example of a nucleophilic substitution reaction?<br><span><span class="post__question-option__text flex-grow-1">1. RX + KOH&nbsp;&rarr; ROH + KX</span></span><br><span><span class="post__question-option__text flex-grow-1">2. 2RX + 2Na&nbsp;&rarr;R &mdash; R + 2NaX</span></span><br><span><span class="post__question-option__text flex-grow-1">3. RX + H<sub>2</sub>&rarr;RH + HX</span></span><br><span><span class="post__question-option__text flex-grow-1">4. RX + Mg&nbsp;&rarr;RMg X</span></span></div>
-</div>
-
-
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>94.</b></span> <p style="display:inline" style="display:inline">
-
-What is the name of the following reaction?<br />
-<img src="https://d2f8z173p7073l.cloudfront.net/1631711454311" /><br>1. Friedel-Crafts reaction<br>2. Perkins reaction<br>3. Acetylation reaction<br>4. Schotten-Baumann reaction</p>
-<quillbot-extension-portal></quillbot-extension-portal><quillbot-extension-portal></quillbot-extension-portal><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>95.</b></span> <p style="display:inline" style="display:inline">If the mass of electron is 9.11&times;10<sup>-31</sup>&nbsp;kg&nbsp; and the planck&#39;s constant is 6.626 &times;10<sup>-34</sup>&nbsp;Js, then the uncertainty involved in the measurement of velocity within a distance of 0.1 &Aring; is:<br>1.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mn>5</mn><mo>.</mo><mn>79</mn><mo>&times;</mo><msup><mn>10</mn><mn>6</mn></msup></math>&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi><msup><mi>s</mi><mrow><mo>-</mo><mn>1</mn></mrow></msup></math><br>2.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mn>5</mn><mo>.</mo><mn>79</mn><mo>&times;</mo><msup><mn>10</mn><mn>7</mn></msup></math>&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi><msup><mi>s</mi><mrow><mo>-</mo><mn>1</mn></mrow></msup></math><br>3.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mn>5</mn><mo>.</mo><mn>79</mn><mo>&times;</mo><msup><mn>10</mn><mn>8</mn></msup></math>&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi><msup><mi>s</mi><mrow><mo>-</mo><mn>1</mn></mrow></msup></math><br>4.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mn>5</mn><mo>.</mo><mn>79</mn><mo>&times;</mo><msup><mn>10</mn><mn>5</mn></msup></math>&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi><msup><mi>s</mi><mrow><mo>-</mo><mn>1</mn></mrow></msup></math></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>96.</b></span> <p style="display:inline" style="display:inline">The coordination number of Ni in&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>[</mo><mi>Ni</mi><mo>(</mo><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><msub><mi mathvariant="normal">O</mi><mn>4</mn></msub><msub><mo>)</mo><mn>3</mn></msub><mo>]</mo></mrow><mrow><mn>4</mn><mo>-</mo></mrow></msup></math>&nbsp;is:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>3</td>
-			<td>2.</td>
-			<td>6</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>4&nbsp;</td>
-			<td>4.</td>
-			<td>2&nbsp;</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>97.</b></span> <p style="display:inline" style="display:inline">Incorrect order among the following is:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>NH<sub>3</sub> &lt; PH<sub>3</sub>&nbsp;&lt; AsH<sub>3</sub>&nbsp;&ndash; Acidic</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Li &lt; Be &lt; B &lt; C &ndash; I<sup>st</sup> Ionization potential</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Al<sub>2</sub>O<sub>3</sub>&nbsp;&lt; MgO &lt; Na<sub>2</sub>O &lt; K<sub>2</sub>O - Basic</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Li<sup>+</sup> &lt; Na<sup>+</sup> &lt; K<sup>+</sup> &lt; Cs<sup>+</sup> - Ionic radius</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>98.</b></span> <p style="display:inline" style="display:inline">The number of electrons delivered at the cathode during electrolysis by a current of 1 ampere in 60 seconds is:<br>(Charge on electron = 1.60 &times; 10<sup>&ndash;19&nbsp;</sup>C)<br>1.&nbsp;&nbsp;<math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mn>6</mn><mo>&times;</mo><msup><mn>10</mn><mn>23</mn></msup></math><br>2.&nbsp;&nbsp;<math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mn>6</mn><mo>&times;</mo><msup><mn>10</mn><mn>20</mn></msup></math><br>3.&nbsp;&nbsp;<math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mn>3</mn><mo>.</mo><mn>75</mn><mo>&times;</mo><msup><mn>10</mn><mn>20</mn></msup></math><br>4.&nbsp;&nbsp;<math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mn>7</mn><mo>.</mo><mn>48</mn><mo>&times;</mo><msup><mn>10</mn><mn>20</mn></msup></math></p>
-<quillbot-extension-portal></quillbot-extension-portal><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>99.</b></span> Given below are two statements:&nbsp;
-<table>
-	<tbody>
-		<tr>
-			<td><strong><span style="white-space:nowrap;">Statement I :</span></strong></td>
-			<td>Propene on treatment with diborane gives an addition product with the formula&nbsp;<span class="math-tex">\((CH_3)_2-CH)_3 -B \)</span></td>
-		</tr>
-		<tr>
-			<td><strong><span style="white-space:nowrap;">Statement II :&nbsp;</span></strong></td>
-			<td>Oxidation of&nbsp;<span class="math-tex">\((CH_3)_2-CH)_3 -B\)</span>&nbsp;with hydrogen peroxide in presence of&nbsp;<span class="math-tex">\(NaOH \)</span>&nbsp;gives propan-2-ol.</td>
-		</tr>
-	</tbody>
-</table>
-In the light of the above statements, choose the most appropriate answer from the options given below:<br />
-1.&nbsp;<span style="white-space:nowrap;"><strong>Statement I</strong> is correct but&nbsp;<span style="white-space:nowrap;"><strong>Statement II</strong> is incorrect&nbsp;<br />
-2.&nbsp;<span style="white-space:nowrap;"><strong>Statement I</strong> is incorrect but <strong>Statement II </strong>is correct&nbsp;<br />
-3. Both&nbsp;<span style="white-space:nowrap;"><strong>Statement I</strong> and&nbsp;<span style="white-space:nowrap;"><strong>Statement II</strong> are correct&nbsp;<br />
-4. Both&nbsp;<span style="white-space:nowrap;"><strong>Statement I</strong> and&nbsp;<span style="white-space:nowrap;"><strong>Statement II </strong>are incorrect</span></span></span></span></span></span></span><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>100.</b></span> Match List -I with List-II&nbsp;
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td><strong>List-I<br />
-			(Mixtures/Sample)</strong></td>
-			<td></td>
-			<td><strong>List-II<br />
-			(Technique used for purification)</strong></td>
-		</tr>
-		<tr>
-			<td>A.</td>
-			<td>Glycerol from spent lye</td>
-			<td>(I)</td>
-			<td>Steam distillation</td>
-		</tr>
-		<tr>
-			<td>B.</td>
-			<td>Chloroform + Aniline&nbsp;</td>
-			<td>(II)</td>
-			<td>Fractional distillation</td>
-		</tr>
-		<tr>
-			<td>C.</td>
-			<td>Fractions of crude oil</td>
-			<td>(III)</td>
-			<td>Distillation under reduced pressure</td>
-		</tr>
-		<tr>
-			<td>D.</td>
-			<td>Aniline+water</td>
-			<td>(IV)</td>
-			<td>Distillation&nbsp;</td>
-		</tr>
-	</tbody>
-</table>
-&nbsp;<br />
-Choose the correct answer from the options given below&nbsp;
-<table>
-	<tbody>
-		<tr>
-			<td>Options:</td>
-			<td style="text-align: center;"><strong>(A)</strong></td>
-			<td style="text-align: center;"><strong>(B)</strong></td>
-			<td style="text-align: center;"><strong>(C)</strong></td>
-			<td style="text-align: center;"><strong>(D)</strong></td>
-		</tr>
-		<tr>
-			<td>1.</td>
-			<td style="text-align: center;">III</td>
-			<td style="text-align: center;">IV</td>
-			<td style="text-align: center;">II</td>
-			<td style="text-align: center;">I</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td style="text-align: center;">IV</td>
-			<td style="text-align: center;">II</td>
-			<td style="text-align: center;">I</td>
-			<td style="text-align: center;">III</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td style="text-align: center;">I</td>
-			<td style="text-align: center;">II</td>
-			<td style="text-align: center;">III</td>
-			<td style="text-align: center;">IV</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td style="text-align: center;">I</td>
-			<td style="text-align: center;">III</td>
-			<td style="text-align: center;">II</td>
-			<td style="text-align: center;">IV</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>101.</b></span> <p style="display:inline" style="display:inline">Percentage of C, H &amp; N of a compound is given as follows:<br />
-C=40%, H=13.33%, N=46.67%<br />
-The empirical formula of the compound will be:<br>
-1.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><msub><mi>H</mi><mn>2</mn></msub><mi>N</mi></math><br>2.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>C</mi><mn>2</mn></msub><msub><mi>H</mi><mn>4</mn></msub><mi>N</mi></math><br>3.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><msub><mi>H</mi><mn>4</mn></msub><mi>N</mi></math><br>4.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><msub><mi>H</mi><mn>3</mn></msub><mi>N</mi></math></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>102.</b></span> <p style="display:inline" style="display:inline"><math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mi mathvariant="normal">A</mi></math>&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mo>&rarr;</mo></math>&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">B</mi></math>&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mo>+</mo></math>&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">C</mi></math>; It would be a zero-order reaction when:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>The rate of reaction is proportional to the square&nbsp;of the concentration of A</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>The rate of reaction remains the same at any&nbsp;concentration of A</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>The rate remains unchanged at any&nbsp;concentration&nbsp;of B and C</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>The rate of reaction doubles if the&nbsp;concentration of B is doubled</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>103.</b></span> During the preparation of Mohr&#39;s salt solution (Ferrous ammonium sulphate), which of the following acid is added to prevent hydrolysis of Fe<sup>2+&nbsp;</sup>ion?<br />
-1. Concentrated sulphuric acid&nbsp;<br />
-2. Dilute nitric acid<br />
-3. Dilute sulphuric acid&nbsp;<br />
-4. Dilute hydrochloric acid<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>104.</b></span> <p style="display:inline" style="display:inline">Which composition will make the basic buffer?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>100 mL of 0.1 M HCl+100 mL of 0.1 M NaOH</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>50 mL of 0.1 M NaOH+25 mL of 0.1 M CH<sub>3</sub>COOH</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>100 mL of 0.1 M CH<sub>3</sub>COOH+100 mL of 0.1 M NaOH</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>100 mL of 0.1 M HCl+200 mL of 0.1 M NH<sub>4</sub>OH</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>105.</b></span> <p style="display:inline" style="display:inline">Which is the correct statement among the following?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Starch is a polymer of &alpha;-glucose&nbsp;</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Amylose is a component of cellulose</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Proteins are composed of only one type&nbsp;of amino acid</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>In the cyclic structure of fructose, there&nbsp;are four carbons and one oxygen atom</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>106.</b></span> <p style="display:inline" style="display:inline">The incorrect oxidation number of the underlined atom in the following species is:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Cu<sub>2</sub><u>O</u> is -1</td>
-			<td>2.</td>
-			<td><u>Cl</u><span class="math-tex">\(O_{3}^{-}\)</span>&nbsp;is +5</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>K<sub>2</sub><u>Cr</u><sub>2</sub>O<sub>7</sub> is +6</td>
-			<td>4.</td>
-			<td>H<u>Au</u>Cl<sub>4</sub>&nbsp;&nbsp;is +3</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>107.</b></span> <p style="display:inline" style="display:inline">Gadolinium belongs to 4f series. It&rsquo;s atomic number is 64. Which of the following is the correct electronic configuration of gadolinium?<br>1.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced open="[" close="]"><mrow><mi>X</mi><mi>e</mi></mrow></mfenced><mn>4</mn><mo>&#160;</mo><msup><mi>f</mi><mn>8</mn></msup><mo>&#160;</mo><mn>6</mn><msup><mi>d</mi><mn>2</mn></msup></math><br>2.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced open="[" close="]"><mrow><mi>X</mi><mi>e</mi></mrow></mfenced><mn>4</mn><mo>&#160;</mo><msup><mi>f</mi><mn>9</mn></msup><mo>&#160;</mo><mn>5</mn><msup><mi>s</mi><mn>1</mn></msup></math><br>3.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced open="[" close="]"><mrow><mi>X</mi><mi>e</mi></mrow></mfenced><mn>4</mn><mo>&#160;</mo><msup><mi>f</mi><mn>7</mn></msup><mo>&#160;</mo><mn>5</mn><msup><mi>d</mi><mn>1</mn></msup><mn>6</mn><msup><mi>s</mi><mn>2</mn></msup></math><br>4.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced open="[" close="]"><mrow><mi>X</mi><mi>e</mi></mrow></mfenced><mn>4</mn><mo>&#160;</mo><msup><mi>f</mi><mn>6</mn></msup><mo>&#160;</mo><mn>5</mn><msup><mi>d</mi><mn>2</mn></msup><mn>6</mn><msup><mi>s</mi><mn>2</mn></msup></math></p><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>108.</b></span> <p style="display:inline" style="display:inline">In which of the following molecules are all the bonds not equal?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>ClF<sub>3</sub></td>
-			<td>2.</td>
-			<td>BF<sub>3</sub></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>AlF<sub>3</sub></td>
-			<td>4.</td>
-			<td>NF<sub>3</sub></td>
-		</tr>
-	</tbody>
-</table>
-<quillbot-extension-portal></quillbot-extension-portal><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>109.</b></span> The work done during reversible isothermal expansion of one mole of hydrogen gas at 25&deg;C from pressure of 20 atmosphere to 10 atmosphere is :<br />
-(Given R = 2.0 cal K<sup>&ndash;1</sup>&nbsp;mol<sup>&ndash;1</sup>)
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>&ndash;413.14 calories</td>
-			<td>2.</td>
-			<td>413.14 calories&nbsp;</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>100 calories</td>
-			<td>4.</td>
-			<td>0 calorie</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>110.</b></span> <p style="display:inline" style="display:inline">
-
-The reaction of a carbonyl compound with one of the following reagents involves nucleophilic addition followed by the elimination of water. The reagents are:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>A Grignard reagent.</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td><i>Hydra</i>zine in the presence of a feebly acidic solution.</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Hydrocyanic acid.</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Sodium hydrogen sulphite.</td>
-		</tr>
-	</tbody>
-</table>
-
-
-<quillbot-extension-portal></quillbot-extension-portal><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>111.</b></span> <p style="display:inline" style="display:inline">The most reactive compound among the following toward electrophilic aromatic substitution reaction&nbsp;is:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.&nbsp;</td>
-			<td><img height="84" src="https://d2f8z173p7073l.cloudfront.net/1665918734037" width="115" /></td>
-			<td>2.</td>
-			<td><img src="https://d2f8z173p7073l.cloudfront.net/1703847510503" style="width: 150px; height: 76px;" /></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>&nbsp;<img height="95" src="https://d2f8z173p7073l.cloudfront.net/1665918849353" width="144" /></td>
-			<td>4.</td>
-			<td> <img height="83" src="https://d2f8z173p7073l.cloudfront.net/1665918883649" width="126" /></td>
-		</tr>
-	</tbody>
-</table>
-&nbsp;
-
-
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>112.</b></span> <p style="display:inline" style="display:inline">A compound having two direct bonds
-<style type="text/css"><!--td {border: 1px solid #ccc;}br {mso-data-placement:same-cell;}-->
-</style>
-between P and H atoms is:<br>1.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>H</mi><mn>3</mn></msub><mi>P</mi><msub><mi>O</mi><mn>2</mn></msub></math><br>2.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>H</mi><mn>3</mn></msub><mi>P</mi><msub><mi>O</mi><mn>3</mn></msub></math><br>3.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>H</mi><mn>3</mn></msub><mi>P</mi><msub><mi>O</mi><mn>4</mn></msub></math><br>4.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>H</mi><mn>4</mn></msub><msub><mi>P</mi><mn>2</mn></msub><msub><mi>O</mi><mn>7</mn></msub></math></p>
-<quillbot-extension-portal></quillbot-extension-portal><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>113.</b></span> <p style="display:inline" style="display:inline">Beans get cooked earlier in a pressure cooker, because:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>The boiling point increases with increasing pressure</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>The boiling point decreases with increasing pressure</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>The extra pressure of the pressure cooker softens the beans</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Internal energy is not lost while cooking in a pressure&nbsp;cooker</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>114.</b></span> <p style="display:inline" style="display:inline">Which of the following compounds undergoes nucleophilic substitution reaction most easily?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><img src="https://d2f8z173p7073l.cloudfront.net/1624358015873" style="width: 72px; height: 50px;" /></td>
-			<td>2.</td>
-			<td><img src="https://d2f8z173p7073l.cloudfront.net/1624358033697" style="width: 100px; height: 50px;" /></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><img src="https://d2f8z173p7073l.cloudfront.net/1624358070056" style="width: 39px; height: 80px;" /></td>
-			<td>4.</td>
-			<td><img src="https://d2f8z173p7073l.cloudfront.net/1624358078710" style="width: 47px; height: 80px;" /></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>115.</b></span> <p style="display:inline" style="display:inline">Which of the following statements is incorrect?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>NaHCO<sub>3</sub> on heating gives Na<sub>2</sub>CO<sub>3.</sub></td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Pure sodium metal dissolves in liquid ammonia to give a blue solution.</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>NaOH reacts with glass to give sodium silicate.</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Aluminium reacts with excess NaOH to give Al(OH)<sub>3</sub>.</td>
-		</tr>
-	</tbody>
-</table>
-
-
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>116.</b></span> <p style="display:inline" style="display:inline"><img src="https://d2f8z173p7073l.cloudfront.net/1658918533923" style="width: 168px; height: 40px;" /><br />
-For the above-given reaction, A (Predominantly) is:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><img src="https://d2f8z173p7073l.cloudfront.net/1658918543275" style="width: 150px; height: 50px;" /></td>
-			<td>2.</td>
-			<td><img src="https://d2f8z173p7073l.cloudfront.net/1658918553971" style="width: 120px; height: 80px;" /></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><img src="https://d2f8z173p7073l.cloudfront.net/1658918575990" style="width: 150px; height: 50px;" /></td>
-			<td>4.</td>
-			<td><img src="https://d2f8z173p7073l.cloudfront.net/1658918590816" style="width: 144px; height: 45px;" /></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>117.</b></span> <p style="display:inline" style="display:inline">The incorrect statement among the following regarding the primary amine is:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Alkyl amines are stronger bases than&nbsp;aryl amines</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Alkyl amines react with nitrous acid&nbsp;to produce alcohols</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Aryl amines react with nitrous acid to&nbsp;produce phenols</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Alkyl amines are stronger bases than ammonia</td>
-		</tr>
-	</tbody>
-</table>
-<quillbot-extension-portal></quillbot-extension-portal><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>118.</b></span> If radius of second Bohr orbit of the&nbsp;<span class="math-tex">\(He^+\)</span>&nbsp;ion is 105.8 pm, what is the radius of third Bohr orbit of&nbsp;<span class="math-tex">\(Li^{2+}\)</span>&nbsp;ion?&nbsp;
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>158.7&nbsp;&Aring;</td>
-			<td>2.</td>
-			<td>158.7 pm&nbsp;</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>15.87 pm&nbsp;</td>
-			<td>4.</td>
-			<td>1.587 pm</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>119.</b></span> <p style="display:inline" style="display:inline">Among the given complex, the complex having the highest paramagnetic behaviour is:<br />
-(At. No. Ti = 22, Cr = 24, Co = 27, Zn = 30)<br>1.&nbsp;<math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mfenced close="]" open="["><mrow><mi>Zn</mi><msub><mfenced><msub><mi>NH</mi><mn>3</mn></msub></mfenced><mn>6</mn></msub></mrow></mfenced><mrow><mn>2</mn><mo>+</mo></mrow></msup></math><br>2.&nbsp;<math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mfenced close="]" open="["><mrow><mi>Ti</mi><msub><mfenced><msub><mi>NH</mi><mn>3</mn></msub></mfenced><mn>6</mn></msub></mrow></mfenced><mrow><mn>3</mn><mo>+</mo></mrow></msup></math><br>3.&nbsp;<math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mfenced close="]" open="["><mrow><mi>Cr</mi><msub><mfenced><msub><mi>NH</mi><mn>3</mn></msub></mfenced><mn>6</mn></msub></mrow></mfenced><mrow><mn>3</mn><mo>+</mo></mrow></msup></math><br>4.&nbsp;<math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mfenced close="]" open="["><mrow><mi>Co</mi><msub><mfenced><msub><mi>NH</mi><mn>3</mn></msub></mfenced><mn>6</mn></msub></mrow></mfenced><mrow><mn>3</mn><mo>+</mo></mrow></msup></math></p>
-
-
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>120.</b></span> <p style="display:inline" style="display:inline">Among the following, the most characteristic oxidation states for lead and tin are, respectively:<br>1. +4, +2<br>2. +2, +4<br>3. +4, +4<br>4. +2, +2</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>121.</b></span> The standard cell potential of the following cell <span class="math-tex">\(\mathrm{{Zn}\left|{Zn}^{2+}({aq}) \| {Fe}^{2+}({aq})\right| {Fe}~\text{ is }~0.32 {~V}}.\)</span> Calculate the standard Gibbs energy change for the reaction:<br />
-<span class="math-tex">\(\mathrm{{Zn}({s})+{Fe}^{2+}({aq}) \rightarrow {Zn}^{2+}({aq})+{Fe}({s})}\)</span><br>
-(Given : <span class="math-tex">\(1 \mathrm{~F}=96487 \mathrm{C} mol^{-1}\)</span>)
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><span class="math-tex">\(-61.75 \mathrm{{~kJ} {~mol}}^{-1}\)</span></td>
-			<td>2.</td>
-			<td><span class="math-tex">\(+5.006 \mathrm{{~kJ} {~mol}}^{-1}\)</span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span class="math-tex">\(-5.006 \mathrm{{~kJ} {~mol}}^{-1}\)</span></td>
-			<td>4.</td>
-			<td><span class="math-tex">\(+61.75 \mathrm{{~kJ} {~mol}}^{-1}\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>122.</b></span> <p style="display:inline" style="display:inline">The correct order of acidity among the following is:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><span class="math-tex">\(\mathrm{CH \equiv CH &gt; CH_3 - C \equiv CH }\)</span><br />
-			<span class="math-tex">\(\mathrm{ &gt; CH_2 = CH_2 &gt; CH_3 - CH_3}\)</span></td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td><span class="math-tex">\(\mathrm{CH \equiv CH &gt; CH_2 = CH_2 }\)</span><br />
-			<span class="math-tex">\(\mathrm{ &gt; CH_3 - C \equiv CH &gt; CH_3 - CH_3}\)</span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span class="math-tex">\(\mathrm{CH_3 - CH_3 &gt; CH_2 = CH_2 }\)</span><br />
-			<span class="math-tex">\(\mathrm{ &gt; CH_3 - C \equiv CH &gt; CH \equiv CH }\)</span></td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td><span class="math-tex">\(\mathrm{ CH_2 = CH_2 &gt; CH_3 - CH_3 }\)</span><br />
-			<span class="math-tex">\(\mathrm{ &gt; CH_3 - C \equiv CH &gt; CH \equiv CH}\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<quillbot-extension-portal></quillbot-extension-portal><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>123.</b></span> <p style="display:inline" style="display:inline">Match each item in Column I with one in Column II and select the correct match from the codes given</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td><strong>List-I</strong></td>
-			<td></td>
-			<td><strong>List-II</strong></td>
-		</tr>
-		<tr>
-			<td>(a)</td>
-			<td>Separation of aniline-water mixture</td>
-			<td>(i)</td>
-			<td>Fractional distillation</td>
-		</tr>
-		<tr>
-			<td>(b)</td>
-			<td>Separation of aniline-chloroform mixture</td>
-			<td>(ii)</td>
-			<td>Distillation under reduced pressure</td>
-		</tr>
-		<tr>
-			<td>(c)</td>
-			<td>Separation of glycerol from spent-lye</td>
-			<td>(iii)</td>
-			<td>Distillation</td>
-		</tr>
-		<tr>
-			<td>(d)</td>
-			<td>Separation of different fractions of crude oil</td>
-			<td>(iv)</td>
-			<td>Steam distillation</td>
-		</tr>
-	</tbody>
-</table>
-<br />
-Codes:
-<table>
-	<tbody>
-		<tr>
-			<td></td>
-			<td style="text-align: center;"><strong>(a)</strong></td>
-			<td style="text-align: center;"><strong>(b)</strong></td>
-			<td style="text-align: center;"><strong>(c)</strong></td>
-			<td style="text-align: center;"><strong>(d)</strong></td>
-		</tr>
-		<tr>
-			<td>1.</td>
-			<td style="text-align: center;">(i)</td>
-			<td style="text-align: center;">(iii)</td>
-			<td style="text-align: center;">(ii)</td>
-			<td style="text-align: center;">(iv)</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td style="text-align: center;">(iv)</td>
-			<td style="text-align: center;">(i)</td>
-			<td style="text-align: center;">(iii)</td>
-			<td style="text-align: center;">(ii)</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td style="text-align: center;">(iv)</td>
-			<td style="text-align: center;">(ii)</td>
-			<td style="text-align: center;">(iii)</td>
-			<td style="text-align: center;">(i)</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td style="text-align: center;">(iv)</td>
-			<td style="text-align: center;">(iii)</td>
-			<td style="text-align: center;">(ii)</td>
-			<td style="text-align: center;">(i)</td>
-		</tr>
-	</tbody>
-</table>
-<quillbot-extension-portal></quillbot-extension-portal><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>124.</b></span> 1.0 g of&nbsp;<span class="math-tex">\(H_2\)</span>&nbsp;has same number of molecules as in:
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>14 g of&nbsp;<span class="math-tex">\(N_2\)</span></td>
-			<td>2.</td>
-			<td>18 g of&nbsp;<span class="math-tex">\(H_2O\)</span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>16 g of CO&nbsp;</td>
-			<td>4.</td>
-			<td>28 g of&nbsp;<span class="math-tex">\(N_2\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>125.</b></span> <p style="display:inline" style="display:inline">The reaction A &rarr; B follows first-order kinetics. The time taken for 0.8 mol of A to produce 0.6 mol of B is 1 hour. The time taken for the conversion of 0.9 mol of A to produce 0.675 mol of B will be:&nbsp;</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>1 hour</td>
-			<td>2.</td>
-			<td>0.5 hour</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>0.25 hour</td>
-			<td>4.</td>
-			<td>2 hour</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>126.</b></span> <p style="display:inline" style="display:inline">The strongest acid among the following compounds is:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>HClO<sub>3</sub></td>
-			<td>2.</td>
-			<td>HClO<sub>4</sub></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>H<sub>2</sub>SO<sub>3</sub></td>
-			<td>4.</td>
-			<td>H<sub>2</sub>SO<sub>4</sub></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>127.</b></span> <p style="display:inline" style="display:inline">A compound that gives a positive Fehling solution test<span style="white-space:nowrap;"> is:&nbsp;</span></p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Sucrose</td>
-			<td>2.</td>
-			<td>Glucose</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Fats</td>
-			<td>4.</td>
-			<td>Protein</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>128.</b></span> <p style="display:inline" style="display:inline">Best description of the behavior of bromine in the reaction given below is:<br><math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi mathvariant="normal">H</mi><mn>2</mn></msub><mi mathvariant="normal">O</mi><mo>+</mo><msub><mi>Br</mi><mn>2</mn></msub><mo stretchy="false">&rarr;</mo><mi>HOBr</mi><mo>+</mo><mi>HBr</mi></math><br>1. Both oxidized and reduced<br>2. Oxidized only<br>3. Reduced only<br>4. Proton acceptor only</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>129.</b></span> The incorrect statement among the following regarding interstitial compounds is:<br />
-1. They are chemically reactive.<br />
-2. They are much harder than the pure metal.<br />
-3. They have a higher melting point than pure metals.<br />
-4. They retain metallic conductivity.<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>130.</b></span> Amongst the following, which one will have maximum &#39;lone pair - lone pair&#39; electron repulsions?&nbsp;<br>
-1.&nbsp;<span class="math-tex">\(\mathrm{XeF_2}\)</span><br />
-2.&nbsp;<span class="math-tex">\(\mathrm{CIF_3}\)</span><br />
-3.&nbsp;<span class="math-tex">\(\mathrm{IF_5}\)</span><br />
-4.&nbsp;<span class="math-tex">\(\mathrm{SF_4}\)</span><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>131.</b></span> <p style="display:inline" style="display:inline">For which one of the following equations is <math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mo>∆</mo><mi mathvariant="normal">H</mi><msub><mo>&deg;</mo><mi>reaction</mi></msub></math> equal to <math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mo>∆</mo><mi mathvariant="normal">H</mi><msub><mo>&deg;</mo><mi mathvariant="normal">formation</mi></msub></math> for the product:<br>1. N<sub>2</sub>(g) + O<sub>3</sub>(g) &rarr; N<sub>2</sub>O<sub>3</sub>(g)<br>2. CH<sub>4</sub>(g) + 2Cl<sub>2</sub>(g) &rarr; CH<sub>2</sub>Cl<sub>2</sub>(l) + 2HCl(g)<br>3. Xe(g) + 2F<sub>2</sub>(g) &rarr; XeF<sub>4</sub>(g)<br>4. 2CO(g) + O<sub>2</sub>(g) &rarr; 2CO<sub>2</sub>(g)</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>132.</b></span> <p style="display:inline" style="display:inline">The major organic product formed from the following reaction<br><img height="89" src="https://d2f8z173p7073l.cloudfront.net/1661840898487" width="261" />is:<br />
-&nbsp;</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><img height="83" src="https://d2f8z173p7073l.cloudfront.net/1661841150304" width="115" /></td>
-			<td>2.</td>
-			<td><img height="80" src="https://d2f8z173p7073l.cloudfront.net/1661841272082" width="117" /></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><img height="76" src="https://d2f8z173p7073l.cloudfront.net/1661841374755" width="117" /></td>
-			<td>4.</td>
-			<td><img height="72" src="https://d2f8z173p7073l.cloudfront.net/1661841443278" width="149" /></td>
-		</tr>
-	</tbody>
-</table>
-
-
-<quillbot-extension-portal></quillbot-extension-portal><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>133.</b></span> Identify the correct reagents that would bring about the following transformation.<br />
-<img src="https://dsbihjlymzdyy.cloudfront.net/question-assets/key__2024-09-08%2006%3A52%3A46%20%2B0000image.png" style="width: 150px; height: 111px;" />
-<table>
-	<tbody>
-		<tr>
-			<td>1.&nbsp;</td>
-			<td><span class="math-tex">\(\text { (i) } \mathrm{BH}_3\)</span></td>
-			<td>2.</td>
-			<td><span class="math-tex">\(\text { (i) } \mathrm{BH}_3\)</span></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><span class="math-tex">\((ii) \mathrm{H}_2 \mathrm{O}_2 / \stackrel{\ominus}{\mathrm{OH}}\)</span></td>
-			<td></td>
-			<td><span class="math-tex">\((ii) \mathrm{H}_2 \mathrm{O}_2 / \stackrel{\ominus}{\mathrm{OH}}\)</span></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><span class="math-tex">\(\text { (iii) } \mathrm{P C C}\)</span></td>
-			<td></td>
-			<td><span class="math-tex">\(\text { (iii) alk. } \mathrm{KMnO}_4\)</span></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td><span class="math-tex">\(\text { (iv) } \mathrm{H}_3 \mathrm{O}^{+}\)</span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span class="math-tex">\(\text { (i) } \mathrm{H}_2 \mathrm{O} / \mathrm{H}^{+}\)</span></td>
-			<td>4.</td>
-			<td><span class="math-tex">\(\text { (i) } \mathrm{H}_2 \mathrm{O} / \mathrm{H}^{+}\)</span></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><span class="math-tex">\(\text { (ii) } \mathrm{P C C}\)</span></td>
-			<td></td>
-			<td><span class="math-tex">\(\text { (ii) } \mathrm{CrO}_3\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>134.</b></span> <p style="display:inline" style="display:inline">Nitrogen form <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>N</mi><mn>2</mn></msub></math>, but phosphorous&nbsp; form <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>P</mi><mn>2</mn></msub></math>, it&#39;s at a time convert in <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>P</mi><mn>4</mn></msub></math>, reason is:<br>1. Triple bond present between phosphorous atoms.&nbsp;<br />
-2.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">p</mi><mi mathvariant="normal">&pi;</mi><mo>-</mo><mi>p</mi><mi mathvariant="normal">&pi;</mi></math>&nbsp;bonding is weak in phosphorous.<br />
-3.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">p</mi><mi mathvariant="normal">&pi;</mi><mo>-</mo><mi>p</mi><mi mathvariant="normal">&pi;</mi></math>&nbsp;bonding is strong in phosphorous.<br />
-4. Multiple bonds easily form phosphorous.</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>135.</b></span> <p style="display:inline" style="display:inline">A solution has a 1:4 mole ratio of pentane to hexane.<br />
-The vapor pressures of the pure hydrocarbons at 20 &ordm;C are<br />
-440 mm Hg for pentane and 120 mm Hg for hexane.<br />
-The mole fraction of pentane in the vapor phase would be:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>0.200</td>
-			<td>2.</td>
-			<td>0.478</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>0.949</td>
-			<td>4.</td>
-			<td>0.786</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-            <div style="width: 100%; margin: auto; text-align: center; font-size: 32px;"><b>Physics</b></div>
-          <span class="questionId" style="vertical-align: top;"><b>136.</b></span> Three capacitors, each of capacitance&nbsp;<span class="math-tex">\(0.3~\mu \text{F}\)</span> are connected in parallel. This combination is connected with another capacitor of capacitance&nbsp;<span class="math-tex">\(0.1~\mu \text{F}\)</span> in series. Then the equivalent capacitance of the combination is:<br />
-1. <span id="cke_bm_648S" style="display: none;">&nbsp;</span><span class="math-tex">\(0.9~\mu\text{F}\)</span><br />
-2. <span id="cke_bm_932S" style="display: none;">&nbsp;</span><span class="math-tex">\(0.09~\mu\text{F}\)</span><br />
-3. <span id="cke_bm_1250S" style="display: none;">&nbsp;</span><span class="math-tex">\(0.1~\mu\text{F}\)</span><br />
-4. <span id="cke_bm_1593S" style="display: none;">&nbsp;</span><span class="math-tex">\(0.01~\mu\text{F}\)</span><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>137.</b></span> <p style="display:inline" style="display:inline">The figure shows a logic circuit with two inputs <span class="math-tex">\(A\)</span> and <span class="math-tex">\(B\)</span> and the output <span class="math-tex">\(C\)</span>. The voltage waveforms across <span class="math-tex">\(A\)</span>, <span class="math-tex">\(B\)</span>, and <span class="math-tex">\(C\)</span> are as given. The logic circuit gate is:<br />
-<strong>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</strong>&nbsp;<img src="https://dsbihjlymzdyy.cloudfront.net/question-assets/key__2024-10-02%2010%3A57%3A17%20%2B0000image.png" style="width: 250px; height: 220px;" /><br>1. <span class="math-tex">\(\text{OR}\)</span> gate<br />
-2. <span class="math-tex">\(\text{NOR}\)</span> gate<br />
-3. <span class="math-tex">\(\text{AND}\)</span> gate<br />
-4. <span class="math-tex">\(\text{NAND}\)</span> gate</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>138.</b></span> Two transparent media <span class="math-tex">\({A}\)</span> and <span class="math-tex">\({B}\)</span> are separated by a plane boundary. The speeds of light in those media are <span class="math-tex">\(1.5\times 10^{8} \)</span> m/s and&nbsp;<span class="math-tex">\(2.0\times 10^{8} \)</span> m/s, respectively. The critical angle for a ray of light for these two media is:
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><span id="cke_bm_534S" style="display: none;">&nbsp;</span><span class="math-tex">\(\text{tan}^{-1}(0.750)\)</span></td>
-			<td>2.</td>
-			<td><span id="cke_bm_702S" style="display: none;">&nbsp;</span><span class="math-tex">\(\text{sin}^{-1}(0.500)\)</span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span id="cke_bm_883S" style="display: none;">&nbsp;</span><span class="math-tex">\(\text{sin}^{-1}(0.750)\)</span></td>
-			<td>4.</td>
-			<td><span id="cke_bm_1020S" style="display: none;">&nbsp;</span><span class="math-tex">\(\text{tan}^{-1}(0.500)\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>139.</b></span> <p style="display:inline" style="display:inline">Fission of nuclei is possible because the binding energy per nucleon in them:<br />
-&nbsp;</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>decreases with the mass number at low mass numbers</td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>increases with the mass number at low mass numbers</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>decreases with the mass number at high mass numbers</td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>increases with the mass number at high mass numbers</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>140.</b></span> One coolie&nbsp;takes <span class="math-tex">\(1\)</span> minute to raise a suitcase through a height of <span class="math-tex">\(2~\text m\)</span>&nbsp;but the second coolie takes <span class="math-tex">\(30~\text s\)</span>&nbsp;to raise the same suitcase to the same height. The powers of two coolies are in the ratio:<br />
-1.&nbsp;<span class="math-tex">\(1:3\)</span><br />
-2.&nbsp;<span class="math-tex">\(2:1\)</span><br />
-3.&nbsp;<span class="math-tex">\(3:1\)</span><br />
-4.&nbsp;<span class="math-tex">\(1:2\)</span><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>141.</b></span> <p style="display:inline" style="display:inline">One mole of an ideal monatomic gas undergoes a process described by the equation&nbsp;<span class="math-tex">\(PV^3=\text{constant}.\)</span>&nbsp;The heat capacity of the gas during this process is:<br />
-1.&nbsp;<span class="math-tex">\(\frac{3}{2}R\)</span><br />
-2.&nbsp;<span class="math-tex">\(\frac{5}{2}R\)</span><br />
-3.&nbsp;<span class="math-tex">\(2R\)</span><br />
-4.&nbsp;<span class="math-tex">\(R\)</span></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>142.</b></span> <p style="display:inline" style="display:inline">The total energy of an electron in the first excited state of a hydrogen atom is about <span class="math-tex">\(-3.4~\text{eV}.\)</span> Its kinetic energy in this state will be:<br />
-1.&nbsp;<span class="math-tex">\(-6.8~\text{eV}\)</span><br />
-2.&nbsp;<span class="math-tex">\(3.4~\text{eV}\)</span><br />
-3.&nbsp;<span class="math-tex">\(6.8~\text{eV}\)</span><br />
-4.&nbsp;<span class="math-tex">\(-3.4~\text{eV}\)</span></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>143.</b></span> <p style="display:inline" style="display:inline">The mean free path for a gas, with molecular diameter <span class="math-tex">\(d\)</span> and number density <span class="math-tex">\(n,\)</span> can be expressed as:<br />
-1.&nbsp;<span class="math-tex">\( \dfrac{1}{\sqrt{2} n \pi {d}^2} \)</span><br>
-2.&nbsp;<span class="math-tex">\( \dfrac{1}{\sqrt{2} n^2 \pi {d}^2} \)</span><br>
-3.&nbsp;<span class="math-tex">\(\dfrac{1}{\sqrt{2} n^2 \pi^2 d^2} \)</span><br>
-4.&nbsp;<span class="math-tex">\( \dfrac{1}{\sqrt{2} n \pi {d}}\)</span></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>144.</b></span> <p style="display:inline" style="display:inline">A <span class="math-tex">\(800\)</span> turn coil of effective area&nbsp;<span class="math-tex">\(0.05~\text{m}^2\)</span>&nbsp;is kept perpendicular to a magnetic field <span class="math-tex">\(5\times 10^{-5}~\text{T}\)</span>. When the plane of the coil is rotated by <span class="math-tex">\(90^{\circ}\)</span><math xmlns="http://www.w3.org/1998/Math/MathML"><mo></mo></math>around any of its coplanar axis in <span class="math-tex">\(0.1~\text{s}\)</span>, the emf induced in the coil will be:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><span class="math-tex">\(0.02~\text{V}\)</span></td>
-			<td>2.</td>
-			<td><span class="math-tex">\(2~\text{V}\)</span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span class="math-tex">\(0.2~\text{V}\)</span></td>
-			<td>4.</td>
-			<td><span class="math-tex">\(2\times 10^{-3}~\text{V}\)</span></td>
-		</tr>
-	</tbody>
-</table><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>145.</b></span> <p style="display:inline" style="display:inline">The speed of a projectile at its maximum height is half of its initial speed. The angle of projection is:<br />
-1.&nbsp;<span class="math-tex">\(15^{\circ}\)</span><br />
-2.&nbsp;<span class="math-tex">\(30^{\circ}\)</span><br />
-3.&nbsp;<span class="math-tex">\(45^{\circ}\)</span><br />
-4.&nbsp;<span class="math-tex">\(60^{\circ}\)</span></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>146.</b></span> <p style="display:inline" style="display:inline">Five equal resistances each of resistance <span class="math-tex">\(R\)</span> are connected as shown in the figure below. A battery of <span style="white-space:nowrap;"><span class="math-tex">\(V\)</span> volts</span> is connected between <span class="math-tex">\(A\)</span> and <span class="math-tex">\(B\)</span>. The current flowing in <span class="math-tex">\(AFCEB\)</span> will be:<br>&nbsp; &nbsp; &nbsp;  <img src="https://dsbihjlymzdyy.cloudfront.net/question-assets/key__2024-07-14%2011%3A21%3A36%20%2B0000image.png" style="width: 220px; height: 202px;" /><br />
-1.&nbsp;<span class="math-tex">\(\frac{V}{R}\)</span><br />
-2.&nbsp;<span class="math-tex">\(\frac{V}{2R}\)</span><br />
-3.&nbsp;<span class="math-tex">\(\frac{2V}{R}\)</span><br />
-4.&nbsp;<span class="math-tex">\(\frac{3V}{R}\)</span></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>147.</b></span> <p style="display:inline" style="display:inline">Resistance of a Galvanometer coil is <span class="math-tex">\(8~\Omega\)</span> and <span class="math-tex">\(2~\Omega\)</span> shunt resistance is connected with it. If main current is <span class="math-tex">\(1\)</span> A then the current flow through <span class="math-tex">\(2~\Omega\)</span> resistance will be:<br />
-1. <span class="math-tex">\(0.2\)</span> A<br />
-2. <span class="math-tex">\(0.8\)</span> A<br />
-3. <span class="math-tex">\(0.1\)</span> A<br />
-4. <span class="math-tex">\(0.4\)</span> A</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>148.</b></span> The maximum elongation of a steel wire of <span class="math-tex">\(1~\text m\)</span> length if the elastic limit of steel and its Young&#39;s modulus, respectively, are <span class="math-tex">\(8 × 10^8 ~\text{N m}^{-2 }\)</span>&nbsp;and <span class="math-tex">\(2 × 10^{11} ~\text{N m}^{-2},\)</span>&nbsp;is:<br />
-1. <span class="math-tex">\(0.4~\text{mm}\)</span><br />
-2. <span class="math-tex">\(40~\text{mm}\)</span><br />
-3. <span class="math-tex">\(8~\text{mm}\)</span><br />
-4. <span class="math-tex">\(4~\text{mm}\)</span><br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>149.</b></span> The ratio of radii of gyration of a circular ring and a circular disc, of the same mass and radius, about an axis passing through their centres and perpendicular to their planes are:
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><span class="math-tex">\(1 : \sqrt 2\)</span></td>
-			<td>2.</td>
-			<td><span class="math-tex">\(3:2\)</span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span class="math-tex">\(2:1\)</span></td>
-			<td>4.</td>
-			<td><span class="math-tex">\( \sqrt 2 : 1 \)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>150.</b></span> <p style="display:inline" style="display:inline">A block of mass <span class="math-tex">\(m\)</span> is placed on a smooth inclined wedge <span class="math-tex">\(ABC\)</span> of inclination&nbsp;<span class="math-tex">\(\theta\)</span>&nbsp;as shown in the figure. The wedge is given an acceleration &#39;<span class="math-tex">\(a\)</span>&#39; towards the right. The relation between <span class="math-tex">\(a\)</span> and <span class="math-tex">\(\theta\)</span>&nbsp;for the block to remain stationary on the wedge is:<br />
-&nbsp; &nbsp; &nbsp; &nbsp;  <img src="https://d2f8z173p7073l.cloudfront.net/1708171593889" style="width: 151px; height: 108px;" /><br />
-1.&nbsp;<span class="math-tex">\(a = \dfrac{g}{\mathrm{cosec }~ \theta}\)</span><br />
-2.&nbsp;<span class="math-tex">\(a = \dfrac{g}{\sin\theta}\)</span><br />
-3.&nbsp;<span class="math-tex">\(a = g\cos\theta\)</span><br />
-4.&nbsp;<span class="math-tex">\(a = g\tan\theta\)</span></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>151.</b></span> <p style="display:inline" style="display:inline">Three forces acting on a body are shown in the figure. To have the resultant force only along the y-direction, the magnitude of the minimum additional force needed is:<br />
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; <img height="219" src="https://d2f8z173p7073l.cloudfront.net/1658821155943" width="224" /><br>1.&nbsp;&nbsp;<math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn><mo>.</mo><mn>5</mn></math>&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">N</mi></math><br>2.&nbsp;&nbsp;<math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo>.</mo><mn>5</mn></math>&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">N</mi></math><br>3.&nbsp;&nbsp;<math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><msqrt><mn>3</mn></msqrt><mn>4</mn></mfrac></math>&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">N</mi></math><br>4.&nbsp;&nbsp;<math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><msqrt><mn>3</mn></msqrt></math>&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">N</mi></math></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>152.</b></span> <p style="display:inline" style="display:inline">A body weighs <span class="math-tex">\(72~\text{N}\)</span> on the surface of the earth. What is the gravitational force on it at a height equal to half the radius of the earth?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td style="width: 7%;">1.</td>
-			<td style="width: 43%;"><span class="math-tex">\(32~\text{N}\)</span></td>
-			<td style="width: 7%;">2.</td>
-			<td style="width: 43%;"><span class="math-tex">\(30~\text{N}\)</span></td>
-		</tr>
-		<tr>
-			<td style="width: 7%;">3.</td>
-			<td style="width: 43%;"><span class="math-tex">\(24~\text{N}\)</span></td>
-			<td style="width: 7%;">4.</td>
-			<td style="width: 43%;"><span class="math-tex">\(48~\text{N}\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>153.</b></span> <p style="display:inline" style="display:inline">A student measures the distance traversed in free fall of a body, initially at rest in a given time. He uses this data to estimate <span class="math-tex">\(g,\)</span> the acceleration due to gravity. If the maximum percentage errors in the measurement of the distance and the time are <span class="math-tex">\(e_1\)</span><sub>&nbsp;</sub>and <span class="math-tex">\(e_2\)</span> respectively, the percentage error in the estimation of <span class="math-tex">\(g\)</span> is:<br />
-1.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub><mo>+</mo><mn>2</mn><msub><mi>e</mi><mn>2</mn></msub></math><br />
-2.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub><mo>+</mo><msub><mi>e</mi><mn>2</mn></msub></math><br />
-3.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub><mo>-</mo><mn>2</mn><msub><mi>e</mi><mn>2</mn></msub></math><br />
-4.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>2</mn></msub><mo>-</mo><msub><mi>e</mi><mn>1</mn></msub></math></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>154.</b></span> <p style="display:inline" style="display:inline">Gravitational force is required for:<br />
-1. stirring of liquid<br />
-2. convection<br />
-3. conduction<br />
-4. radiation</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>155.</b></span> <p style="display:inline" style="display:inline">The approximate depth of an ocean is <span class="math-tex">\(2700~\text{m}\)</span>. The compressibility of water is <span class="math-tex">\(45.4\times10^{-11}~\text{Pa}^{-1}\)</span>&nbsp;and the density of water is <span class="math-tex">\(10^{3}~\text{kg/m}^3\)</span>. What fractional compression of water will be obtained at the bottom of the ocean?<br />
-1. <span class="math-tex">\(0.8\times 10^{-2}\)</span><br />
-2.&nbsp;<span class="math-tex">\(1.0\times 10^{-2}\)</span><br />
-3.&nbsp;<span class="math-tex">\(1.2\times 10^{-2}\)</span><br />
-4.&nbsp;<span class="math-tex">\(1.4\times 10^{-2}\)</span></p>
-
-
-
-
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>156.</b></span> A coil has a resistance of <span class="math-tex">\(30~ \text{ohm}\)</span> and inductive reactance of <span class="math-tex">\(20 ~\text{ohm}\)</span> at a <span class="math-tex">\(50~\text{Hz}\)</span> frequency. If an <span class="math-tex">\(AC\)</span> source of <span class="math-tex">\(200~\text{volts,}\)</span> <span class="math-tex">\(100~\text{Hz}\)</span> is connected across the coil, the current in the coil will be:
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><span class="math-tex">\(2.0~\text{A}\)</span></td>
-			<td>2.</td>
-			<td><span class="math-tex">\(4.0~\text{A}\)</span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span class="math-tex">\(8.0~\text{A}\)</span></td>
-			<td>4.</td>
-			<td><span class="math-tex">\(20/\sqrt{13}~\text{A}\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>157.</b></span> <p style="display:inline" style="display:inline">The phase difference between the instantaneous velocity and acceleration of a particle executing simple harmonic motion is:<br />
-1. 0.5<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">&pi;</mi></math><br />
-2.&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">&pi;</mi></math><br />
-3. 0.707<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">&pi;</mi></math><br />
-4. zero</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>158.</b></span> The best suited curve showing the variations of susceptibility (<span class="math-tex">\(\chi\)</span>) of a paramagnetic material in free space with temperature (<span class="math-tex">\(T\)</span>) is:&nbsp;
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>&nbsp;<img src="https://dsbihjlymzdyy.cloudfront.net/question-assets/key__2024-05-08%2013%3A14%3A09%20%2B0000image.png" style="width: 110px; height: 109px;" /></td>
-			<td>2.</td>
-			<td><img src="https://dsbihjlymzdyy.cloudfront.net/question-assets/key__2024-05-08%2013%3A14%3A21%20%2B0000image.png" style="width: 110px; height: 109px;" /></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><img src="https://dsbihjlymzdyy.cloudfront.net/question-assets/key__2024-05-08%2013%3A14%3A53%20%2B0000image.png" style="width: 110px; height: 109px;" /></td>
-			<td>4.</td>
-			<td><img src="https://dsbihjlymzdyy.cloudfront.net/question-assets/key__2024-05-08%2013%3A14%3A36%20%2B0000image.png" style="width: 110px; height: 109px;" /></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>159.</b></span> <p style="display:inline" style="display:inline">A linear aperture whose width is <span class="math-tex">\(0.02\)</span> cm is placed immediately in front of a lens of focal length <span class="math-tex">\(60\)</span> cm. The aperture is illuminated normally by a parallel beam of wavelength <span class="math-tex">\(5\times 10^{-5}\)</span> cm. The distance of the first dark band of the diffraction pattern from the centre of the screen is:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td style="width: 7%;">1.</td>
-			<td style="width: 43%;"><span class="math-tex">\( 0.10 \)</span> cm</td>
-			<td style="width: 7%;">2.</td>
-			<td style="width: 43%;"><span class="math-tex">\( 0.25 \)</span> cm</td>
-		</tr>
-		<tr>
-			<td style="width: 7%;">3.</td>
-			<td style="width: 43%;"><span class="math-tex">\( 0.20 \)</span> cm</td>
-			<td style="width: 7%;">4.</td>
-			<td style="width: 43%;"><span class="math-tex">\( 0.15\)</span> cm</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>160.</b></span> <p style="display:inline" style="display:inline">A stone falls freely under gravity. It covers distances <span class="math-tex">\(h_1,~h_2\)</span>&nbsp;and <span class="math-tex">\(h_3\)</span>&nbsp;in the first <span class="math-tex">\(5\)</span> seconds, the next <span class="math-tex">\(5\)</span> seconds and the next <span class="math-tex">\(5\)</span> seconds respectively. The relation between <span class="math-tex">\(h_1,~h_2\)</span> and <span class="math-tex">\(h_3\)</span>&nbsp;is:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><span class="math-tex">\(h_1=\frac{h_2}{3}=\frac{h_3}{5}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)</span></td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td><span class="math-tex">\(h_2=3h_1\)</span>&nbsp;and&nbsp;<span class="math-tex">\(h_3=3h_2\)</span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span class="math-tex">\(h_1=h_2=h_3\)</span></td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td><span class="math-tex">\(h_1=2h_2=3h_3\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>161.</b></span> <p style="display:inline" style="display:inline">A <span class="math-tex">\(200~\text{W}\)</span> sodium street lamp emits yellow light of wavelength <span class="math-tex">\(0.6~\mu\text{m}.\)</span><math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mi></mi></math>&nbsp;Assuming it to be <span class="math-tex">\(25\%\)</span> efficient in converting electrical energy to light, the number of photons of yellow light it emits per second is:<br />
-1.&nbsp;<span class="math-tex">\(1.5\times 10^{20}\)</span><br />
-2.&nbsp;<span class="math-tex">\(6\times 10^{18}\)</span><br />
-3.&nbsp;<span class="math-tex">\(62\times 10^{20}\)</span><br />
-4.&nbsp;<span class="math-tex">\(3\times 10^{19}\)</span></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>162.</b></span> <p style="display:inline" style="display:inline">A tuning fork of frequency <span class="math-tex">\(512~\text{Hz}\)</span>&nbsp;makes <span class="math-tex">\(4~\text{beats/s}\)</span>&nbsp;with the vibrating string of a piano. The beat frequency decreases to <span class="math-tex">\(2~\text{beats/s}\)</span>&nbsp;when the tension in the piano string is slightly increased. The frequency of the piano string before increasing the tension was:<br />
-1. <span class="math-tex">\(510~\text{Hz}\)</span>&nbsp;<br />
-2. <span class="math-tex">\(514~\text{Hz}\)</span>&nbsp;<br />
-3. <span class="math-tex">\(516~\text{Hz}\)</span>&nbsp;<br />
-4. <span class="math-tex">\(508~\text{Hz}\)</span>&nbsp;</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>163.</b></span> <p style="display:inline" style="display:inline">In an electromagnetic wave in free space, the root mean square value of the electric field is <span class="math-tex">\(E_{\text{rms}} = 6~\text{V/m}\)</span>. The peak value of the magnetic field is:<br />
-1.&nbsp;<span class="math-tex">\(2.83\times 10^{-8}~\text{T}\)</span><br />
-2.&nbsp;<span class="math-tex">\(0.70\times 10^{-8}~\text{T}\)</span><br />
-3.&nbsp;<span class="math-tex">\(4.23\times 10^{-8}~\text{T}\)</span><br />
-4.&nbsp;<span class="math-tex">\(1.41\times 10^{-8}~\text{T}\)</span></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>164.</b></span> <p style="display:inline" style="display:inline">The electric field at a distance&nbsp;<span class="math-tex">\(\frac{3R}{2}\)</span> from the centre of a charged conducting spherical shell of radius&nbsp;<span class="math-tex">\(R\)</span> is <span class="math-tex">\(E\)</span>. The electric field at a distance&nbsp;<span class="math-tex">\(\frac{R}{2}\)</span> from&nbsp;the centre of the sphere is:<br />
-1.&nbsp;<span class="math-tex">\(E\)</span><br />
-2.&nbsp;<span class="math-tex">\(\frac{E}{2}\)</span><br />
-3.&nbsp;<span class="math-tex">\(\frac{E}{3}\)</span><br />
-4. zero<br />
-&nbsp;</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>165.</b></span> <p style="display:inline" style="display:inline">A parallel plate air capacitor has capacitance&nbsp;<span class="math-tex">\(C,\)</span> the distance of separation between plates is <span class="math-tex">\(d\)</span> and potential difference <span class="math-tex">\(V\)</span> is applied between the plates. The force of attraction between the plates of the parallel plate air capacitor is:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><span class="math-tex">\(\frac{C^2V^2}{2d}\)</span></td>
-			<td>2.</td>
-			<td><span class="math-tex">\(\frac{CV^2}{2d}\)</span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span class="math-tex">\(\frac{CV^2}{d}\)</span></td>
-			<td>4.</td>
-			<td><span class="math-tex">\(\frac{C^2V^2}{2d^2}\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>166.</b></span> When the output of an OR gate is applied as input to a NOT gate, then the combination acts as a:<br />
-1.&nbsp;NAND gate<br />
-2.&nbsp;NOR gate<br />
-3.&nbsp;AND gate<br />
-4.&nbsp;OR gate<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>167.</b></span> <p style="display:inline" style="display:inline">In an astronomical telescope in normal adjustment, a straight line of length <span class="math-tex">\(L\)</span> is drawn on the inside part of the objective lens. The eye-piece forms a real image of this line. The length of this image is <span class="math-tex">\(l.\)</span> The magnification of the telescope is:<br />
-1.&nbsp;<span class="math-tex">\(\frac{L}{l}+1\)</span><br />
-2.&nbsp;<span class="math-tex">\(\frac{L}{l}-1\)</span><br />
-3.&nbsp;<span class="math-tex">\(\frac{L+1}{l-1}\)</span><br />
-4.&nbsp;<span class="math-tex">\(\frac{L}{l}\)</span></p>
-
-
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>168.</b></span> <p style="display:inline" style="display:inline"><span class="math-tex">\(M_p\)</span> denotes the mass of a proton and <span class="math-tex">\(M_n\)</span> that of a neutron. A given nucleus, of binding energy <span class="math-tex">\(B\)</span>, contains <span class="math-tex">\(Z\)</span> protons and <span class="math-tex">\(N\)</span> neutrons. The mass <span class="math-tex">\(M(N,Z)\)</span> of the nucleus is given by:<br />
-(<span class="math-tex">\(c\)</span> is the velocity of light )<br />
-1.&nbsp;<span class="math-tex">\(M(N,Z)= NM_n+ZM_p+ Bc^2\)</span><br />
-2.&nbsp;<span class="math-tex">\(M(N,Z)= NM_n+ZM_p-\frac{B}{c^2}\)</span><br />
-3.&nbsp;<span class="math-tex">\(M(N,Z)= NM_n+ZM_p+\frac{B}{c^2}\)</span><br />
-4.&nbsp;<span class="math-tex">\(M(N,Z)= NM_n+ZM_p- Bc^2\)</span></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>169.</b></span> <p style="display:inline" style="display:inline">A stationary particle explodes into two particles of masses m<sub>1</sub> and m<sub>2</sub> which move in opposite directions with velocities v<sub>1</sub> and v<sub>2</sub>. The ratio of their kinetic energies E<sub>1</sub>/E2 is:<br>1. m<sub>2</sub>/m<sub>1</sub><br>2. m<sub>1</sub>/m<sub>2</sub><br>3. 1<br>4. m<sub>1</sub>v<sub>2</sub>/m<sub>2</sub>v<sub>1</sub></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>170.</b></span> A system is taken from state&nbsp;<span class="math-tex">\(a\)</span> to&nbsp;state&nbsp;<span class="math-tex">\(c\)</span>&nbsp;by two paths&nbsp;<span class="math-tex">\(adc\)</span>&nbsp;and&nbsp;<span class="math-tex">\(abc\)</span>&nbsp;as shown in the figure. The internal energy at&nbsp;<span class="math-tex">\(a\)</span>&nbsp;is&nbsp;<span class="math-tex">\({U}_{a}=10~\text{J}.\)</span>&nbsp;Along the path&nbsp;<span class="math-tex">\(adc\)</span>&nbsp;the amount of heat absorbed&nbsp;<span class="math-tex">\(\delta Q_1=50~\text{J}\)</span>&nbsp;and the work obtained&nbsp;<span class="math-tex">\(\delta W_1=20~\text{J}\)</span>&nbsp;whereas along the path&nbsp;<span class="math-tex">\(abc\)</span>&nbsp;the heat absorbed&nbsp;<span class="math-tex">\(\delta Q_2 = 36~\text{J}.\)</span>&nbsp;The amount of work along the path&nbsp;<span class="math-tex">\(abc\)</span>&nbsp;is:&nbsp;<br />
-&nbsp; &nbsp;&nbsp; &nbsp;<img src="https://d2f8z173p7073l.cloudfront.net/1708428860200" style="width: 180px; height: 144px; margin-top: 7px; margin-bottom: 7px;" />
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><span class="math-tex">\(10~\text{J}\)</span></td>
-			<td>2.</td>
-			<td><span class="math-tex">\(12~\text{J}\)</span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span class="math-tex">\(36~\text{J}\)</span></td>
-			<td>4.</td>
-			<td><span class="math-tex">\(6~\text{J}\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>171.</b></span> <p style="display:inline" style="display:inline">For which one of the following Bohr models is not valid?</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td>Singly ionised helium atom&nbsp;<span class="math-tex">\(\big(\mathrm{He}^{+}\big).\)</span></td>
-		</tr>
-		<tr>
-			<td>2.</td>
-			<td>Deuteron atom.</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td>Singly ionised neon atom&nbsp;<span class="math-tex">\(\big(\mathrm{Ne}^{+}\big).\)</span></td>
-		</tr>
-		<tr>
-			<td>4.</td>
-			<td>Hydrogen atom.</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>172.</b></span> Three vessels of equal capacity have gases at the same temperature and pressure. The first vessel contains helium (monoatomic), the second contains fluorine (diatomic) and the third contains sulfur hexafluoride (polyatomic). The correct statement, among the following, is:
-<table>
-	<tbody>
-		<tr>
-			<td>1.&nbsp;</td>
-			<td>All vessels contain an unequal number of respective molecules.</td>
-		</tr>
-		<tr>
-			<td>2.&nbsp;</td>
-			<td>The root mean square speed of molecules is the same in all three cases.</td>
-		</tr>
-		<tr>
-			<td>3.&nbsp;</td>
-			<td>The root mean square speed of helium is the largest.</td>
-		</tr>
-		<tr>
-			<td>4.&nbsp;</td>
-			<td>The root mean square speed of sulfur hexafluoride is the largest.</td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>173.</b></span> <div style="display:inline" style="display:inline">A long solenoid has <span class="math-tex">\(1000\)</span> turns. When a current of <span style="white-space:nowrap;"><span class="math-tex">\(4~\text{A}\)</span></span> flows through it, the magnetic flux linked with each turn of the solenoid is <span class="math-tex">\(4\times 10^{-3}~\text{Wb}\)</span>. The self-inductance of the solenoid is:<br>1. <span class="math-tex">\(3~\text{H}\)</span><br>2. <span class="math-tex">\(2~\text{H}\)</span><br>3. <span class="math-tex">\(1~\text{H}\)</span><br>4.&nbsp;<span class="math-tex">\(4~\text{H}\)</span></div>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>174.</b></span> <p style="display:inline" style="display:inline">In the given figure, <span class="math-tex">\(a=15\)</span> m/s<sup>2</sup>&nbsp;represents the total acceleration of a particle moving in the clockwise direction in a circle of radius <span class="math-tex">\(R=2.5\)</span> m at a given instant of time. The speed of the particle is:<br />
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  <img src="https://d2f8z173p7073l.cloudfront.net/1708169384184" style="width: 160px; height: 154px;" /><br>1. <span class="math-tex">\(4.5\)</span> m/s<br />
-2. <span class="math-tex">\(5.0\)</span> m/s<br />
-3. <span class="math-tex">\(5.7\)</span> m/s<br />
-4. <span class="math-tex">\(6.2\)</span> m/s</p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>175.</b></span> <p style="display:inline" style="display:inline">A current of <span class="math-tex">\(2~\text{A}\)</span> flows through a <span class="math-tex">\(2~\Omega\)</span>&nbsp;resistor when connected across a battery. The same battery supplies a current of <span class="math-tex">\(0.5~\text{A}\)</span> when connected across a <span class="math-tex">\(9~\Omega\)</span>&nbsp;resistor. The internal resistance of the battery is:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><span class="math-tex">\(\dfrac{1}{3}~\Omega\)</span></td>
-			<td>2.</td>
-			<td><span class="math-tex">\(\dfrac{1}{4}~\Omega\)</span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span class="math-tex">\(1~\Omega\)</span></td>
-			<td>4.</td>
-			<td><span class="math-tex">\(0.5~\Omega\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>176.</b></span> <p style="display:inline" style="display:inline">An electron moving in a circular orbit of radius <span class="math-tex">\(r\)</span> makes <span class="math-tex">\(n\)</span> rotations per second. The magnetic field produced at the centre has a magnitude:</p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><span class="math-tex">\(\dfrac{\mu_0ne}{2\pi r}\)</span></td>
-			<td>2.</td>
-			<td>zero</td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span class="math-tex">\(\dfrac{n^2e}{r}\)</span></td>
-			<td>4.</td>
-			<td><span class="math-tex">\(\dfrac{\mu_0ne}{2r}\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>177.</b></span> <p style="display:inline" style="display:inline"><span style="font-weight: 400;">A wire of length <span class="math-tex">\(L,\)</span>&nbsp;area of cross section <span class="math-tex">\(A\)</span></span><span style="font-weight: 400;"> is hanging from a fixed support. The length of the wire changes to <span class="math-tex">\({L}_1\)</span>&nbsp;when mass <span class="math-tex">\(M\)</span> is suspended from its free end. The expression for Young&#39;s modulus is:</span></p>
-
-<table>
-	<tbody>
-		<tr>
-			<td>1.</td>
-			<td><span style="font-weight: 400;"><span class="math-tex">\(\dfrac{{Mg(L}_1-{L)}}{{AL}}\)</span></span></td>
-			<td>2.</td>
-			<td><span style="font-weight: 400;"><span style="font-weight: 400;"><span class="math-tex">\(\dfrac{{MgL}}{{AL}_1}\)</span></span></span></td>
-		</tr>
-		<tr>
-			<td>3.</td>
-			<td><span style="font-weight: 400;"><span style="font-weight: 400;"><span class="math-tex">\(\dfrac{{MgL}}{{A(L}_1-{L})}\)</span></span></span></td>
-			<td>4.</td>
-			<td><span style="font-weight: 400;"><span style="font-weight: 400;"><span style="font-weight: 400;"><span style="font-weight: 400;"><span class="math-tex">\(\dfrac{{MgL}_1}{{AL}}\)</span></span></span></span></span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>178.</b></span> <p style="display:inline" style="display:inline">Two bodies of mass <span class="math-tex">\(1\)</span> kg and <span class="math-tex">\(3\)</span> kg have position vectors&nbsp;<span class="math-tex">\(\hat{i}+2\hat{j}+\hat{k}\)</span>&nbsp;and&nbsp;<span class="math-tex">\(-3\hat{i}-2\hat{j}+\hat{k}\)</span>&nbsp;respectively. The centre of mass of this system has a position vector:<br />
-1.&nbsp;<span class="math-tex">\(-2\hat{i}+2\hat{k}\)</span><br />
-2.&nbsp;<span class="math-tex">\(-2\hat{i}-\hat{j}+\hat{k}\)</span><br />
-3.&nbsp;<span class="math-tex">\(2\hat{i}-\hat{j}-2\hat{k}\)</span><br />
-4.&nbsp;<span class="math-tex">\(-\hat{i}+\hat{j}+\hat{k}\)</span></p>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>179.</b></span> <p style="display:inline" style="display:inline">Calculate the acceleration of the block and trolly system shown in the figure. The coefficient of kinetic friction between the trolly and the surface is <span class="math-tex">\(0.05.\)</span>&nbsp;<br />
-(&nbsp;<span class="math-tex">\(g=10~\text{m/s}^2,\)</span>&nbsp;the mass of the string is negligible and no other friction exists)<br><img src="https://d2f8z173p7073l.cloudfront.net/1708172539887" style="width: 155px; height: 122px;" /></p>
-
-<table>
-	<tbody>
-		<tr>
-			<td style="width: 10%;">1.</td>
-			<td style="width: 40%;"><span class="math-tex">\( 1.25~\text{m/s}^2\)</span></td>
-			<td style="width: 10%;">2.</td>
-			<td><span class="math-tex">\( 1.50~\text{m/s}^2\)</span></td>
-		</tr>
-		<tr>
-			<td style="width: 10%;">3.</td>
-			<td style="width: 40%;"><span class="math-tex">\(1.66~\text{m/s}^2\)</span></td>
-			<td style="width: 10%;">4.</td>
-			<td><span class="math-tex">\( 1.00~\text{m/s}^2\)</span></td>
-		</tr>
-	</tbody>
-</table>
-<br><br>
-        </div>
-        <div class="dontsplit question">
-          <span class="questionId" style="vertical-align: top;"><b>180.</b></span> <p style="display:inline" style="display:inline">If the angle between the vector <math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mover><mi mathvariant="normal">A</mi><mo>&rarr;</mo></mover><mtext>&nbsp;and&nbsp;</mtext><mover><mi mathvariant="normal">B</mi><mo>&rarr;</mo></mover></math> is <span class="math-tex">\(\theta\)</span>, the value of the product <math class="wrs_chemistry" xmlns="http://www.w3.org/1998/Math/MathML"><mo>(</mo><mover><mi mathvariant="normal">B</mi><mo>&rarr;</mo></mover><mo>&times;</mo><mover><mi mathvariant="normal">A</mi><mo>&rarr;</mo></mover><mo>)</mo><mo>&sdot;</mo><mover><mi mathvariant="normal">A</mi><mo>&rarr;</mo></mover></math> is equal to:<br>1. zero<br>2. BA<sup>2</sup><span class="math-tex">\(\sin\theta \cos \theta\)</span><br>3. BA<sup>2</sup><span class="math-tex">\(\cos\theta\)</span><br>4. BA<sup>2</sup><span class="math-tex">\(\sin\theta\)</span></p>
-<br><br>
-        </div>
-          <div class="dontsplit">
-            <div>
-              <a target="_blank" href="https://www.neetprep.com/tests/omr_sheet/5767983"><h2 style="text-align: center;">Fill OMR Sheet*</h2></a>
-            </div>
-            <div>
-              *If above link doesn't work, please go to test link from where you got the pdf and fill OMR from there
-            </div>
-            <br>
-            <br>
-              <br>
-              <div class="free-trial">
-                <a target="_blank" href="https://www.neetprep.com/get-trial-course">CLICK HERE</a> to get FREE ACCESS for 2 days of ANY NEETprep course
-              </div>
-              <br>
-              <br>
-          </div>
+    <div class="loader">
+      <br><br>
+      <div class="spinner"></div>
+      <br><br>
+      <h2 style="text-align: center;">Generating PDF, please wait...</h2>
     </div>
+    <div id="printDiv" class="noprint">
+      <button id='printBtn'>Print PDF</button>
+    </div>
+    <div id="newsletterContent" style="visibility:hidden;display:block;"></div>
   </body>
 </html>
