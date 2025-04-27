@@ -7,8 +7,8 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,13 +18,16 @@
             box-sizing: border-box;
         }
 
+        main {
+            padding: 20px;
+        }
+
         .quiz-title {
             font-size: 1.5em;
             margin: 10px 0;
             color: #333;
             text-align: center;
             border: 2px solid black;
-            background-color: white;
             padding: 10px;
         }
 
@@ -35,16 +38,22 @@
             box-sizing: border-box;
         }
 
-        .subject-divider {
-            column-span: all;
-            text-align: center;
+        .subject-section {
+            break-inside: avoid;
+            page-break-inside: avoid;
+            margin-bottom: 30px;
+        }
+
+        .subject-title {
             font-size: 1.3em;
             font-weight: bold;
-            margin: 15px 0;
-            padding: 5px;
-            background-color: #e0e0e0;
+            color: #2c3e50;
+            padding: 10px;
+            background-color: #ecf0f1;
             border-radius: 5px;
+            margin-bottom: 15px;
             break-after: avoid;
+            page-break-after: avoid;
         }
 
         .question {
@@ -93,63 +102,79 @@
             margin-right: 10px;
         }
 
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+
         .action-buttons {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            display: flex;
-            gap: 10px;
             z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .print-button, .pdf-button {
+        .action-button {
             background-color: #000;
             color: white;
             padding: 10px 20px;
-            border: none;
+            border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+        }
+
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
+        }
+
+        .question-content span {
+            display: inline-block;
         }
 
         .progress-container {
-            position: fixed;
-            bottom: 70px;
-            right: 20px;
-            width: 200px;
-            background-color: white;
-            border: 1px solid #ccc;
+            width: 100%;
+            background-color: #e0e0e0;
             border-radius: 5px;
-            padding: 5px;
-            z-index: 1000;
+            margin: 20px 0;
             display: none;
         }
 
         .progress-bar {
             height: 20px;
             background-color: #4CAF50;
+            border-radius: 5px;
             width: 0%;
-            border-radius: 3px;
             transition: width 0.3s;
+            text-align: center;
+            color: white;
+            font-weight: bold;
         }
 
-        .progress-text {
+        .loading-message {
             text-align: center;
-            font-size: 0.8em;
-            margin-top: 3px;
+            font-size: 1.2em;
+            margin: 20px 0;
+            display: none;
         }
 
         @media print {
-            .action-buttons, .progress-container {
-                display: none !important;
+            .action-buttons {
+                display: none;
             }
 
             body {
                 padding: 10mm;
                 margin: 0;
                 background-color: white;
+                font-size: 11pt;
             }
 
             .quiz-container {
@@ -159,6 +184,11 @@
             }
 
             .question {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .subject-section {
                 break-inside: avoid;
                 page-break-inside: avoid;
             }
@@ -175,34 +205,32 @@
             }
 
             .action-buttons {
-                flex-direction: column;
+                flex-direction: row;
                 bottom: 10px;
                 right: 10px;
             }
 
-            .progress-container {
-                bottom: 120px;
-                right: 10px;
-                width: 150px;
+            .action-button {
+                padding: 8px 15px;
+                font-size: 0.9em;
             }
         }
     </style>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
+    <div class="progress-container" id="progress-container">
+        <div class="progress-bar" id="progress-bar">0%</div>
+    </div>
+    <div class="loading-message" id="loading-message">Loading quiz questions...</div>
     <div id="quiz-container" class="quiz-container"></div>
     
-    <div class="progress-container" id="progress-container">
-        <div class="progress-bar" id="progress-bar"></div>
-        <div class="progress-text" id="progress-text">0%</div>
-    </div>
-    
     <div class="action-buttons">
-        <button class="print-button" onclick="window.print()">
-            <i class="fas fa-print"></i> Print
+        <button class="action-button" onclick="window.print()">
+            <i class="fas fa-print"></i> Print Quiz
         </button>
-        <button class="pdf-button" onclick="generatePDF()">
-            <i class="fas fa-file-pdf"></i> PDF
+        <button class="action-button" onclick="generatePDF()">
+            <i class="fas fa-file-pdf"></i> Save as PDF
         </button>
     </div>
 
@@ -212,6 +240,11 @@
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
 
+        // Show loading elements
+        document.getElementById('progress-container').style.display = 'block';
+        document.getElementById('loading-message').style.display = 'block';
+        updateProgress(10);
+
         if (title) {
             document.getElementById('quiz-title').textContent = title;
         }
@@ -219,12 +252,31 @@
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
         fetch(jsonUrl)
-            .then(response => response.json())
+            .then(response => {
+                updateProgress(30);
+                return response.json();
+            })
             .then(data => {
                 quizData = data;
+                updateProgress(70);
                 displaySortedQuestions();
+                updateProgress(100);
+                setTimeout(() => {
+                    document.getElementById('progress-container').style.display = 'none';
+                    document.getElementById('loading-message').style.display = 'none';
+                }, 500);
             })
-            .catch(error => console.error('Error fetching the JSON data:', error));
+            .catch(error => {
+                console.error('Error fetching the JSON data:', error);
+                document.getElementById('loading-message').textContent = 'Error loading quiz. Please try again.';
+                document.getElementById('progress-container').style.display = 'none';
+            });
+
+        function updateProgress(percent) {
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = percent + '%';
+            progressBar.textContent = percent + '%';
+        }
 
         function displaySortedQuestions() {
             const quizContainer = document.getElementById('quiz-container');
@@ -236,23 +288,24 @@
                 return order.indexOf(a.title) - order.indexOf(b.title);
             });
 
-            let questionCounter = 1;
-            
+            // Display questions by subject
             sortedSubjects.forEach(subject => {
-                // Add subject divider
-                const divider = document.createElement('div');
-                divider.className = 'subject-divider';
-                divider.textContent = subject.title;
-                quizContainer.appendChild(divider);
+                const subjectSection = document.createElement('div');
+                subjectSection.className = 'subject-section';
+                
+                const subjectTitle = document.createElement('div');
+                subjectTitle.className = 'subject-title';
+                subjectTitle.textContent = subject.title;
+                subjectSection.appendChild(subjectTitle);
 
-                // Add questions for this subject
-                subject.questions.forEach(question => {
+                // Display all questions for this subject
+                subject.questions.forEach((question, index) => {
                     const questionElement = document.createElement('div');
                     questionElement.className = 'question';
 
                     const questionNumber = document.createElement('div');
                     questionNumber.className = 'question-number';
-                    questionNumber.textContent = `Question ${questionCounter++}:`;
+                    questionNumber.textContent = `Question ${index + 1}:`;
                     questionElement.appendChild(questionNumber);
 
                     const questionContent = document.createElement('div');
@@ -281,8 +334,10 @@
                     });
 
                     questionElement.appendChild(optionsList);
-                    quizContainer.appendChild(questionElement);
+                    subjectSection.appendChild(questionElement);
                 });
+
+                quizContainer.appendChild(subjectSection);
             });
 
             // Re-render MathJax content
@@ -290,49 +345,27 @@
         }
 
         function generatePDF() {
-            const progressContainer = document.getElementById('progress-container');
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
+            const element = document.getElementById('quiz-container');
+            const title = document.getElementById('quiz-title').textContent;
             
-            progressContainer.style.display = 'block';
-            
-            // Clone the quiz container to avoid modifying the original
-            const element = document.getElementById('quiz-container').cloneNode(true);
-            
-            // Remove radio buttons for PDF
-            const radioButtons = element.querySelectorAll('input[type="radio"]');
-            radioButtons.forEach(radio => {
-                radio.style.display = 'none';
-            });
-            
-            // Add title to the PDF
-            const title = document.createElement('h1');
-            title.textContent = document.getElementById('quiz-title').textContent;
-            title.style.textAlign = 'center';
-            title.style.marginBottom = '20px';
-            element.insertBefore(title, element.firstChild);
-            
-            // Configure PDF options
             const opt = {
                 margin: 10,
-                filename: 'quiz_questions.pdf',
+                filename: `${title || 'quiz'}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2,
-                    logging: true,
-                    useCORS: true,
-                    progress: function(progress) {
-                        const percent = Math.round(progress * 100);
-                        progressBar.style.width = percent + '%';
-                        progressText.textContent = percent + '%';
-                    }
-                },
+                html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
+
+            // Show loading state
+            const originalContent = document.body.innerHTML;
+            document.body.innerHTML = '<div style="text-align:center;padding:50px;"><h2>Generating PDF...</h2><p>Please wait</p></div>';
             
             // Generate PDF
-            html2pdf().set(opt).from(element).save().then(() => {
-                progressContainer.style.display = 'none';
+            html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
+                // Restore content
+                document.body.innerHTML = originalContent;
+                // Re-initialize MathJax
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             });
         }
 
