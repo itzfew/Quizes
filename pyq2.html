@@ -2,270 +2,165 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="x-ua-compatible" content="ie=edge" />
-  <title>PDF Generator - NEET PYQs</title>
+  <title>NEET PYQs PDF Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/paper-css@0.3.0/paper.min.css">
   <style>
-    /* [Previous CSS remains mostly the same] */
-    /* Add these new styles: */
-    .controls {
-      background: #f8f9fa;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    @page { size: A4; margin: 10mm }
+    body {
+      font-family: Arial, sans-serif;
     }
-    .control-group {
-      margin-bottom: 10px;
+    .sheet {
+      padding: 10mm;
     }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
+    .question {
+      margin-bottom: 15px;
+      page-break-inside: avoid;
     }
-    select, input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+    .options {
+      margin-top: 5px;
+      margin-left: 20px;
     }
-    .progress-container {
-      width: 100%;
-      background-color: #f1f1f1;
-      border-radius: 5px;
-      margin: 10px 0;
+    .option {
+      margin-bottom: 3px;
     }
-    .progress-bar {
-      height: 20px;
-      background-color: #4CAF50;
-      border-radius: 5px;
-      width: 0%;
-      transition: width 0.3s;
+    .loader {
       text-align: center;
-      line-height: 20px;
+      margin: 50px;
+    }
+    .spinner {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .controls {
+      margin: 20px;
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #28a745;
       color: white;
-    }
-    .subject-filter {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .subject-filter label {
-      display: flex;
-      align-items: center;
-      margin-right: 15px;
+      border: none;
+      border-radius: 4px;
       cursor: pointer;
+      font-size: 16px;
     }
-    .subject-filter input {
-      width: auto;
-      margin-right: 5px;
+    .noprint {
+      display: block;
+    }
+    @media print {
+      .noprint {
+        display: none;
+      }
     }
   </style>
-  <!-- [Previous script includes remain the same] -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src='https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js'></script>
 </head>
 <body class="A4">
   <div class="controls noprint">
-    <div class="control-group">
-      <label for="examSelect">Select Exam:</label>
-      <select id="examSelect">
-        <!-- Options will be populated by JavaScript -->
-      </select>
-    </div>
-    <div class="control-group">
-      <label for="questionCount">Number of Questions:</label>
-      <input type="number" id="questionCount" min="1" max="300" value="180">
-    </div>
-    <div class="control-group">
-      <label>Subjects:</label>
-      <div class="subject-filter" id="subjectFilter">
-        <!-- Subjects will be populated by JavaScript -->
-      </div>
-    </div>
-    <button id="generateBtn" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-      Generate PDF
-    </button>
-    <div class="progress-container" id="progressContainer" style="display: none;">
-      <div class="progress-bar" id="progressBar">0%</div>
-    </div>
+    <h2>NEET PYQs PDF Generator</h2>
+    <button id="loadBtn">Load Questions</button>
+    <button id="printBtn" style="display:none; background:#007bff;">Print PDF</button>
   </div>
 
-  <div class="page_template">
-    <div class='header'>
-      <!-- Dynamically updated by JavaScript -->
-    </div>
-    <div class='content'></div>
-    <div class='footer'><span>Page: </span></div>
-  </div>
-  
-  <div class="loader">
-    <br><br>
+  <div class="loader" id="loader" style="display:none;">
     <div class="spinner"></div>
-    <br><br>
-    <h2 style="text-align: center;">Generating PDF, please wait...</h2>
+    <p>Loading questions...</p>
   </div>
-  
-  <div id="printDiv" class="noprint">
-    <button id='printBtn'>Print PDF</button>
-  </div>
-  
-  <div id="newsletterContent" style="visibility:hidden;display:block;"></div>
+
+  <div id="questionsContainer" class="sheet"></div>
 
   <script>
-    // Improved JavaScript with better organization
-    $(function() {
-      // Constants
-      const content_height = 900;
-      const SUBJECTS = ['Physics', 'Chemistry', 'Biology'];
-      const DEFAULT_QUESTIONS = 180;
-      
-      // State variables
-      let page = 1;
-      let examTitle = "NEET PYQs";
-      let selectedQuestions = [];
-      let questionDataCache = {}; // Cache for fetched question data
-
-      // Meta IDs and titles
-      const metaIds = [
-        { id: "3c48616f-298a-5f69-91d2-bcd59444c455", title: "NEET 2023 Manipur" },
-        // [Rest of the metaIds array remains the same]
+    $(document).ready(function() {
+      // Sample questions in case JSON fails to load
+      const sampleQuestions = [
+        {
+          content: "What is the SI unit of force?",
+          options: ["Newton", "Joule", "Watt", "Pascal"],
+          answer: 0
+        },
+        {
+          content: "The process of photosynthesis occurs in which part of the plant cell?",
+          options: ["Mitochondria", "Nucleus", "Chloroplast", "Ribosome"],
+          answer: 2
+        }
       ];
 
-      // DOM Elements
-      const $examSelect = $('#examSelect');
-      const $questionCount = $('#questionCount');
-      const $subjectFilter = $('#subjectFilter');
-      const $generateBtn = $('#generateBtn');
-      const $progressContainer = $('#progressContainer');
-      const $progressBar = $('#progressBar');
-      const $loader = $('.loader');
-      const $printDiv = $('#printDiv');
-      const $newsletterContent = $('#newsletterContent');
-
-      // Initialize UI
-      function initUI() {
-        // Populate exam dropdown
-        metaIds.forEach(meta => {
-          $examSelect.append(`<option value="${meta.id}">${meta.title}</option>`);
-        });
+      // Load questions from JSON
+      $('#loadBtn').click(function() {
+        $('#loader').show();
+        $('#questionsContainer').empty();
         
-        // Set default exam from URL parameter if present
-        const urlMetaId = getQueryParam('metaid');
-        if (urlMetaId) {
-          $examSelect.val(urlMetaId);
-        }
+        // Try loading from JSON (replace with your actual JSON URL)
+        const jsonUrl = 'https://raw.githubusercontent.com/itzfew/Quizes/main/pyq/cbfbed57-d7d8-5a07-9957-478e4cb62f17.json';
         
-        // Populate subject filter
-        SUBJECTS.forEach(subject => {
-          $subjectFilter.append(`
-            <label>
-              <input type="checkbox" name="subject" value="${subject}" checked> 
-              ${subject}
-            </label>
-          `);
-        });
-        
-        // Set default question count from URL if present
-        const urlQuestionCount = parseInt(getQueryParam('total'));
-        if (urlQuestionCount) {
-          $questionCount.val(urlQuestionCount);
-        }
-        
-        // Hide loader initially
-        $loader.hide();
-        $printDiv.hide();
-      }
-
-      // Parse query parameters
-      function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
-      }
-
-      // MathJax rendering
-      function renderMathJax(content) {
-        if (!content) return "";
-        return content
-          .replace(/\$\$(.*?)\$\$/g, (match, p1) => `<span class="mathjax-block">\\[${p1}\\]</span>`)
-          .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
-      }
-
-      // Typeset MathJax content
-      function typesetMathJax() {
-        if (window.MathJax) {
-          MathJax.typesetPromise().catch(err => console.error("MathJax typesetting error:", err));
-        }
-      }
-
-      // Shuffle array
-      function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-      }
-
-      // Update progress bar
-      function updateProgress(percentage) {
-        $progressBar.css('width', `${percentage}%`);
-        $progressBar.text(`${Math.round(percentage)}%`);
-      }
-
-      // Fetch JSON data with caching
-      async function fetchJsonWithCache(url) {
-        if (questionDataCache[url]) {
-          return questionDataCache[url];
-        }
-        
-        try {
-          const response = await fetch(url);
-          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-          const data = await response.json();
-          questionDataCache[url] = data; // Cache the data
-          return data;
-        } catch (error) {
-          console.error('Error fetching JSON:', error);
-          throw error;
-        }
-      }
-
-      // [Rest of the functions remain similar but are reorganized]
-      
-      // Main initialization
-      initUI();
-      
-      // Event listeners
-      $generateBtn.on('click', async function() {
-        try {
-          $loader.show();
-          $progressContainer.show();
-          $printDiv.hide();
-          $newsletterContent.empty();
-          
-          const selectedMetaId = $examSelect.val();
-          const totalQuestions = parseInt($questionCount.val()) || DEFAULT_QUESTIONS;
-          const selectedSubjects = Array.from($subjectFilter.find('input:checked')).map(el => el.value);
-          
-          // Update exam title
-          const selectedMeta = metaIds.find(meta => meta.id === selectedMetaId) || metaIds[0];
-          examTitle = selectedMeta.title;
-          
-          // Fetch and process questions
-          await fetchAndProcessQuestions(selectedMetaId, totalQuestions, selectedSubjects);
-          
-          // Render and build newsletter
-          renderQuestions(selectedQuestions);
-          setTimeout(buildNewsletter, 500);
-          
-        } catch (error) {
-          console.error('Error generating PDF:', error);
-          $newsletterContent.append('<div class="error-message">Error generating PDF. Please try again.</div>');
-          $loader.hide();
-        }
+        $.getJSON(jsonUrl)
+          .done(function(data) {
+            renderQuestions(data);
+          })
+          .fail(function() {
+            console.log("Using sample questions - JSON load failed");
+            renderQuestions([{ subject: "Sample", questions: sampleQuestions }]);
+          });
       });
-      
-      // [Rest of the event listeners and functions]
+
+      // Print PDF
+      $('#printBtn').click(function() {
+        window.print();
+      });
+
+      // Render questions to the page
+      function renderQuestions(subjects) {
+        $('#questionsContainer').empty();
+        
+        if (!subjects || subjects.length === 0) {
+          $('#questionsContainer').html('<p>No questions available.</p>');
+          return;
+        }
+
+        let html = '<h1>NEET Previous Year Questions</h1>';
+        
+        subjects.forEach(subjectData => {
+          const subject = subjectData.subject || "General";
+          const questions = subjectData.questions || [];
+          
+          html += `<h2>${subject}</h2>`;
+          
+          questions.forEach((q, index) => {
+            html += `
+              <div class="question">
+                <p><strong>${index + 1}.</strong> ${q.content}</p>
+                <div class="options">`;
+            
+            (q.options || []).forEach((opt, optIndex) => {
+              html += `<div class="option">${optIndex + 1}. ${opt.content || opt}</div>`;
+            });
+            
+            html += `</div></div>`;
+          });
+        });
+
+        $('#questionsContainer').html(html);
+        $('#loader').hide();
+        $('#printBtn').show();
+        
+        // Render MathJax if present
+        if (window.MathJax) {
+          MathJax.typesetPromise().catch(err => console.log("MathJax error:", err));
+        }
+      }
     });
   </script>
 </body>
