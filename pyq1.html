@@ -7,6 +7,7 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -36,6 +37,21 @@
             box-sizing: border-box;
         }
 
+        .subject-section {
+            margin-bottom: 30px;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .subject-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 0 10px;
+            color: #222;
+            border-bottom: 2px solid #333;
+            break-inside: avoid;
+        }
+
         .question {
             margin-bottom: 30px;
             padding: 10px;
@@ -43,7 +59,7 @@
             overflow-x: auto;
             word-wrap: break-word;
             white-space: normal;
-            break-inside: avoid; /* Prevent splitting across columns/pages */
+            break-inside: avoid;
             page-break-inside: avoid;
         }
 
@@ -87,17 +103,44 @@
             height: auto;
         }
 
-        .print-button {
+        .button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .print-button, .pdf-button {
             background-color: #000;
             color: white;
             padding: 10px 20px;
             border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
+        }
+
+        .progress-container {
             position: fixed;
-            bottom: 20px;
+            top: 20px;
+            left: 20px;
             right: 20px;
             z-index: 1000;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 20px;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.3s ease;
         }
 
         .mathjax-inline {
@@ -111,13 +154,14 @@
         }
 
         @media print {
-            .print-button {
+            .button-container, .progress-container {
                 display: none;
             }
 
             body {
                 padding: 10mm;
                 margin: 0;
+                background-color: white;
             }
 
             .quiz-container {
@@ -126,7 +170,7 @@
                 width: 100%;
             }
 
-            .question {
+            .question, .subject-section {
                 break-inside: avoid;
                 page-break-inside: avoid;
             }
@@ -139,7 +183,7 @@
 
         @media (max-width: 768px) {
             .quiz-container {
-                column-count: 2;
+                column-count: 1;
                 column-gap: 10px;
             }
 
@@ -158,7 +202,7 @@
 
         @media (max-width: 480px) {
             .quiz-container {
-                column-count: 2;
+                column-count: 1;
                 column-gap: 5px;
             }
 
@@ -177,9 +221,17 @@
     </style>
 </head>
 <body>
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+    </div>
     <div class="quiz-title" id="quiz-title"></div>
     <div id="quiz-container" class="quiz-container"></div>
-    <button class="print-button" onclick="window.print()">Print Quiz</button>
+    <div class="button-container">
+        <button class="print-button" onclick="window.print()">Print Quiz</button>
+        <button class="pdf-button" onclick="downloadPDF()">Download PDF</button>
+    </div>
 
     <script>
         let quizData = [];
@@ -211,57 +263,90 @@
                 return order.indexOf(a.title) - order.indexOf(b.title);
             });
 
-            // Collect all questions
-            let allQuestions = [];
+            let totalQuestions = 0;
             sortedSubjects.forEach(subject => {
-                subject.questions.forEach(question => {
-                    question.subject = subject.title;
-                    allQuestions.push(question);
-                });
+                totalQuestions += subject.questions.length;
             });
 
-            // Display questions
-            allQuestions.forEach((question, index) => {
-                const questionElement = document.createElement('div');
-                questionElement.className = 'question';
+            let questionIndex = 0;
 
-                const questionNumber = document.createElement('div');
-                questionNumber.className = 'question-number';
-                questionNumber.textContent = `Question ${index + 1}:`;
-                questionElement.appendChild(questionNumber);
+            // Display questions by subject
+            sortedSubjects.forEach(subject => {
+                const subjectSection = document.createElement('div');
+                subjectSection.className = 'subject-section';
 
-                const questionContent = document.createElement('div');
-                questionContent.className = 'question-content';
-                questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                const subjectTitle = document.createElement('div');
+                subjectTitle.className = 'subject-title';
+                subjectTitle.textContent = subject.title;
+                subjectSection.appendChild(subjectTitle);
+
+                subject.questions.forEach(question => {
+                    questionIndex++;
+                    const questionElement = document.createElement('div');
+                    questionElement.className = 'question';
+
+                    const questionNumber = document.createElement('div');
+                    questionNumber.className = 'question-number';
+                    questionNumber.textContent = `Question ${questionIndex}:`;
+                    questionElement.appendChild(questionNumber);
+
+                    const questionContent = document.createElement('div');
+                    questionContent.className = 'question-content';
+                    questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                        return `<span class="mathjax-inline">$$${p1}$$</span>`;
+                    });
+                    questionElement.appendChild(questionContent);
+
+                    const optionsList = document.createElement('ul');
+                    optionsList.className = 'options';
+
+                    question.options.forEach(option => {
+                        const optionItem = document.createElement('li');
+                        const optionLabel = document.createElement('label');
+                        const optionInput = document.createElement('input');
+
+                        optionInput.type = 'radio';
+                        optionInput.name = `question${question.question_id}`;
+                        optionInput.value = option.identifier;
+                        optionInput.addEventListener('change', () => updateProgress());
+
+                        optionLabel.appendChild(optionInput);
+                        optionLabel.innerHTML += option.content;
+                        optionItem.appendChild(optionLabel);
+                        optionsList.appendChild(optionItem);
+                    });
+
+                    questionElement.appendChild(optionsList);
+                    subjectSection.appendChild(questionElement);
                 });
-                questionElement.appendChild(questionContent);
 
-                const optionsList = document.createElement('ul');
-                optionsList.className = 'options';
-
-                question.options.forEach(option => {
-                    const optionItem = document.createElement('li');
-                    const optionLabel = document.createElement('label');
-                    const optionInput = document.createElement('input');
-
-                    optionInput.type = 'radio';
-                    optionInput.name = `question${question.question_id}`;
-                    optionInput.value = option.identifier;
-
-                    optionLabel.appendChild(optionInput);
-                    optionLabel.innerHTML += option.content;
-                    optionItem.appendChild(optionLabel);
-                    optionsList.appendChild(optionItem);
-                });
-
-                questionElement.appendChild(optionsList);
-
-                quizContainer.appendChild(questionElement);
+                quizContainer.appendChild(subjectSection);
             });
 
             // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+            // Initialize progress
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalQuestions = document.querySelectorAll('.question').length;
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progress').style.width = `${progressPercentage}%`;
+        }
+
+        function downloadPDF() {
+            const element = document.getElementById('quiz-container');
+            const opt = {
+                margin: 10,
+                filename: `${document.getElementById('quiz-title').textContent || 'quiz'}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
         }
 
         window.onbeforeunload = function (event) {
