@@ -8,23 +8,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/paper-css@0.3.0/paper.min.css">
     <style>
       @page { size: A4; margin: 10mm }
-      @media print {
-        .footer { page-break-after: always; }
-        .footer:last-child { page-break-after: avoid; }
-        .noprint { display: none !important; }
-        table {
-          max-width: 100% !important;
-          width: 100% !important;
-        }
-        td, th {
-          overflow-wrap: break-word !important;
-          word-break: break-all !important;
-          white-space: normal !important;
-          max-width: 120px !important;
-          padding: 3px !important;
-          font-size: 9pt !important;
-        }
-      }
       body {
         font-family: Arial, Helvetica, sans-serif;
       }
@@ -150,21 +133,20 @@
         display: block;
         margin: 4px auto;
       }
-      .subject-title {
-        text-align: center;
-        font-size: 18pt;
-        font-weight: bold;
-        margin: 12px 0;
-      }
       .error-message {
         color: red;
         text-align: center;
         margin: 20px;
         font-size: 12pt;
       }
+      /* Hide loader and print button in PDF */
+      .loader, #printDiv {
+        display: none !important;
+      }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src='https://www.neetprep.com/jquery.columnizer.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script async src='https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js'></script>
     <script>
       $(function() {
@@ -174,7 +156,6 @@
         // Fallback content
         var fallbackContent = [
           {
-            subject: "physics",
             questions: [
               {
                 content: "What is the SI unit of force? (A) Newton (B) Joule (C) Watt (D) Pascal",
@@ -183,6 +164,15 @@
                   { content: "Joule" },
                   { content: "Watt" },
                   { content: "Pascal" }
+                ]
+              },
+              {
+                content: "Which of the following is a vector quantity? (A) Mass (B) Speed (C) Force (D) Energy",
+                options: [
+                  { content: "Mass" },
+                  { content: "Speed" },
+                  { content: "Force" },
+                  { content: "Energy" }
                 ]
               }
             ]
@@ -194,40 +184,41 @@
           var newsletterContent = $('#newsletterContent');
           newsletterContent.empty();
 
-          var subjects = {};
-          data.forEach(function(subjectData) {
-            var subject = subjectData.subject;
-            if (!subjects[subject]) {
-              subjects[subject] = [];
+          // Flatten all questions from all categories
+          var allQuestions = [];
+          data.forEach(function(category) {
+            if (category.questions && category.questions.length > 0) {
+              allQuestions = allQuestions.concat(category.questions);
             }
-            subjects[subject].push(subjectData.questions);
           });
 
-          Object.keys(subjects).forEach(function(subject) {
-            newsletterContent.append('<div class="subject-title">' + subject.charAt(0).toUpperCase() + subject.slice(1) + '</div>');
-            subjects[subject].flat().forEach(function(q, index) {
-              var questionHtml = '<div class="dontsplit question">' +
-                '<span class="questionId"><b>' + (index + 1) + '.</b></span> ' +
-                '<p style="display:inline">' + q.content + '</p>';
+          // If no questions found, use fallback
+          if (allQuestions.length === 0) {
+            allQuestions = fallbackContent[0].questions;
+          }
 
-              if (q.options && q.options.length > 0) {
-                questionHtml += '<table><tbody>';
-                for (var i = 0; i < q.options.length; i += 2) {
-                  questionHtml += '<tr>' +
-                    '<td>' + (i + 1) + '.</td>' +
-                    '<td>' + q.options[i].content + '</td>';
-                  if (i + 1 < q.options.length) {
-                    questionHtml += '<td>' + (i + 2) + '.</td>' +
-                      '<td>' + q.options[i + 1].content + '</td>';
-                  }
-                  questionHtml += '</tr>';
+          allQuestions.forEach(function(q, index) {
+            var questionHtml = '<div class="dontsplit question">' +
+              '<span class="questionId"><b>' + (index + 1) + '.</b></span> ' +
+              '<p style="display:inline">' + q.content + '</p>';
+
+            if (q.options && q.options.length > 0) {
+              questionHtml += '<table><tbody>';
+              for (var i = 0; i < q.options.length; i += 2) {
+                questionHtml += '<tr>' +
+                  '<td>' + (i + 1) + '.</td>' +
+                  '<td>' + q.options[i].content + '</td>';
+                if (i + 1 < q.options.length) {
+                  questionHtml += '<td>' + (i + 2) + '.</td>' +
+                    '<td>' + q.options[i + 1].content + '</td>';
                 }
-                questionHtml += '</tbody></table>';
+                questionHtml += '</tr>';
               }
+              questionHtml += '</tbody></table>';
+            }
 
-              questionHtml += '<br>';
-              newsletterContent.append(questionHtml);
-            });
+            questionHtml += '<br>';
+            newsletterContent.append(questionHtml);
           });
         }
 
@@ -235,7 +226,6 @@
           $('.question table').each(function() {
             var $table = $(this);
             var parentWidth = $table.parent().width();
-            // Override inline styles
             $table.css({
               'width': '100%',
               'max-width': parentWidth + 'px',
@@ -306,11 +296,22 @@
             $('#printDiv').show();
             $('#newsletterContent').hide();
             $('#printBtn').click(function() {
-              console.log("Print button clicked");
+              console.log("Generating PDF...");
               adjustTableWidths();
-              setTimeout(function() {
-                window.print();
-              }, 500);
+              const element = document.querySelector('body');
+              const opt = {
+                margin: 10,
+                filename: 'NEET_PYQs.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+              };
+              html2pdf().set(opt).from(element).save().then(() => {
+                console.log("PDF generated and downloaded");
+              }).catch(err => {
+                console.error("PDF generation failed:", err);
+                alert("Failed to generate PDF. Please try again.");
+              });
             });
           }
         }
@@ -354,7 +355,7 @@
       <h2 style="text-align: center;">Generating PDF, please wait...</h2>
     </div>
     <div id="printDiv" class="noprint">
-      <button id='printBtn'>Print PDF</button>
+      <button id='printBtn'>Download PDF</button>
     </div>
     <div id="newsletterContent" style="visibility:hidden;display:block;"></div>
   </body>
