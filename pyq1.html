@@ -7,7 +7,8 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -336,46 +337,67 @@
             document.getElementById('progress').style.width = `${progressPercentage}%`;
         }
 
-        function downloadPDF() {
+        async function downloadPDF() {
+            const { jsPDF } = window.jspdf;
             const element = document.getElementById('quiz-container');
             const titleElement = document.getElementById('quiz-title');
 
-            // Ensure MathJax is fully rendered before PDF generation
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub], () => {
-                const opt = {
-                    margin: [10, 10, 10, 10],
-                    filename: `${titleElement.textContent || 'quiz'}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { 
-                        scale: 2, 
-                        useCORS: true, 
-                        logging: false,
-                        windowWidth: element.scrollWidth
-                    },
-                    jsPDF: { 
-                        unit: 'mm', 
-                        format: 'a4', 
-                        orientation: 'portrait' 
-                    },
-                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-                };
+            // Wait for MathJax to render
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub], async () => {
+                try {
+                    // Create a container with title and content
+                    const container = document.createElement('div');
+                    container.style.padding = '10mm';
+                    container.style.backgroundColor = 'white';
+                    container.style.width = '210mm'; // A4 width
+                    container.appendChild(titleElement.cloneNode(true));
+                    container.appendChild(element.cloneNode(true));
+                    document.body.appendChild(container);
 
-                // Create a container with title and content
-                const container = document.createElement('div');
-                container.style.padding = '10mm';
-                container.style.backgroundColor = 'white';
-                container.appendChild(titleElement.cloneNode(true));
-                container.appendChild(element.cloneNode(true));
-
-                // Generate and save PDF
-                html2pdf()
-                    .set(opt)
-                    .from(container)
-                    .save()
-                    .catch(err => {
-                        console.error('Error generating PDF:', err);
-                        alert('Failed to generate PDF. Please try printing instead.');
+                    // Convert to image
+                    const dataUrl = await domtoimage.toPng(container, {
+                        quality: 0.98,
+                        width: container.offsetWidth,
+                        height: container.offsetHeight
                     });
+
+                    // Remove temporary container
+                    document.body.removeChild(container);
+
+                    // Initialize jsPDF
+                    const pdf = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4'
+                    });
+
+                    // A4 dimensions: 210mm x 297mm
+                    const imgProps = pdf.getImageProperties(dataUrl);
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                    let heightLeft = imgHeight;
+                    let position = 0;
+
+                    // Add first page
+                    pdf.addImage(dataUrl, 'PNG', 0, position, pdfWidth, imgHeight);
+                    heightLeft -= pdfHeight;
+
+                    // Add additional pages if content overflows
+                    while (heightLeft > 0) {
+                        position = heightLeft - imgHeight;
+                        pdf.addPage();
+                        pdf.addImage(dataUrl, 'PNG', 0, position, pdfWidth, imgHeight);
+                        heightLeft -= pdfHeight;
+                    }
+
+                    // Save PDF
+                    pdf.save(`${titleElement.textContent || 'quiz'}.pdf`);
+                } catch (err) {
+                    console.error('Error generating PDF:', err);
+                    alert('Failed to generate PDF. Please try printing instead.');
+                }
             });
         }
 
