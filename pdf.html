@@ -11,119 +11,158 @@
       @media print {
         .footer { page-break-after: always; }
         .footer:last-child { page-break-after: avoid; }
-        .noprint {
-          display: none !important;
-        }
+        .noprint { display: none !important; }
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
       }
       .question {
-        padding-right: 7px;
-        padding-left: 7px;
-        font-size: 11pt;
+        padding: 5px;
+        font-size: 10pt;
+        line-height: 1.3;
+        margin-bottom: 8px;
       }
       .loader .spinner {
-        border-top: 16px solid blue;
-        border-right: 16px solid green;
-        border-bottom: 16px solid red;
-        border-left: 16px solid pink;
+        border: 12px solid #f3f3f3;
+        border-top: 12px solid #3498db;
         border-radius: 50%;
         margin: auto;
-        width: 120px;
-        height: 120px;
-        animation: spin 2s linear infinite;
+        width: 80px;
+        height: 80px;
+        animation: spin 1.5s linear infinite;
       }
       @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
       #printDiv {
-        display: flex;
-        justify-content: center;
         display: none;
+        justify-content: center;
+        margin: 20px 0;
       }
       #printBtn {
-        width: 800px;
+        width: 250px;
         padding: 10px;
-        margin: 20px;
-        background: green;
+        background: #28a745;
         color: white;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 20px;
+        font-size: 16px;
         font-weight: bold;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
       }
       .sheet .content .column {
         text-align: justify;
-        font-size: 11pt;
+        font-size: 10pt;
+        line-height: 1.3;
       }
       .sheet .content .column blockquote {
-        background: #DEDEDE;
-        padding: 10px;
-        margin: 4px 20px;
-        clear: both;
-      }
-      .sheet .content .column h1 {
-        padding: 0 10px;
+        background: #f5f5f5;
+        padding: 6px;
+        margin: 4px 10px;
+        border-left: 2px solid #ddd;
       }
       .sheet .header {
         text-align: center;
-        font-size: 18pt;
-        font-family: helvetica, arial;
-        padding: 20px 0 0;
+        font-size: 14pt;
+        padding: 10px 0;
       }
       .sheet .header .contact {
         float: right;
-        font-size: 14pt;
-        font-family: helvetica, arial;
+        font-size: 10pt;
       }
       .sheet .header .logo {
         float: left;
-        vertical-align: middle;
       }
       .sheet .header hr, .sheet .footer hr {
-        width: 800px;
+        width: 95%;
+        margin: 8px auto;
       }
       .sheet .footer span {
         position: absolute;
-        bottom: 10px;
+        bottom: 8px;
         right: 10px;
+        font-size: 9pt;
       }
       .page_template {
         display: none;
       }
       table {
         table-layout: fixed;
-        text-align: left;
         border-collapse: collapse;
-        border: 1px solid black;
+        border: 1px solid #333;
         width: 100%;
+        font-size: 9pt;
+        margin: 4px 0;
       }
       th, td {
-        border: 1px solid black;
-        padding: 5px;
+        border: 1px solid #333;
+        padding: 4px;
         text-align: left;
+        vertical-align: top;
+        overflow-wrap: break-word;
+      }
+      td:nth-child(1), td:nth-child(3) {
+        width: 6%;
+      }
+      td:nth-child(2), td:nth-child(4) {
+        width: 44%;
       }
       .content {
-        padding: 10px;
-        background: linear-gradient(#000, #000) no-repeat center/0.1px 99%;
-        border-bottom: 1px solid black;
+        padding: 8px;
+        background: linear-gradient(#000, #000) no-repeat center/0.1px 98%;
+        border-bottom: 1px solid #333;
       }
       .content img {
-        max-width: 100%;
+        max-width: 85%;
         height: auto;
+        display: block;
+        margin: 4px auto;
+      }
+      .subject-title {
+        text-align: center;
+        font-size: 18pt;
+        font-weight: bold;
+        margin: 12px 0;
+      }
+      .error-message {
+        color: red;
+        text-align: center;
+        margin: 20px;
+        font-size: 12pt;
       }
     </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src='https://www.neetprep.com/jquery.columnizer.min.js'></script>
-    <script async src='https://cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+    <script async src='https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js'></script>
     <script>
       $(function() {
-        var content_height = 900;  // the height of the content, excluding the header/footer
-        var page = 1;        // the beginning page number to show in the footer
+        var content_height = 960;
+        var page = 1;
 
-        // Fetch questions from JSON
-        $.getJSON('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/3c48616f-298a-5f69-91d2-bcd59444c455.json', function(data) {
+        // Fallback content in case JSON fetch fails
+        var fallbackContent = [
+          {
+            subject: "physics",
+            questions: [
+              {
+                content: "What is the SI unit of force? (A) Newton (B) Joule (C) Watt (D) Pascal",
+                options: [
+                  { content: "Newton" },
+                  { content: "Joule" },
+                  { content: "Watt" },
+                  { content: "Pascal" }
+                ]
+              }
+            ]
+          }
+        ];
+
+        function renderQuestions(data) {
+          console.log("Rendering questions from data:", data);
           var newsletterContent = $('#newsletterContent');
-          
-          // Group questions by subject
+          newsletterContent.empty();
+
           var subjects = {};
           data.forEach(function(subjectData) {
             var subject = subjectData.subject;
@@ -133,86 +172,104 @@
             subjects[subject].push(subjectData.questions);
           });
 
-          // Render questions
           Object.keys(subjects).forEach(function(subject) {
-            newsletterContent.append('<div style="width: 100%; margin: auto; text-align: center; font-size: 32px;"><b>' + subject.charAt(0).toUpperCase() + subject.slice(1) + '</b></div>');
+            newsletterContent.append('<div class="subject-title">' + subject.charAt(0).toUpperCase() + subject.slice(1) + '</div>');
             subjects[subject].flat().forEach(function(q, index) {
               var questionHtml = '<div class="dontsplit question">' +
-                '<span class="questionId" style="vertical-align: top;"><b>' + (index + 1) + '.</b></span> ' +
+                '<span class="questionId"><b>' + (index + 1) + '.</b></span> ' +
                 '<p style="display:inline">' + q.content + '</p>';
 
-              // Render options if available
               if (q.options && q.options.length > 0) {
                 questionHtml += '<table><tbody>';
                 for (var i = 0; i < q.options.length; i += 2) {
                   questionHtml += '<tr>' +
-                    '<td style="width: 7%;">' + (i + 1) + '.</td>' +
-                    '<td style="width: 43%;">' + q.options[i].content + '</td>';
+                    '<td>' + (i + 1) + '.</td>' +
+                    '<td>' + q.options[i].content + '</td>';
                   if (i + 1 < q.options.length) {
-                    questionHtml += '<td style="width: 7%;">' + (i + 2) + '.</td>' +
-                      '<td style="width: 43%;">' + q.options[i + 1].content + '</td>';
+                    questionHtml += '<td>' + (i + 2) + '.</td>' +
+                      '<td>' + q.options[i + 1].content + '</td>';
                   }
                   questionHtml += '</tr>';
                 }
                 questionHtml += '</tbody></table>';
               }
 
-              questionHtml += '<br><br></div>';
+              questionHtml += '<br>';
               newsletterContent.append(questionHtml);
             });
           });
+        }
 
-          // Trigger PDF generation
-          setTimeout(buildNewsletter, 1000);
-        });
-
-        function buildNewsletter(){
-          var image = $('.question img');
-          image.each(function () {
-            var that = $(this);
-            if (that.width() >= 359) {
-              that.width('100%');
+        function buildNewsletter() {
+          console.log("Building newsletter, remaining content:", $('#newsletterContent').contents().length);
+          var images = $('.question img');
+          images.each(function() {
+            var $this = $(this);
+            if ($this.width() > 250) {
+              $this.css({'width': '85%', 'max-width': '250px'});
             }
           });
 
-          if($('#newsletterContent').contents().length > 0){
-            $page = $(".page_template:first").clone().addClass("sheet padding-10mm").css("display", "block").css("margin", "auto");
-            $page.find(".footer span").append(page);
-            $("body").append($page);
+          if ($('#newsletterContent').contents().length > 0) {
+            var $page = $('.page_template:first').clone()
+              .addClass('sheet padding-10mm')
+              .css({'display': 'block', 'margin': 'auto'});
+            $page.find('.footer span').append(page);
+            $('body').append($page);
             page++;
 
             $('#newsletterContent').columnize({
               columns: 2,
-              target: ".sheet:last .content",
+              target: '.sheet:last .content',
               ignoreImageLoading: false,
               overflow: {
                 height: content_height,
-                id: "#newsletterContent",
-                doneFunc: function(){
-                  console.log("done with page");
+                id: '#newsletterContent',
+                doneFunc: function() {
+                  console.log("Page completed, moving to next");
                   buildNewsletter();
                 }
               }
             });
           } else {
             $('.loader').hide();
-            $('#printDiv').css('display', 'flex');
-            $('#newsletterContent').css("display", "none");
-
-            $('#printBtn').click(function () {
+            $('#printDiv').show();
+            $('#newsletterContent').hide();
+            $('#printBtn').click(function() {
+              console.log("Print button clicked");
               window.print();
             });
           }
         }
+
+        // Fetch JSON or use fallback
+        console.log("Fetching JSON...");
+        $.getJSON('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/3c48616f-298a-5f69-91d2-bcd59444c455.json')
+          .done(function(data) {
+            console.log("JSON fetched successfully");
+            renderQuestions(data);
+            MathJax.typesetPromise().then(() => {
+              console.log("MathJax rendering complete");
+              setTimeout(buildNewsletter, 500);
+            });
+          })
+          .fail(function(jqXHR, textStatus, error) {
+            console.error("JSON fetch failed:", textStatus, error);
+            $('#newsletterContent').append('<div class="error-message">Failed to load questions. Using sample content.</div>');
+            renderQuestions(fallbackContent);
+            MathJax.typesetPromise().then(() => {
+              setTimeout(buildNewsletter, 500);
+            });
+          });
       });
     </script>
   </head>
   <body class="A4">
     <div class="page_template">
       <div class='header'>
-        <img class="logo" src="https://www.neetprep.com/assets/img/logo.png" width="111" height="28">
+        <img class="logo" src="https://www.neetprep.com/assets/img/logo.png" width="90" height="22">
         Full Test - NEET PYQs
-        <span class="contact">Contact Number: 8527521718</span>
+        <span class="contact">Contact: 8527521718</span>
         <hr>
       </div>
       <div class='content'></div>
@@ -222,10 +279,10 @@
       <br><br>
       <div class="spinner"></div>
       <br><br>
-      <h1 style="text-align: center;">Please be patient as the PDF generation may take up to a minute.</h1>
+      <h2 style="text-align: center;">Generating PDF, please wait...</h2>
     </div>
     <div id="printDiv" class="noprint">
-      <button id='printBtn'>Print</button>
+      <button id='printBtn'>Print PDF</button>
     </div>
     <div id="newsletterContent" style="visibility:hidden;display:block;"></div>
   </body>
