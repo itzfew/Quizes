@@ -18,14 +18,16 @@
             box-sizing: border-box;
         }
 
+        main {
+            padding: 20px;
+        }
+
         .quiz-title {
             font-size: 1.5em;
             margin: 10px 0;
             color: #333;
             text-align: center;
             border: 2px solid black;
-            background-color: white;
-            padding: 10px;
         }
 
         .quiz-container {
@@ -35,16 +37,19 @@
             box-sizing: border-box;
         }
 
-        .subject-divider {
-            column-span: all;
-            text-align: center;
+        .subject-section {
+            margin-bottom: 30px;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .subject-title {
             font-size: 1.3em;
             font-weight: bold;
-            margin: 15px 0;
-            padding: 5px;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            break-after: avoid;
+            margin: 20px 0 10px;
+            color: #222;
+            border-bottom: 2px solid #333;
+            break-inside: avoid;
         }
 
         .question {
@@ -56,7 +61,6 @@
             white-space: normal;
             break-inside: avoid;
             page-break-inside: avoid;
-            background-color: white;
         }
 
         .question-number {
@@ -72,12 +76,6 @@
             white-space: normal;
             max-width: 100%;
             overflow-x: auto;
-            color: black !important; /* Ensure text color for PDF */
-        }
-
-        .options {
-            list-style-type: none;
-            padding-left: 0;
         }
 
         .options li {
@@ -88,21 +86,24 @@
             overflow-x: auto;
             word-wrap: break-word;
             white-space: normal;
-            background-color: white;
         }
 
         .options label {
             cursor: pointer;
             display: flex;
             align-items: center;
-            color: black !important; /* Ensure text color for PDF */
         }
 
         .options input[type="radio"] {
             margin-right: 10px;
         }
 
-        .action-buttons {
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        .button-container {
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -115,55 +116,50 @@
             background-color: #000;
             color: white;
             padding: 10px 20px;
-            border: none;
+            border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
         .progress-container {
             position: fixed;
-            bottom: 70px;
+            top: 20px;
+            left: 20px;
             right: 20px;
-            width: 200px;
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px;
             z-index: 1000;
-            display: none;
         }
 
         .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress {
             height: 20px;
             background-color: #4CAF50;
             width: 0%;
-            border-radius: 3px;
-            transition: width 0.3s;
+            transition: width 0.3s ease;
         }
 
-        .progress-text {
-            text-align: center;
-            font-size: 0.8em;
-            margin-top: 3px;
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 1.1em;
         }
 
-        /* PDF-specific styles */
-        .pdf-page {
-            width: 100%;
-            padding: 0;
-            margin: 0;
+        .question-content span {
+            display: inline-block;
         }
 
         @media print {
-            .action-buttons, .progress-container {
-                display: none !important;
+            .button-container, .progress-container {
+                display: none;
             }
 
             body {
-                padding: 0;
+                padding: 10mm;
                 margin: 0;
                 background-color: white;
             }
@@ -174,10 +170,9 @@
                 width: 100%;
             }
 
-            .question {
+            .question, .subject-section {
                 break-inside: avoid;
                 page-break-inside: avoid;
-                background-color: white !important;
             }
 
             @page {
@@ -189,38 +184,53 @@
         @media (max-width: 768px) {
             .quiz-container {
                 column-count: 1;
+                column-gap: 10px;
             }
 
-            .action-buttons {
-                flex-direction: column;
-                bottom: 10px;
-                right: 10px;
+            .question {
+                padding: 5px;
             }
 
-            .progress-container {
-                bottom: 120px;
-                right: 10px;
-                width: 150px;
+            .options li {
+                padding: 5px;
+            }
+
+            img {
+                max-width: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quiz-container {
+                column-count: 1;
+                column-gap: 5px;
+            }
+
+            .quiz-title {
+                font-size: 1.2em;
+            }
+
+            .question-number {
+                font-size: 1em;
+            }
+
+            .options li {
+                font-size: 0.9em;
             }
         }
     </style>
 </head>
 <body>
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+    </div>
     <div class="quiz-title" id="quiz-title"></div>
     <div id="quiz-container" class="quiz-container"></div>
-    
-    <div class="progress-container" id="progress-container">
-        <div class="progress-bar" id="progress-bar"></div>
-        <div class="progress-text" id="progress-text">0%</div>
-    </div>
-    
-    <div class="action-buttons">
-        <button class="print-button" onclick="window.print()">
-            <i class="fas fa-print"></i> Print
-        </button>
-        <button class="pdf-button" onclick="generatePDF()">
-            <i class="fas fa-file-pdf"></i> PDF
-        </button>
+    <div class="button-container">
+        <button class="print-button" onclick="window.print()">Print Quiz</button>
+        <button class="pdf-button" onclick="downloadPDF()">Download PDF</button>
     </div>
 
     <script>
@@ -253,23 +263,31 @@
                 return order.indexOf(a.title) - order.indexOf(b.title);
             });
 
-            let questionCounter = 1;
-            
+            let totalQuestions = 0;
             sortedSubjects.forEach(subject => {
-                // Add subject divider
-                const divider = document.createElement('div');
-                divider.className = 'subject-divider';
-                divider.textContent = subject.title;
-                quizContainer.appendChild(divider);
+                totalQuestions += subject.questions.length;
+            });
 
-                // Add questions for this subject
+            let questionIndex = 0;
+
+            // Display questions by subject
+            sortedSubjects.forEach(subject => {
+                const subjectSection = document.createElement('div');
+                subjectSection.className = 'subject-section';
+
+                const subjectTitle = document.createElement('div');
+                subjectTitle.className = 'subject-title';
+                subjectTitle.textContent = subject.title;
+                subjectSection.appendChild(subjectTitle);
+
                 subject.questions.forEach(question => {
+                    questionIndex++;
                     const questionElement = document.createElement('div');
                     questionElement.className = 'question';
 
                     const questionNumber = document.createElement('div');
                     questionNumber.className = 'question-number';
-                    questionNumber.textContent = `Question ${questionCounter++}:`;
+                    questionNumber.textContent = `Question ${questionIndex}:`;
                     questionElement.appendChild(questionNumber);
 
                     const questionContent = document.createElement('div');
@@ -290,6 +308,7 @@
                         optionInput.type = 'radio';
                         optionInput.name = `question${question.question_id}`;
                         optionInput.value = option.identifier;
+                        optionInput.addEventListener('change', () => updateProgress());
 
                         optionLabel.appendChild(optionInput);
                         optionLabel.innerHTML += option.content;
@@ -298,85 +317,65 @@
                     });
 
                     questionElement.appendChild(optionsList);
-                    quizContainer.appendChild(questionElement);
+                    subjectSection.appendChild(questionElement);
                 });
+
+                quizContainer.appendChild(subjectSection);
             });
 
-            // Re-render MathJax content
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            // Re-render MathJax content and wait for completion
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub], () => {
+                updateProgress();
+            });
         }
 
-        function generatePDF() {
-            const progressContainer = document.getElementById('progress-container');
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            
-            progressContainer.style.display = 'block';
-            
-            // Create a new div for PDF generation
-            const pdfContainer = document.createElement('div');
-            pdfContainer.className = 'pdf-page';
-            
-            // Add title
-            const title = document.createElement('h1');
-            title.textContent = document.getElementById('quiz-title').textContent;
-            title.style.textAlign = 'center';
-            title.style.marginBottom = '20px';
-            title.style.color = 'black';
-            pdfContainer.appendChild(title);
-            
-            // Clone all questions
-            const questions = document.querySelectorAll('.question');
-            questions.forEach(question => {
-                const clone = question.cloneNode(true);
-                
-                // Ensure all text is black for PDF
-                clone.querySelectorAll('*').forEach(el => {
-                    if (window.getComputedStyle(el).color !== 'rgb(0, 0, 0)') {
-                        el.style.color = 'black';
-                    }
-                });
-                
-                // Remove radio buttons
-                const inputs = clone.querySelectorAll('input[type="radio"]');
-                inputs.forEach(input => input.remove());
-                
-                pdfContainer.appendChild(clone);
-            });
-            
-            // Add to body temporarily
-            document.body.appendChild(pdfContainer);
-            
-            // PDF options
-            const opt = {
-                margin: 10,
-                filename: 'quiz_questions.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2,
-                    logging: true,
-                    useCORS: true,
-                    letterRendering: true,
-                    allowTaint: true,
-                    backgroundColor: '#FFFFFF',
-                    progress: function(progress) {
-                        const percent = Math.round(progress * 100);
-                        progressBar.style.width = percent + '%';
-                        progressText.textContent = percent + '%';
-                    }
-                },
-                jsPDF: { 
-                    unit: 'mm', 
-                    format: 'a4', 
-                    orientation: 'portrait',
-                    hotfixes: ["px_scaling"] 
-                }
-            };
-            
-            // Generate PDF
-            html2pdf().set(opt).from(pdfContainer).save().then(() => {
-                progressContainer.style.display = 'none';
-                document.body.removeChild(pdfContainer);
+        function updateProgress() {
+            const totalQuestions = document.querySelectorAll('.question').length;
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progress').style.width = `${progressPercentage}%`;
+        }
+
+        function downloadPDF() {
+            const element = document.getElementById('quiz-container');
+            const titleElement = document.getElementById('quiz-title');
+
+            // Ensure MathJax is fully rendered before PDF generation
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub], () => {
+                const opt = {
+                    margin: [10, 10, 10, 10],
+                    filename: `${titleElement.textContent || 'quiz'}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2, 
+                        useCORS: true, 
+                        logging: false,
+                        windowWidth: element.scrollWidth
+                    },
+                    jsPDF: { 
+                        unit: 'mm', 
+                        format: 'a4', 
+                        orientation: 'portrait' 
+                    },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                };
+
+                // Create a container with title and content
+                const container = document.createElement('div');
+                container.style.padding = '10mm';
+                container.style.backgroundColor = 'white';
+                container.appendChild(titleElement.cloneNode(true));
+                container.appendChild(element.cloneNode(true));
+
+                // Generate and save PDF
+                html2pdf()
+                    .set(opt)
+                    .from(container)
+                    .save()
+                    .catch(err => {
+                        console.error('Error generating PDF:', err);
+                        alert('Failed to generate PDF. Please try printing instead.');
+                    });
             });
         }
 
