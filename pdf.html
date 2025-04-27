@@ -24,10 +24,6 @@
           padding: 3px !important;
           font-size: 9pt !important;
         }
-        .MJX-TEX {
-          margin: 0 !important;
-          padding: 0 !important;
-        }
       }
       body {
         font-family: Arial, Helvetica, sans-serif;
@@ -133,7 +129,6 @@
         width: 45%;
         max-width: 120px;
       }
-      /* Override inline table styles */
       .question table, .question table * {
         width: 100% !important;
         max-width: 100% !important;
@@ -160,20 +155,11 @@
         margin: 20px;
         font-size: 12pt;
       }
-      /* MathJax styling - fixes spacing issues */
-      .MJX-TEX {
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-      mjx-container[jax="CHTML"] {
-        display: inline-block !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        vertical-align: middle !important;
-      }
-      .MJX-TEX > * {
-        margin: 0 !important;
-        padding: 0 !important;
+      /* Prevent MathJax line breaks and ensure inline equations are rendered smoothly */
+      .mathjax-inline {
+        white-space: nowrap;
+        display: inline-block;
+        font-size: 1.1em;
       }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -201,12 +187,10 @@
           }
         ];
 
-        function cleanContent(content) {
-          // Remove unwanted spaces around MathJax
+        function renderMathJax(content) {
           return content
-            .replace(/\s*(\$\$.*?\$\$)\s*/g, '$1')
-            .replace(/\s*(\$.*?\$)\s*/g, '$1')
-            .replace(/<br>\s*<br>/g, '<br>');
+            .replace(/\$\$(.*?)\$\$/g, (match, p1) => `<span class="mathjax-block">\\[${p1}\\]</span>`)
+            .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
         }
 
         function renderQuestions(data) {
@@ -214,35 +198,22 @@
           var newsletterContent = $('#newsletterContent');
           newsletterContent.empty();
 
-          // Flatten all questions from all subjects
-          var allQuestions = [];
-          data.forEach(function(subjectData) {
-            if (subjectData.questions && subjectData.questions.length > 0) {
-              allQuestions = allQuestions.concat(subjectData.questions);
-            }
-          });
-
-          // If no questions found, use fallback
-          if (allQuestions.length === 0) {
-            allQuestions = fallbackContent[0].questions;
-          }
-
-          // Render all questions sequentially
-          allQuestions.forEach(function(q, index) {
-            var cleanedContent = cleanContent(q.content);
+          var questions = data.flatMap(subjectData => subjectData.questions);
+          questions.forEach(function(q, index) {
+            var questionContent = renderMathJax(q.content);
             var questionHtml = '<div class="dontsplit question">' +
               '<span class="questionId"><b>' + (index + 1) + '.</b></span> ' +
-              '<p style="display:inline">' + cleanedContent + '</p>';
+              '<p style="display:inline">' + questionContent + '</p>';
 
             if (q.options && q.options.length > 0) {
               questionHtml += '<table><tbody>';
               for (var i = 0; i < q.options.length; i += 2) {
                 questionHtml += '<tr>' +
-                  '<td>' + String.fromCharCode(65 + i) + '.</td>' +
-                  '<td>' + cleanContent(q.options[i].content) + '</td>';
+                  '<td>' + (i + 1) + '.</td>' +
+                  '<td>' + renderMathJax(q.options[i].content) + '</td>';
                 if (i + 1 < q.options.length) {
-                  questionHtml += '<td>' + String.fromCharCode(65 + i + 1) + '.</td>' +
-                    '<td>' + cleanContent(q.options[i + 1].content) + '</td>';
+                  questionHtml += '<td>' + (i + 2) + '.</td>' +
+                    '<td>' + renderMathJax(q.options[i + 1].content) + '</td>';
                 }
                 questionHtml += '</tr>';
               }
@@ -258,7 +229,6 @@
           $('.question table').each(function() {
             var $table = $(this);
             var parentWidth = $table.parent().width();
-            // Override inline styles
             $table.css({
               'width': '100%',
               'max-width': parentWidth + 'px',
@@ -338,42 +308,24 @@
           }
         }
 
-        // Wait for MathJax to be ready
-        MathJax = {
-          startup: {
-            ready: function() {
-              MathJax.startup.defaultReady();
-              console.log("MathJax is ready");
-              
-              console.log("Fetching JSON...");
-              $.getJSON('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/3c48616f-298a-5f69-91d2-bcd59444c455.json')
-                .done(function(data) {
-                  console.log("JSON fetched successfully");
-                  renderQuestions(data);
-                  MathJax.typesetPromise().then(() => {
-                    console.log("MathJax rendering complete");
-                    setTimeout(buildNewsletter, 500);
-                  });
-                })
-                .fail(function(jqXHR, textStatus, error) {
-                  console.error("JSON fetch failed:", textStatus, error);
-                  $('#newsletterContent').append('<div class="error-message">Failed to load questions. Using sample content.</div>');
-                  renderQuestions(fallbackContent);
-                  MathJax.typesetPromise().then(() => {
-                    setTimeout(buildNewsletter, 500);
-                  });
-                });
-            }
-          },
-          tex: {
-            inlineMath: [['$', '$'], ['\\(', '\\)']],
-            displayMath: [['$$', '$$'], ['\\[', '\\]']]
-          },
-          options: {
-            skipHtmlTags: {'[+]': ['p']},
-            ignoreHtmlClass: 'tex2jax_ignore'
-          }
-        };
+        console.log("Fetching JSON...");
+        $.getJSON('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/3c48616f-298a-5f69-91d2-bcd59444c455.json')
+          .done(function(data) {
+            console.log("JSON fetched successfully");
+            renderQuestions(data);
+            MathJax.typesetPromise().then(() => {
+              console.log("MathJax rendering complete");
+              setTimeout(buildNewsletter, 500);
+            });
+          })
+          .fail(function(jqXHR, textStatus, error) {
+            console.error("JSON fetch failed:", textStatus, error);
+            $('#newsletterContent').append('<div class="error-message">Failed to load questions. Using sample content.</div>');
+            renderQuestions(fallbackContent);
+            MathJax.typesetPromise().then(() => {
+              setTimeout(buildNewsletter, 500);
+            });
+          });
       });
     </script>
   </head>
