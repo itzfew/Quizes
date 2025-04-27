@@ -13,184 +13,185 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
-        }
-
-        main {
-            padding: 20px;
+            padding: 0;
         }
 
         .quiz-title {
             font-size: 1.5em;
-            margin: 10px 0;
+            margin: 5px 0;
             color: #333;
             text-align: center;
             border: 2px solid black;
+            background-color: white;
+            padding: 10px;
         }
 
-        .quiz-container {
+        .print-button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background-color: #000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .page-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
+            width: 100%;
+            max-width: 210mm; /* A4 width */
+            margin: 0 auto;
+            background-color: white;
+            padding: 10mm;
+            box-sizing: border-box;
+            page-break-after: always;
         }
 
         .column {
-            flex: 1;
-            min-width: 45%;
-            margin-right: 20px;
+            width: 48%;
             box-sizing: border-box;
         }
 
-        .column:last-child {
-            margin-right: 0;
-        }
-
         .question {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             padding: 10px;
-            border-bottom: 1px solid #ccc;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             page-break-inside: avoid;
         }
 
         .question-number {
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.1em;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .question-content {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             word-wrap: break-word;
-            white-space: normal;
-            max-width: 100%;
-            overflow-x: auto;
+        }
+
+        .options {
+            list-style-type: none;
+            padding-left: 0;
         }
 
         .options li {
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-            word-wrap: break-word;
-            white-space: normal;
+            margin-bottom: 8px;
+            padding: 5px;
         }
 
         .options label {
             cursor: pointer;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .options input[type="radio"] {
-            margin-right: 10px;
+            margin-right: 8px;
+            margin-top: 3px;
+        }
+
+        .question-id {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 0.9em;
         }
 
         .correct-answer {
-            margin-top: 10px;
+            margin-top: 5px;
             font-weight: bold;
             color: green;
+            font-size: 0.9em;
         }
 
-        img {
-            max-width: 100px;
-            height: auto;
-        }
-
-        .print-button {
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            border: 1px solid white;
-            border-radius: 5px;
+        .explanation-button {
+            margin-top: 5px;
+            background-color: white;
+            color: black;
+            border: 1px solid black;
             cursor: pointer;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
+            padding: 5px 10px;
+            font-size: 0.9em;
         }
 
         .explanation-content {
             display: none;
-            margin-top: 10px;
+            margin-top: 5px;
             font-style: italic;
             color: #777;
+            font-size: 0.9em;
             background-color: #FFF59D;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 5px;
+            border-radius: 3px;
         }
 
-        .mathjax-inline {
-            white-space: nowrap;
-            display: inline-block;
-            font-size: 1.1em;
+        .explanation-content.open {
+            display: block;
         }
 
-        .question-content span {
-            display: inline-block;
+        .subject-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #333;
         }
 
         @media print {
-            .print-button, .explanation-button {
-                display: none;
-            }
-
             body {
+                background-color: white;
+            }
+            .print-button, .explanation-button {
+                display: none !important;
+            }
+            .page-container {
                 padding: 0;
                 margin: 0;
+                max-width: 100%;
             }
-
-            .quiz-container {
-                display: block;
-            }
-
             .column {
-                width: 50%;
-                float: left;
-                margin: 0;
-                padding: 10px;
-                box-sizing: border-box;
-            }
-
-            .question {
-                page-break-inside: avoid;
-            }
-
-            @page {
-                size: A4;
-                margin: 1cm;
-            }
-
-            .page-break {
-                clear: both;
-                page-break-before: always;
+                width: 48%;
             }
         }
 
         @media (max-width: 768px) {
             .column {
-                min-width: 100%;
-                margin-right: 0;
+                width: 100%;
             }
+            .page-container {
+                padding: 5mm;
+            }
+        }
 
-            .quiz-container {
-                flex-direction: column;
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .column {
+                width: 48%;
             }
+        }
 
-            img {
-                max-width: 80px;
-            }
+        /* MathJax specific styling */
+        .mathjax-inline {
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        /* Ensure images don't overflow */
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
-    <div id="quiz-container" class="quiz-container"></div>
-    <button class="print-button" onclick="window.print()">Print Quiz</button>
+    <button class="print-button" onclick="window.print()"><i class="fas fa-print"></i> Print Questions</button>
+    <div id="quiz-container"></div>
 
     <script>
         let quizData = [];
@@ -204,115 +205,171 @@
 
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
+        // Fetch the JSON data
         fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
                 quizData = data;
-                sortAndDisplayQuestions();
+                displayAllQuestions();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
-        function sortAndDisplayQuestions() {
+        function displayAllQuestions() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
 
-            // Sort subjects: Biology, Chemistry, Physics
-            const sortedSubjects = quizData.sort((a, b) => {
-                const order = ['Biology', 'Chemistry', 'Physics'];
-                return order.indexOf(a.title) - order.indexOf(b.title);
-            });
-
+            // Combine all subjects' questions
             let allQuestions = [];
-            sortedSubjects.forEach(subject => {
-                subject.questions.forEach(question => {
-                    question.subject = subject.title;
-                    allQuestions.push(question);
-                });
+            quizData.forEach(subject => {
+                allQuestions = allQuestions.concat(subject.questions.map(q => ({
+                    ...q,
+                    subjectTitle: subject.title
+                })));
             });
 
-            // Create two columns
-            const column1 = document.createElement('div');
-            column1.className = 'column';
-            const column2 = document.createElement('div');
-            column2.className = 'column';
-            quizContainer.appendChild(column1);
-            quizContainer.appendChild(column2);
-
-            let currentColumn = column1;
-            let questionCount = 0;
-            let pageHeight = 0;
-            const maxPageHeight = 1050; // Approximate A4 height in pixels for content
-
-            allQuestions.forEach((question, index) => {
-                const questionElement = document.createElement('div');
-                questionElement.className = 'question';
-
-                const questionNumber = document.createElement('div');
-                questionNumber.className = 'question-number';
-                questionNumber)
-
-
-                questionNumber.textContent = `Question ${index + 1}:`;
-                questionElement.appendChild(questionNumber);
-
-                const questionContent = document.createElement('div');
-                questionContent.className = 'question-content';
-                questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
-                    return `<span class="mathjax-inline">$$${p1}$$</span>`;
-                });
-                questionElement.appendChild(questionContent);
-
-                const optionsList = document.createElement('ul');
-                optionsList.className = 'options';
-
-                question.options.forEach(option => {
-                    const optionItem = document.createElement('li');
-                    const optionLabel = document.createElement('label');
-                    const optionInput = document.createElement('input');
-
-                    optionInput.type = 'radio';
-                    optionInput.name = `question${question.question_id}`;
-                    optionInput.value = option.identifier;
-
-                    optionLabel.appendChild(optionInput);
-                    optionLabel.innerHTML += option.content;
-                    optionItem.appendChild(optionLabel);
-                    optionsList.appendChild(optionItem);
-                });
-
-                questionElement.appendChild(optionsList);
-
-                const explanationContent = document.createElement('div');
-                explanationContent.className = 'explanation-content';
-                explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
-                questionElement.appendChild(explanationContent);
-
-                // Estimate height of question
-                document.body.appendChild(questionElement);
-                const questionHeight = questionElement.offsetHeight;
-                document.body.removeChild(questionElement);
-
-                if (pageHeight + questionHeight > maxPageHeight) {
-                    if (currentColumn === column1) {
-                        currentColumn = column2;
-                        pageHeight = 0;
-                    } else {
-                        const pageBreak = document.createElement('div');
-                        pageBreak.className = 'page-break';
-                        quizContainer.appendChild(pageBreak);
-                        currentColumn = column1;
-                        pageHeight = 0;
-                    }
-                }
-
-                currentColumn.appendChild(questionElement);
-                pageHeight += questionHeight;
-                questionCount++;
+            // Group by subject (Bio, Chem, Phy order)
+            const subjectsOrder = ['Biology', 'Chemistry', 'Physics'];
+            const groupedQuestions = {};
+            
+            subjectsOrder.forEach(subject => {
+                groupedQuestions[subject] = allQuestions.filter(q => q.subjectTitle === subject);
             });
 
+            // Create pages with two columns
+            createPages(allQuestions, quizContainer);
+
+            // Re-render MathJax content
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
+        function createPages(questions, container) {
+            const questionsPerPage = estimateQuestionsPerPage();
+            let currentPage = 1;
+            let currentColumn = 1;
+            let questionsInCurrentColumn = 0;
+            
+            // Create first page
+            let pageContainer = createPageContainer(container, currentPage);
+            let column1 = createColumn(pageContainer, 1);
+            let column2 = createColumn(pageContainer, 2);
+            
+            let currentColumnElement = column1;
+            let currentSubject = null;
+            
+            for (let i = 0; i < questions.length; i++) {
+                const question = questions[i];
+                
+                // Add subject title if it's a new subject
+                if (currentSubject !== question.subjectTitle) {
+                    currentSubject = question.subjectTitle;
+                    const subjectTitleElement = document.createElement('div');
+                    subjectTitleElement.className = 'subject-title';
+                    subjectTitleElement.textContent = currentSubject;
+                    currentColumnElement.appendChild(subjectTitleElement);
+                    questionsInCurrentColumn++; // Count subject title as space
+                }
+                
+                // Check if we need to switch columns or pages
+                if (questionsInCurrentColumn >= questionsPerPage) {
+                    if (currentColumn === 1) {
+                        currentColumn = 2;
+                        currentColumnElement = column2;
+                    } else {
+                        currentPage++;
+                        pageContainer = createPageContainer(container, currentPage);
+                        column1 = createColumn(pageContainer, 1);
+                        column2 = createColumn(pageContainer, 2);
+                        currentColumn = 1;
+                        currentColumnElement = column1;
+                    }
+                    questionsInCurrentColumn = 0;
+                    
+                    // Add subject title again if we switched columns/pages
+                    if (currentSubject) {
+                        const subjectTitleElement = document.createElement('div');
+                        subjectTitleElement.className = 'subject-title';
+                        subjectTitleElement.textContent = currentSubject;
+                        currentColumnElement.appendChild(subjectTitleElement);
+                        questionsInCurrentColumn++; // Count subject title as space
+                    }
+                }
+                
+                // Add the question
+                const questionElement = createQuestionElement(question, i + 1);
+                currentColumnElement.appendChild(questionElement);
+                questionsInCurrentColumn++;
+            }
+        }
+
+        function createPageContainer(parent, pageNumber) {
+            const pageContainer = document.createElement('div');
+            pageContainer.className = 'page-container';
+            pageContainer.id = `page-${pageNumber}`;
+            parent.appendChild(pageContainer);
+            return pageContainer;
+        }
+
+        function createColumn(parent, columnNumber) {
+            const column = document.createElement('div');
+            column.className = 'column';
+            column.id = `column-${columnNumber}`;
+            parent.appendChild(column);
+            return column;
+        }
+
+        function createQuestionElement(question, questionNumber) {
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question';
+
+            // Question Number
+            const questionNumberElement = document.createElement('div');
+            questionNumberElement.className = 'question-number';
+            questionNumberElement.textContent = `Question ${questionNumber}:`;
+            questionElement.appendChild(questionNumberElement);
+
+            // Question Content
+            const questionContent = document.createElement('div');
+            questionContent.className = 'question-content';
+            questionContent.innerHTML = question.content.replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+                return `<span class="mathjax-inline">$$${p1}$$</span>`;
+            });
+            questionElement.appendChild(questionContent);
+
+            // Options
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options';
+
+            question.options.forEach(option => {
+                const optionItem = document.createElement('li');
+                const optionLabel = document.createElement('label');
+                const optionInput = document.createElement('input');
+
+                optionInput.type = 'radio';
+                optionInput.name = `question${question.question_id}`;
+                optionInput.value = option.identifier;
+
+                optionLabel.appendChild(optionInput);
+                optionLabel.innerHTML += option.content;
+                optionItem.appendChild(optionLabel);
+                optionsList.appendChild(optionItem);
+            });
+
+            questionElement.appendChild(optionsList);
+
+            return questionElement;
+        }
+
+        function estimateQuestionsPerPage() {
+            // Estimate how many questions can fit in one column of an A4 page
+            // This is a rough estimate and may need adjustment
+            if (window.innerWidth <= 768) { // Mobile
+                return 3;
+            } else { // Desktop
+                return 10;
+            }
+        }
+
+        // Prevent page refresh or navigation
         window.onbeforeunload = function (event) {
             return "Are you sure you want to leave? Your progress may be lost.";
         };
