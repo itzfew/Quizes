@@ -7,21 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/paper-css@0.3.0/paper.min.css">
     <style>
-      @page { size: A4; margin: 10mm; }
+      @page { size: A4 }
       @media print {
         .footer { page-break-after: always; }
         .footer:last-child { page-break-after: avoid; }
-        .noprint, .loader { display: none !important; }
-        .sheet { margin: 0 !important; }
+        .noprint {
+          display: none !important;
+        }
       }
-      body { font-family: Arial, Helvetica, sans-serif; }
       .question {
-        padding: 7px;
+        padding-right: 7px;
+        padding-left: 7px;
         font-size: 11pt;
-        page-break-inside: avoid; /* Prevent questions from splitting */
       }
       .loader .spinner {
-        border: 16px solid #f3f3f3;
         border-top: 16px solid blue;
         border-right: 16px solid green;
         border-bottom: 16px solid red;
@@ -47,181 +46,160 @@
         margin: 20px;
         background: green;
         color: white;
+        font-family: Arial, Helvetica, sans-serif;
         font-size: 20px;
         font-weight: bold;
-        cursor: pointer;
       }
-      .sheet .content .column { text-align: justify; font-size: 11pt; }
-      .sheet .content .column blockquote { background: #DEDEDE; padding: 10px; margin: 4px 20px; clear: both; }
-      .sheet .content .column h1 { padding: 0 10px; }
-      .sheet .header { text-align: center; font-size: 18pt; padding: 20px 0 0; }
-      .sheet .header .contact { float: right; font-size: 14pt; }
-      .sheet .header .logo { float: left; vertical-align: middle; }
-      .sheet .header hr, .sheet .footer hr { width: 800px; }
-      .sheet .footer span { position: absolute; bottom: 10px; right: 10px; }
-      .page_template { display: none; }
+      .sheet .content .column {
+        text-align: justify;
+        font-size: 11pt;
+      }
+      .sheet .content .column blockquote {
+        background: #DEDEDE;
+        padding: 10px;
+        margin: 4px 20px;
+        clear: both;
+      }
+      .sheet .content .column h1 {
+        padding: 0 10px;
+      }
+      .sheet .header {
+        text-align: center;
+        font-size: 18pt;
+        font-family: helvetica, arial;
+        padding: 20px 0 0;
+      }
+      .sheet .header .contact {
+        float: right;
+        font-size: 14pt;
+        font-family: helvetica, arial;
+      }
+      .sheet .header .logo {
+        float: left;
+        vertical-align: middle;
+      }
+      .sheet .header hr, .sheet .footer hr {
+        width: 800px;
+      }
+      .sheet .footer span {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+      }
+      .page_template {
+        display: none;
+      }
       table {
         table-layout: fixed;
         text-align: left;
         border-collapse: collapse;
         border: 1px solid black;
-        width: 100%; /* Ensure table fits within column */
-        max-width: 100%;
-        word-wrap: break-word;
-        page-break-inside: avoid; /* Prevent table splitting */
+        width: 100%;
+      }
+      th, td {
+        border: 1px solid black;
+        padding: 5px;
+        text-align: left;
       }
       .content {
         padding: 10px;
         background: linear-gradient(#000, #000) no-repeat center/0.1px 99%;
         border-bottom: 1px solid black;
-        min-height: 900px; /* Ensure consistent content height */
       }
-      th, td {
-        border: 1px solid black;
-        padding: 5px;
-        font-size: 10pt;
-        overflow-wrap: break-word; /* Handle long content */
+      .content img {
+        max-width: 100%;
+        height: auto;
       }
-      table tr td p { margin: 0 !important; }
-      img { max-width: 100%; height: auto; } /* Prevent image overflow */
     </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://www.neetprep.com/jquery.columnizer.min.js"></script>
-    <!-- Updated to MathJax v3 -->
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src='https://www.neetprep.com/jquery.columnizer.min.js'></script>
+    <script async src='https://cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
     <script>
       $(function() {
-        var content_height = 900; // Content height excluding header/footer
-        var page = 1; // Starting page number
-
-        // Function to compress tables
-        function compressTables() {
-          $('table').each(function() {
-            var table = $(this);
-            var tableWidth = table.width();
-            var parentWidth = table.parent().width();
-            if (tableWidth > parentWidth) {
-              table.css('font-size', '9pt'); // Reduce font size
-              table.find('td').css('padding', '3px'); // Reduce padding
-            }
-          });
-        }
-
-        // Function to handle image scaling
-        function scaleImages() {
-          $('.question img').each(function() {
-            var img = $(this);
-            if (img.width() > img.parent().width()) {
-              img.css('width', '100%');
-            }
-          });
-        }
-
-        // Function to wait for MathJax rendering
-        function waitForMathJax(callback) {
-          if (typeof MathJax !== 'undefined') {
-            MathJax.typesetPromise().then(() => {
-              callback();
-            }).catch(err => {
-              console.error('MathJax rendering failed:', err);
-              callback(); // Proceed even if MathJax fails
-            });
-          } else {
-            callback(); // Proceed if MathJax is not loaded
-          }
-        }
+        var content_height = 900;  // the height of the content, excluding the header/footer
+        var page = 1;        // the beginning page number to show in the footer
 
         // Fetch questions from JSON
-        $.getJSON('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/3c48616f-298a-5f69-91d2-bcd59444c455.json')
-          .done(function(data) {
-            var newsletterContent = $('#newsletterContent');
-
-            // Group questions by subject
-            var subjects = {};
-            data.forEach(function(subjectData) {
-              var subject = subjectData.subject;
-              if (!subjects[subject]) {
-                subjects[subject] = [];
-              }
-              subjects[subject].push(subjectData.questions);
-            });
-
-            // Render questions
-            Object.keys(subjects).forEach(function(subject) {
-              newsletterContent.append(
-                '<div style="width: 100%; text-align: center; font-size: 32px;"><b>' +
-                  subject.charAt(0).toUpperCase() + subject.slice(1) +
-                '</b></div>'
-              );
-              subjects[subject].flat().forEach(function(q, index) {
-                var questionHtml = '<div class="dontsplit question">' +
-                  '<span class="questionId" style="vertical-align: top;"><b>' + (index + 1) + '.</b></span> ' +
-                  '<p style="display:inline">' + q.content + '</p>';
-
-                // Render options if available
-                if (q.options && q.options.length > 0) {
-                  questionHtml += '<table><tbody>';
-                  for (var i = 0; i < q.options.length; i += 2) {
-                    questionHtml += '<tr>' +
-                      '<td style="width: 7%;">' + (i + 1) + '.</td>' +
-                      '<td style="width: 43%;">' + q.options[i].content + '</td>';
-                    if (i + 1 < q.options.length) {
-                      questionHtml += '<td style="width: 7%;">' + (i + 2) + '.</td>' +
-                        '<td style="width: 43%;">' + q.options[i + 1].content + '</td>';
-                    }
-                    questionHtml += '</tr>';
-                  }
-                  questionHtml += '</tbody></table>';
-                }
-
-                questionHtml += '<br><br></div>';
-                newsletterContent.append(questionHtml);
-              });
-            });
-
-            // Wait for MathJax to render, then build newsletter
-            waitForMathJax(function() {
-              setTimeout(buildNewsletter, 500); // Reduced timeout for faster rendering
-            });
-          })
-          .fail(function(jqXHR, textStatus, errorThrown) {
-            console.error('Failed to fetch JSON:', textStatus, errorThrown);
-            $('.loader').hide();
-            $('#printDiv').css('display', 'flex').append('<p style="color: red;">Failed to load questions. Please try again.</p>');
+        $.getJSON('https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/3c48616f-298a-5f69-91d2-bcd59444c455.json', function(data) {
+          var newsletterContent = $('#newsletterContent');
+          
+          // Group questions by subject
+          var subjects = {};
+          data.forEach(function(subjectData) {
+            var subject = subjectData.subject;
+            if (!subjects[subject]) {
+              subjects[subject] = [];
+            }
+            subjects[subject].push(subjectData.questions);
           });
 
-        // Build newsletter pages
-        function buildNewsletter() {
-          scaleImages();
-          compressTables();
+          // Render questions
+          Object.keys(subjects).forEach(function(subject) {
+            newsletterContent.append('<div style="width: 100%; margin: auto; text-align: center; font-size: 32px;"><b>' + subject.charAt(0).toUpperCase() + subject.slice(1) + '</b></div>');
+            subjects[subject].flat().forEach(function(q, index) {
+              var questionHtml = '<div class="dontsplit question">' +
+                '<span class="questionId" style="vertical-align: top;"><b>' + (index + 1) + '.</b></span> ' +
+                '<p style="display:inline">' + q.content + '</p>';
 
-          if ($('#newsletterContent').contents().length > 0) {
-            var $page = $('.page_template:first').clone()
-              .addClass('sheet padding-10mm')
-              .css({ display: 'block', margin: 'auto' });
-            $page.find('.footer span').append(page);
-            $('body').append($page);
+              // Render options if available
+              if (q.options && q.options.length > 0) {
+                questionHtml += '<table><tbody>';
+                for (var i = 0; i < q.options.length; i += 2) {
+                  questionHtml += '<tr>' +
+                    '<td style="width: 7%;">' + (i + 1) + '.</td>' +
+                    '<td style="width: 43%;">' + q.options[i].content + '</td>';
+                  if (i + 1 < q.options.length) {
+                    questionHtml += '<td style="width: 7%;">' + (i + 2) + '.</td>' +
+                      '<td style="width: 43%;">' + q.options[i + 1].content + '</td>';
+                  }
+                  questionHtml += '</tr>';
+                }
+                questionHtml += '</tbody></table>';
+              }
+
+              questionHtml += '<br><br></div>';
+              newsletterContent.append(questionHtml);
+            });
+          });
+
+          // Trigger PDF generation
+          setTimeout(buildNewsletter, 1000);
+        });
+
+        function buildNewsletter(){
+          var image = $('.question img');
+          image.each(function () {
+            var that = $(this);
+            if (that.width() >= 359) {
+              that.width('100%');
+            }
+          });
+
+          if($('#newsletterContent').contents().length > 0){
+            $page = $(".page_template:first").clone().addClass("sheet padding-10mm").css("display", "block").css("margin", "auto");
+            $page.find(".footer span").append(page);
+            $("body").append($page);
             page++;
 
             $('#newsletterContent').columnize({
               columns: 2,
-              target: '.sheet:last .content',
+              target: ".sheet:last .content",
               ignoreImageLoading: false,
               overflow: {
                 height: content_height,
-                id: '#newsletterContent',
-                doneFunc: function() {
-                  console.log('Done with page');
-                  waitForMathJax(buildNewsletter); // Wait for MathJax on each page
+                id: "#newsletterContent",
+                doneFunc: function(){
+                  console.log("done with page");
+                  buildNewsletter();
                 }
               }
             });
           } else {
             $('.loader').hide();
             $('#printDiv').css('display', 'flex');
-            $('#newsletterContent').css('display', 'none');
+            $('#newsletterContent').css("display", "none");
 
-            $('#printBtn').click(function() {
+            $('#printBtn').click(function () {
               window.print();
             });
           }
@@ -231,14 +209,14 @@
   </head>
   <body class="A4">
     <div class="page_template">
-      <div class="header">
+      <div class='header'>
         <img class="logo" src="https://www.neetprep.com/assets/img/logo.png" width="111" height="28">
         Full Test - NEET PYQs
         <span class="contact">Contact Number: 8527521718</span>
         <hr>
       </div>
-      <div class="content"></div>
-      <div class="footer"><span>Page: </span></div>
+      <div class='content'></div>
+      <div class='footer'><span>Page: </span></div>
     </div>
     <div class="loader">
       <br><br>
@@ -247,8 +225,8 @@
       <h1 style="text-align: center;">Please be patient as the PDF generation may take up to a minute.</h1>
     </div>
     <div id="printDiv" class="noprint">
-      <button id="printBtn">Print</button>
+      <button id='printBtn'>Print</button>
     </div>
-    <div id="newsletterContent" style="visibility: hidden; display: block;"></div>
+    <div id="newsletterContent" style="visibility:hidden;display:block;"></div>
   </body>
-</html> 
+</html>
