@@ -3,44 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Quiz Game with PDF Export</title>
+    <title>Interactive Quiz Game</title>
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
-        }
-        main {
-            margin-top: 80px;
             padding: 20px;
         }
+
+        main {
+            padding: 20px;
+        }
+
         .quiz-title {
             font-size: 1.5em;
-            margin: 5px 0;
+            margin: 10px 0;
             color: #333;
             text-align: center;
             border: 2px solid black;
         }
+
+        .quiz-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .column {
+            flex: 1;
+            min-width: 45%;
+            margin-right: 20px;
+            box-sizing: border-box;
+        }
+
+        .column:last-child {
+            margin-right: 0;
+        }
+
         .question {
             margin-bottom: 30px;
-            padding: 3px;
+            padding: 10px;
             border-bottom: 1px solid #ccc;
             overflow-x: auto;
             word-wrap: break-word;
             white-space: normal;
+            page-break-inside: avoid;
         }
+
         .question-number {
             font-weight: bold;
             font-size: 1.2em;
             color: #333;
             margin-bottom: 10px;
         }
+
         .question-content {
             margin-bottom: 15px;
             word-wrap: break-word;
@@ -48,6 +69,7 @@
             max-width: 100%;
             overflow-x: auto;
         }
+
         .options li {
             margin-bottom: 10px;
             border: 1px solid #ccc;
@@ -57,93 +79,108 @@
             word-wrap: break-word;
             white-space: normal;
         }
+
         .options label {
             cursor: pointer;
             display: flex;
             align-items: center;
         }
+
         .options input[type="radio"] {
             margin-right: 10px;
         }
-        #subject-dropdown {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 1em;
+
+        .correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
+            color: green;
         }
+
         img {
             max-width: 100px;
             height: auto;
         }
-        .submit-button, .pdf-button {
+
+        .print-button {
             background-color: #000;
             color: white;
             padding: 10px 20px;
             border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
-            width: 100%;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .buttons-container {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #f4f4f4;
+            bottom: 20px;
+            right: 20px;
             z-index: 1000;
-            padding: 10px 0;
         }
-        .explanation-button {
-            display: none;
-            margin-top: 10px;
-            background-color: white;
-            color: black;
-            border: 2px solid black;
-            cursor: pointer;
-            padding: 8px 16px;
-        }
-        .explanation-button:hover {
-            background-color: black;
-            color: white;
-        }
+
         .explanation-content {
             display: none;
             margin-top: 10px;
             font-style: italic;
             color: #777;
-        }
-        .explanation-content.open {
-            display: block;
             background-color: #FFF59D;
             padding: 10px;
             border-radius: 5px;
-            margin-top: 10px;
-            font-style: italic;
-            color: #777;
         }
+
         .mathjax-inline {
             white-space: nowrap;
             display: inline-block;
             font-size: 1.1em;
         }
+
         .question-content span {
             display: inline-block;
         }
-        @media (max-width: 600px) {
+
+        @media print {
+            .print-button, .explanation-button {
+                display: none;
+            }
+
             body {
-                padding: 0px;
+                padding: 0;
+                margin: 0;
             }
-            #quiz-container {
-                padding: 3px;
+
+            .quiz-container {
+                display: block;
             }
-            .submit-button, .pdf-button {
+
+            .column {
+                width: 50%;
+                float: left;
+                margin: 0;
                 padding: 10px;
+                box-sizing: border-box;
             }
-            .options li {
-               %BE4.5; padding: 5px;
+
+            .question {
+                page-break-inside: avoid;
             }
+
+            @page {
+                size: A4;
+                margin: 1cm;
+            }
+
+            .page-break {
+                clear: both;
+                page-break-before: always;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .column {
+                min-width: 100%;
+                margin-right: 0;
+            }
+
+            .quiz-container {
+                flex-direction: column;
+            }
+
             img {
                 max-width: 80px;
             }
@@ -152,15 +189,10 @@
 </head>
 <body>
     <div class="quiz-title" id="quiz-title"></div>
-    <select id="subject-dropdown"></select>
-    <div id="quiz-container"></div>
-    <div class="buttons-container">
-        <button class="pdf-button" onclick="generatePDF()">Generate PDF</button>
-        <button class="submit-button" onclick="showAllExplanations()">Submit All</button>
-    </div>
+    <div id="quiz-container" class="quiz-container"></div>
+    <button class="print-button" onclick="window.print()">Print Quiz</button>
 
     <script>
-        let currentQuestionIndex = 0;
         let quizData = [];
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
@@ -176,47 +208,50 @@
             .then(response => response.json())
             .then(data => {
                 quizData = data;
-                populateSubjectDropdown();
-                displayAllQuestions();
+                sortAndDisplayQuestions();
             })
             .catch(error => console.error('Error fetching the JSON data:', error));
 
-        function populateSubjectDropdown() {
-            const subjectDropdown = document.getElementById('subject-dropdown');
-            quizData.forEach((subject, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = subject.title;
-                subjectDropdown.appendChild(option);
-            });
-
-            subjectDropdown.onchange = () => {
-                currentQuestionIndex = 0;
-                displayAllQuestions();
-            };
-        }
-
-        let totalQuestions = 0;
-        let correctAnswers = 0;
-        let incorrectAnswers = 0;
-        let missedAnswers = 0;
-        let startTime = new Date();
-
-        function displayAllQuestions() {
+        function sortAndDisplayQuestions() {
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
-            totalQuestions = 0;
 
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
+            // Sort subjects: Biology, Chemistry, Physics
+            const sortedSubjects = quizData.sort((a, b) => {
+                const order = ['Biology', 'Chemistry', 'Physics'];
+                return order.indexOf(a.title) - order.indexOf(b.title);
+            });
 
-            subject.questions.forEach((question, index) => {
-                totalQuestions++;
+            let allQuestions = [];
+            sortedSubjects.forEach(subject => {
+                subject.questions.forEach(question => {
+                    question.subject = subject.title;
+                    allQuestions.push(question);
+                });
+            });
+
+            // Create two columns
+            const column1 = document.createElement('div');
+            column1.className = 'column';
+            const column2 = document.createElement('div');
+            column2.className = 'column';
+            quizContainer.appendChild(column1);
+            quizContainer.appendChild(column2);
+
+            let currentColumn = column1;
+            let questionCount = 0;
+            let pageHeight = 0;
+            const maxPageHeight = 1050; // Approximate A4 height in pixels for content
+
+            allQuestions.forEach((question, index) => {
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question';
 
                 const questionNumber = document.createElement('div');
                 questionNumber.className = 'question-number';
+                questionNumber)
+
+
                 questionNumber.textContent = `Question ${index + 1}:`;
                 questionElement.appendChild(questionNumber);
 
@@ -247,217 +282,35 @@
 
                 questionElement.appendChild(optionsList);
 
-                const explanationButton = document.createElement('button');
-                explanationButton.className = 'explanation-button';
-                explanationButton.textContent = 'Show Explanation';
-                explanationButton.onclick = () => toggleExplanation(questionElement);
-                questionElement.appendChild(explanationButton);
-
                 const explanationContent = document.createElement('div');
                 explanationContent.className = 'explanation-content';
                 explanationContent.innerHTML = `Explanation: ${question.explanation || 'No explanation available.'}`;
                 questionElement.appendChild(explanationContent);
 
-                quizContainer.appendChild(questionElement);
-            });
+                // Estimate height of question
+                document.body.appendChild(questionElement);
+                const questionHeight = questionElement.offsetHeight;
+                document.body.removeChild(questionElement);
 
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        }
-
-        function toggleExplanation(questionElement) {
-            const explanationContent = questionElement.querySelector('.explanation-content');
-            explanationContent.classList.toggle('open');
-        }
-
-        function showAllExplanations() {
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-
-            correctAnswers = 0;
-            incorrectAnswers = 0;
-            missedAnswers = 0;
-
-            subject.questions.forEach((question, index) => {
-                const selectedOption = document.querySelector(`input[name="question${question.question_id}"]:checked`);
-                const questionElement = document.querySelector(`.question:nth-child(${index + 1})`);
-                const explanationButton = questionElement.querySelector('.explanation-button');
-
-                explanationButton.style.display = 'block';
-
-                const feedback = document.createElement('div');
-                feedback.className = 'correct-answer';
-                const options = document.querySelectorAll(`input[name="question${question.question_id}"]`);
-                const correctOptionValue = question.correct_options[0];
-
-                if (selectedOption) {
-                    const selectedOptionValue = selectedOption.value;
-
-                    if (selectedOptionValue === correctOptionValue) {
-                        correctAnswers++;
-                        feedback.innerHTML = "You are correct!";
-                        feedback.style.color = 'green';
+                if (pageHeight + questionHeight > maxPageHeight) {
+                    if (currentColumn === column1) {
+                        currentColumn = column2;
+                        pageHeight = 0;
                     } else {
-                        incorrectAnswers++;
-                        feedback.innerHTML = `You selected the wrong answer. The correct answer is: Option ${correctOptionValue}`;
-                        feedback.style.color = 'red';
+                        const pageBreak = document.createElement('div');
+                        pageBreak.className = 'page-break';
+                        quizContainer.appendChild(pageBreak);
+                        currentColumn = column1;
+                        pageHeight = 0;
                     }
-                } else {
-                    missedAnswers++;
-                    feedback.innerHTML = `You did not select an option, but the correct answer is: Option ${correctOptionValue}`;
-                    feedback.style.color = 'red';
                 }
 
-                questionElement.appendChild(feedback);
-
-                options.forEach(option => {
-                    const optionItem = option.closest('li');
-                    if (option.value === correctOptionValue) {
-                        optionItem.style.backgroundColor = 'green';
-                        optionItem.style.color = 'white';
-                    } else if (option.checked) {
-                        optionItem.style.backgroundColor = 'red';
-                        optionItem.style.color = 'white';
-                    }
-                    option.disabled = true;
-                });
-            });
-
-            const endTime = new Date();
-            const timeTakenInSeconds = Math.round((endTime - startTime) / 1000);
-            const timeTakenInMinutes = (timeTakenInSeconds / 60).toFixed(2);
-            const totalAttempts = correctAnswers + incorrectAnswers;
-            const avgTimePerAttempt = totalAttempts > 0 ? (timeTakenInSeconds / totalAttempts).toFixed(2) : 0;
-
-            const scoreCard = document.createElement('div');
-            scoreCard.innerHTML = `
-                <table style="width: 100%; text-align: center; border: 1px solid #ccc;">
-                    <tr>
-                        <th>Total Attempted</th>
-                        <th>Correct</th>
-                        <th>Incorrect</th>
-                        <th>Missed</th>
-                        <th>Total Time (Minutes)</th>
-                        <th>Avg. Time per Attempt (Seconds)</th>
-                    </tr>
-                    <tr>
-                        <td>${totalAttempts}</td>
-                        <td>${correctAnswers}</td>
-                        <td>${incorrectAnswers}</td>
-                        <td>${missedAnswers}</td>
-                        <td>${timeTakenInMinutes}</td>
-                        <td>${avgTimePerAttempt}</td>
-                    </tr>
-                </table>
-            `;
-
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.insertBefore(scoreCard, quizContainer.firstChild);
-
-            window.scrollTo({
-                top: quizContainer.offsetTop,
-                behavior: 'smooth'
+                currentColumn.appendChild(questionElement);
+                pageHeight += questionHeight;
+                questionCount++;
             });
 
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        }
-
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4'
-            });
-
-            const subjectIndex = document.getElementById('subject-dropdown').value;
-            const subject = quizData[subjectIndex];
-            let yOffset = 10;
-
-            // Title
-            doc.setFontSize(16);
-            doc.text(document.getElementById('quiz-title').textContent, 10, yOffset, { align: 'center', width: 190 });
-            yOffset += 10;
-
-            // Subject
-            doc.setFontSize(12);
-            doc.text(subject.title, 10, yOffset);
-            yOffset += 10;
-
-            // Questions
-            subject.questions.forEach((question, index) => {
-                if (yOffset > 260) {
-                    doc.addPage();
-                    yOffset = 10;
-                }
-
-                doc.setFontSize(12);
-                doc.text(`Question ${index + 1}:`, 10, yOffset);
-                yOffset += 6;
-
-                // Question content (basic text, MathJax rendering not supported in jsPDF)
-                let questionText = question.content.replace(/\$\$(.*?)\$\$/g, '$1').replace(/<[^>]+>/g, '');
-                let splitText = doc.splitTextToSize(questionText, 190);
-                doc.setFontSize(10);
-                doc.text(splitText, 10, yOffset);
-                yOffset += splitText.length * 5 + 5;
-
-                // Options
-                question.options.forEach(option => {
-                    if (yOffset > 270) {
-                        doc.addPage();
-                        yOffset = 10;
-                    }
-                    let optionText = option.content.replace(/\$\$(.*?)\$\$/g, '$1').replace(/<[^>]+>/g, '');
-                    let optionSplit = doc.splitTextToSize(`${option.identifier}: ${optionText}`, 180);
-                    doc.text(optionSplit, 15, yOffset);
-                    yOffset += optionSplit.length * 5 + 2;
-                });
-
-                yOffset += 5;
-            });
-
-            // Answer Key
-            doc.addPage();
-            yOffset = 10;
-            doc.setFontSize(14);
-            doc.text('Answer Key', 10, yOffset);
-            yOffset += 10;
-
-            subject.questions.forEach((question, index) => {
-                if (yOffset > 270) {
-                    doc.addPage();
-                    yOffset = 10;
-                }
-                doc.setFontSize(10);
-                doc.text(`Question ${index + 1}: ${question.correct_options[0]}`, 10, yOffset);
-                yOffset += 6;
-            });
-
-            // Solutions
-            doc.addPage();
-            yOffset = 10;
-            doc.setFontSize(14);
-            doc.text('Solutions', 10, yOffset);
-            yOffset += 10;
-
-            subject.questions.forEach((question, index) => {
-                if (yOffset > 260) {
-                    doc.addPage();
-                    yOffset = 10;
-                }
-                doc.setFontSize(12);
-                doc.text(`Question ${index + 1}:`, 10, yOffset);
-                yOffset += 6;
-
-                let explanationText = (question.explanation || 'No explanation available.').replace(/\$\$(.*?)\$\$/g, '$1').replace(/<[^>]+>/g, '');
-                let splitExplanation = doc.splitTextToSize(explanationText, 190);
-                doc.setFontSize(10);
-                doc.text(splitExplanation, 10, yOffset);
-                yOffset += splitExplanation.length * 5 + 5;
-            });
-
-            // Save PDF
-            doc.save(`${document.getElementById('quiz-title').textContent}.pdf`);
         }
 
         window.onbeforeunload = function (event) {
