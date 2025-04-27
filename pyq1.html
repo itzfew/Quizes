@@ -7,9 +7,8 @@
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,6 +28,7 @@
             color: #333;
             text-align: center;
             border: 2px solid black;
+            padding: 10px;
         }
 
         .quiz-container {
@@ -39,18 +39,21 @@
         }
 
         .subject-section {
-            margin-bottom: 30px;
             break-inside: avoid;
             page-break-inside: avoid;
+            margin-bottom: 30px;
         }
 
         .subject-title {
             font-size: 1.3em;
             font-weight: bold;
-            margin: 20px 0 10px;
-            color: #222;
-            border-bottom: 2px solid #333;
-            break-inside: avoid;
+            color: #2c3e50;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            break-after: avoid;
+            page-break-after: avoid;
         }
 
         .question {
@@ -104,44 +107,26 @@
             height: auto;
         }
 
-        .button-container {
+        .action-buttons {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            display: flex;
-            gap: 10px;
             z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .print-button, .pdf-button {
+        .action-button {
             background-color: #000;
             color: white;
             padding: 10px 20px;
             border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
-        }
-
-        .progress-container {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        .progress-bar {
-            width: 100%;
-            background-color: #ddd;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .progress {
-            height: 20px;
-            background-color: #4CAF50;
-            width: 0%;
-            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .mathjax-inline {
@@ -154,8 +139,64 @@
             display: inline-block;
         }
 
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .loading-message {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .pdf-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            display: none;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @media print {
-            .button-container, .progress-container {
+            .action-buttons {
                 display: none;
             }
 
@@ -163,6 +204,7 @@
                 padding: 10mm;
                 margin: 0;
                 background-color: white;
+                font-size: 11pt;
             }
 
             .quiz-container {
@@ -171,7 +213,12 @@
                 width: 100%;
             }
 
-            .question, .subject-section {
+            .question {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .subject-section {
                 break-inside: avoid;
                 page-break-inside: avoid;
             }
@@ -185,53 +232,42 @@
         @media (max-width: 768px) {
             .quiz-container {
                 column-count: 1;
-                column-gap: 10px;
             }
 
-            .question {
-                padding: 5px;
+            .action-buttons {
+                flex-direction: row;
+                bottom: 10px;
+                right: 10px;
             }
 
-            .options li {
-                padding: 5px;
-            }
-
-            img {
-                max-width: 80px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .quiz-container {
-                column-count: 1;
-                column-gap: 5px;
-            }
-
-            .quiz-title {
-                font-size: 1.2em;
-            }
-
-            .question-number {
-                font-size: 1em;
-            }
-
-            .options li {
+            .action-button {
+                padding: 8px 15px;
                 font-size: 0.9em;
             }
         }
     </style>
 </head>
 <body>
-    <div class="progress-container">
-        <div class="progress-bar">
-            <div class="progress" id="progress"></div>
-        </div>
-    </div>
     <div class="quiz-title" id="quiz-title"></div>
+    <div class="progress-container" id="progress-container">
+        <div class="progress-bar" id="progress-bar">0%</div>
+    </div>
+    <div class="loading-message" id="loading-message">Loading quiz questions...</div>
     <div id="quiz-container" class="quiz-container"></div>
-    <div class="button-container">
-        <button class="print-button" onclick="window.print()">Print Quiz</button>
-        <button class="pdf-button" onclick="downloadPDF()">Download PDF</button>
+    
+    <div class="action-buttons">
+        <button class="action-button" onclick="window.print()">
+            <i class="fas fa-print"></i> Print Quiz
+        </button>
+        <button class="action-button" onclick="generatePDF()">
+            <i class="fas fa-file-pdf"></i> Save as PDF
+        </button>
+    </div>
+
+    <div class="pdf-loading" id="pdf-loading">
+        <div class="spinner"></div>
+        <h2>Generating PDF...</h2>
+        <p>Please wait while we prepare your document</p>
     </div>
 
     <script>
@@ -240,6 +276,11 @@
         const title = urlParams.get('title');
         const metaId = urlParams.get('metaId');
 
+        // Show loading elements
+        document.getElementById('progress-container').style.display = 'block';
+        document.getElementById('loading-message').style.display = 'block';
+        updateProgress(10);
+
         if (title) {
             document.getElementById('quiz-title').textContent = title;
         }
@@ -247,12 +288,31 @@
         const jsonUrl = `https://raw.githubusercontent.com/itzfew/Quizes/refs/heads/main/pyq/${metaId}.json`;
 
         fetch(jsonUrl)
-            .then(response => response.json())
+            .then(response => {
+                updateProgress(30);
+                return response.json();
+            })
             .then(data => {
                 quizData = data;
+                updateProgress(70);
                 displaySortedQuestions();
+                updateProgress(100);
+                setTimeout(() => {
+                    document.getElementById('progress-container').style.display = 'none';
+                    document.getElementById('loading-message').style.display = 'none';
+                }, 500);
             })
-            .catch(error => console.error('Error fetching the JSON data:', error));
+            .catch(error => {
+                console.error('Error fetching the JSON data:', error);
+                document.getElementById('loading-message').textContent = 'Error loading quiz. Please try again.';
+                document.getElementById('progress-container').style.display = 'none';
+            });
+
+        function updateProgress(percent) {
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = percent + '%';
+            progressBar.textContent = percent + '%';
+        }
 
         function displaySortedQuestions() {
             const quizContainer = document.getElementById('quiz-container');
@@ -264,31 +324,24 @@
                 return order.indexOf(a.title) - order.indexOf(b.title);
             });
 
-            let totalQuestions = 0;
-            sortedSubjects.forEach(subject => {
-                totalQuestions += subject.questions.length;
-            });
-
-            let questionIndex = 0;
-
             // Display questions by subject
             sortedSubjects.forEach(subject => {
                 const subjectSection = document.createElement('div');
                 subjectSection.className = 'subject-section';
-
+                
                 const subjectTitle = document.createElement('div');
                 subjectTitle.className = 'subject-title';
                 subjectTitle.textContent = subject.title;
                 subjectSection.appendChild(subjectTitle);
 
-                subject.questions.forEach(question => {
-                    questionIndex++;
+                // Display all questions for this subject
+                subject.questions.forEach((question, index) => {
                     const questionElement = document.createElement('div');
                     questionElement.className = 'question';
 
                     const questionNumber = document.createElement('div');
                     questionNumber.className = 'question-number';
-                    questionNumber.textContent = `Question ${questionIndex}:`;
+                    questionNumber.textContent = `Question ${index + 1}:`;
                     questionElement.appendChild(questionNumber);
 
                     const questionContent = document.createElement('div');
@@ -309,7 +362,6 @@
                         optionInput.type = 'radio';
                         optionInput.name = `question${question.question_id}`;
                         optionInput.value = option.identifier;
-                        optionInput.addEventListener('change', () => updateProgress());
 
                         optionLabel.appendChild(optionInput);
                         optionLabel.innerHTML += option.content;
@@ -324,67 +376,59 @@
                 quizContainer.appendChild(subjectSection);
             });
 
-            // Re-render MathJax content and wait for completion
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub], () => {
-                updateProgress();
-            });
+            // Re-render MathJax content
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
 
-        function updateProgress() {
-            const totalQuestions = document.querySelectorAll('.question').length;
-            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
-            const progressPercentage = (answeredQuestions / totalQuestions) * 100;
-            document.getElementById('progress').style.width = `${progressPercentage}%`;
-        }
-
-        async function downloadPDF() {
-            // Create a clone of the quiz container to manipulate
+        function generatePDF() {
+            // Show PDF loading screen
+            document.getElementById('pdf-loading').style.display = 'flex';
+            
+            // Clone the quiz container to avoid modifying the original
             const element = document.getElementById('quiz-container').cloneNode(true);
-            const titleElement = document.getElementById('quiz-title').cloneNode(true);
-            const container = document.createElement('div');
-            container.appendChild(titleElement);
-            container.appendChild(element);
+            const title = document.getElementById('quiz-title').textContent;
+            
+            // Remove radio buttons for PDF
+            const radioButtons = element.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.style.display = 'none';
+            });
+            
+            // Add the cloned element temporarily to the body
+            element.style.position = 'absolute';
+            element.style.left = '-9999px';
+            document.body.appendChild(element);
+            
+            const opt = {
+                margin: 10,
+                filename: `${title || 'quiz'}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    logging: true,
+                    useCORS: true,
+                    allowTaint: true,
+                    letterRendering: true
+                },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
 
-            // Ensure MathJax is rendered
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub, element], async () => {
-                // Convert MathJax elements to images
-                const mathElements = element.querySelectorAll('.mathjax-inline');
-                for (let mathElement of mathElements) {
-                    try {
-                        const canvas = await html2canvas(mathElement, { scale: 2 });
-                        const img = document.createElement('img');
-                        img.src = canvas.toDataURL('image/png');
-                        img.style.maxWidth = '100%';
-                        mathElement.parentNode.replaceChild(img, mathElement);
-                    } catch (err) {
-                        console.error('Error converting MathJax to image:', err);
-                    }
-                }
-
-                // PDF generation options
-                const opt = {
-                    margin: 10,
-                    filename: `${document.getElementById('quiz-title').textContent || 'quiz'}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { 
-                        scale: 2,
-                        useCORS: true,
-                        logging: false
-                    },
-                    jsPDF: { 
-                        unit: 'mm', 
-                        format: 'a4', 
-                        orientation: 'portrait' 
-                    }
-                };
-
-                // Generate and save PDF
-                try {
-                    await html2pdf().set(opt).from(container).save();
-                } catch (err) {
-                    console.error('Error generating PDF:', err);
-                    alert('Failed to generate PDF. Please try printing instead.');
-                }
+            // Wait for MathJax to finish rendering
+            MathJax.Hub.Queue(() => {
+                // Give a small delay to ensure everything is rendered
+                setTimeout(() => {
+                    html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
+                        // Remove the cloned element
+                        document.body.removeChild(element);
+                        // Hide loading screen
+                        document.getElementById('pdf-loading').style.display = 'none';
+                    }).catch(err => {
+                        console.error('PDF generation error:', err);
+                        document.getElementById('pdf-loading').style.display = 'none';
+                        document.body.removeChild(element);
+                        alert('Error generating PDF. Please try again.');
+                    });
+                }, 1000);
             });
         }
 
