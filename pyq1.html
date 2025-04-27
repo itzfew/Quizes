@@ -242,7 +242,7 @@
         var selectedMetaId = getQueryParam('metaid') || metaIds[0].id;
         var totalQuestions = parseInt(getQueryParam('total')) || 0;
         var selectedMeta = metaIds.find(meta => meta.id === selectedMetaId) || metaIds[0];
-        examTitle = selectedMeta.title;
+        examTitle = totalQuestions === 180 ? "NEET Mixed Test" : selectedMeta.title;
 
         // Update header with exam title
         $('.page_template .header').html(`
@@ -261,7 +261,11 @@
 
         function typesetMathJax() {
           if (window.MathJax) {
-            MathJax.typesetPromise().catch(err => console.error("MathJax typesetting error:", err));
+            MathJax.typesetPromise()
+              .then(() => console.log("MathJax typesetting completed"))
+              .catch(err => console.error("MathJax typesetting error:", err));
+          } else {
+            console.warn("MathJax not loaded");
           }
         }
 
@@ -280,7 +284,7 @@
 
           if (questions.length === 0) {
             console.warn("No questions to render");
-            newsletterContent.append('<div class="error-message">No questions available.</div>');
+            newsletterContent.append('<div class="error-message">No questions available. Please try another meta ID or check JSON availability.</div>');
             return;
           }
 
@@ -408,7 +412,7 @@
           console.log("Fetching JSON:", url);
           return $.getJSON(url)
             .done(function(data) {
-              console.log("JSON fetched successfully for", metaId);
+              console.log("JSON fetched successfully for", metaId, "Questions:", data.flatMap(s => s.questions || []).length);
               return data;
             })
             .fail(function(jqXHR, textStatus, error) {
@@ -418,6 +422,7 @@
         }
 
         function fetchAllJsonsAndSelectQuestions(total) {
+          console.log("Fetching all JSONs for", total, "questions");
           var promises = metaIds.map(meta => fetchSingleJson(meta.id));
           $.when.apply($, promises).then(function() {
             var allData = Array.from(arguments).map((result, index) => {
@@ -436,18 +441,24 @@
               });
             });
 
-            // Calculate questions per subject (assume 3 subjects: physics, chemistry, biology)
-            var subjects = Object.keys(subjectQuestions);
+            // Calculate questions per subject
+            var subjects = Object.keys(subjectQuestions).filter(s => s !== "unknown");
             var questionsPerSubject = Math.floor(total / subjects.length);
             var selectedQuestions = [];
+
+            console.log("Subjects found:", subjects);
 
             // Randomly select questions for each subject
             subjects.forEach(subject => {
               var questions = subjectQuestions[subject];
-              if (questions.length === 0) return;
+              if (questions.length === 0) {
+                console.warn("No questions for subject:", subject);
+                return;
+              }
               var shuffled = shuffleArray([...questions]);
               var numToSelect = Math.min(questionsPerSubject, questions.length);
               selectedQuestions.push(...shuffled.slice(0, numToSelect));
+              console.log("Selected", numToSelect, "questions for", subject);
             });
 
             // Ensure exact total by filling with random questions if needed
@@ -456,6 +467,7 @@
               var remaining = total - selectedQuestions.length;
               var shuffledRemaining = shuffleArray([...allQuestions]);
               selectedQuestions.push(...shuffledRemaining.slice(0, remaining));
+              console.log("Added", remaining, "additional random questions");
             }
 
             // Sort by subject for rendering
@@ -465,7 +477,7 @@
               sortedQuestions.push(...subjectQs);
             });
 
-            console.log("Selected", sortedQuestions.length, "questions");
+            console.log("Total selected questions:", sortedQuestions.length);
             renderQuestions(sortedQuestions);
             setTimeout(buildNewsletter, 500);
           }).fail(function() {
@@ -477,6 +489,8 @@
         }
 
         // Main logic
+        console.log("Query parameters - metaId:", selectedMetaId, "total:", totalQuestions);
+        $('.loader').show();
         if (totalQuestions === 180) {
           console.log("Generating 180 random questions from all JSONs");
           fetchAllJsonsAndSelectQuestions(totalQuestions);
@@ -484,11 +498,20 @@
           console.log("Fetching single JSON for metaId:", selectedMetaId);
           fetchSingleJson(selectedMetaId)
             .done(function(data) {
-              renderQuestions(data.flatMap(subjectData => subjectData.questions || []));
+              var questions = data.flatMap(subjectData => subjectData.questions || []);
+              console.log("Questions loaded:", questions.length);
+              if (questions.length === 0) {
+                console.warn("No questions in JSON, using fallback");
+                $('#newsletterContent').append('<div class="error-message">No questions found for this meta ID. Using sample content.</div>');
+                renderQuestions(fallbackContent);
+              } else {
+                renderQuestions(questions);
+              }
               setTimeout(buildNewsletter, 500);
             })
             .fail(function() {
-              $('#newsletterContent').append('<div class="error-message">Failed to load questions. Using sample content.</div>');
+              console.error("Single JSON fetch failed, using fallback");
+              $('#newsletterContent').append('<div class="error-message">Failed to load questions for meta ID. Using sample content.</div>');
               renderQuestions(fallbackContent);
               setTimeout(buildNewsletter, 500);
             });
