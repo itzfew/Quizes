@@ -9,10 +9,10 @@
     <style>
       @page { size: A4 }
       @media print {
-        .footer {page-break-after: always;}
-        .footer:last-child {page-break-after: avoid;}
+        .footer { page-break-after: always; }
+        .footer:last-child { page-break-after: avoid; }
         .noprint {
-          display:none !important;
+          display: none !important;
         }
       }
       .question {
@@ -20,7 +20,7 @@
         padding-left: 7px;
         font-size: 11pt;
       }
-      .loader .spinner{
+      .loader .spinner {
         border-top: 16px solid blue;
         border-right: 16px solid green;
         border-bottom: 16px solid red;
@@ -35,54 +35,87 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
-      #printDiv{
+      #printDiv {
         display: flex;
         justify-content: center;
         display: none;
       }
-      #printBtn{
+      #printBtn {
         width: 800px;
         padding: 10px;
         margin: 20px;
         background: green;
         color: white;
-        font-family: Arial,Helvetica,sans-serif;
+        font-family: Arial, Helvetica, sans-serif;
         font-size: 20px;
         font-weight: bold;
       }
-      .sheet .content .column{ text-align:justify; font-size: 11pt;  }
-      .sheet .content .column blockquote{ background: #DEDEDE; padding: 10px; margin: 4px 20px; clear: both;  }
-      .sheet .content .column h1{ padding: 0 10px;  }
-      .sheet .header{ text-align: center; font-size: 18pt; font-family: helvetica, arial; padding: 20px 0 0;  }
-      .sheet .header .contact{ float: right; font-size: 14pt; font-family: helvetica, arial;}
-      .sheet .header .logo{ float: left; vertical-align: middle;}
-      .sheet .header hr, .sheet .footer hr{ width: 800px;  }
-      .sheet .footer span{ position: absolute; bottom: 10px; right: 10px;  }
-      .page_template{ display: none;  }
+      .sheet .content .column {
+        text-align: justify;
+        font-size: 11pt;
+      }
+      .sheet .content .column blockquote {
+        background: #DEDEDE;
+        padding: 10px;
+        margin: 4px 20px;
+        clear: both;
+      }
+      .sheet .content .column h1 {
+        padding: 0 10px;
+      }
+      .sheet .header {
+        text-align: center;
+        font-size: 18pt;
+        font-family: helvetica, arial;
+        padding: 20px 0 0;
+      }
+      .sheet .header .contact {
+        float: right;
+        font-size: 14pt;
+        font-family: helvetica, arial;
+      }
+      .sheet .header .logo {
+        float: left;
+        vertical-align: middle;
+      }
+      .sheet .header hr, .sheet .footer hr {
+        width: 800px;
+      }
+      .sheet .footer span {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+      }
+      .page_template {
+        display: none;
+      }
       table {
-        table-layout:fixed;
+        table-layout: fixed;
         text-align: left;
         border-collapse: collapse;
         border: 1px solid black;
-        min-width: 200px;
+        width: 100%;
+      }
+      th, td {
+        border: 1px solid black;
+        padding: 5px;
+        text-align: left;
       }
       .content {
         padding: 10px;
         background: linear-gradient(#000, #000) no-repeat center/0.1px 99%;
         border-bottom: 1px solid black;
       }
-      th, td {
-        border: 1px solid black;
-      }
-      table tr td p {
-        margin: 0px !important;
+      .content img {
+        max-width: 100%;
+        height: auto;
       }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src='https://www.neetprep.com/jquery.columnizer.min.js'></script>
     <script async src='https://cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
     <script>
-      $(function(){
+      $(function() {
         var content_height = 900;  // the height of the content, excluding the header/footer
         var page = 1;        // the beginning page number to show in the footer
 
