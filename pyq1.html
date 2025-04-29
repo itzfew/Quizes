@@ -33,19 +33,27 @@
         font-size: 10pt;
         line-height: 1.3;
         margin-bottom: 8px;
+        page-break-inside: avoid;
       }
-      .loader .spinner {
-        border: 12px solid #f3f3f3;
-        border-top: 12px solid #3498db;
-        border-radius: 50%;
-        margin: auto;
-        width: 80px;
-        height: 80px;
-        animation: spin 1.5s linear infinite;
+      .loader {
+        text-align: center;
+        padding: 20px;
       }
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+      .progress-container {
+        width: 80%;
+        margin: 20px auto;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+      }
+      .progress-bar {
+        width: 0%;
+        height: 20px;
+        background-color: #4CAF50;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 20px;
+        color: white;
+        transition: width 0.3s;
       }
       #printDiv {
         display: none;
@@ -155,37 +163,61 @@
         margin: 20px;
         font-size: 12pt;
       }
-      /* Improved MathJax styling for better inline rendering */
+      /* MathJax styling */
+      .MathJax {
+        display: inline !important;
+        white-space: normal !important;
+      }
+      .MathJax_Display {
+        display: inline !important;
+        white-space: normal !important;
+        margin: 0 !important;
+      }
+      .mathjax-wrapper {
+        display: inline;
+      }
       .mathjax-block {
         display: block;
-        margin: 0.5em 0;
         text-align: center;
+        margin: 5px 0;
       }
       .mathjax-inline {
         display: inline;
-        margin: 0;
-        padding: 0;
-        vertical-align: baseline;
-        line-height: inherit;
-      }
-      /* Prevent line breaks around inline math */
-      .no-break {
         white-space: nowrap;
-      }
-      /* Ensure proper spacing around equations */
-      .question p {
-        margin: 0;
-        padding: 0;
-        display: inline;
       }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src='https://www.neetprep.com/jquery.columnizer.min.js'></script>
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          processEscapes: true,
+          packages: {'[+]': ['mhchem']}
+        },
+        options: {
+          ignoreHtmlClass: 'tex2jax_ignore',
+          processHtmlClass: 'tex2jax_process'
+        },
+        startup: {
+          ready: function() {
+            MathJax.startup.defaultReady();
+            MathJax.startup.promise.then(function() {
+              if (window.renderComplete) window.renderComplete();
+            });
+          }
+        }
+      };
+    </script>
     <script async src='https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js'></script>
     <script>
       $(function() {
         var content_height = 960;
         var page = 1;
+        var totalQuestions = 0;
+        var processedQuestions = 0;
+        var progressInterval;
 
         // Fallback content
         var fallbackContent = [
@@ -199,21 +231,44 @@
                   { content: "Watt" },
                   { content: "Pascal" }
                 ]
+              },
+              {
+                content: "The equation $E = mc^2$ was proposed by: (A) Newton (B) Einstein (C) Tesla (D) Bohr",
+                options: [
+                  { content: "Newton" },
+                  { content: "Einstein" },
+                  { content: "Tesla" },
+                  { content: "Bohr" }
+                ]
               }
             ]
           }
         ];
 
+        function updateProgress(count) {
+          processedQuestions = count;
+          var percent = Math.min(100, Math.round((processedQuestions / totalQuestions) * 100));
+          $('.progress-bar').css('width', percent + '%').text(percent + '%');
+          
+          if (percent >= 100) {
+            clearInterval(progressInterval);
+            $('.progress-container').fadeOut(500);
+          }
+        }
+
         function renderMathJax(content) {
-          // First handle display math ($$...$$)
-          content = content.replace(/\$\$(.*?)\$\$/g, function(match, p1) {
-            return `<span class="mathjax-block">\\[${p1}\\]</span>`;
+          // First pass - handle block equations
+          content = content.replace(/\$\$(.*?)\$\$/gs, function(match, equation) {
+            return '<div class="mathjax-block">$$' + equation + '$$</div>';
           });
           
-          // Then handle inline math ($...$)
-          content = content.replace(/\$(.*?)\$/g, function(match, p1) {
-            // Wrap in span with no-break class to prevent line breaks
-            return `<span class="no-break"><span class="mathjax-inline">\\(${p1}\\)</span></span>`;
+          // Second pass - handle inline equations
+          content = content.replace(/\$(.*?)\$/g, function(match, equation) {
+            // Skip if this is part of a block equation
+            if (match.indexOf('\n') !== -1 || equation.indexOf('$$') !== -1) {
+              return match;
+            }
+            return '<span class="mathjax-inline">$' + equation + '$</span>';
           });
           
           return content;
@@ -225,11 +280,19 @@
           newsletterContent.empty();
 
           var questions = data.flatMap(subjectData => subjectData.questions);
+          totalQuestions = questions.length;
+          processedQuestions = 0;
+          
+          // Start progress updater
+          progressInterval = setInterval(function() {
+            updateProgress(processedQuestions);
+          }, 200);
+
           questions.forEach(function(q, index) {
             var questionContent = renderMathJax(q.content);
             var questionHtml = '<div class="dontsplit question">' +
               '<span class="questionId"><b>' + (index + 1) + '.</b></span> ' +
-              '<p>' + questionContent + '</p>';
+              '<span class="question-text">' + questionContent + '</span>';
 
             if (q.options && q.options.length > 0) {
               questionHtml += '<table><tbody>';
@@ -246,8 +309,9 @@
               questionHtml += '</tbody></table>';
             }
 
-            questionHtml += '<br>';
+            questionHtml += '</div>';
             newsletterContent.append(questionHtml);
+            processedQuestions++;
           });
         }
 
@@ -271,17 +335,6 @@
               'overflow-wrap': 'break-word',
               'word-break': 'break-all',
               'white-space': 'normal'
-            });
-            if ($table.width() > parentWidth) {
-              console.log("Adjusted table width from", $table.width(), "to parent:", parentWidth);
-              $table.css('width', '100%');
-            }
-            $table.find('td').each(function() {
-              var $td = $(this);
-              if ($td.width() > 120) {
-                $td.css('max-width', '120px');
-                console.log("Compressed table cell width:", $td.width());
-              }
             });
           });
         }
@@ -334,32 +387,9 @@
           }
         }
 
-        // Configure MathJax before loading
-        window.MathJax = {
-          tex: {
-            inlineMath: [['$', '$'], ['\\(', '\\)']],
-            displayMath: [['$$', '$$'], ['\\[', '\\]']],
-            processEscapes: true,
-            packages: {'[+]': ['mhchem']}
-          },
-          options: {
-            ignoreHtmlClass: 'tex2jax_ignore',
-            processHtmlClass: 'tex2jax_process'
-          },
-          startup: {
-            ready: function() {
-              MathJax.startup.defaultReady();
-              // Ensure MathJax doesn't add extra spacing
-              MathJax.startup.input[0].preFilters.add(function(data) {
-                data.math.display = data.math.display.replace(/^<span[^>]*>/, '').replace(/<\/span>$/, '');
-              });
-              MathJax.startup.input[0].postFilters.add(function(data) {
-                if (!data.display) {
-                  data.math = data.math.replace(/^<span[^>]*>/, '').replace(/<\/span>$/, '');
-                }
-              });
-            }
-          }
+        window.renderComplete = function() {
+          console.log("MathJax rendering complete");
+          setTimeout(buildNewsletter, 300);
         };
 
         console.log("Fetching JSON...");
@@ -367,18 +397,11 @@
           .done(function(data) {
             console.log("JSON fetched successfully");
             renderQuestions(data);
-            MathJax.typesetPromise().then(() => {
-              console.log("MathJax rendering complete");
-              setTimeout(buildNewsletter, 500);
-            });
           })
           .fail(function(jqXHR, textStatus, error) {
             console.error("JSON fetch failed:", textStatus, error);
             $('#newsletterContent').append('<div class="error-message">Failed to load questions. Using sample content.</div>');
             renderQuestions(fallbackContent);
-            MathJax.typesetPromise().then(() => {
-              setTimeout(buildNewsletter, 500);
-            });
           });
       });
     </script>
@@ -396,9 +419,11 @@
     </div>
     <div class="loader">
       <br><br>
-      <div class="spinner"></div>
-      <br><br>
       <h2 style="text-align: center;">Generating PDF, please wait...</h2>
+      <div class="progress-container">
+        <div class="progress-bar">0%</div>
+      </div>
+      <p id="status-text">Loading questions...</p>
     </div>
     <div id="printDiv" class="noprint">
       <button id='printBtn'>Print PDF</button>
