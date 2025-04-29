@@ -171,41 +171,48 @@
         var page = 1;
 
         function renderMathJax(content) {
-          return content
-            .replace(/\$\$(.*?)\$\$/g, (match, p1) => `<span class="mathjax-block">\\[${p1}\\]</span>`)
-            .replace(/\$(.*?)\$/g, (match, p1) => `<span class="mathjax-inline">\\(${p1}\\)</span>`);
+      // Handle inline math with proper spacing and flow
+      return content
+        .replace(/\$\$(.*?)\$\$/g, (match, p1) => {
+          // For block math ($$...$$), we'll keep it as block but ensure proper spacing
+          return `<div class="mathjax-block" style="margin:0;padding:0;display:inline">\\[${p1}\\]</div>`;
+        })
+        .replace(/\$(.*?)\$/g, (match, p1) => {
+          // For inline math ($...$), ensure it flows with text
+          return `<span class="mathjax-inline" style="white-space:nowrap">\\(${p1}\\)</span>`;
+        });
         }
 
         function renderQuestions(data) {
-          console.log("Rendering questions from data:", data);
-          var newsletterContent = $('#newsletterContent');
-          newsletterContent.empty();
+      console.log("Rendering questions from data:", data);
+      var newsletterContent = $('#newsletterContent');
+      newsletterContent.empty();
 
-          var questions = data.flatMap(subjectData => subjectData.questions);
-          questions.forEach(function(q, index) {
-            var questionContent = renderMathJax(q.content);
-            var questionHtml = '<div class="dontsplit question">' +
-              '<span class="questionId"><b>' + (index + 1) + '.</b></span> ' +
-              '<p style="display:inline">' + questionContent + '</p>';
+      var questions = data.flatMap(subjectData => subjectData.questions);
+      questions.forEach(function(q, index) {
+        var questionContent = renderMathJax(q.content);
+        var questionHtml = '<div class="dontsplit question" style="white-space:normal">' +
+          '<span class="questionId"><b>' + (index + 1) + '.</b></span> ' +
+          '<span style="display:inline">' + questionContent + '</span>';
 
-            if (q.options && q.options.length > 0) {
-              questionHtml += '<table><tbody>';
-              for (var i = 0; i < q.options.length; i += 2) {
-                questionHtml += '<tr>' +
-                  '<td>' + (i + 1) + '.</td>' +
-                  '<td>' + renderMathJax(q.options[i].content) + '</td>';
-                if (i + 1 < q.options.length) {
-                  questionHtml += '<td>' + (i + 2) + '.</td>' +
-                    '<td>' + renderMathJax(q.options[i + 1].content) + '</td>';
-                }
-                questionHtml += '</tr>';
-              }
-              questionHtml += '</tbody></table>';
+        if (q.options && q.options.length > 0) {
+          questionHtml += '<table><tbody>';
+          for (var i = 0; i < q.options.length; i += 2) {
+            questionHtml += '<tr>' +
+              '<td>' + (i + 1) + '.</td>' +
+              '<td style="white-space:normal">' + renderMathJax(q.options[i].content) + '</td>';
+            if (i + 1 < q.options.length) {
+              questionHtml += '<td>' + (i + 2) + '.</td>' +
+                '<td style="white-space:normal">' + renderMathJax(q.options[i + 1].content) + '</td>';
             }
+            questionHtml += '</tr>';
+          }
+          questionHtml += '</tbody></table>';
+        }
 
-            questionHtml += '<br>';
-            newsletterContent.append(questionHtml);
-          });
+        questionHtml += '</div>';
+        newsletterContent.append(questionHtml);
+      });
         }
 
         function adjustTableWidths() {
