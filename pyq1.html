@@ -161,6 +161,25 @@
         display: inline-block;
         font-size: 1.1em;
       }
+          .text(`
+          .mathjax-inline {
+            display: inline !important;
+            white-space: nowrap !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          .mathjax-block {
+            display: inline !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          .question {
+            white-space: normal !important;
+            word-wrap: break-word !important;
+          }
+        `)
+        .appendTo('head');
+    }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src='https://www.neetprep.com/jquery.columnizer.min.js'></script>
